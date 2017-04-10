@@ -45,7 +45,7 @@
     "redux-sagas-injector": "0.1.0",
     "reselect": "3.0.0",
     "url": "0.11.0",
-    "uuid": "^3.0.1"
+    "uuid": "3.0.1"
   },
   "devDependencies": {
     "add-asset-html-webpack-plugin": "1.0.2",
