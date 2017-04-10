@@ -44,7 +44,7 @@ const SignIn = (props) => {
             <HelmetTitle title="Sign in"/>
             <Bender width={73} style={style.logo} color={theme['primary-color']}/>
             <div style={style.form}>
-                <h1>Login to Bender</h1>
+                <h1>Login to Analytics</h1>
                 <p style={style.p}>New around here ? <Link to='sign-up/'>Signup</Link> instead</p>
                 {signInError &&
                 <p className="error" role="alert">

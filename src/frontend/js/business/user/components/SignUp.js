@@ -48,7 +48,7 @@ const SignUp = (props) => {
             <HelmetTitle title="Sign up"/>
             <Bender width={73} style={style.logo} color={theme['primary-color']}/>
             <div style={style.form}>
-                <h1>Sign Up to Bender</h1>
+                <h1>Sign Up to Analytics</h1>
                 {registered && <p>Yeah! You're now registered! Please check your email to login !</p>}
                 {signUpError &&
                 <p className="error" role="alert">
