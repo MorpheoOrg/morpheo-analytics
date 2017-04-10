@@ -1,0 +1,41 @@
+/* Ant override */
+.ant-btn.ant-btn-primary.custom-primary {
+    border: none !important;
+    padding: 5px 15px !important;
+    box-shadow: 3px 3px 10px 0 #a7b5c2 !important;
+}
+
+.ant-btn.ant-btn-primary.custom-primary:hover {
+    box-shadow: 0 0 0 0 #a2b3c2 !important;
+}
+
+.ant-input {
+    .ant-mention-editor {
+        background: #f9f9f9 !important;
+        color: #8d8e9a !important;
+    }
+    .ant-form-item-label {
+        padding: 0;
+    }
+}
+
+/* use css to set position of modal */
+.vertical-center-modal {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.vertical-center-modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    width: 0;
+}
+
+.vertical-center-modal .ant-modal {
+    display: inline-block;
+    vertical-align: middle;
+    top: 0;
+    text-align: left;
+}

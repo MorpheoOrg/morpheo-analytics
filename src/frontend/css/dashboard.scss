@@ -1,0 +1,67 @@
+
+.ant-card {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.dashboard-number {
+    text-align: center;
+    padding: 20px 0;
+    border-radius: 5px;
+    border: 1px solid #e9e9e9;
+    margin: 10px;
+    white-space: nowrap;
+    h1{
+        font-size: 30px;
+        font-weight: lighter;
+        text-transform: uppercase;
+    }
+}
+
+.filterer {
+    min-width: 520px;
+    max-width: 1020px;
+    overflow: hidden;
+    width: auto;
+    position: relative;
+    float: right;
+    text-align: right;
+
+    .sort-button {
+        margin:0;
+        border: 0 solid;
+        min-width: 90px;
+        // max-width: 150;
+        outline: none !important;
+
+        > div {
+            border: 1px solid #e9e9e9;
+            border-radius: 0;
+            border-right: 0;
+        }
+    }
+    .sort-button:first-child > div {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    .sort-button:last-child {
+        border-right: 0;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .sort-button.apply {
+        // max-width: 80px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.ant-tabs-bar {
+    border-bottom: 0 solid;
+}
+
+.recharts-rectangle {
+    fill: rgba(237, 237, 237, 0.7) !important;
+}
