@@ -17,7 +17,7 @@ class Trials extends React.Component {
         }
     }
     render() {
-        const {loading, trials, algos, item, learnuplet, setIsExpanded, deleteTrial} = this.props;
+        const {loading, trials, algos, item, learnuplet, setIsExpanded, deleteTrial, setCreateModalAlgo} = this.props;
 
         return !loading.algo && !loading.trial ? (trials && trials.length ?
             <div>
