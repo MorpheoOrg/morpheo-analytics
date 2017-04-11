@@ -8,7 +8,7 @@ import {signOut as signOutActions} from '../business/user/actions';
 import experimentActions from '../business/models/experiment/actions';
 import userActions from '../business/user/actions';
 
-import Bender from '../presentation/icons/bender';
+import Morpheo from '../presentation/icons/morpheo';
 import theme from '../../css/variables';
 
 import UserSettings from '../business/user/components/modal';
@@ -64,7 +64,7 @@ class LeftMenu extends React.Component {
         return (
             <div style={style.menu}>
                 <Link to="/experiments">
-                    <Bender width={42} height={42} style={style.logo} color={theme['primary-color']}/>
+                    <Morpheo width={40} height={40} style={style.logo} color={theme['primary-color']}/>
                 </Link>
                 <div style={style.bottom}>
                     <Tooltip placement="right" title={'New Experiment'}>

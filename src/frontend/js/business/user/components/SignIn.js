@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router-dom';
 
-import Bender from '../../../presentation/icons/bender';
+import Morpheo from '../../../presentation/icons/morpheo';
 import {signIn as signInActions} from '../actions';
 import HelmetTitle from '../../../utils/HelmetTitle';
 import FormTemplate from '../form/sign-in';
@@ -43,7 +43,7 @@ const SignIn = (props) => {
     return (
         <div style={style.main}>
             <HelmetTitle title="Sign in"/>
-            <Bender width={73} style={style.logo} color={theme['primary-color']}/>
+            <Morpheo width={73} style={style.logo} color={theme['primary-color']}/>
             <div style={style.form}>
                 <h1>Login to Analytics</h1>
                 <p style={style.p}>New around here ? <Link to='sign-up/'>Signup</Link> instead</p>

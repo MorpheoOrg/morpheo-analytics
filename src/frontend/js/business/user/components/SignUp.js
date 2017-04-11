@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router-dom';
 
-import Bender from '../../../presentation/icons/bender';
+import Morpheo from '../../../presentation/icons/morpheo';
 import {signUp as signUpActions} from '../actions';
 import HelmetTitle from '../../../utils/HelmetTitle';
 import FormTemplate from '../form/sign-up';
@@ -47,7 +47,7 @@ const SignUp = (props) => {
     return (
         <div style={style.main}>
             <HelmetTitle title="Sign up"/>
-            <Bender width={73} style={style.logo} color={theme['primary-color']}/>
+            <Morpheo width={73} style={style.logo} color={theme['primary-color']}/>
             <div style={style.form}>
                 <h1>Sign Up to Analytics</h1>
                 {registered && <p>Yeah! You're now registered! Please check your email to login !</p>}
