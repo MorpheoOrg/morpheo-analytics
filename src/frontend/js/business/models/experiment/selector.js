@@ -4,7 +4,7 @@
 
 import {createSelector} from 'reselect';
 import queryString from 'query-string';
-import {round} from 'lodash';
+import {round, sortBy} from 'lodash';
 import createDeepEqualSelector from '../../../utils/selector';
 
 const error = state => state.list.error;
@@ -15,6 +15,7 @@ const location = props => props.location;
 const item = state => state.models.experiment.item;
 const trialsResults = state => state.models.trial.item.results;
 const algosResults = state => state.models.algo.item.results;
+const learnupletsResults = state => state.models.learnuplet.list.results;
 const selectedMetric = state => state.models.experiment.chart.selectedMetric;
 const selectedParameter = state => state.models.experiment.chart.selectedParameter;
 const scatter = state => state.models.experiment.widget.scatter;
@@ -37,7 +38,7 @@ export const getTrials = createDeepEqualSelector([trialsResults, item],
             ...o,
             isExpanded: !!o.isExpanded,
         })) : []
-    );
+);
 
 export const getAlgos = createDeepEqualSelector([algosResults, item],
     (results, item) => item.id ? results[item.id] : [],
@@ -98,4 +99,13 @@ export const getScatterChartData = createDeepEqualSelector([getTrials, filteredA
                 X: round(o.results[selectedMetric], 4),
                 Y: o.parameters[selectedParameter],
             })) : []
+);
+
+export const getLChartData = createDeepEqualSelector([learnupletsResults],
+    (results) => sortBy(results, ['rank']).reduce((previous, current) =>
+            [...previous, {
+                name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
+                perf: current.perf
+            }],
+        [])
 );
