@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import {Row, Col, Button, Popconfirm} from 'antd';
 import {round} from 'lodash';

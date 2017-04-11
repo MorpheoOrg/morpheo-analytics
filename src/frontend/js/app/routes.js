@@ -1,5 +1,6 @@
 import {Route, Redirect} from 'react-router';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {injectReducer} from 'redux-injector';
 import {injectSaga} from 'redux-sagas-injector';
 

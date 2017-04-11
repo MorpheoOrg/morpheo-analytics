@@ -8,7 +8,7 @@ import userSagas from '../business/user/sagas';
 export const setFilter = filter =>
     function* setFilterSaga(request) {
         const state = yield select(),
-            location = state.routing.locationBeforeTransitions,
+            location = state.routing.location,
             query = location && location.search ? queryString.parse(location.search) : {};
 
         if (typeof request.payload !== 'undefined' && request.payload !== null) { // is not null ? (0 can be passed)
@@ -31,7 +31,7 @@ export const setFilter = filter =>
 export const setDateFilter = (reducer, filter) =>
     function* setDateFilterSaga(request) {
         const state = yield select(),
-            location = state.routing.locationBeforeTransitions,
+            location = state.routing.location,
             query = location && location.search ? queryString.parse(location.search) : {};
 
         if (request.payload) { // is null ?

@@ -1,5 +1,6 @@
 import {Route, Redirect} from 'react-router';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import {asyncComponent} from 'react-async-component';
 

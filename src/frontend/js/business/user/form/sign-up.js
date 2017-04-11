@@ -2,7 +2,8 @@
  * Created by guillaume on 2/22/17.
  */
 
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 
 import {Form, Icon, Input, Button, Checkbox} from 'antd';

@@ -2,7 +2,8 @@
  * Created by guillaume on 3/3/17.
  */
 
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {Button, Popconfirm} from 'antd';
 
 class Infos extends React.PureComponent {

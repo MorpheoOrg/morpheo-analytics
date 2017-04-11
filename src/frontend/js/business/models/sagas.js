@@ -28,7 +28,7 @@ export function getPrevious(baseUrl, query, page) {
 export const loadList = (actions, fetchList, action = 'list', q) =>
     function* loadListSaga() {
         const state = yield select(),
-            location = state.routing.locationBeforeTransitions;
+            location = state.routing.location;
 
         // override query if needed, default to current url query
         const query = q || (location && location.search ? queryString.parse(location.search) : {});
@@ -65,7 +65,7 @@ export const loadByUrlRef = actions =>
     function* loadByUrlRefSaga(request) {
         const state = yield select();
         const jwt = state.user.token,
-            location = state.routing.locationBeforeTransitions,
+            location = state.routing.location,
             query = location && location.search ? queryString.parse(location.search) : {};
 
         // need to remove page from query, as already in url
@@ -119,7 +119,7 @@ export const loadByUrlRef = actions =>
 export const loadListFromPath = (actions, fetchList, subreducer) =>
     function* loadListFromPathSaga(request) {
         const state = yield select(),
-            location = state.routing.locationBeforeTransitions,
+            location = state.routing.location,
             query = location && location.search ? queryString.parse(location.search) : {};
 
         const {error, list} = yield call(fetchList, query, state.user.token, request.payload);
@@ -172,7 +172,7 @@ export const loadListNext = (actions, type) =>
 export const loadItemFactory = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {
         const state = yield select(),
-            location = state.routing.locationBeforeTransitions,
+            location = state.routing.location,
             q = location && location.search ? {...query, ...queryString.parse(location.search)} : query;
 
 
@@ -264,7 +264,7 @@ export const deleteItemFactory = (actions, deleteItem) =>
 export const loadAdditionnal = (fetchList, action) =>
     function* loadAdditionnalSaga(request) {
         const state = yield select(),
-            location = state.routing.locationBeforeTransitions;
+            location = state.routing.location;
 
         // override query if needed, default to current url query
         const q = {experiment: request.payload};

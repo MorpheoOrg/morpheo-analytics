@@ -69,7 +69,7 @@ export const signOut = removeLocalUser =>
             pathname: '/',
             // store current location if relogin
             state: {
-                ...state.routing.locationBeforeTransitions,
+                ...state.routing.location,
             },
         }));
     };

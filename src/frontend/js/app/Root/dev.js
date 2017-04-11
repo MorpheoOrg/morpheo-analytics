@@ -1,10 +1,11 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
 
 // support react-router v4
 //import syncHistoryWithStore from '../../../lib/react-router-redux/sync';
-import ConnectedRouter from '../../../lib/react-router-redux/connectedRouter';
-//import {ConnectedRouter} from 'react-router-redux';
+//import ConnectedRouter from '../../../lib/react-router-redux/connectedRouter';
+import {ConnectedRouter} from 'react-router-redux';
 
 import DevTools from '../DevTools';
 

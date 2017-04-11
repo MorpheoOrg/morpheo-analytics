@@ -30,7 +30,7 @@ const activeDot = {r: 8};
 
 const LearnupletChart = ({item, data}) => {
     return item && <Card
-            title={'learnuplets over time'}
+            title={'learnuplets over perf'}
             style={card}
         >
             <LineChart width={600} height={300} data={data} margin={chart}>
@@ -57,4 +57,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['item', 'chartData'])(LearnupletChart));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['item', 'data'])(LearnupletChart));
