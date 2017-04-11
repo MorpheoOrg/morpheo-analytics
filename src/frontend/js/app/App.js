@@ -7,7 +7,7 @@ import actions from './actions';
 import {signOut as signOutActions} from '../business/user/actions';
 
 import LeftMenu from '../components/left-menu';
-//import ErrorModal from '../presentation/modals/error';
+import ErrorModal from '../presentation/modals/error';
 
 class App extends React.PureComponent {
 
@@ -34,11 +34,11 @@ class App extends React.PureComponent {
         return (
             <div className="app">
                 {user && user.authenticated && <LeftMenu /> }
-                 {/*<ErrorModal*/}
-                 {/*isVisible={general.error !== ''}*/}
-                 {/*error={general.error}*/}
-                 {/*onClose={this.onClose}*/}
-                 {/*/>*/}
+                 <ErrorModal
+                 isVisible={general.error !== ''}
+                 error={general.error}
+                 onClose={this.onClose}
+                 />
             </div>
         );
     }
