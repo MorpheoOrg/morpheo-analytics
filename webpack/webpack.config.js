@@ -79,7 +79,7 @@ export default {
         path: `${__dirname}/../build/frontend`,
         // use '/dreem-fronts/build/frontend/' :  for debugging prod files on dev
         // https://blog.jetbrains.com/webstorm/2015/09/debugging-webpack-applications-in-webstorm/
-        publicPath: DEBUG ? '/bender-front-new/build/frontend/' : '/bender-front-new/'
+        publicPath: DEBUG ? '/morpheo-analyitics/build/frontend/' : '/'
     },
     devtool: DEBUG ? 'source-map' : (DEVELOPMENT ? 'cheap-module-source-map' : '#hidden-source-map'),
     plugins: [

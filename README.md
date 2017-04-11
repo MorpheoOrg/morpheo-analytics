@@ -46,7 +46,7 @@ The dev dll allow us to optimize the way we deal with vendors code in order not 
 
 You can re run `npm run start` now.
 
-The website should be available on `http://localhost:3000/ghost/`
+The website should be available on `http://localhost:3000/`
 If you make any modifications on the rendering code, you'll see your page updating automatically witjout refreshing thanks to the hot module configuration (though it will do a full refresh for sagas files).
 
 Thanks to BrowserSync, you can also test your website on other devices:

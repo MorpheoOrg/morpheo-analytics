@@ -5,7 +5,7 @@
 import {createBrowserHistory} from 'history';
 
 export const history = createBrowserHistory({
-    basename: '/bender-front-new/',
+    basename: '/',
 });
 
 export default history;
