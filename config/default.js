@@ -11,6 +11,10 @@ module.exports = {
             api_port: apiPort,
             storage_api_url : storageApiUrl,
             orchestrator_api_url: orchestratorApiUrl,
+            baseName: {
+                production: '/',
+                debug: '/morpheo-analytics/build/frontend/',
+            }
         },
     },
     babel_ignore: /node_modules\/(?!admin-config)/,

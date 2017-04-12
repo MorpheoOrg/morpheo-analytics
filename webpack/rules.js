@@ -47,7 +47,20 @@ export default function (appName) {
         ...(PRODUCTION ? {
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use: ['css-loader?importLoaders=1', 'postcss-loader', 'less-loader']
+                    use: [
+                        {
+                            loader: 'css-loader',
+                            options: {importLoaders: 1}
+                        },
+                        'postcss-loader',
+                        {
+                            loader: 'less-loader',
+                            options: {
+                                sourceMap: true,
+                                modifyVars: theme
+                            }
+                        },
+                    ],
                 })
             } : {
                 use: [
@@ -63,7 +76,7 @@ export default function (appName) {
                             sourceMap: true,
                             modifyVars: theme
                         }
-                    }
+                    },
                 ]
             } )
     },

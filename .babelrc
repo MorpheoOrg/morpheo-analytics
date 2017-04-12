@@ -9,7 +9,8 @@
         "lodash",
         "date-fns"
 //        ["import", {
-//            "libraryName": "antd"
+//            "libraryName": "antd",
+//            "style": true
 //        }]
     ]
 }

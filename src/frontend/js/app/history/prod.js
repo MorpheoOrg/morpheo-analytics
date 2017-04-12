@@ -2,10 +2,12 @@
  * Created by guillaume on 2/7/17.
  */
 
+/* globals PRODUCTION_BASE_NAME */
+
 import {createBrowserHistory} from 'history';
 
 export const history = createBrowserHistory({
-    basename: '/',
+    basename: PRODUCTION_BASE_NAME,
 });
 
 export default history;

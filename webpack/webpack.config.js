@@ -9,11 +9,16 @@ import path from 'path';
 import fs from 'fs';
 import HappyPack from 'happypack';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
+import config from 'config';
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
-    PRODUCTION = (['production'].includes(process.env.NODE_ENV));
+    PRODUCTION = (['production'].includes(process.env.NODE_ENV)),
+    PRODUCTION_BASE_NAME = config.apps.frontend.baseName.production,
+    DEBUG_BASE_NAME = config.apps.frontend.baseName.debug;
 
+
+console.log(PRODUCTION_BASE_NAME, DEBUG_BASE_NAME);
 
 const DllArray = ['React', 'Redux', 'App'];
 const DllReferencePlugins = function () {
@@ -59,9 +64,6 @@ export default {
     },
     module: {
         rules: rules('frontend'),
-        // Shut off warnings about using pre-built javascript files
-        // as Quill.js unfortunately ships one as its `main`.
-        noParse: /node_modules\/quill\/dist/
     },
     stats: {
         colors: true,
@@ -77,9 +79,8 @@ export default {
     output: {
         filename: '[name].js',
         path: `${__dirname}/../build/frontend`,
-        // use '/dreem-fronts/build/frontend/' :  for debugging prod files on dev
         // https://blog.jetbrains.com/webstorm/2015/09/debugging-webpack-applications-in-webstorm/
-        publicPath: DEBUG ? '/morpheo-analyitics/build/frontend/' : '/'
+        publicPath: DEBUG ? DEBUG_BASE_NAME : PRODUCTION_BASE_NAME
     },
     devtool: DEBUG ? 'source-map' : (DEVELOPMENT ? 'cheap-module-source-map' : '#hidden-source-map'),
     plugins: [
@@ -92,7 +93,7 @@ export default {
                         'lodash',
                         'date-fns',
                         ["import", {
-                            "libraryName": "antd",
+                            libraryName: 'antd',
                             style: true
                         }],
                         'transform-runtime',
