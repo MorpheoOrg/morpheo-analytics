@@ -10,6 +10,6 @@ import React from 'react';
 // development build.  Small savings. :)
 const ReactHotLoader = process.env.NODE_ENV !== 'production'
     ? require('react-hot-loader').AppContainer
-    : ({ children }) => React.Children.only(children);
+    : ({children}) => React.Children.only(children);
 
 export default ReactHotLoader;

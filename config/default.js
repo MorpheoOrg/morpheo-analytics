@@ -1,10 +1,10 @@
-const apiPort = process.env.NODE_PORT || 3000;
-const apiUrl = 'https://bender-api.rythm.co';
+const apiPort = process.env.NODE_PORT || 8000;
+const apiUrl = 'https://notebook.morpheo.co';
 const storageApiUrl = 'https://storage.morpheo.co';
 const orchestratorApiUrl = 'https://orchestrator.morpheo.co';
 
 module.exports = {
-    appName: 'Analytics',
+    appName: 'Notebook',
     apps: {
         frontend: {
             api_url: apiUrl,
@@ -13,7 +13,7 @@ module.exports = {
             orchestrator_api_url: orchestratorApiUrl,
             baseName: {
                 production: '/',
-                debug: '/morpheo-analytics/build/frontend/',
+                debug: '/morpheo-notebook/build/frontend/',
             }
         },
     },

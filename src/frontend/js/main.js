@@ -1,47 +1,38 @@
 /* globals document */
 
-import 'babel-core/register';
-import 'babel-polyfill';
-
-import FastClick from 'fastclick';
+import {createStore, applyMiddleware} from 'redux';
 import React from 'react';
-import {render} from 'react-dom';
-import {createRenderer} from 'fela';
-import {Provider as FelaProvider} from 'react-fela';
-import {AsyncComponentProvider} from 'react-async-component';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-import ReactHotLoader from './ReactHotLoader';
-import Root from './app/Root/index';
-import configureStore from './app/configureStore/index';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import thunk from 'redux-thunk';
+// import { createLogger } from 'redux-logger'
+import App from './components/App';
+import reducer from './reducers';
+import {addCell, connectKernel} from './actions';
 
-const store = configureStore();
 
-FastClick.attach(document.body);
-// Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
-injectTapEventPlugin();
+const middleware = [thunk];
+// if (process.env.NODE_ENV !== 'production') {
+//   middleware.push(createLogger());
+// }
 
-const root = document.getElementById('root');
-const renderer = createRenderer();
-const mountNode = document.getElementById('stylesheet');
+const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpsb3RlbiJ9.6kZ-0Y96-gAzrOXzqH91F9WAgAAFXpRaayVifYjuEv4';
 
-const renderApp = RootElement => {
-    const app = <ReactHotLoader key={Math.random()}>
-        <AsyncComponentProvider>
-            <FelaProvider renderer={renderer} mountNode={mountNode}>
-                <RootElement {...{store}} />
-            </FelaProvider>
-        </AsyncComponentProvider>
-    </ReactHotLoader>;
 
-    render(app, root);
-};
+const store = createStore(
+  reducer,
+  applyMiddleware(...middleware),
+  // pesisted_state
+);
 
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-    module.hot.accept('./app/Root/index', () =>
-        System.import('./app/Root/index').then(module => renderApp(module.default)),
-    );
-}
+store.dispatch(addCell());
+store.dispatch(connectKernel('127.0.0.1', '8080', jwt));
 
-renderApp(Root);
+console.log(store.getState());
 
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('root'),
+);

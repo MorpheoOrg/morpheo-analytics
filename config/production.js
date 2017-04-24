@@ -3,7 +3,7 @@ module.exports = {
         frontend: {
             baseName: {
                 //production: '/',  // uncomment when production ready with new domain
-                production: '/analytics/',
+                production: '/notebook/',
             }
         },
     },

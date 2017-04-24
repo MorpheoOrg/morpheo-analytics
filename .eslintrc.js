@@ -2,7 +2,6 @@ module.exports = {
     "extends": "airbnb",
     "parser": "babel-eslint",
     "rules": {
-        // rythm rules
         "indent": [2, 4],
         "react/jsx-indent": [2, 4],
         "react/jsx-indent-props": [2, 4],
