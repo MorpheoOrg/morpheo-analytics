@@ -7,7 +7,6 @@ import * as types from '../constants/ActionTypes';
 
 let ws;
 let nextCellId = 0;
-
 export const addCell = () => {
     nextCellId += 1;
     return {
@@ -83,8 +82,12 @@ export const connectKernel = (ip, port, jwt) => (dispatch, status) => {
     };
 
     fetch(`http://${ip}:${port}/api/kernels`, {
-        method: 'post',
+        method: 'POST',
         headers,
+        // Allows API to set http-only cookies with AJAX calls
+        // @see http://www.redotheweb.com/2015/11/09/api-security.html
+        // credentials: 'include',
+        mode: 'cors',
     })
   .catch(err => console.log(err))
   .then(response =>
@@ -114,7 +117,7 @@ export const sendCode = (python_code, cell_id) => (dispatch) => {
     const message = {
         header: {
             username: '',
-            version: '5.0',
+            version: '5.1',
             session: '',
             msg_id,
             msg_type: 'execute_request',

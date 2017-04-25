@@ -10,29 +10,22 @@ import {createRenderer} from 'fela';
 import {Provider as FelaProvider} from 'react-fela';
 import {AsyncComponentProvider} from 'react-async-component';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {createStore, applyMiddleware} from 'redux';
-import {Provider} from 'react-redux';
-import thunk from 'redux-thunk';
 
 import ReactHotLoader from './ReactHotLoader';
-import App from './components/App';
-import reducer from './reducers';
-import {addCell, connectKernel} from './actions';
+import Root from './app/Root';
+import {addCell} from './actions';
+import configureStore from './app/configureStore/index';
 
+import {create as createActions} from './business/kernel/actions';
+
+const store = configureStore();
 
 const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpsb3RlbiJ9.6kZ-0Y96-gAzrOXzqH91F9WAgAAFXpRaayVifYjuEv4';
-const middleware = [thunk];
-// if (process.env.NODE_ENV !== 'production') {
-//   middleware.push(createLogger());
-// }
-
-const store = createStore(
-  reducer,
-  applyMiddleware(...middleware),
-);
 
 store.dispatch(addCell());
-store.dispatch(connectKernel('127.0.0.1', '8080', jwt));
+store.dispatch(createActions.request({jwt}));
+// store.dispatch(actionTypes.create.REQUEST);
+// store.dispatch(connectKernel('127.0.0.1', '8080', jwt));
 
 FastClick.attach(document.body);
 // Needed for onTouchTap
@@ -47,10 +40,7 @@ const renderApp = (RootElement) => {
     const app = (<ReactHotLoader key={Math.random()}>
         <AsyncComponentProvider>
             <FelaProvider renderer={renderer} mountNode={mountNode}>
-                {/* Put that into Root*/}
-                <Provider store={store}>
-                    <RootElement />
-                </Provider>
+                <RootElement {...{store}} />
             </FelaProvider>
         </AsyncComponentProvider>
     </ReactHotLoader>);
@@ -58,4 +48,4 @@ const renderApp = (RootElement) => {
     render(app, root);
 };
 
-renderApp(App);
+renderApp(Root);

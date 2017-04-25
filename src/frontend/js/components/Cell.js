@@ -6,22 +6,21 @@ import React from 'react';
 
 const Cell = ({dispatch, cellId, value, onDeleteClick, onSendClick, content}) => {
     let codeTextArea;
-    console.log(content);
     return (<div>
         <div className="cell">
-      Cell n°{cellId} :
-      <textarea
-          ref={(textarea) => {
-              codeTextArea = textarea;
-          }}
-      >
-          {value}
-      </textarea>
+          Cell n°{cellId} :
+          <textarea
+              ref={(textarea) => {
+                  codeTextArea = textarea;
+              }}
+          >
+              {value}
+          </textarea>
             <div>
                 <button onClick={onDeleteClick}>Delete</button>
                 <button onClick={() => onSendClick(codeTextArea.value)}>
-          Send
-        </button>
+                    Send
+                </button>
             </div>
         </div>
         <div className="result" dangerouslySetInnerHTML={{__html: content}} />
@@ -36,6 +35,7 @@ Cell.propTypes = {
     onSendClick: PropTypes.func.isRequired,
     content: PropTypes.node,
 };
+
 Cell.defaultProps = {
     dispatch: undefined,
     value: undefined,

@@ -2,7 +2,11 @@ import {connect} from 'react-redux';
 
 import CellList from '../components/CellList';
 
-import {removeCell, sendCode} from '../actions';
+import {removeCell} from '../actions';
+
+import {
+  message as messageActions,
+} from '../business/kernel/actions';
 
 
 const mapStateToProps = state => ({
@@ -11,7 +15,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onDeleteClick: id => () => dispatch(removeCell(id)),
-    onSendClick: id => python_code => dispatch(sendCode(python_code, id)),
+    onSendClick: id => python_code => dispatch(messageActions.send(python_code, id)),
 });
 
 const NotebookCellList = connect(
