@@ -111,8 +111,6 @@ const sagas = function* sagas() {
     yield [
         takeLatest(actionTypes.create.REQUEST,
                    createKernel(fetchCreateKernelApi)),
-        // takeLatest(actionTypes.connect.REQUEST,
-        //            connectKernel(fetchConnectKernelApi)),
         connectKernel(fetchConnectKernelApi)(),
     ];
 };

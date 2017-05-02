@@ -10,7 +10,7 @@ import {
 
 
 const mapStateToProps = state => ({
-    cells: state.cells,
+    cells: state.notebooks.cells,
 });
 
 const mapDispatchToProps = dispatch => ({

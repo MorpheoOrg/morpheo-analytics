@@ -89,22 +89,22 @@ const cells = (state = [], action) => {
 };
 
 
-const ws_connection = (state = false, action) => {
-    switch (action.type) {
-    case types.CONNECT_WS:
-        return true;
-
-    case types.DISCONNECT_WS:
-        return false;
-
-    default:
-        return state;
-    }
-};
+// const ws_connection = (state = false, action) => {
+//     switch (action.type) {
+//     case types.CONNECT_WS:
+//         return true;
+//
+//     case types.DISCONNECT_WS:
+//         return false;
+//
+//     default:
+//         return state;
+//     }
+// };
 
 const NotebookApp = {
     cells,
-    ws_connection,
+    // ws_connection,
 };
 
 export default NotebookApp;

@@ -22,7 +22,7 @@ const store = configureStore();
 
 const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpsb3RlbiJ9.6kZ-0Y96-gAzrOXzqH91F9WAgAAFXpRaayVifYjuEv4';
 
-store.dispatch(addCell());
+// store.dispatch(addCell());
 store.dispatch(createActions.request({jwt}));
 // store.dispatch(actionTypes.create.REQUEST);
 // store.dispatch(connectKernel('127.0.0.1', '8080', jwt));
