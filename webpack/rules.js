@@ -35,50 +35,50 @@ export default function (appName) {
         use: 'html-loader',
     }, {
         test: /\.s?css$/,
-        exclude: /node_modules/,
+        //exclude: /node_modules/,
         ...(PRODUCTION ? {
             loader: ExtractTextPlugin.extract({
                 fallback: 'style-loader',
-                use: ['css-loader?importLoaders=1', 'postcss-loader', 'sass-loader']
-            })
-        } : {loaders: ["style-loader", "css-loader?sourceMap", "postcss-loader", "sass-loader?sourceMap&sourceComments"]} )
+                use: ['css-loader?importLoaders=1', 'postcss-loader', 'sass-loader'],
+            }),
+        } : {loaders: ['style-loader', 'css-loader?sourceMap', 'postcss-loader', 'sass-loader?sourceMap&sourceComments']}),
     }, {
         test: /antd.*\.less$/,
         ...(PRODUCTION ? {
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {importLoaders: 1}
-                        },
-                        'postcss-loader',
-                        {
-                            loader: 'less-loader',
-                            options: {
-                                sourceMap: true,
-                                modifyVars: theme
-                            }
-                        },
-                    ],
-                })
-            } : {
+            use: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
                 use: [
-                    'style-loader',
                     {
                         loader: 'css-loader',
-                        options: {sourceMap: 1}
+                        options: {importLoaders: 1},
                     },
                     'postcss-loader',
                     {
                         loader: 'less-loader',
                         options: {
                             sourceMap: true,
-                            modifyVars: theme
-                        }
+                            modifyVars: theme,
+                        },
                     },
-                ]
-            } )
+                ],
+            }),
+        } : {
+            use: [
+                'style-loader',
+                {
+                    loader: 'css-loader',
+                    options: {sourceMap: 1},
+                },
+                'postcss-loader',
+                {
+                    loader: 'less-loader',
+                    options: {
+                        sourceMap: true,
+                        modifyVars: theme,
+                    },
+                },
+            ],
+        }),
     },
     ];
 }

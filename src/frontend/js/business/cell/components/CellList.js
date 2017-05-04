@@ -2,6 +2,7 @@ import {PropTypes} from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Button} from 'antd';
 
 import Cell from './Cell';
 
@@ -33,7 +34,7 @@ class CellList extends React.Component {
                     cell={cell}
                 />,
             )}
-            <button onClick={this.addCell}>+</button>
+            <Button type={'primary'} onClick={this.addCell} icon="plus" />
         </div>);
     }
 }

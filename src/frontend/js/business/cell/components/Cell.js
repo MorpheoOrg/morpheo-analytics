@@ -2,7 +2,10 @@
 
 import {PropTypes} from 'prop-types';
 import React from 'react';
+import {Button} from 'antd';
 import {onlyUpdateForKeys} from 'recompose';
+
+import SlateEditor from './slate';
 
 const style = {
     main: {
@@ -25,10 +28,6 @@ class Cell extends React.Component {
         super(props);
         this.send = this.send.bind(this);
         this.delete = this.delete.bind(this);
-        this.onBlur = this.onBlur.bind(this);
-    }
-    onBlur(e) {
-        this.props.set({value: e.target.value, id: this.props.cell.id});
     }
 
     delete() {
@@ -40,20 +39,20 @@ class Cell extends React.Component {
     }
 
     render() {
-        const {cell} = this.props;
+        const {cell, set} = this.props;
 
         return (
             <div style={style.main}>
                 <div style={style.cell}>
                     <div className="cell">
                         Cell n°{cell.id} :
-                        <textarea onBlur={this.onBlur}>{cell.value}</textarea>
+                        <SlateEditor set={set} cell={cell} />
                         <div>
-                            <button onClick={this.delete}>Delete</button>
-                            <button onClick={this.send}>Send</button>
+                            <Button onClick={this.delete} icon="delete" />
+                            <Button onClick={this.send}>Send</Button>
                         </div>
                     </div>
-                    <div className="result" dangerouslySetInnerHTML={{__html: cell.content}} />
+                    {cell.content && <div className="result" dangerouslySetInnerHTML={{__html: cell.content}} />}
                 </div>
             </div>);
     }

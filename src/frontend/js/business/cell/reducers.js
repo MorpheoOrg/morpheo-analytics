@@ -45,7 +45,7 @@ export default (state = initialState, {type, payload, ...rest}) => {
         return {
             ...state,
             results: state.results.reduce((p, c) =>
-                    ([...p, c.id === parseInt(payload.parent_header.msg_id.split('-')[0], 10) ? {
+                    ([...p, payload.parent_header.msg_id && c.id === parseInt(payload.parent_header.msg_id.split('-')[0], 10) ? {
                         ...c,
                         content: getContent(payload.content, payload.msg_type) || c.content,
                         status: 'DONE',
