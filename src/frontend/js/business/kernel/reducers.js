@@ -3,11 +3,9 @@ import {actionTypes} from './actions';
 export default function (localStorage) {
     const initialState = {
         kernel_id: localStorage.getItem('kernel_id'),
-        exp: localStorage.getItem('exp') ? parseInt(localStorage.getItem('exp'), 10) : localStorage.getItem('exp'),
-        authenticated: !!localStorage.getItem('kernel_id') && localStorage.getItem('exp') && parseInt(localStorage.getItem('exp'), 10) > Math.floor(Date.now() / 1000),
         loading: false,
         modal: false,
-        registered: false,
+        registered: false, // TODO use it
     };
 
     return (state = initialState, {type, payload}) => {
@@ -15,9 +13,7 @@ export default function (localStorage) {
         case actionTypes.connect.REQUEST:
             return {
                 ...state,
-                authenticated: false,
                 kernel_id: null,
-                exp: null,
                 error: false,
                 loading: true,
             };
@@ -26,7 +22,6 @@ export default function (localStorage) {
             return {
                 ...state,
                 ...payload,
-                authenticated: true,
                 error: false,
                 loading: false,
             };
@@ -34,21 +29,17 @@ export default function (localStorage) {
         case actionTypes.connect.FAILURE:
             return {
                 ...state,
-                authenticated: false,
                 error: payload,
                 loading: false,
                 kernel_id: null,
-                exp: null,
             };
-
-        case actionTypes.disconnect.SUCCESS:
-            return {
-                ...state,
-                authenticated: false,
-                kernel_id: null,
-                loading: false,
-                exp: null,
-            };
+        // TODO create
+        // case actionTypes.disconnect.SUCCESS:
+        //     return {
+        //         ...state,
+        //         kernel_id: null,
+        //         loading: false,
+        //     };
 
         default:
             return state;

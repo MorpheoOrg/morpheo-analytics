@@ -1,5 +1,4 @@
 /* globals API_URL, API_SOCKET_URL, fetch, WebSocket */
-// import {Observable} from 'rxjs/Rx';
 
 export function fetchCreateKernel(jwt) {
     return fetch(`${API_URL}/api/kernels`, {

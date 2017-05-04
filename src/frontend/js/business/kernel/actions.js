@@ -1,5 +1,4 @@
 import {createAction} from 'redux-actions';
-import uuid from 'uuid';
 
 import createRequestActionTypes from '../../actions/createRequestActionTypes';
 
@@ -27,35 +26,10 @@ export const close = {
     success: createAction(actionTypes.close.SUCCESS),
 };
 
-const sendCodeSocket = (code, cell_id) => {
-    const message = {
-        header: {
-            username: '',
-            version: '5.1',
-            session: '',
-            msg_id: `${cell_id}-${uuid.v4()}`,
-            msg_type: 'execute_request',
-        },
-        parent_header: {},
-        channel: 'shell',
-        content: {
-            code,
-            silent: false,
-            store_history: false,
-            user_expression: {},
-            allow_stdin: false,
-        },
-        metadata: {},
-        buffers: {},
-    };
-
-    return createAction(actionTypes.message.SEND)(message);
-};
-
 export const message = {
     error: createAction(actionTypes.message.ERROR),
     receive: createAction(actionTypes.message.RECEIVE),
-    send: sendCodeSocket,
+    send: createAction(actionTypes.message.SEND),
 };
 
 export default {

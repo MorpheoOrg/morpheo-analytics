@@ -12,20 +12,10 @@ import {AsyncComponentProvider} from 'react-async-component';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import ReactHotLoader from './ReactHotLoader';
-import Root from './app/Root';
-import {addCell} from './actions';
+import Root from './app/Root/index';
 import configureStore from './app/configureStore/index';
 
-import {create as createActions} from './business/kernel/actions';
-
 const store = configureStore();
-
-const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpsb3RlbiJ9.6kZ-0Y96-gAzrOXzqH91F9WAgAAFXpRaayVifYjuEv4';
-
-// store.dispatch(addCell());
-store.dispatch(createActions.request({jwt}));
-// store.dispatch(actionTypes.create.REQUEST);
-// store.dispatch(connectKernel('127.0.0.1', '8080', jwt));
 
 FastClick.attach(document.body);
 // Needed for onTouchTap
@@ -47,5 +37,11 @@ const renderApp = (RootElement) => {
 
     render(app, root);
 };
+
+if (process.env.NODE_ENV !== 'production' && module.hot) {
+    module.hot.accept('./app/Root/index', () =>
+        System.import('./app/Root/index').then(module => renderApp(module.default)),
+    );
+}
 
 renderApp(Root);

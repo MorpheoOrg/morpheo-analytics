@@ -4,7 +4,7 @@ module.exports = {
             baseName: {
                 //production: '/',  // uncomment when production ready with new domain
                 production: '/notebook/',
-            }
+            },
         },
     },
 };

@@ -3,18 +3,19 @@
 /* eslint no-constant-condition: ["error", { "checkLoops": false }] */
 import {call, fork, put, take, takeLatest} from 'redux-saga/effects';
 import {eventChannel} from 'redux-saga';
+import sendSagas from './send';
 
 import {
-  close as closeActions,
-  connect as connectActions,
-  create as createActions,
-  message as messageActions,
-  actionTypes,
-} from './actions';
+    close as closeActions,
+    connect as connectActions,
+    create as createActions,
+    message as messageActions,
+    actionTypes,
+} from '../actions';
 import {
-  fetchCreateKernel as fetchCreateKernelApi,
-  fetchConnectKernel as fetchConnectKernelApi,
-} from './api';
+    fetchCreateKernel as fetchCreateKernelApi,
+    fetchConnectKernel as fetchConnectKernelApi,
+} from '../api';
 
 export const createKernel = fetchCreateKernel =>
     function* createKernelSagas({payload: {jwt}}) {
@@ -32,12 +33,11 @@ export const createKernel = fetchCreateKernel =>
         }
     };
 
-const subscribeSocketChannel =
-    (socket, closeAfterReception = false) => eventChannel((emit) => {
+const subscribeSocketChannel = (socket, closeAfterReception = false) =>
+    eventChannel((emit) => {
         socket.onmessage = (e) => {
-            let msg = null;
             try {
-                msg = JSON.parse(e.data);
+                const msg = JSON.parse(e.data);
                 emit(messageActions.receive(msg));
             }
             catch (e) {
@@ -54,21 +54,15 @@ function* receiveSocketMessage(socket) {
     const socketChannel = yield call(subscribeSocketChannel, socket, true);
     while (true) {
         const action = yield take(socketChannel);
+        console.log(action);
         yield put(action);
     }
 }
 
-function* sendSocketMessage(socket) {
-    while (true) {
-        const {payload: message} = yield take(actionTypes.message.SEND);
-        console.log(message);
-        socket.send(JSON.stringify(message));
-    }
-}
 
 function* manageSocketMessage(socket) {
     yield fork(receiveSocketMessage, socket);
-    yield fork(sendSocketMessage, socket);
+    yield fork(sendSagas, socket);
     // TODO Add closeSocket sagas
     // yield fork(closeSocket, socket);
 }
@@ -77,17 +71,11 @@ export const connectKernel = fetchConnectKernel =>
     function* connectKernelSagas() {
         while (true) {
             const {payload: {jwt, kernel_id}} = yield take(actionTypes.connect.REQUEST);
-            const socket = new WebSocket(
-                `${API_SOCKET_URL}/api/kernels/${kernel_id}/channels`);
-            const authenticateChannel = yield call(
-                subscribeSocketChannel, socket, true);
+            const socket = new WebSocket(`${API_SOCKET_URL}/api/kernels/${kernel_id}/channels`);
+            const authenticateChannel = yield call(subscribeSocketChannel, socket, true);
 
             // Send authentication
-            socket.onopen = () => {
-                socket.send(JSON.stringify({
-                    Authorization: `Bearer ${jwt}`,
-                }));
-            };
+            socket.onopen = () => socket.send(JSON.stringify({Authorization: `Bearer ${jwt}`}));
 
             // Validate authentication
             const {payload} = yield take(authenticateChannel);
@@ -109,8 +97,7 @@ export const connectKernel = fetchConnectKernel =>
 /* istanbul ignore next */
 const sagas = function* sagas() {
     yield [
-        takeLatest(actionTypes.create.REQUEST,
-                   createKernel(fetchCreateKernelApi)),
+        takeLatest(actionTypes.create.REQUEST, createKernel(fetchCreateKernelApi)),
         connectKernel(fetchConnectKernelApi)(),
     ];
 };

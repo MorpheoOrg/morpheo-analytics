@@ -37,11 +37,11 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
                 yield put(routerActions.push({
                     ...previousRoute,
                     // make sure we don't push history on same location
-                    pathname: previousRoute.pathname === '/' || previousRoute.pathname === '/sign-in' ? '/notebooks' : previousRoute.pathname,
+                    pathname: previousRoute.pathname === '/' || previousRoute.pathname === '/sign-in' ? '/' : previousRoute.pathname,
                 }));
             }
             else {
-                yield put(signInActions.failure({detail: `You don't have the permission to access this site. Your current permission is ${user.permission} and only admin and team policies are allowed. Please ask Guillaume for modifying your permission on bender service.`}));
+                yield put(signInActions.failure({detail: `You don't have the permission to access this site. Your current permission is ${user.permission} and only admin and team policies are allowed. Please ask toan administrator for modifying your permission on morpheo service.`}));
             }
         }
     };

@@ -12,7 +12,7 @@ module.exports = {
             orchestrator_api_url: orchestratorApiUrl,
             baseName: {
                 production: '/',
-            }
+            },
         },
     },
 };

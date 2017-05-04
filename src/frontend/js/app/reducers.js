@@ -4,7 +4,6 @@ import {reducer as formReducer} from 'redux-form';
 import {routerReducer} from 'react-router-redux';
 
 import userReducerFactory from '../business/user/reducer';
-import rootReducer from '../reducers';
 import {actionTypes} from './actions';
 
 const initialState = {error: ''};
@@ -27,5 +26,4 @@ export default {
     routing: routerReducer,
     user: userReducerFactory(window.localStorage),
     general,
-    // ...rootReducer,
 };

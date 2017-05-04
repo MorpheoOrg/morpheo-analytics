@@ -6,31 +6,29 @@ import {injectReducer} from 'redux-injector';
 import {injectSaga} from 'redux-sagas-injector';
 
 import UserRoute from '../business/user/routes';
+import CellRoutes from '../business/cell/routes';
 
-// const AsyncApp = asyncComponent({
-//     resolve: () => System.import('./App'),
-// });
+/* globals window */
 
-const AsyncHome = asyncComponent({
+const AsyncApp = asyncComponent({
     resolve: () => {
-        const sagas = System.import('../business/kernel/sagas'),
-            reducers = System.import('../reducers');
-            // reducers = System.import('../business/kernel/reducers');
+        const sagas = [System.import('../business/kernel/sagas/index')],
+            reducers = [System.import('../business/kernel/reducers')];
 
-        return Promise.all([sagas, reducers]).then((values) => {
-            injectSaga('cells', values[0].default);
-            injectReducer('notebooks', values[1].default);
+        return Promise.all([...sagas, ...reducers]).then((values) => {
+            injectSaga('kernel', values[0].default);
+            injectReducer('kernel', values[1].default(window.localStorage));
 
             // Configure hot module replacement for the reducer
             if (process.env.NODE_ENV !== 'production') {
                 if (module.hot) {
                     module.hot.accept('../business/kernel/reducers', () => System.import('../business/kernel/reducers').then((module) => {
-                        injectReducer('cells', module.default);
+                        injectReducer('kernel', module.default(window.localStorage));
                     }));
                 }
             }
 
-            return System.import('../components/Home');
+            return System.import('./App');
         });
     },
 });
@@ -70,8 +68,8 @@ PrivateRoute.defaultProps = {
 const Routes = ({store}) =>
     <div id="routes">
         <div className="middle">
-            {/* <Route path="/notebook" component={AsyncApp} /> */}
-            <PrivateRoute component={AsyncHome} store={store} />
+            <Route path="/" component={AsyncApp} />
+            <PrivateRoute component={CellRoutes} store={store} />
             <UserRoute />
         </div>
     </div>;
