@@ -25,10 +25,9 @@ class Cell extends React.Component {
         super(props);
         this.send = this.send.bind(this);
         this.delete = this.delete.bind(this);
-        this.onChange = this.onChange.bind(this);
+        this.onBlur = this.onBlur.bind(this);
     }
-    onChange(e) {
-        console.log(e.target.value);
+    onBlur(e) {
         this.props.set({value: e.target.value, id: this.props.cell.id});
     }
 
@@ -48,7 +47,7 @@ class Cell extends React.Component {
                 <div style={style.cell}>
                     <div className="cell">
                         Cell n°{cell.id} :
-                        <textarea onChange={this.onChange}>{cell.value}</textarea>
+                        <textarea onBlur={this.onBlur}>{cell.value}</textarea>
                         <div>
                             <button onClick={this.delete}>Delete</button>
                             <button onClick={this.send}>Send</button>
