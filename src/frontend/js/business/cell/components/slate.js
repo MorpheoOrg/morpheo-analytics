@@ -6,13 +6,15 @@ import {Editor, Raw} from 'slate';
 import PluginEditCode from 'slate-edit-code';
 import PluginPrism from 'slate-prism';
 import PrismPython from '!!raw-loader!../../../../../../node_modules/prismjs/components/prism-python.js';
+import PrismR from '!!raw-loader!../../../../../../node_modules/prismjs/components/prism-r.js';
 
 import '../../../../../../node_modules/prismjs/themes/prism.css';
 
 const onlyInCode = (node => node.type === 'code_block');
 
-// load python language
+// load python and r language
 eval(PrismPython);
+eval(PrismR);
 
 const plugins = [
     PluginPrism({
@@ -43,54 +45,37 @@ const schema = {
     },
 };
 
+
 class SlateEditor extends React.Component {
 
     constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
         this.onBlur = this.onBlur.bind(this);
-        this.state = {
-            state: Raw.deserialize({
-                nodes: [
-                    {
-                        kind: 'block',
-                        type: 'code_block',
-                        data: {syntax: this.props.cell.language || 'python'},
-                        nodes: [
-                            {
-                                kind: 'text',
-                                ranges: [
-                                    {
-                                        text: this.props.cell.value || '',
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],
-            }, {terse: true}),
-        };
     }
 
     onChange(state) {
-        this.setState({
-            state,
-        });
+        // do not allow code block suppression by a default paragraph
+        if (Raw.serialize(state, {terse: true}).nodes[0].type !== 'paragraph') {
+            this.props.setSlate({state, id: this.props.cell.id});
+        }
     }
 
     onBlur(e) {
         // format code for having correct return
-        const value = Raw.serialize(this.state.state, {terse: true}).nodes[0].nodes.map(o => o.nodes[0].text).join('\n');
+        const value = Raw.serialize(this.props.cell.slateState, {terse: true}).nodes[0].nodes.map(o => o.nodes[0].text).join('\n');
         this.props.set({value, id: this.props.cell.id});
     }
 
     render() {
+
+        const {cell: {slateState}} = this.props;
+
         return (
             <div>
                 <Editor
-                    placeholder={'Enter some code...'}
                     plugins={plugins}
-                    state={this.state.state}
+                    state={slateState}
                     onChange={this.onChange}
                     onBlur={this.onBlur}
                     schema={schema}

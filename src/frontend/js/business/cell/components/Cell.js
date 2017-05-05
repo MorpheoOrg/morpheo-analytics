@@ -2,25 +2,52 @@
 
 import {PropTypes} from 'prop-types';
 import React from 'react';
-import {Button} from 'antd';
+import {Button, Select} from 'antd';
 import {onlyUpdateForKeys} from 'recompose';
 
+import languages from '../languages';
 import SlateEditor from './slate';
 
+const box = {
+    display: 'inline-block',
+    verticalAlign: 'top',
+    width: '50%',
+};
+
 const style = {
-    main: {
-        margin: '0 auto',
-        padding: '10px 30px 0 30px',
-    },
     cell: {
-        margin: '0 auto',
-        backgroundColor: '#fff',
-        padding: '30px 30px 10px',
-        borderRadius: 10,
-        boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.05)',
-        overflow: 'visible',
+        main: {
+            margin: '1px 0 0 0',
+            backgroundColor: '#fff',
+            padding: '30px 30px 10px',
+            borderRadius: 10,
+            boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.05)',
+            overflow: 'visible',
+        },
+        input: {
+            ...box,
+        },
+        output: {
+            ...box,
+            paddingLeft: '5%',
+        },
+        error: {
+            ...box,
+            paddingLeft: '5%',
+            color: 'red',
+        },
+        actions: {
+            float: 'right',
+            margin: 10,
+        },
+        select: {
+            float: 'right',
+            width: 100,
+        },
     },
 };
+
+const Option = Select.Option;
 
 class Cell extends React.Component {
 
@@ -28,6 +55,7 @@ class Cell extends React.Component {
         super(props);
         this.send = this.send.bind(this);
         this.delete = this.delete.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     delete() {
@@ -38,22 +66,37 @@ class Cell extends React.Component {
         this.props.send({code: this.props.cell.value, id: this.props.cell.id});
     }
 
+    handleChange(language) {
+        this.props.setLanguage({language, id: this.props.cell.id});
+    }
+
     render() {
-        const {cell, set} = this.props;
+        const {cell, set, setSlate} = this.props;
 
         return (
-            <div style={style.main}>
-                <div style={style.cell}>
-                    <div className="cell">
-                        Cell n°{cell.id} :
-                        <SlateEditor set={set} cell={cell} />
-                        <div>
-                            <Button onClick={this.delete} icon="delete" />
-                            <Button onClick={this.send}>Send</Button>
-                        </div>
+            <div style={style.cell.main}>
+                <div style={style.cell.input}>
+                    <h2>Cell n°{cell.id} :</h2>
+                    <Select style={style.cell.select} defaultValue={languages[0]} onChange={this.handleChange}>
+                        {languages.map(o =>
+                            <Option key={o} value={o}>{o}</Option>,
+                        )}
+                    </Select>
+                    <SlateEditor set={set} setSlate={setSlate} cell={cell}/>
+                    <div style={style.cell.actions}>
+                        <Button onClick={this.delete} icon="delete"/>
+                        <Button type={'primary'} onClick={this.send}>Send</Button>
                     </div>
-                    {cell.content && <div className="result" dangerouslySetInnerHTML={{__html: cell.content}} />}
                 </div>
+                {cell.content && !cell.content.ename &&
+                <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}}/>
+                }
+                {cell.content && cell.content.ename &&
+                <div style={style.cell.error}>
+                    <span>{cell.content.ename}</span>
+                    <p>{cell.content.evalue}</p>
+                </div>
+                }
             </div>);
     }
 }
@@ -66,6 +109,8 @@ Cell.propTypes = {
     deleteCell: PropTypes.func.isRequired,
     send: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
+    setLanguage: PropTypes.func.isRequired,
+    setSlate: PropTypes.func.isRequired,
 };
 
 Cell.defaultProps = {

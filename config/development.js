@@ -1,7 +1,7 @@
-const apiUrl = 'http://localhost:8080';
-const apiSocketUrl = 'ws://localhost:8080';
-const storageApiUrl = 'http://localhost:8000';
-const orchestratorApiUrl = 'http://localhost:5000';
+const apiUrl = 'http://127.0.0.1:8080';
+const apiSocketUrl = 'ws://127.0.0.1:8080';
+const storageApiUrl = 'http://127.0.0.1:8000';
+const orchestratorApiUrl = 'http://127.0.0.1:5000';
 
 module.exports = {
     apps: {
