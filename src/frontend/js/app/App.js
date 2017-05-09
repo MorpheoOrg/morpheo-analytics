@@ -12,7 +12,11 @@ import {Modal, Button} from 'antd';
 import Morpheo from '!!file-loader!../../img/konami.jpg';
 import {create} from '../business/kernel/actions';
 
-console.log(Morpheo);
+const Footer = onClick => [
+    <Button key="submit" type="primary" size="large" onClick={onClick}>
+        Ok
+    </Button>,
+];
 
 class App extends React.Component {
     constructor(props) {
@@ -20,9 +24,8 @@ class App extends React.Component {
         this.displayModal = this.displayModal.bind(this);
         this.handleOk = this.handleOk.bind(this);
         this.jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpsb3RlbiJ9.6kZ-0Y96-gAzrOXzqH91F9WAgAAFXpRaayVifYjuEv4';
+        this.state = {visible: false};
     }
-
-    state = {visible: false}
 
     componentWillMount() {
         this.props.connect({jwt: this.jwt});
@@ -42,14 +45,13 @@ class App extends React.Component {
 
     render() {
         return (<div>
-            <Konami easterEgg={this.displayModal.bind(this)}/>
-            <Modal title="Hello from the team" visible={this.state.visible} width={800}
-                   onCancel={this.handleOk.bind(this)}
-                   footer={[
-                       <Button key="submit" type="primary" size="large" onClick={this.handleOk.bind(this)}>
-                           Ok
-                       </Button>,
-                   ]}>
+            <Konami easterEgg={this.displayModal}/>
+            <Modal
+                title="Hello from the team"
+                visible={this.state.visible}
+                width={800}
+                onCancel={this.handleOk}
+                footer={Footer(this.handleOk)}>
                 <img src={Morpheo} alt="Konami"/>
             </Modal>
         </div>);

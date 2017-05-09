@@ -41,7 +41,7 @@ const PrivateRoute = ({component, store}) =>
                 user && user.authenticated ?
                     React.createElement(component, props) :
                     <Redirect
-                        to={{ // jsx literal -> rerender
+                        to={{ // jsx literal -> rerender, need to avoid it
                             pathname: '/sign-in',
                             // save previous route if set
                             state: {
