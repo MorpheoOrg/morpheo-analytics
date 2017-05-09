@@ -17,12 +17,12 @@ const getContent = (content, type) => {
     }
 };
 
-const getType = (type) => {
+const getType = (content, type) => {
     switch (type) {
     case 'stream':
         return 'text';
     case 'display_data':
-        return 'img';
+        return content.data['image/svg+xml'] ? 'text' : 'img';
     case 'error':
         return 'error';
     default:
@@ -74,7 +74,7 @@ export default (state = initialState, {type, payload}) => {
                                             kind: 'text',
                                             ranges: [
                                                 {
-                                                    text: c.value,
+                                                    text: c.value || '',
                                                 },
                                             ],
                                         },
@@ -103,7 +103,7 @@ export default (state = initialState, {type, payload}) => {
                     ([...p, payload.parent_header.msg_id && c.id === parseInt(payload.parent_header.msg_id.split('-')[0], 10) ? {
                         ...c,
                         content: getContent(payload.content, payload.msg_type) || c.content,
-                        type: getType(payload.msg_type) || c.type,
+                        type: getType(payload.content, payload.msg_type) || c.type,
                         status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
                     } : c]),
                 []),

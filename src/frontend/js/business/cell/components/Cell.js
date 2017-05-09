@@ -12,6 +12,7 @@ const box = {
     display: 'inline-block',
     verticalAlign: 'top',
     width: '50%',
+    overflow: 'auto',
 };
 
 const style = {
@@ -91,7 +92,7 @@ class Cell extends React.Component {
                 {cell.content && cell.type === 'text' &&
                 <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}} />}
                 {cell.content && cell.type === 'img' &&
-                <img alt="result" src={`data:image/png;base64,${cell.content}`} />}
+                <img style={style.cell.output} alt="result" src={`data:image/png;base64,${cell.content}`} />}
                 {cell.content && cell.type === 'error' &&
                 <div style={style.cell.error}>
                     <span>{cell.content.ename}</span>
