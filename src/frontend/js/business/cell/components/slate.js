@@ -40,7 +40,7 @@ const codeStyle = {
 const schema = {
     nodes: {
         code_block: {
-            render: props => <pre style={codeStyle}><code {...props.attributes}>{props.children}</code></pre>,
+            render: props => <pre style={codeStyle} className="code"><code {...props.attributes}>{props.children}</code></pre>,
         },
     },
 };

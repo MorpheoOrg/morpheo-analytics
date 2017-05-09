@@ -9,9 +9,22 @@ const getContent = (content, type) => {
     case 'stream':
         return content.text;
     case 'display_data':
-        return content.data['image/svg+xml'] || content.data['text/plain'];
+        return content.data['image/svg+xml'] || content.data['text/plain'] || content.data['image/png'];
     case 'error':
         return content;
+    default:
+        return undefined;
+    }
+};
+
+const getType = (type) => {
+    switch (type) {
+    case 'stream':
+        return 'text';
+    case 'display_data':
+        return 'img';
+    case 'error':
+        return 'error';
     default:
         return undefined;
     }
@@ -90,6 +103,7 @@ export default (state = initialState, {type, payload}) => {
                     ([...p, payload.parent_header.msg_id && c.id === parseInt(payload.parent_header.msg_id.split('-')[0], 10) ? {
                         ...c,
                         content: getContent(payload.content, payload.msg_type) || c.content,
+                        type: getType(payload.msg_type) || c.type,
                         status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
                     } : c]),
                 []),
