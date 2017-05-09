@@ -82,14 +82,14 @@ class Cell extends React.Component {
                             <Option key={o} value={o}>{o}</Option>,
                         )}
                     </Select>
-                    <SlateEditor set={set} setSlate={setSlate} cell={cell}/>
+                    <SlateEditor set={set} setSlate={setSlate} cell={cell} />
                     <div style={style.cell.actions}>
-                        <Button onClick={this.delete} icon="delete"/>
+                        <Button onClick={this.delete} icon="delete" />
                         <Button type={'primary'} onClick={this.send}>Send</Button>
                     </div>
                 </div>
                 {cell.content && !cell.content.ename &&
-                <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}}/>
+                <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}} />
                 }
                 {cell.content && cell.content.ename &&
                 <div style={style.cell.error}>

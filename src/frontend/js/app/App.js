@@ -45,14 +45,15 @@ class App extends React.Component {
 
     render() {
         return (<div>
-            <Konami easterEgg={this.displayModal}/>
+            <Konami easterEgg={this.displayModal} />
             <Modal
                 title="Hello from the team"
                 visible={this.state.visible}
                 width={800}
                 onCancel={this.handleOk}
-                footer={Footer(this.handleOk)}>
-                <img src={Morpheo} alt="Konami"/>
+                footer={Footer(this.handleOk)}
+            >
+                <img src={Morpheo} alt="Konami" />
             </Modal>
         </div>);
     }

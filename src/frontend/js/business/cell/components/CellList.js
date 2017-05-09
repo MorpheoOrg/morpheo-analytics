@@ -12,7 +12,7 @@ import {message as messageActions} from '../../kernel/actions';
 
 const createCell = cells => (
     {
-        id: (Math.max(cells.map(o => o.id))) + 1,
+        id: cells.length ? (Math.max(...cells.map(o => o.id))) + 1 : 1,
         slateState: Raw.deserialize({
             nodes: [
                 {

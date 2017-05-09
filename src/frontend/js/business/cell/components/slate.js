@@ -68,7 +68,6 @@ class SlateEditor extends React.Component {
     }
 
     render() {
-
         const {cell: {slateState}} = this.props;
 
         return (
