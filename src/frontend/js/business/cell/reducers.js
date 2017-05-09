@@ -8,9 +8,8 @@ const getContent = (content, type) => {
     switch (type) {
     case 'stream':
         return content.text;
-
     case 'display_data':
-        return content.data['image/svg+xml'];
+        return content.data['image/svg+xml'] || content.data['text/plain'];
     case 'error':
         return content;
     default:
