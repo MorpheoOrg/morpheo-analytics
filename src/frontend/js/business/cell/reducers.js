@@ -59,8 +59,9 @@ export default (state = initialState, {type, payload}) => {
     case actionTypes.SET_LANGUAGE:
         return {
             ...state,
-            results: state.results.reduce((p, c) =>
-                    ([...p, c.id === payload.id ? {
+
+            results: state.results.reduce((p, c) => (
+                    [...p, c.id === payload.id ? {
                         ...c,
                         language: payload.language,
                         slateState: Raw.deserialize({
@@ -69,16 +70,19 @@ export default (state = initialState, {type, payload}) => {
                                     kind: 'block',
                                     type: 'code_block',
                                     data: {syntax: payload.language},
-                                    nodes: [
+                                    nodes: c.value ? c.value.split('\n').map(o => (
                                         {
-                                            kind: 'text',
-                                            ranges: [
-                                                {
-                                                    text: c.value || '',
-                                                },
-                                            ],
-                                        },
-                                    ],
+                                            kind: 'block',
+                                            type: 'code_line',
+                                            nodes: [{
+                                                kind: 'text',
+                                                text: o,
+                                            }],
+                                        }),
+                                    ) : {
+                                        kind: 'text',
+                                        ranges: [{text: ''}],
+                                    },
                                 },
                             ],
                         }, {terse: true}),

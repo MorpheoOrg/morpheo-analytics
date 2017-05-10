@@ -2,11 +2,10 @@
 
 import {PropTypes} from 'prop-types';
 import React from 'react';
-import {Button, Select} from 'antd';
+import {Button} from 'antd';
 import {onlyUpdateForKeys} from 'recompose';
 
-import languages from '../languages';
-import SlateEditor from './slate';
+import Editor from './Editor';
 
 const box = {
     display: 'inline-block',
@@ -30,36 +29,35 @@ const style = {
         },
         output: {
             ...box,
-            paddingLeft: '5%',
+            marginLeft: '5%',
+            width: '45%',
         },
         error: {
             ...box,
-            paddingLeft: '5%',
+            marginLeft: '5%',
+            width: '45%',
             color: 'red',
         },
         actions: {
             float: 'right',
-            margin: 10,
+            margin: '10px 0 10px 10px',
         },
-        select: {
-            float: 'right',
-            width: 100,
-        },
+        buttons: {
+            margin: '0 8px 0 0',
+        }
     },
 };
-
-const Option = Select.Option;
 
 class Cell extends React.Component {
 
     constructor(props) {
         super(props);
         this.send = this.send.bind(this);
-        this.delete = this.delete.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.remove = this.remove.bind(this);
+        this.selectLanguage = this.selectLanguage.bind(this);
     }
 
-    delete() {
+    remove() {
         this.props.deleteCell(this.props.cell.id);
     }
 
@@ -67,32 +65,33 @@ class Cell extends React.Component {
         this.props.send({code: this.props.cell.value, id: this.props.cell.id});
     }
 
-    handleChange(language) {
+    selectLanguage(language) {
         this.props.setLanguage({language, id: this.props.cell.id});
     }
 
     render() {
-        const {cell, set, setSlate} = this.props;
+        const {cell, user, set, setSlate} = this.props;
 
         return (
             <div style={style.cell.main}>
                 <div style={style.cell.input}>
                     <h2>Cell n°{cell.id} :</h2>
-                    <Select style={style.cell.select} defaultValue={languages[0]} onChange={this.handleChange}>
-                        {languages.map(o =>
-                            <Option key={o} value={o}>{o}</Option>,
-                        )}
-                    </Select>
-                    <SlateEditor set={set} setSlate={setSlate} cell={cell} />
+                    <Editor
+                        set={set}
+                        setSlate={setSlate}
+                        cell={cell}
+                        user={user}
+                        selectLanguage={this.selectLanguage}
+                    />
                     <div style={style.cell.actions}>
-                        <Button onClick={this.delete} icon="delete" />
-                        <Button type={'primary'} onClick={this.send}>Send</Button>
+                        <Button style={style.cell.buttons} onClick={this.remove} icon="delete"/>
+                        <Button type={'primary'} onClick={this.send}>Execute</Button>
                     </div>
                 </div>
                 {cell.content && cell.type === 'text' &&
-                <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}} />}
+                <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}}/>}
                 {cell.content && cell.type === 'img' &&
-                <img style={style.cell.output} alt="result" src={`data:image/png;base64,${cell.content}`} />}
+                <img style={style.cell.output} alt="result" src={`data:image/png;base64,${cell.content}`}/>}
                 {cell.content && cell.type === 'error' &&
                 <div style={style.cell.error}>
                     <span>{cell.content.ename}</span>
@@ -108,6 +107,8 @@ Cell.propTypes = {
         id: PropTypes.number,
         value: PropTypes.string,
     }),
+    user: PropTypes.shape({}),
+
     deleteCell: PropTypes.func.isRequired,
     send: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
@@ -117,6 +118,7 @@ Cell.propTypes = {
 
 Cell.defaultProps = {
     cell: undefined,
+    user: undefined,
 };
 
-export default onlyUpdateForKeys(['cell'])(Cell);
+export default onlyUpdateForKeys(['cell', 'user'])(Cell);

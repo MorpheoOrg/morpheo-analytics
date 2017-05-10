@@ -14,6 +14,8 @@ export default function (localStorage) {
         loading: false,
         modal: false,
         registered: false,
+        theme: localStorage.getItem('theme') || '',
+        preferred_language: localStorage.getItem('preferred_language') || 'python',
     };
 
     return (state = initialState, {type, payload}) => {
@@ -69,6 +71,16 @@ export default function (localStorage) {
             return {
                 ...state,
                 modal: payload,
+            };
+        case actionTypes.theme.SET:
+            return {
+                ...state,
+                theme: payload,
+            };
+        case actionTypes.preferred_language.SET:
+            return {
+                ...state,
+                preferred_language: payload,
             };
         default:
             return state;

@@ -44,7 +44,7 @@ export function fetchConnectKernel(jwt, kernel_id) {
         }
 
         if (msg) {
-            console.log(msg);
+            //console.log(msg);
         }
     };
 
