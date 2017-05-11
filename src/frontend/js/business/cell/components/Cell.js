@@ -44,7 +44,7 @@ const style = {
         },
         buttons: {
             margin: '0 8px 0 0',
-        }
+        },
     },
 };
 

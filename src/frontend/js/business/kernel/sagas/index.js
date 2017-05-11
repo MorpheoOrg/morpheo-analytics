@@ -54,7 +54,6 @@ function* receiveSocketMessage(socket) {
     const socketChannel = yield call(subscribeSocketChannel, socket, true);
     while (true) {
         const action = yield take(socketChannel);
-        //console.log(action);
         yield put(action);
     }
 }

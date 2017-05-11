@@ -7,6 +7,7 @@ import {injectSaga} from 'redux-sagas-injector';
 
 import UserRoute from '../business/user/routes';
 import CellRoutes from '../business/cell/routes';
+import SettingsRoutes from '../business/settings/routes';
 
 /* globals window */
 
@@ -69,6 +70,7 @@ const Routes = ({store}) =>
     <div id="routes">
         <div className="middle">
             <Route path="/" component={AsyncApp} />
+            <PrivateRoute component={SettingsRoutes} store={store} />
             <PrivateRoute component={CellRoutes} store={store} />
             <UserRoute />
         </div>

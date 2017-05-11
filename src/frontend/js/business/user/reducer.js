@@ -1,4 +1,5 @@
 import {actionTypes} from './actions';
+import {actionTypes as settingsActionTypes} from '../settings/actions';
 
 export default function (localStorage) {
     const initialState = {
@@ -72,12 +73,12 @@ export default function (localStorage) {
                 ...state,
                 modal: payload,
             };
-        case actionTypes.theme.SET:
+        case settingsActionTypes.theme.SET:
             return {
                 ...state,
                 theme: payload,
             };
-        case actionTypes.preferred_language.SET:
+        case settingsActionTypes.preferredLanguage.SET:
             return {
                 ...state,
                 preferred_language: payload,

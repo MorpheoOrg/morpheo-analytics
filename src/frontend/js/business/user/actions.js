@@ -7,12 +7,6 @@ export const actionTypes = {
     modal: {
         SET: 'USER_MODAL_SET',
     },
-    theme: {
-        SET: 'USER_THEME_SET',
-    },
-    preferred_language: {
-        SET: 'USER_PREFERRED_LANGUAGE_SET',
-    },
 };
 
 export const signIn = {
@@ -36,14 +30,8 @@ export const modal = {
 };
 
 
-export const settings = {
-    setTheme: createAction(actionTypes.theme.SET),
-    setPreferred_language: createAction(actionTypes.preferred_language.SET),
-};
-
 export default {
     signIn,
     signOut,
     modal,
-    settings,
 };

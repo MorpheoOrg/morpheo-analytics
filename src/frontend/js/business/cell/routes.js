@@ -25,6 +25,8 @@ const AsyncCell = asyncComponent({
         });
     },
 });
+
+
 // automatically redirect to models pokemon if we signed in and redirection has not been made
 export default props =>
     <div className="cells">

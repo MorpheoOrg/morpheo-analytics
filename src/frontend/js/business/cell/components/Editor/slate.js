@@ -106,13 +106,13 @@ class SlateEditor extends React.Component {
     }
 
     render() {
-        const {cell: {slateState}, user, selectLanguage} = this.props;
+        const {cell: {slateState}, user: {theme, preferred_language}, selectLanguage} = this.props;
 
         return (
             <div>
                 <div style={style.main}>
                     <Select
-                        style={style.select} defaultValue={user.preferred_languages || languages[0]}
+                        style={style.select} defaultValue={preferred_language || languages[0]}
                         onChange={selectLanguage}
                     >
                         {languages.map(o =>
@@ -122,7 +122,7 @@ class SlateEditor extends React.Component {
                 </div>
                 <Editor
                     style={style.editor}
-                    className={user.theme || 'default'}
+                    className={theme || 'default'}
                     plugins={plugins}
                     state={slateState}
                     onChange={this.onChange}

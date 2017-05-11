@@ -2,27 +2,14 @@ import {PropTypes} from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {Button, Select} from 'antd';
+import {Button} from 'antd';
 import {Raw} from 'slate';
 
 import Cell from './Cell';
 import languages from './Editor/languages';
 import actions from '../actions';
 import {message as messageActions} from '../../kernel/actions';
-import {settings as settingsActions} from '../../user/actions';
 
-const Option = Select.Option;
-
-const themes = [
-    '',
-    'coy',
-    'dark',
-    'funky',
-    'okaidia',
-    'solarizedlight',
-    'tomorrow',
-    'twilight',
-];
 
 const createCell = (cells, preferred_language) => (
     {
@@ -54,17 +41,13 @@ const style = {
         padding: '10px 30px 0 30px',
         margin: '0 auto',
     },
-    select: {
-        width: 130,
-        float: 'right',
-    },
 };
 
 class CellList extends React.Component {
     constructor(props) {
         super(props);
         this.addCell = this.addCell.bind(this);
-        this.selectTheme = this.selectTheme.bind(this);
+        this.save = this.save.bind(this);
     }
     componentWillMount() {
         if (!this.props.cells.length) {
@@ -74,20 +57,13 @@ class CellList extends React.Component {
     addCell() {
         this.props.addCell(createCell(this.props.cells, this.props.user.preferred_language));
     }
-
-    selectTheme(theme) {
-        this.props.setTheme(theme);
+    // TODO : interfce save with notebook services
+    save() {
+        this.props.save({code: ''});
     }
     render() {
-        const {user, cells, deleteCell, send, set, setLanguage, setTheme, setSlate} = this.props;
+        const {user, cells, deleteCell, send, set, setLanguage, setSlate} = this.props;
         return (<div style={style.main}>
-            <Select
-                style={style.select} defaultValue={user.theme || themes[0]}
-                onChange={this.selectTheme}>
-                {themes.map(o =>
-                    <Option key={o} value={o}>{o || 'morpheo'}</Option>,
-                )}
-            </Select>
             {cells.map(cell =>
                 <Cell
                     key={cell.id}
@@ -95,13 +71,13 @@ class CellList extends React.Component {
                     send={send}
                     set={set}
                     setLanguage={setLanguage}
-                    setTheme={setTheme}
                     setSlate={setSlate}
                     cell={cell}
                     user={user}
                 />,
             )}
             <Button type={'primary'} onClick={this.addCell} icon="plus" />
+            <Button type={'primary'} onClick={this.save}>Save</Button>
         </div>);
     }
 }
@@ -114,8 +90,8 @@ CellList.propTypes = {
     deleteCell: PropTypes.func,
     send: PropTypes.func,
     set: PropTypes.func,
+    save: PropTypes.func.isRequired,
     setLanguage: PropTypes.func,
-    setTheme: PropTypes.func,
     setSlate: PropTypes.func,
     addCell: PropTypes.func,
 };
@@ -129,8 +105,8 @@ CellList.defaultProps = {
     deleteCell: noop,
     send: noop,
     set: noop,
+    save: noop,
     setLanguage: noop,
-    setTheme: noop,
     setSlate: noop,
     addCell: noop,
 };
@@ -144,8 +120,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     addCell: actions.add,
     deleteCell: actions.remove,
     set: actions.set,
+    save: actions.save.request,
     setLanguage: actions.setLanguage,
-    setTheme: settingsActions.setTheme,
     setSlate: actions.setSlate,
     send: messageActions.send,
 }, dispatch);

@@ -114,6 +114,39 @@ export default (state = initialState, {type, payload}) => {
         };
     }
 
+    case actionTypes.save.REQUEST:
+        return {
+            ...state,
+            results: state.results.reduce((p, c) =>
+                    ([...p, c.id === payload.id ? {
+                        ...c,
+                        loading: true,
+                    } : c]),
+                []),
+        };
+    case actionTypes.save.SUCCESS:
+        return {
+            ...state,
+            results: state.results.reduce((p, c) =>
+                    ([...p, c.id === payload.id ? {
+                        ...c,
+                        version: payload.version,
+                        loading: false,
+                    } : c]),
+                []),
+        };
+    case actionTypes.save.FAILURE:
+        return {
+            ...state,
+            results: state.results.reduce((p, c) =>
+                    ([...p, c.id === payload.id ? {
+                        ...c,
+                        loading: false,
+                        error: payload.error,
+                    } : c]),
+                []),
+        };
+
     default:
         return state;
     }

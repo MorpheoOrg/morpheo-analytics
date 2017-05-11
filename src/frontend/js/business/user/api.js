@@ -27,6 +27,7 @@ export const storeLocalUser = ({user: {exp, permission, username, firstName, las
 };
 
 export const removeLocalUser = () => {
+    // user
     localStorage.removeItem('email');
     localStorage.removeItem('username');
     localStorage.removeItem('firstName');
@@ -34,4 +35,9 @@ export const removeLocalUser = () => {
     localStorage.removeItem('exp');
     localStorage.removeItem('token');
     localStorage.removeItem('permission');
+
+
+    // settings
+    localStorage.removeItem('preferred_language');
+    localStorage.removeItem('theme');
 };
