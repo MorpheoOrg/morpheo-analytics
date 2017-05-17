@@ -12,55 +12,24 @@ import {Select} from 'antd';
 import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 import languages from './languages';
 
+import Options from '../../../../../../../node_modules/slate-edit-code/dist/options';
+import onKeyDown from './onKeyDown';
+import schema from './schema';
+import getCurrentCode from '../../../../../../../node_modules/slate-edit-code/dist/getCurrentCode';
+
 const Option = Select.Option;
 
-const onlyInCode = (node => node.type === 'code_block');
+// make opts available for dealing with custom KeyDown
+const opts = new Options({});
+const pluginEditCode = PluginEditCode(opts);
 
 const plugins = [
     PluginPrism({
-        onlyIn: onlyInCode,
+        onlyIn: (node => node.type === 'code_block'),
         getSyntax: (node => node.data.get('syntax')),
     }),
-    PluginEditCode({
-        onlyIn: onlyInCode,
-    }),
+    pluginEditCode,
 ];
-
-/**
- * Define a schema.
- *
- * @type {Object}
- */
-
-const codeStyle = {
-    width: '100%',
-};
-
-const schema = lineNumbersDisplayed => ({
-    nodes: {
-        code_block: {
-            render: (props) => {
-                const nodes = Raw.serialize(props.state, {terse: true}).nodes;
-                const linesNumber = nodes[0].nodes.length;
-
-                return (<pre
-                    style={codeStyle}
-                    className={`language-${nodes[0].data.syntax} line-numbers`}
-                >
-                    <code className={`language-${nodes[0].data.syntax}`} {...props.attributes}>
-                        {lineNumbersDisplayed && <span className="line-numbers-rows">
-                            {[...Array(linesNumber).keys()].map(o =>
-                                <span key={o} />,
-                        )}
-                        </span>
-                        }
-                        {props.children}
-                    </code>
-                </pre>);
-            },
-        },
-    },
-});
 
 const style = {
     main: {
@@ -75,34 +44,88 @@ const style = {
     },
 };
 
+const rRegexp = new RegExp(/^```r[\s\S]*?```$/, 'g');
+
 // TODO: put a throttle on return key for avoiding lag
 
 class SlateEditor extends React.Component {
 
+    static onKeyDown(e, data, state) {
+        return onKeyDown(e, data, state, opts);
+    }
+
     constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
+        SlateEditor.onKeyDown = SlateEditor.onKeyDown.bind(this);
         this.onBlur = this.onBlur.bind(this);
     }
 
     onChange(state) {
-        const nodes = Raw.serialize(state, {terse: true}).nodes;
+        const {startBlock, startText} = state;
+        const currentCode = getCurrentCode(opts, state);
+
+        let text = '';
+        if (currentCode) {
+            text = currentCode.getTexts().map(t => t.text).join('\n');
+        }
+        else if (startBlock.type === 'paragraph') {
+            text = startText.text;
+            if (text.match(rRegexp)) { // does not work with rRegexp.test(text), dont't knw why
+
+                // TODO find a way to create it with an helper, and auto focus new state
+
+                // pluginEditCode.transforms.toggleCodeBlock(state.transform(), 'paragraph')
+                //     .focus()
+                //     .apply()
+
+                // const newState = pluginEditCode.transforms.wrapCodeBlock(state.transform()).focus()
+                //     .apply();
+
+                const newState = Raw.deserialize({
+                    nodes: [
+                        {
+                            kind: 'block',
+                            type: 'code_block',
+                            data: {syntax: languages[1]},
+                            nodes: [
+                                {
+                                    kind: 'text',
+                                    ranges: [
+                                        {
+                                            text: '', // initialize to empty
+                                        },
+                                    ],
+                                },
+                            ],
+
+                        },
+                    ],
+                }, {terse: true});
+
+
+                this.props.setSlate({state: newState, id: this.props.cell.id});
+                return;
+            }
+        }
 
         // do not allow code block suppression by a default paragraph
-        if (nodes.length && nodes[0].type !== 'paragraph') {
-            this.props.setSlate({state, id: this.props.cell.id});
-        }
+        this.props.setSlate({state, id: this.props.cell.id});
     }
 
-    onBlur(e) {
-        // format code for having correct return
+    onBlur(e, data, state) {
+        const {startBlock, startText} = state;
+        const currentCode = getCurrentCode(opts, state);
 
-        const nodes = Raw.serialize(this.props.cell.slateState, {terse: true}).nodes;
-
-        if (nodes) {
-            const value = nodes[0].nodes.map(o => o.nodes.length ? o.nodes[0].text : []).join('\n');
-            this.props.set({value, id: this.props.cell.id});
+        let text = '';
+        if (currentCode) {
+            text = currentCode.getTexts().map(t => t.text).join('\n');
         }
+        else if (startBlock.type === 'paragraph') {
+            text = startText.text;
+        }
+
+        this.props.set({value: text, id: this.props.cell.id});
     }
 
     render() {
@@ -110,9 +133,10 @@ class SlateEditor extends React.Component {
 
         return (
             <div>
+                {slateState.startBlock.type.startsWith('code') &&
                 <div style={style.main}>
                     <Select
-                        style={style.select} defaultValue={preferred_language || languages[0]}
+                        style={style.select} defaultValue={slateState.startBlock.data.get('syntax') || preferred_language || languages[0]}
                         onChange={selectLanguage}
                     >
                         {languages.map(o =>
@@ -120,12 +144,14 @@ class SlateEditor extends React.Component {
                         )}
                     </Select>
                 </div>
+                }
                 <Editor
                     style={style.editor}
                     className={theme || 'default'}
                     plugins={plugins}
                     state={slateState}
                     onChange={this.onChange}
+                    onKeyDown={SlateEditor.onKeyDown}
                     onBlur={this.onBlur}
                     schema={schema(true)}
                 />

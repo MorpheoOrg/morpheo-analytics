@@ -11,30 +11,44 @@ import actions from '../actions';
 import {message as messageActions} from '../../kernel/actions';
 
 
-const createCell = (cells, preferred_language) => (
+const createCell = (cells, preferred_language, type = 'code_block') => (
     {
         id: cells.length ? Math.max(...cells.map(o => o.id)) + 1 : 1,
         slateState: Raw.deserialize({
             nodes: [
                 {
                     kind: 'block',
-                    type: 'code_block',
-                    data: {syntax: preferred_language || languages[0]},
-                    nodes: [
-                        {
-                            kind: 'text',
-                            ranges: [
-                                {
-                                    text: '', // initialize to empty
-                                },
-                            ],
-                        },
-                    ],
+                    type,
+                    ...(type === 'code_block' ? {
+                        data: {syntax: preferred_language || languages[0]},
+                        nodes: [
+                            {
+                                kind: 'text',
+                                ranges: [
+                                    {
+                                        text: '', // initialize to empty
+                                    },
+                                ],
+                            },
+                        ],
+                    } : {
+                        nodes: [
+                            {
+                                kind: 'text',
+                                ranges: [
+                                    {
+                                        text: '', // initialize to empty
+                                    },
+                                ],
+                            },
+                        ],
+                    }),
                 },
             ],
         }, {terse: true}),
     }
 );
+
 
 const style = {
     main: {
@@ -47,20 +61,34 @@ class CellList extends React.Component {
     constructor(props) {
         super(props);
         this.addCell = this.addCell.bind(this);
+        this.addTextCell = this.addTextCell.bind(this);
+        this.addCodeCell = this.addCodeCell.bind(this);
         this.save = this.save.bind(this);
     }
+
     componentWillMount() {
         if (!this.props.cells.length) {
             this.props.addCell(createCell(this.props.cells, this.props.user.preferred_language));
         }
     }
-    addCell() {
-        this.props.addCell(createCell(this.props.cells, this.props.user.preferred_language));
+
+    addCell(type = 'code_block') {
+        this.props.addCell(createCell(this.props.cells, this.props.user.preferred_language, type));
     }
-    // TODO : interfce save with notebook services
+
+    addCodeCell() {
+        this.addCell('code_block');
+    }
+
+    addTextCell() {
+        this.addCell('paragraph');
+    }
+
+    // TODO : interface save with notebook services
     save() {
         this.props.save({code: ''});
     }
+
     render() {
         const {user, cells, deleteCell, send, set, setLanguage, setSlate} = this.props;
         return (<div style={style.main}>
@@ -76,7 +104,8 @@ class CellList extends React.Component {
                     user={user}
                 />,
             )}
-            <Button type={'primary'} onClick={this.addCell} icon="plus" />
+            <Button type={'primary'} onClick={this.addCodeCell} icon="plus"/>
+            <Button type={'primary'} onClick={this.addTextCell}>Add paragraph</Button>
             <Button type={'primary'} onClick={this.save}>Save</Button>
         </div>);
     }

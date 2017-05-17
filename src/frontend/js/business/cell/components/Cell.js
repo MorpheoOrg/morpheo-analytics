@@ -85,7 +85,8 @@ class Cell extends React.Component {
                     />
                     <div style={style.cell.actions}>
                         <Button style={style.cell.buttons} onClick={this.remove} icon="delete"/>
-                        <Button type={'primary'} onClick={this.send}>Execute</Button>
+                        {cell.slateState.startBlock.type.startsWith('code') &&
+                        <Button type={'primary'} onClick={this.send}>Execute</Button>}
                     </div>
                 </div>
                 {cell.content && cell.type === 'text' &&
