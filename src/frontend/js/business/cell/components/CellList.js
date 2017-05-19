@@ -4,12 +4,13 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Button} from 'antd';
 import {Raw} from 'slate';
+import keydown from 'react-keydown';
 
 import Cell from './Cell';
 import languages from './Editor/languages';
 import actions from '../actions';
 import {message as messageActions} from '../../kernel/actions';
-
+import KEYS from './keys';
 
 const createCell = (cells, preferred_language, type = 'code_block') => (
     {
@@ -68,7 +69,23 @@ class CellList extends React.Component {
 
     componentWillMount() {
         if (!this.props.cells.length) {
-            this.props.addCell(createCell(this.props.cells, this.props.user.preferred_language, 'paragraph'));
+            this.props.addCell({...createCell(this.props.cells, this.props.user.preferred_language, 'paragraph'), isActive: true});
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // handle key from keyboard
+        if (nextProps.keydown.event) {
+            // prevent infinite loop
+            const key = nextProps.keydown.event.key;
+            nextProps.keydown.event = null;
+            // TODO, get KEYS from reducer user settings
+            if (key === KEYS.above) { // above == before
+                this.props.insertBeforeCell(createCell(this.props.cells, this.props.user.preferred_language, 'paragraph'));
+            }
+            else if (key === KEYS.below) { // below == after
+                this.props.insertAfterCell(createCell(this.props.cells, this.props.user.preferred_language, 'paragraph'));
+            }
         }
     }
 
@@ -90,7 +107,7 @@ class CellList extends React.Component {
     }
 
     render() {
-        const {user, cells, deleteCell, send, set, setLanguage, setSlate} = this.props;
+        const {user, cells, deleteCell, send, set, setLanguage, setSlate, setActive} = this.props;
         return (<div style={style.main}>
             {cells.map(cell =>
                 <Cell
@@ -100,6 +117,7 @@ class CellList extends React.Component {
                     set={set}
                     setLanguage={setLanguage}
                     setSlate={setSlate}
+                    setActive={setActive}
                     cell={cell}
                     user={user}
                 />,
@@ -122,6 +140,7 @@ CellList.propTypes = {
     save: PropTypes.func.isRequired,
     setLanguage: PropTypes.func,
     setSlate: PropTypes.func,
+    setActive: PropTypes.func,
     addCell: PropTypes.func,
 };
 
@@ -137,6 +156,7 @@ CellList.defaultProps = {
     save: noop,
     setLanguage: noop,
     setSlate: noop,
+    setActive: noop,
     addCell: noop,
 };
 
@@ -147,12 +167,15 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     addCell: actions.add,
+    insertBeforeCell: actions.insertBefore,
+    insertAfterCell: actions.insertAfter,
     deleteCell: actions.remove,
     set: actions.set,
     save: actions.save.request,
     setLanguage: actions.setLanguage,
     setSlate: actions.setSlate,
+    setActive: actions.setActive,
     send: messageActions.send,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(CellList);
+export default connect(mapStateToProps, mapDispatchToProps)(keydown(CellList));

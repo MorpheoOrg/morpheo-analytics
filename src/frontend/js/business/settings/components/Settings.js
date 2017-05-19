@@ -24,6 +24,11 @@ const style = {
         display: 'inline-block',
         width: '55%',
     },
+    shortcut: {
+        color: '#730101',
+        backgroundColor: '#c7c6c6',
+        padding: '0px 5px',
+    },
 };
 
 const themes = [
@@ -81,6 +86,7 @@ class Settings extends React.Component {
                     </Select>
                 </div>
             </div>
+            <p>Use key shorcuts <span style={style.shortcut}>a</span> and <span style={style.shortcut}>b</span> for adding a cell above or below the selected cell.</p>
         </div>);
     }
 }

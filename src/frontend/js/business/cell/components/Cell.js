@@ -55,6 +55,7 @@ class Cell extends React.Component {
         this.send = this.send.bind(this);
         this.remove = this.remove.bind(this);
         this.selectLanguage = this.selectLanguage.bind(this);
+        this.setActive = this.setActive.bind(this);
     }
 
     remove() {
@@ -69,11 +70,15 @@ class Cell extends React.Component {
         this.props.setLanguage({language, id: this.props.cell.id});
     }
 
+    setActive() {
+        this.props.setActive(this.props.cell.id);
+    }
     render() {
         const {cell, user, set, setSlate} = this.props;
 
+        // TODO : create a selector on style
         return (
-            <div style={style.cell.main}>
+            <div style={{...style.cell.main, ...(cell.isActive ? {border: '2px solid #3f8bea'} : {border: '2px solid transparent'})}} onClick={this.setActive}>
                 <div style={style.cell.input}>
                     <Editor
                         set={set}
@@ -83,15 +88,15 @@ class Cell extends React.Component {
                         selectLanguage={this.selectLanguage}
                     />
                     <div style={style.cell.actions}>
-                        <Button style={style.cell.buttons} onClick={this.remove} icon="delete"/>
+                        <Button style={style.cell.buttons} onClick={this.remove} icon="delete" />
                         {cell.slateState.startBlock.type.startsWith('code') &&
                         <Button type={'primary'} onClick={this.send}>Execute</Button>}
                     </div>
                 </div>
                 {cell.content && cell.type === 'text' &&
-                <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}}/>}
+                <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}} />}
                 {cell.content && cell.type === 'img' &&
-                <img style={style.cell.output} alt="result" src={`data:image/png;base64,${cell.content}`}/>}
+                <img style={style.cell.output} alt="result" src={`data:image/png;base64,${cell.content}`} />}
                 {cell.content && cell.type === 'error' &&
                 <div style={style.cell.error}>
                     <span>{cell.content.ename}</span>
@@ -114,6 +119,7 @@ Cell.propTypes = {
     set: PropTypes.func.isRequired,
     setLanguage: PropTypes.func.isRequired,
     setSlate: PropTypes.func.isRequired,
+    setActive: PropTypes.func.isRequired,
 };
 
 Cell.defaultProps = {

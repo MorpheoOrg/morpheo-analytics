@@ -15,6 +15,7 @@ export default function (localStorage) {
         loading: false,
         modal: false,
         registered: false,
+        // TODO PUT in settings reducer
         theme: localStorage.getItem('theme') || '',
         preferred_language: localStorage.getItem('preferred_language') || 'python',
     };

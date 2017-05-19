@@ -35,6 +35,7 @@ const initialState = {
 };
 
 export default (state = initialState, {type, payload}) => {
+    const index = state.results.findIndex(o => o.isActive);
     switch (type) {
     case actionTypes.ADD:
         return {
@@ -100,6 +101,38 @@ export default (state = initialState, {type, payload}) => {
                 []),
         };
 
+    case actionTypes.SET_ACTIVE:
+        return {
+            ...state,
+            results: state.results.reduce((p, c) =>
+                    ([...p, {
+                        ...c,
+                        isActive: c.id === payload,
+                    }]),
+                []),
+        };
+
+    case actionTypes.INSERT_AFTER:
+        return {
+            ...state,
+            results: [
+                ...state.results.slice(0, index),
+                {...state.results[index], isActive: false},
+                {...payload, isActive: true},
+                ...state.results.slice(index + 1, state.results.length),
+            ],
+        };
+
+    case actionTypes.INSERT_BEFORE:
+        return {
+            ...state,
+            results: [
+                ...state.results.slice(0, index),
+                {...payload, isActive: true},
+                {...state.results[index], isActive: false},
+                ...state.results.slice(index + 1, state.results.length),
+            ],
+        };
     case kernelActionTypes.message.RECEIVE: {
         return {
             ...state,
