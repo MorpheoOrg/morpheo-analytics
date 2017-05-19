@@ -53,10 +53,7 @@ const languagesMap = languages.map(l => ({
     regex: new RegExp(`${regexPrefix}${l}${regexSuffix}`, 'g'),
 }));
 
-console.log(languagesMap);
-
 // TODO: put a throttle on return key for avoiding lag
-
 class SlateEditor extends React.Component {
 
     static onKeyDown(e, data, state) {

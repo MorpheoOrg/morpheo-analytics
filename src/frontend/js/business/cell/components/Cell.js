@@ -40,7 +40,7 @@ const style = {
         },
         actions: {
             float: 'right',
-            margin: '10px 0 10px 10px',
+            margin: '10px 8px 10px 10px',
         },
         buttons: {
             margin: '0 8px 0 0',
@@ -75,7 +75,6 @@ class Cell extends React.Component {
         return (
             <div style={style.cell.main}>
                 <div style={style.cell.input}>
-                    <h2>Cell n°{cell.id} :</h2>
                     <Editor
                         set={set}
                         setSlate={setSlate}
