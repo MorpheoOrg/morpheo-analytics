@@ -1,0 +1,4 @@
+:8000 {
+  gzip
+  root /var/www/html
+}
