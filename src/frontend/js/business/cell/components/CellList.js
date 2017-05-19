@@ -23,12 +23,12 @@ const createCell = (cells, preferred_language, type = 'code_block') => (
                         data: {syntax: preferred_language || languages[0]},
                         nodes: [
                             {
-                                kind: 'text',
-                                ranges: [
-                                    {
-                                        text: '', // initialize to empty
-                                    },
-                                ],
+                                kind: 'block',
+                                type: 'code_line',
+                                nodes: [{
+                                    kind: 'text',
+                                    text: '',
+                                }],
                             },
                         ],
                     } : {
@@ -68,7 +68,7 @@ class CellList extends React.Component {
 
     componentWillMount() {
         if (!this.props.cells.length) {
-            this.props.addCell(createCell(this.props.cells, this.props.user.preferred_language));
+            this.props.addCell(createCell(this.props.cells, this.props.user.preferred_language, 'paragraph'));
         }
     }
 

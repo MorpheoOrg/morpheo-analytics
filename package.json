@@ -29,7 +29,7 @@
     "react-fela": "4.3.2",
     "react-helmet": "5.0.3",
     "react-highlight": "0.9.0",
-    "react-konami": "^0.3.3",
+    "react-konami": "0.3.3",
     "react-particles-js": "1.5.0",
     "react-redux": "5.0.4",
     "react-router": "4.0.0",
@@ -133,7 +133,7 @@
   "scripts": {
     "test": "NODE_ENV=development ./node_modules/.bin/mocha --compilers js:babel-register \"./src/frontend/js/**/*.spec.js\"",
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register \"./src/frontend/js/**/*.spec.js\"",
-    "start": "NODE_ENV=development babel-node tools/run start",
+    "start": "NODE_ENV=development DEBUG=slate:content babel-node tools/run start",
     "start-debug": "NODE_ENV=debug babel-node tools/run start",
     "start-production": "NODE_ENV=production babel-node tools/run start",
     "start-staging": "NODE_ENV=staging babel-node tools/run start",

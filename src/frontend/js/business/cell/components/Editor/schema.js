@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import {Raw} from 'slate';
 
 import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 
@@ -12,6 +11,7 @@ import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-lin
  *
  * @type {Object}
  */
+
 
 const schemaStyle = {
     code: {
@@ -27,14 +27,14 @@ const schema = lineNumbersDisplayed => ({
     nodes: {
         code_block: {
             render: (props) => {
-                const nodes = Raw.serialize(props.state, {terse: true}).nodes;
-                const linesNumber = nodes[0].nodes.length;
+                const {editor, node, state} = props;
+                const linesNumber = node.getTexts().size;
 
                 return (<pre
                     style={schemaStyle.code}
-                    className={`language-${nodes[0].data.syntax} line-numbers`}
+                    className={`language-${node.data.get('syntax')} line-numbers`}
                 >
-                    <code className={`language-${nodes[0].data.syntax}`} {...props.attributes}>
+                    <code className={`language-${node.data.get('syntax')}`} {...props.attributes}>
                         {lineNumbersDisplayed && <span className="line-numbers-rows">
                             {[...Array(linesNumber).keys()].map(o =>
                                 <span key={o}/>,
@@ -48,7 +48,7 @@ const schema = lineNumbersDisplayed => ({
         },
         paragraph: {
             render: (props) => {
-                return <p style={schemaStyle.p}>{props.children}</p>;
+                return <p  {...props.attributes} style={schemaStyle.p}>{props.children}</p>;
             },
         },
     },
