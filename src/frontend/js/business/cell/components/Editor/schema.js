@@ -35,7 +35,7 @@ const schema = lineNumbersDisplayed => ({
                     className={`language-${node.data.get('syntax')} line-numbers`}
                 >
                     <code className={`language-${node.data.get('syntax')}`} {...props.attributes}>
-                        {lineNumbersDisplayed && <span className="line-numbers-rows">
+                        {lineNumbersDisplayed && <span className="line-numbers-rows" contentEditable={false}>
                             {[...Array(linesNumber).keys()].map(o =>
                                 <span key={o}/>,
                             )}

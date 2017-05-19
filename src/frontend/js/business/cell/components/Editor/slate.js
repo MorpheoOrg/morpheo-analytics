@@ -45,7 +45,15 @@ const style = {
     },
 };
 
-const rRegexp = new RegExp(/^```r([\s\S]*?)```$/, 'g');
+const regexPrefix = '^```',
+    regexSuffix = '([\\s\\S]*?)```$';
+
+const languagesMap = languages.map(l => ({
+    language: l,
+    regex: new RegExp(`${regexPrefix}${l}${regexSuffix}`, 'g'),
+}));
+
+console.log(languagesMap);
 
 // TODO: put a throttle on return key for avoiding lag
 
@@ -76,15 +84,22 @@ class SlateEditor extends React.Component {
         const {startText} = futureState;
         const text = startText.text;
         // if we detect a code transformation, return own state, no need to save it with onInput
-        if (text.match(rRegexp)) {
-            //event.preventDefault();
-            // Notice that is calls event.preventDefault() to prevent the default browser behavior,
-            // and it returns the current state to prevent the editor from continuing to resolve its plugins stack.
-            return this.props.cell.slateState;
-        }
+        let exit = false;
+        languages.forEach((language) => {
+            const l = languagesMap.find(o => language === o.language);
+            if (text.match(l.regex)) {
+                // event.preventDefault();
+                // Notice that is calls event.preventDefault() to prevent the default browser behavior,
+                // and it returns the current state to prevent the editor from continuing to resolve its plugins stack.
+                exit = true;
+                return this.props.cell.slateState;
+            }
+        });
+
+        return exit ? this.props.cell.slateState : undefined;
     }
 
-    wrapCodeBlockByKey(opts, transform, key, language) {
+    wrapCodeBlockByKey(opts, transform, key, o) {
         const {state} = transform;
         const {document} = state;
 
@@ -96,9 +111,9 @@ class SlateEditor extends React.Component {
             transform.removeNodeByKey(node.key, {normalize: false});
         });
 
-        if (language) {
-            text = rRegexp.exec(text)['1'];
-            text = text.substring(1, text.length - 1);
+        if (o) {
+            text = o.regex.exec(text)['1'];
+            text = text.substring(1, text.length - 1 || 1);
         }
 
         // Insert new text
@@ -111,24 +126,24 @@ class SlateEditor extends React.Component {
         // Set node type
         transform.setNodeByKey(startBlock.key, {
             type: opts.containerType,
-            data: {syntax: language},
+            data: {syntax: o.language},
         });
 
         return transform;
     }
 
-    wrapCodeBlock(transform, language) {
+    wrapCodeBlock(transform, o) {
         const {state} = transform;
         const {startBlock, selection} = state;
 
         // Convert to code block
-        transform = this.wrapCodeBlockByKey(opts, transform, startBlock.key, language);
+        transform = this.wrapCodeBlockByKey(opts, transform, startBlock.key, o);
 
         // TODO, find a way to correctly set the offset on a multilines code
         // Move selection back in the block
         transform = transform
             .collapseToStartOf(transform.state.document.getDescendant(startBlock.key))
-            .moveOffsetsTo(0);//selection.startOffset - 7);
+            .moveOffsetsTo(0);// selection.startOffset - 7);
 
         return transform;
     }
@@ -140,10 +155,14 @@ class SlateEditor extends React.Component {
 
         const text = startText.text;
         if (startBlock.type === 'paragraph') {
-            // does not work with rRegexp.test(text), dont't know why
-            if (text.match(rRegexp)) {
-                newState = this.wrapCodeBlock(state.transform(), 'r').focus().apply();
-            }
+            // does not work with rRegexp.test(text), don't know why
+
+            languages.forEach((language) => {
+                const l = languagesMap.find(o => language === o.language);
+                if (text.match(l.regex)) {
+                    newState = this.wrapCodeBlock(state.transform(), l).focus().apply();
+                }
+            });
         }
 
         this.props.setSlate({state: newState, id: this.props.cell.id});
@@ -165,6 +184,8 @@ class SlateEditor extends React.Component {
     }
 
     onToggleCode() {
+        // TODO add data syntax for getting language highlight
+        // create own transform function
         const s = pluginEditCode.transforms.toggleCodeBlock(this.props.cell.slateState.transform(), 'paragraph')
             .focus()
             .apply();
@@ -180,7 +201,7 @@ class SlateEditor extends React.Component {
         return (
             <div>
                 <button onClick={this.onToggleCode}>
-                    {pluginEditCode.utils.isInCodeBlock(slateState) ? 'Paragraph' : 'Code Block'}
+                    {`Experimental ${pluginEditCode.utils.isInCodeBlock(slateState) ? 'Paragraph' : 'Code Block'}`}
                 </button>
                 {slateState.startBlock.type.startsWith('code') &&
                 <div style={style.main}>
