@@ -4,7 +4,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Editor} from 'slate';
+import {Editor, Text, Block, Document} from 'slate';
 import PluginEditCode from 'slate-edit-code';
 import PluginPrism from 'slate-prism';
 import {Select} from 'antd';
@@ -67,6 +67,7 @@ class SlateEditor extends React.Component {
         SlateEditor.onKeyDown = SlateEditor.onKeyDown.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onToggleCode = this.onToggleCode.bind(this);
+        this.onPaste = this.onPaste.bind(this);
     }
 
     onBeforeInput(event, data) {
@@ -108,9 +109,10 @@ class SlateEditor extends React.Component {
             transform.removeNodeByKey(node.key, {normalize: false});
         });
 
-        if (o) {
-            text = o.regex.exec(text)['1'];
-            text = text.substring(1, text.length - 1 || 1);
+        // do we need to transform from language markdown
+        const res = o.regex.exec(text);
+        if (res) {
+            text = text.substring(1, res['1'].length - 1 || 1);
         }
 
         // Insert new text
@@ -141,6 +143,32 @@ class SlateEditor extends React.Component {
         transform = transform
             .collapseToStartOf(transform.state.document.getDescendant(startBlock.key))
             .moveOffsetsTo(0);// selection.startOffset - 7);
+
+        return transform;
+    }
+
+    wrapParagraph(transform) {
+        const {state} = transform;
+        const {startBlock} = state;
+
+        const parentBlock = state.document.getParent(startBlock.key);
+
+        const text = parentBlock.getTexts().map(t => t.text).join('\n');
+
+        // add paragraph and unwrap it for putting it on the same level of code_block
+        transform.insertBlock(Block.create(
+            {
+                type: opts.exitBlockType,
+                nodes: [Text.createFromString(text)],
+            },
+        )).unwrapBlock();
+
+        // remove code line
+        parentBlock.nodes.forEach((node) => {
+            transform.removeNodeByKey(node.key, {normalize: false});
+        });
+        // remove code block
+        transform.removeNodeByKey(parentBlock.key, {normalize: false});
 
         return transform;
     }
@@ -181,12 +209,48 @@ class SlateEditor extends React.Component {
     }
 
     onToggleCode() {
-        // TODO add data syntax for getting language highlight
-        // create own transform function
-        const s = pluginEditCode.transforms.toggleCodeBlock(this.props.cell.slateState.transform(), 'paragraph')
-            .focus()
+        let newState = this.props.cell.slateState;
+
+        // transform to paragraph
+        if (pluginEditCode.utils.isInCodeBlock(this.props.cell.slateState)) {
+            newState = this.wrapParagraph(newState.transform()).focus().apply();
+        }
+        // transform to code
+        else {
+            const l = languagesMap.find(o => o.language === this.props.user.preferred_language || languages[0]);
+            newState = this.wrapCodeBlock(newState.transform(), l).focus().apply();
+        }
+
+        this.props.setSlate({state: newState, id: this.props.cell.id});
+    }
+
+    /**
+     * User is pasting content, insert it as text
+     */
+    onPaste(event, data, state) {
+        const currentCode = getCurrentCode(opts, state);
+
+        // Convert to text if needed
+        let text;
+        if (data.type === 'fragment') {
+            text = data.fragment.getTexts().map(t => t.text).join('\n');
+        } else {
+            text = data.text;
+        }
+
+        const {endBlock} = state;
+        if (!currentCode || !currentCode.hasDescendant(endBlock.key)) {
+            return state.transform().insertText(text).apply();
+        }
+
+        // Convert the text to code lines
+        const lines = deserializeCode(opts, text).nodes;
+
+        const fragment = Document.create({nodes: lines});
+
+        return state.transform()
+            .insertFragment(fragment)
             .apply();
-        this.props.setSlate({state: s, id: this.props.cell.id});
     }
 
     render() {
@@ -198,7 +262,7 @@ class SlateEditor extends React.Component {
         return (
             <div>
                 <button onClick={this.onToggleCode}>
-                    {`Experimental ${pluginEditCode.utils.isInCodeBlock(slateState) ? 'Paragraph' : 'Code Block'}`}
+                    {pluginEditCode.utils.isInCodeBlock(slateState) ? 'Paragraph' : 'Code Block'}
                 </button>
                 {slateState.startBlock.type.startsWith('code') &&
                 <div style={style.main}>
@@ -220,6 +284,7 @@ class SlateEditor extends React.Component {
                     state={slateState}
                     onChange={this.onChange}
                     onKeyDown={SlateEditor.onKeyDown}
+                    onPaste={this.onPaste}
                     onBeforeInput={this.onBeforeInput}
                     onBlur={this.onBlur}
                     schema={schema(true)}

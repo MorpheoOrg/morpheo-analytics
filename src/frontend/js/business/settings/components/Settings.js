@@ -86,7 +86,7 @@ class Settings extends React.Component {
                     </Select>
                 </div>
             </div>
-            <p>Use key shorcuts <span style={style.shortcut}>a</span> and <span style={style.shortcut}>b</span> for adding a cell above or below the selected cell.</p>
+            <p>Use key shortcuts <span style={style.shortcut}>a</span> and <span style={style.shortcut}>b</span> for adding a cell above or below the selected cell.</p>
         </div>);
     }
 }
