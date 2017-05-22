@@ -217,7 +217,8 @@ class SlateEditor extends React.Component {
         }
         // transform to code
         else {
-            const l = languagesMap.find(o => o.language === this.props.user.preferred_language || languages[0]);
+            const language = this.props.user.preferred_language || languages[0];
+            const l = languagesMap.find(o => o.language === language);
             newState = this.wrapCodeBlock(newState.transform(), l).focus().apply();
         }
 
