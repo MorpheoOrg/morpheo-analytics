@@ -58,10 +58,6 @@ class Cell extends React.Component {
         this.setActive = this.setActive.bind(this);
     }
 
-    remove() {
-        this.props.deleteCell(this.props.cell.id);
-    }
-
     send() {
         this.props.send({code: this.props.cell.value, id: this.props.cell.id});
     }
@@ -72,6 +68,9 @@ class Cell extends React.Component {
 
     setActive() {
         this.props.setActive(this.props.cell.id);
+    }
+    remove() {
+        this.props.deleteCell(this.props.cell.id);
     }
     render() {
         const {cell, user, set, setSlate} = this.props;

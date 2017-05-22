@@ -5,7 +5,9 @@
 
 import webpack from 'webpack';
 import path from 'path';
+
 import {definePlugin} from './plugins';
+
 const PRODUCTION = (['production'].includes(process.env.NODE_ENV));
 
 export default {
@@ -40,11 +42,11 @@ export default {
             'query-string',
             'reselect',
             'url',
-        ]
+        ],
     },
     devtool: '#source-map',
     output: {
-        path: path.join(__dirname, '../build/dll' + (!PRODUCTION ? '-dev' : '')),
+        path: path.join(__dirname, `../build/dll${!PRODUCTION ? '-dev' : ''}`),
         filename: '[name].dll.js',
         library: '[name]_[hash]',
     },
@@ -53,7 +55,7 @@ export default {
         definePlugin(),
         new webpack.DllPlugin({
             name: '[name]_[hash]',
-            path: path.join(__dirname, '../build/dll' + (!PRODUCTION ? '-dev' : ''), '[name]-manifest.json'),
+            path: path.join(__dirname, `../build/dll${!PRODUCTION ? '-dev' : ''}`, '[name]-manifest.json'),
         }),
         new webpack.optimize.DedupePlugin(),
         ...(PRODUCTION ? [new webpack.optimize.UglifyJsPlugin({
@@ -61,6 +63,6 @@ export default {
             compress: {
                 screw_ie8: true,
             },
-        })] : [])
-    ]
+        })] : []),
+    ],
 };

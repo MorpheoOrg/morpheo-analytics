@@ -28,6 +28,7 @@ export default {
     setActive: createAction(actionTypes.SET_ACTIVE),
     setSlate: createAction(actionTypes.SET_SLATE),
     add: createAction(actionTypes.ADD),
+    remove: createAction(actionTypes.REMOVE),
     insertAfter: createAction(actionTypes.INSERT_AFTER),
     insertBefore: createAction(actionTypes.INSERT_BEFORE),
 };
