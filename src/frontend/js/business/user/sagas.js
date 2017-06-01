@@ -8,6 +8,8 @@ import {
     signOut as signOutActions,
     actionTypes,
 } from './actions';
+import {actions as settingsActions} from '../settings/actions';
+
 import {
     fetchSignIn as fetchSignInApi,
     removeLocalUser as removeLocalUserApi,
@@ -15,34 +17,25 @@ import {
 } from './api';
 
 export const signIn = (fetchSignIn, storeLocalUser) =>
-    function* signInSaga({payload: {email, password, previousRoute}}) {
-        const {error, res} = yield call(fetchSignIn, email, password);
+    function* signInSaga({payload: {uuid, previousRoute}}) {
+        const {error, res} = yield call(fetchSignIn, uuid);
 
         if (error) {
             yield put(signInActions.failure(error));
         }
         else {
-            const {user, token} = res;
+            const {settings, access_token} = res;
+            const {uuid} = JSON.parse(atob(access_token.split('.')[1]));
 
-            const {username} = JSON.parse(atob(token.split('.')[1]));
-            // const {exp, username, user_id, email} = JSON.parse(atob(token.split('.')[1]));
-            user.token = token;
-            // user.exp = exp;
-            user.username = username;
+            yield call(storeLocalUser, {uuid, settings, access_token});
+            yield put(signInActions.success({uuid}));
+            yield put(settingsActions.update(...settings));
 
-            yield call(storeLocalUser, {user, token, email});
-            yield put(signInActions.success(user));
-
-            if (user) {
-                yield put(routerActions.push({
-                    ...previousRoute,
-                    // make sure we don't push history on same location
-                    pathname: previousRoute.pathname === '/' || previousRoute.pathname === '/sign-in' ? '/' : previousRoute.pathname,
-                }));
-            }
-            else {
-                yield put(signInActions.failure({detail: `You don't have the permission to access this site. Your current permission is ${user.permission} and only admin and team policies are allowed. Please ask toan administrator for modifying your permission on morpheo service.`}));
-            }
+            yield put(routerActions.push({
+                ...previousRoute,
+                // make sure we don't push history on same location
+                pathname: previousRoute.pathname === '/' || previousRoute.pathname === '/sign-in' ? '/' : previousRoute.pathname,
+            }));
         }
     };
 
@@ -51,6 +44,7 @@ export const signOut = removeLocalUser =>
         const state = yield select();
         yield call(removeLocalUser);
         yield put(signOutActions.success());
+        yield put(settingsActions.update({theme: null, preferred_language: null, keybindings: null}));
         yield put(routerActions.push({
             pathname: '/',
             // store current location if relogin

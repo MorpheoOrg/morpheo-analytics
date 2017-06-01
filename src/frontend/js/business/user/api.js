@@ -1,43 +1,43 @@
-/* globals localStorage */
-export function fetchSignIn(email, password) {
-    // XXX I hard code for now but we will need an auth system soon
-    return new Promise((resolve, reject) => resolve({
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpsb3RlbiJ9.6kZ-0Y96-gAzrOXzqH91F9WAgAAFXpRaayVifYjuEv4',
-        user: {
-            permission: 'admin',
-            has_permission: true,
-            id: 'zloten',
-            firstName: 'zlotenFirstName',
-            lastName: 'zlotenLastName',
+/* globals SERVICES_API_URL, localStorage, fetch */
+
+export function fetchSignIn(uuid) {
+    return fetch(`${SERVICES_API_URL}/user/token/`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
         },
-    }))
+        body: JSON.stringify({
+            uuid,
+        }),
+        // Allows API to set http-only cookies with AJAX calls
+        // @see http://www.redotheweb.com/2015/11/09/api-security.html
+        // credentials: 'include',
+        mode: 'cors',
+    })
+        .then((response) => {
+            if (!response.ok) {
+                return response.text().then(result => Promise.reject(new Error(result)));
+            }
+
+            return response.json();
+        })
         .then(json => ({res: json}), error => ({
             error,
         }));
 }
 
-export const storeLocalUser = ({user: {exp, permission, username, firstName, lastName}, token, email}) => {
-    localStorage.setItem('email', email);
-    localStorage.setItem('username', username);
-    localStorage.setItem('firstName', firstName);
-    localStorage.setItem('lastName', lastName);
-    localStorage.setItem('exp', exp);
-    localStorage.setItem('token', token);
-    localStorage.setItem('permission', permission);
+export const storeLocalUser = ({settings, uuid, access_token}) => {
+    //localStorage.setItem('exp', exp);
+    localStorage.setItem('settings', JSON.stringify(settings));
+    localStorage.setItem('uuid', uuid);
+    localStorage.setItem('access_token', access_token);
 };
 
 export const removeLocalUser = () => {
     // user
-    localStorage.removeItem('email');
-    localStorage.removeItem('username');
-    localStorage.removeItem('firstName');
-    localStorage.removeItem('lastName');
-    localStorage.removeItem('exp');
-    localStorage.removeItem('token');
-    localStorage.removeItem('permission');
-
-
-    // settings
-    localStorage.removeItem('preferred_language');
-    localStorage.removeItem('theme');
+    //localStorage.removeItem('exp');
+    localStorage.removeItem('settings');
+    localStorage.removeItem('uuid');
+    localStorage.removeItem('access_token');
 };

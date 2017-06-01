@@ -45,11 +45,11 @@ const SignIn = (props) => {
             <Morpheo width={73} style={style.logo} color={theme['primary-color']} />
             <div style={style.form}>
                 <h1>Login to Notebook</h1>
-                <p style={style.p}>We will provide Signup soon</p>
+                <p style={style.p}>For getting an uuid please ask to an administrator</p>
                 {signInError &&
                 <p className="error" role="alert">
                     <ul>
-                        {Object.keys(signInError).map(o =>
+                        {signInError.length && Object.keys(signInError).map(o =>
                             <li key={o}>
                                 {o}: <ul>{signInError[o].map(x => <li key={x}>{x}</li>)}</ul>
                             </li>,

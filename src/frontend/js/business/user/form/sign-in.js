@@ -34,8 +34,7 @@ class SignInForm extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.props.signIn(this.props.previousRoute, {
-                    email: values.email,
-                    password: values.password,
+                    uuid: values.uuid,
                 });
             }
         });
@@ -46,30 +45,15 @@ class SignInForm extends React.Component {
 
         return (<Form onSubmit={this.handleSubmit} style={style.main}>
             <FormItem>
-                {getFieldDecorator('email', {
-                    rules: [{required: true, message: 'Please input your email!'}],
+                {getFieldDecorator('uuid', {
+                    rules: [{required: true, message: 'please specify your uuid.'}],
                 })(
-                    <Input addonBefore={<Icon type="user" />} placeholder="Email" />,
+                    <Input addonBefore={<Icon type="user" />} placeholder="uuid" />,
                 )}
             </FormItem>
-            <FormItem>
-                {getFieldDecorator('password', {
-                    rules: [{required: true, message: 'Please input your Password!'}],
-                })(
-                    <Input addonBefore={<Icon type="lock" />} type="password" placeholder="Password" />,
-                )}
-            </FormItem>
-            <FormItem>
-                {getFieldDecorator('remember', {
-                    valuePropName: 'checked',
-                    initialValue: true,
-                })(
-                    <Checkbox>Remember me</Checkbox>,
-                )}
-                <Button type={signInError ? 'danger' : 'primary'} htmlType="submit" style={style.submit}>
-                    Log in
-                </Button>
-            </FormItem>
+            <Button type={signInError ? 'danger' : 'primary'} htmlType="submit" style={style.submit}>
+                Log in
+            </Button>
         </Form>);
     }
 }

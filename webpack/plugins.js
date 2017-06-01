@@ -13,5 +13,6 @@ export function definePlugin() {
         DEBUG_BASE_NAME: JSON.stringify(config.apps.frontend.baseName.debug),
         STORAGE_API_URL: JSON.stringify(config.apps.frontend.storage_api_url),
         ORCHESTRATOR_API_URL: JSON.stringify(config.apps.frontend.orchestrator_api_url),
+        SERVICES_API_URL: JSON.stringify(config.apps.frontend.services_api_url),
     });
 }

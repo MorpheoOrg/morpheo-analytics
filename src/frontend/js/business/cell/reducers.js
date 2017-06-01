@@ -2,6 +2,7 @@ import {Raw} from 'slate';
 
 import {actionTypes} from './actions';
 import {actionTypes as kernelActionTypes} from '../kernel/actions';
+import {actionTypes as settingsActionTypes} from '../settings/actions';
 
 
 const getContent = (content, type) => {
@@ -57,38 +58,39 @@ export default (state = initialState, {type, payload}) => {
                     } : c]),
                 []),
         };
+        // TODO rework to use a correct transform
     case actionTypes.SET_LANGUAGE:
         return {
             ...state,
+            results: state.results.reduce((p, c) => {
 
-            results: state.results.reduce((p, c) => (
-                    [...p, c.id === payload.id ? {
+                // force slateState to update for updating schema
+                return [
+                    ...p,
+                    c.id === payload.id ? {
                         ...c,
                         language: payload.language,
-                        slateState: Raw.deserialize({
-                            nodes: [
-                                {
-                                    kind: 'block',
-                                    type: 'code_block',
-                                    data: {syntax: payload.language},
-                                    nodes: c.value ? c.value.split('\n').map(o => (
-                                        {
-                                            kind: 'block',
-                                            type: 'code_line',
-                                            nodes: [{
-                                                kind: 'text',
-                                                text: o,
-                                            }],
-                                        }),
-                                    ) : {
-                                        kind: 'text',
-                                        ranges: [{text: ''}],
-                                    },
-                                },
-                            ],
-                        }, {terse: true}),
-                    } : c]),
-                []),
+                        slateState: payload.state,
+                    } : c,
+                ];
+
+                // old one
+                // const nodes = Raw.serialize(c.slateState, {terse: true}).nodes;
+                // return [
+                //     ...p,
+                //     c.id === payload.id ? {
+                //         ...c,
+                //         language: payload.language,
+                //         slateState: Raw.deserialize({
+                //             nodes: nodes.reduce((p, c) => [...p, {
+                //                 ...c,
+                //                 data: {...c.data, syntax: payload.language},
+                //             }], []),
+                //         }, {terse: true}),
+                //     } : c,
+                // ];
+
+            }, []),
         };
     case actionTypes.SET_SLATE:
         return {
@@ -178,6 +180,46 @@ export default (state = initialState, {type, payload}) => {
                         error: payload.error,
                     } : c]),
                 []),
+        };
+    case settingsActionTypes.line_numbers.SET:
+        return {
+            ...state,
+            results: state.results.reduce((p, c) => {
+
+                const {slateState} = c;
+                const code_block = slateState.document.getParent(slateState.startBlock.key);
+
+                // force code_block slateState to update for updating schema
+                return [
+                    ...p,
+                    {
+                        ...c,
+                        ...(code_block.type === 'code_block' ? {slateState: c.slateState.transform().focus().apply()} : {}),
+                    },
+                ];
+
+                // old
+                // const nodes = Raw.serialize(c.slateState, {terse: true}).nodes;
+                // return [
+                //     ...p,
+                //     {
+                //         ...c,
+                //         language: payload.language,
+                //         slateState: Raw.deserialize({
+                //             nodes: nodes.reduce((p, c) => [...p, {
+                //                 ...c,
+                //                 ...(c.type === 'code_block' ? {
+                //                     data: {
+                //                         ...c.data,
+                //                         line_numbers: payload,
+                //                     },
+                //                 } : {}),
+                //             }], []),
+                //         }, {terse: true}),
+                //     },
+                // ];
+
+            }, []),
         };
 
     default:

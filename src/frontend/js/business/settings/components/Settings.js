@@ -6,10 +6,12 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Select} from 'antd';
+import {Select, Switch} from 'antd';
 
 import languages from '../../cell/components/Editor/languages';
-import actions from '../actions';
+import themes from '../../cell/components/Editor/themes';
+
+import {actions} from '../actions';
 
 const Option = Select.Option;
 
@@ -31,22 +33,12 @@ const style = {
     },
 };
 
-const themes = [
-    '',
-    'coy',
-    'dark',
-    'funky',
-    'okaidia',
-    'solarizedlight',
-    'tomorrow',
-    'twilight',
-];
-
 class Settings extends React.Component {
     constructor(props) {
         super(props);
         this.selectTheme = this.selectTheme.bind(this);
         this.selectLanguage = this.selectLanguage.bind(this);
+        this.setLineNumbers = this.setLineNumbers.bind(this);
     }
 
     selectTheme(theme) {
@@ -57,8 +49,12 @@ class Settings extends React.Component {
         this.props.setPreferredLanguage(language);
     }
 
+    setLineNumbers(checked) {
+        this.props.setLineNumbers(checked);
+    }
+
     render() {
-        const {user: {preferred_language, theme}} = this.props;
+        const {settings: {preferred_language, theme, line_numbers}} = this.props;
 
         return (<div>
             <h1>Settings</h1>
@@ -66,24 +62,29 @@ class Settings extends React.Component {
                 <div>
                     <label style={style.label}>Preferred language:</label>
                     <Select
-                        style={style.select} defaultValue={preferred_language || languages[0]}
+                        style={style.select}
+                        defaultValue={`${preferred_language || 0}`}
                         onChange={this.selectLanguage}
                     >
                         {languages.map(o =>
-                            <Option key={o} value={o}>{o}</Option>,
+                            <Option key={o} value={`${languages.findIndex(a => a === o)}`}>{o}</Option>,
                         )}
                     </Select>
                 </div>
                 <div>
                     <label style={style.label}>Theme:</label>
                     <Select
-                        style={style.select} defaultValue={theme || themes[0]}
+                        style={style.select} defaultValue={`${theme || 0}`}
                         onChange={this.selectTheme}
                     >
                         {themes.map(o =>
-                            <Option key={o} value={o}>{o || 'morpheo'}</Option>,
+                            <Option key={o} value={`${themes.findIndex(a => a === o)}`}>{o || 'morpheo'}</Option>,
                         )}
                     </Select>
+                </div>
+                <div>
+                    <label style={style.label}>Line numbers:</label>
+                    <Switch defaultChecked={line_numbers} onChange={this.setLineNumbers}/>
                 </div>
             </div>
             <p>Use key shortcuts <span style={style.shortcut}>a</span> and <span style={style.shortcut}>b</span> for adding a cell above or below the selected cell.</p>
@@ -92,29 +93,34 @@ class Settings extends React.Component {
 }
 
 Settings.propTypes = {
-    user: PropTypes.shape({
-        preferred_language: PropTypes.string,
+    settings: PropTypes.shape({
+        preferred_language: PropTypes.number,
+        theme: PropTypes.number,
+        line_numbers: PropTypes.bool,
     }),
     setPreferredLanguage: PropTypes.func,
     setTheme: PropTypes.func,
+    setLineNumbers: PropTypes.func,
 };
 
 const noop = () => {
 };
 
 Settings.defaultProps = {
-    user: {},
+    settings: {},
     setPreferredLanguage: noop,
     setTheme: noop,
+    setLineNumbers: noop,
 };
 
 const mapStateToProps = state => ({
-    user: state.user,
+    settings: state.settings,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     setPreferredLanguage: actions.setPreferredLanguage,
     setTheme: actions.setTheme,
+    setLineNumbers: actions.setLineNumbers,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

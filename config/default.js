@@ -3,6 +3,7 @@ const apiUrl = 'https://notebook.morpheo.co';
 const apiSocketUrl = 'ws://notebook.morpheo.co';
 const storageApiUrl = 'https://storage.morpheo.co';
 const orchestratorApiUrl = 'https://orchestrator.morpheo.co';
+const servicesApiUrl = 'https://notebook-services.morpheo.co';
 
 module.exports = {
     appName: 'Notebook',
@@ -13,6 +14,7 @@ module.exports = {
             api_port: apiPort,
             storage_api_url: storageApiUrl,
             orchestrator_api_url: orchestratorApiUrl,
+            services_api_url: servicesApiUrl,
             baseName: {
                 production: '/',
                 debug: '/morpheo-notebook/build/frontend/',

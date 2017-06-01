@@ -11,6 +11,7 @@ import {Select} from 'antd';
 
 import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 import languages from './languages';
+import themes from './themes';
 
 import opts from './opts';
 import onKeyDown from './onKeyDown';
@@ -111,8 +112,9 @@ class SlateEditor extends React.Component {
 
         // do we need to transform from language markdown
         const res = o.regex.exec(text);
+
         if (res) {
-            text = text.substring(1, res['1'].length - 1 || 1);
+            text = res['1'].substring(1, (res['1'].length - 1) || 1);
         }
 
         // Insert new text
@@ -217,7 +219,7 @@ class SlateEditor extends React.Component {
         }
         // transform to code
         else {
-            const language = this.props.user.preferred_language || languages[0];
+            const language = this.props.settings.preferred_language ? languages[this.props.settings.preferred_language] : languages[0];
             const l = languagesMap.find(o => o.language === language);
             newState = this.wrapCodeBlock(newState.transform(), l).focus().apply();
         }
@@ -255,7 +257,7 @@ class SlateEditor extends React.Component {
     }
 
     render() {
-        const {cell: {slateState}, user: {theme, preferred_language}, selectLanguage} = this.props;
+        const {cell: {slateState}, settings: {theme, preferred_language, line_numbers}, selectLanguage} = this.props;
 
         // TODO put in a selector
         const syntax = slateState.document.getParent(slateState.startBlock.key).data.get('syntax');
@@ -269,7 +271,7 @@ class SlateEditor extends React.Component {
                 <div style={style.main}>
                     <Select
                         style={style.select}
-                        defaultValue={syntax || preferred_language || languages[0]}
+                        defaultValue={syntax || (preferred_language ? languages[preferred_language] : languages[0])}
                         onChange={selectLanguage}
                     >
                         {languages.map(o =>
@@ -280,7 +282,7 @@ class SlateEditor extends React.Component {
                 }
                 <Editor
                     style={style.editor}
-                    className={theme || 'default'}
+                    className={theme ? themes[theme] : 'default'}
                     plugins={plugins}
                     state={slateState}
                     onChange={this.onChange}
@@ -288,7 +290,8 @@ class SlateEditor extends React.Component {
                     onPaste={this.onPaste}
                     onBeforeInput={this.onBeforeInput}
                     onBlur={this.onBlur}
-                    schema={schema(true)}
+                    line_numbers={line_numbers}
+                    schema={schema({line_numbers})}
                 />
             </div>
         );
@@ -304,9 +307,9 @@ SlateEditor.propTypes = {
         id: PropTypes.number,
         slateState: PropTypes.shape({}),
     }).isRequired,
-    user: PropTypes.shape({
-        preferred_language: PropTypes.string,
-        theme: PropTypes.string,
+    settings: PropTypes.shape({
+        preferred_language: PropTypes.number,
+        theme: PropTypes.number,
     }).isRequired,
 };
 

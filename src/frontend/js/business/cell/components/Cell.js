@@ -58,22 +58,25 @@ class Cell extends React.Component {
         this.setActive = this.setActive.bind(this);
     }
 
-    send() {
-        this.props.send({code: this.props.cell.value, id: this.props.cell.id});
+    setActive() {
+        this.props.setActive(this.props.cell.id);
     }
 
     selectLanguage(language) {
-        this.props.setLanguage({language, id: this.props.cell.id});
+        const {cell} = this.props;
+        const {slateState} = cell;
+        const code_block = slateState.document.getParent(slateState.startBlock.key);
+        const state = slateState.transform().setNodeByKey(code_block.key, {data: {...code_block.data, syntax: language}}).focus().apply();
+        this.props.setLanguage({language, id: cell.id, state});
     }
-
-    setActive() {
-        this.props.setActive(this.props.cell.id);
+    send() {
+        this.props.send({code: this.props.cell.value, id: this.props.cell.id});
     }
     remove() {
         this.props.deleteCell(this.props.cell.id);
     }
     render() {
-        const {cell, user, set, setSlate} = this.props;
+        const {cell, settings, set, setSlate} = this.props;
 
         // TODO : create a selector on style
         return (
@@ -83,7 +86,7 @@ class Cell extends React.Component {
                         set={set}
                         setSlate={setSlate}
                         cell={cell}
-                        user={user}
+                        settings={settings}
                         selectLanguage={this.selectLanguage}
                     />
                     <div style={style.cell.actions}>
@@ -111,7 +114,7 @@ Cell.propTypes = {
         id: PropTypes.number,
         value: PropTypes.string,
     }),
-    user: PropTypes.shape({}),
+    settings: PropTypes.shape({}),
 
     deleteCell: PropTypes.func.isRequired,
     send: PropTypes.func.isRequired,
@@ -123,7 +126,7 @@ Cell.propTypes = {
 
 Cell.defaultProps = {
     cell: undefined,
-    user: undefined,
+    settings: undefined,
 };
 
-export default onlyUpdateForKeys(['cell', 'user'])(Cell);
+export default onlyUpdateForKeys(['cell', 'settings'])(Cell);

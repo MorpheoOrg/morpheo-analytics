@@ -21,7 +21,7 @@ const createCell = (cells, preferred_language, type = 'code_block') => (
                     kind: 'block',
                     type,
                     ...(type === 'code_block' ? {
-                        data: {syntax: preferred_language || languages[0]},
+                        data: {syntax: preferred_language ? languages[preferred_language] : languages[0]},
                         nodes: [
                             {
                                 kind: 'block',
@@ -69,7 +69,7 @@ class CellList extends React.Component {
 
     componentWillMount() {
         if (!this.props.cells.length) {
-            this.props.addCell({...createCell(this.props.cells, this.props.user.preferred_language, 'paragraph'), isActive: true});
+            this.props.addCell({...createCell(this.props.cells, this.props.settings.preferred_language, 'paragraph'), isActive: true});
         }
     }
 
@@ -81,16 +81,16 @@ class CellList extends React.Component {
             nextProps.keydown.event = null;
             // TODO, get KEYS from reducer user settings
             if (key === KEYS.above) { // above == before
-                this.props.insertBeforeCell(createCell(this.props.cells, this.props.user.preferred_language, 'paragraph'));
+                this.props.insertBeforeCell(createCell(this.props.cells, this.props.settings.preferred_language, 'paragraph'));
             }
             else if (key === KEYS.below) { // below == after
-                this.props.insertAfterCell(createCell(this.props.cells, this.props.user.preferred_language, 'paragraph'));
+                this.props.insertAfterCell(createCell(this.props.cells, this.props.settings.preferred_language, 'paragraph'));
             }
         }
     }
 
     addCell(type = 'code_block') {
-        this.props.addCell(createCell(this.props.cells, this.props.user.preferred_language, type));
+        this.props.addCell(createCell(this.props.cells, this.props.settings.preferred_language, type));
     }
 
     addCodeCell() {
@@ -107,7 +107,7 @@ class CellList extends React.Component {
     }
 
     render() {
-        const {user, cells, deleteCell, send, set, setLanguage, setSlate, setActive} = this.props;
+        const {settings, cells, deleteCell, send, set, setLanguage, setSlate, setActive} = this.props;
         return (<div style={style.main}>
             {cells.map(cell =>
                 <Cell
@@ -119,7 +119,7 @@ class CellList extends React.Component {
                     setSlate={setSlate}
                     setActive={setActive}
                     cell={cell}
-                    user={user}
+                    settings={settings}
                 />,
             )}
             <Button type={'primary'} onClick={this.addCodeCell} icon="plus"/>
@@ -131,8 +131,8 @@ class CellList extends React.Component {
 
 CellList.propTypes = {
     cells: PropTypes.arrayOf(PropTypes.shape({})),
-    user: PropTypes.shape({
-        preferred_language: PropTypes.string,
+    settings: PropTypes.shape({
+        preferred_language: PropTypes.number,
     }),
     deleteCell: PropTypes.func,
     send: PropTypes.func,
@@ -149,7 +149,7 @@ const noop = () => {
 
 CellList.defaultProps = {
     cells: {},
-    user: {},
+    settings: {},
     deleteCell: noop,
     send: noop,
     set: noop,
@@ -162,7 +162,7 @@ CellList.defaultProps = {
 
 const mapStateToProps = state => ({
     cells: state.cell.results,
-    user: state.user,
+    settings: state.settings,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
