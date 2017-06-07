@@ -1,6 +1,6 @@
 const apiPort = process.env.NODE_PORT || 3000;
-const apiUrl = 'https://notebook.morpheo.co';
-const apiSocketUrl = 'ws://notebook.morpheo.co';
+const apiUrl = 'https://notebook-proxy.morpheo.co';
+const apiSocketUrl = 'wss://notebook-proxy.morpheo.co';
 const storageApiUrl = 'https://storage.morpheo.co';
 const orchestratorApiUrl = 'https://orchestrator.morpheo.co';
 const servicesApiUrl = 'https://notebook-services.morpheo.co';
