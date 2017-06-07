@@ -144,6 +144,7 @@
     "dll": "NODE_ENV=production babel-node tools/run dll",
     "dll:dev": "NODE_ENV=development babel-node tools/run dll",
     "deploy": "tools/deploy.js",
+    "build&deploy": "npm run build && npm run deploy",
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "eslint": "./node_modules/.bin/eslint --fix src/frontend/"
   },
