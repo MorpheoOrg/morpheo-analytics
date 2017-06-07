@@ -1,4 +1,4 @@
-/* globals SERVICES_API_URL, localStorage, fetch */
+/* globals SERVICES_API_URL, localStorage, fetch, btoa */
 
 export function fetchSignIn(uuid) {
     return fetch(`${SERVICES_API_URL}/user/token/`, {
@@ -6,6 +6,7 @@ export function fetchSignIn(uuid) {
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json; charset=utf-8',
+            Authorization: `Basic ${btoa('morpheo:L0mB392w937499Rb')}`,
         },
         body: JSON.stringify({
             uuid,
