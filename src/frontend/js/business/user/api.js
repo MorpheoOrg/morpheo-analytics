@@ -1,12 +1,14 @@
-/* globals SERVICES_API_URL, localStorage, fetch, btoa */
+/* globals SERVICES_API_URL, localStorage, fetch, btoa, NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD */
 
 export function fetchSignIn(uuid) {
+    const basic = `${NOTEBOOK_SERVICES_USER}:${NOTEBOOK_SERVICES_PASSWORD}`;
+
     return fetch(`${SERVICES_API_URL}/user/token/`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json; charset=utf-8',
-            Authorization: `Basic ${btoa('morpheosre:L0mB392w937499Rb')}`,
+            Authorization: `Basic ${btoa(basic)}`,
         },
         body: JSON.stringify({
             uuid,
