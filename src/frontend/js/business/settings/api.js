@@ -1,12 +1,14 @@
-/* globals localStorage SERVICES_API_URL */
+/* globals localStorage fetch SERVICES_API_URL btoa */
 
-const getHeaders = () => ({
+const getHeaders = jwt => ({
     Accept: 'application/json',
     'Content-Type': 'application/json; charset=utf-8',
+    Authorization: `Basic ${jwt}`,
 });
 
 export const updateSettings = (id, payload) => {
-    const headers = getHeaders();
+    const jwt = btoa('NOTEBOOK_SERVICES_USER:NOTEBOOK_SERVICES_PASSWORD');
+    const headers = getHeaders(jwt);
     const url = `${SERVICES_API_URL}/settings/${id}/`;
 
     return fetch(url, {

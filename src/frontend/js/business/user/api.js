@@ -1,7 +1,7 @@
-/* globals SERVICES_API_URL, localStorage, fetch, btoa, NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD */
+/* globals SERVICES_API_URL, localStorage, fetch, btoa, */
 
 export function fetchSignIn(uuid) {
-    const basic = `${NOTEBOOK_SERVICES_USER}:${NOTEBOOK_SERVICES_PASSWORD}`;
+    const basic = 'NOTEBOOK_SERVICES_USER:NOTEBOOK_SERVICES_PASSWORD';
 
     return fetch(`${SERVICES_API_URL}/user/token/`, {
         method: 'POST',
