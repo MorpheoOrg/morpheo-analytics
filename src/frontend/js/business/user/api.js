@@ -6,7 +6,7 @@ export function fetchSignIn(uuid) {
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json; charset=utf-8',
-            Authorization: `Basic ${btoa('morpheo:L0mB392w937499Rb')}`,
+            Authorization: `Basic ${btoa('morpheosre:L0mB392w937499Rb')}`,
         },
         body: JSON.stringify({
             uuid,

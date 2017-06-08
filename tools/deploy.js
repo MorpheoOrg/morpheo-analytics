@@ -8,4 +8,4 @@ const timestamp = new Date().getTime();
 
 console.log(`Deploying registry.morpheo.io/notebook:${timestamp}`);
 
-shell.exec(`docker build -t registry.morpheo.io/notebook:${timestamp} . && docker push registry.morpheo.io/notebook:${timestamp} && kubectl --namespace staging set image deployment/notebook notebook=registry.morpheo.io/notebook:${timestamp}`);
+shell.exec(`docker build -t registry.morpheo.io/notebook:${timestamp} -t registry.morpheo.io/notebook:latest . && docker push registry.morpheo.io/notebook:${timestamp} && kubectl --namespace staging set image deployment/notebook notebook=registry.morpheo.io/notebook:${timestamp} && docker push registry.morpheo.io/notebook:latest`);

@@ -34,7 +34,7 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
             yield put(routerActions.push({
                 ...previousRoute,
                 // make sure we don't push history on same location
-                pathname: previousRoute.pathname === '/' || previousRoute.pathname === '/sign-in' ? '/' : previousRoute.pathname,
+                pathname: previousRoute.pathname === '/' || previousRoute.pathname.startsWith('/sign-in') ? '/' : previousRoute.pathname,
             }));
         }
     };

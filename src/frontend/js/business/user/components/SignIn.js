@@ -12,11 +12,12 @@ import theme from '../../../../css/variables';
 
 const style = {
     logo: {
-        margin: '20% auto 40px',
+        margin: '0 auto 40px',
         display: 'block',
     },
     main: {
         margin: '0 auto',
+        padding: '10% 0 0',
     },
     title: {
         fontSize: '3.5rem',

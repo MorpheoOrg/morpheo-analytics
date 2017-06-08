@@ -38,7 +38,7 @@ const PrivateRoute = ({component, store}) =>
     <Route
         render={({location, ...props}) => {
             const {user} = store.getState();
-            return location.pathname === '/sign-in' ? null : (
+            return location.pathname.startsWith('/sign-in') ? null : (
                 user && user.authenticated ?
                     React.createElement(component, props) :
                     <Redirect
