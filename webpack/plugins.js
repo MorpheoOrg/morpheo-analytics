@@ -2,6 +2,7 @@ import config from 'config';
 import webpack from 'webpack';
 
 const PRODUCTION = process.env.NODE_ENV === 'production';
+const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 export function definePlugin() {
     return new webpack.DefinePlugin({
@@ -14,5 +15,9 @@ export function definePlugin() {
         STORAGE_API_URL: JSON.stringify(config.apps.frontend.storage_api_url),
         ORCHESTRATOR_API_URL: JSON.stringify(config.apps.frontend.orchestrator_api_url),
         SERVICES_API_URL: JSON.stringify(config.apps.frontend.services_api_url),
+        ...(DEVELOPMENT ? {
+            NOTEBOOK_SERVICES_USER: JSON.stringify(config.credentials.NOTEBOOK_SERVICES_USER),
+            NOTEBOOK_SERVICES_PASSWORD: JSON.stringify(config.credentials.NOTEBOOK_SERVICES_PASSWORD),
+        }: {}),
     });
 }

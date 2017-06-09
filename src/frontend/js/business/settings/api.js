@@ -7,7 +7,7 @@ const getHeaders = jwt => ({
 });
 
 export const updateSettings = (id, payload) => {
-    const jwt = btoa('NOTEBOOK_SERVICES_USER:NOTEBOOK_SERVICES_PASSWORD');
+    const jwt = btoa(`${NOTEBOOK_SERVICES_USER}:${NOTEBOOK_SERVICES_PASSWORD}`);
     const headers = getHeaders(jwt);
     const url = `${SERVICES_API_URL}/settings/${id}/`;
 

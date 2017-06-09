@@ -1,3 +1,6 @@
+// uncomment this for testing with prod data
+import {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} from  './credentials';
+
 const apiPort = process.env.NODE_PORT || 3000;
 const apiUrl = 'https://notebook-proxy.morpheo.io';
 const apiSocketUrl = 'wss://notebook-proxy.morpheo.io';
@@ -20,6 +23,10 @@ module.exports = {
                 debug: '/morpheo-notebook/build/frontend/',
             },
         },
+    },
+    credentials: {
+        NOTEBOOK_SERVICES_USER,
+        NOTEBOOK_SERVICES_PASSWORD,
     },
     babel_ignore: /node_modules\/(?!admin-config)/,
 };
