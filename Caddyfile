@@ -2,18 +2,6 @@
   root /var/www/html
   basicauth / {$AUTH_USER} {$AUTH_PASS}
 
-  filter rule {
-      content_type application/x-javascript
-      search_pattern NOTEBOOK_SERVICES_USER
-      replacement {$NOTEBOOK_SERVICES_USER}
-  }
-
-  filter rule {
-      content_type application/x-javascript
-      search_pattern NOTEBOOK_SERVICES_PASSWORD
-      replacement {$NOTEBOOK_SERVICES_PASSWORD}
-  }
-
   rewrite {
   	ext /
     to /#{path}

@@ -31,3 +31,6 @@ dist/
 coverage
 yarn.lock
 .happypack
+
+# Secrets used in dev
+devsecret.js
