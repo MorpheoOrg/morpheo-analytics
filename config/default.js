@@ -1,5 +1,4 @@
-// uncomment this for testing with prod data
-import {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} from  './credentials';
+import {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} from './credentials';
 
 const apiPort = process.env.NODE_PORT || 3000;
 const apiUrl = 'https://notebook-proxy.morpheo.io';

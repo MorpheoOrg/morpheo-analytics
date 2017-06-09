@@ -5,7 +5,7 @@
 // const servicesApiUrl = 'http://127.0.0.1:8000';
 
 // uncomment this for testing with prod data
-import {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} from  './devsecret.js';
+import {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} from './devsecret';
 
 const apiUrl = 'https://notebook-proxy.morpheo.io';
 const apiSocketUrl = 'wss://notebook-proxy.morpheo.io';
