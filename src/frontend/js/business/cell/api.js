@@ -1,12 +1,12 @@
-/* globals */
+/* globals API_URL fetch*/
 
 export const Save = path => (payload) => {
-    //const headers = getHeaders(jwt);
+    // const headers = getHeaders(jwt);
     const url = `${API_URL}/${path}/`;
 
     return fetch(url, {
         method: 'POST',
-        //headers,
+        // headers,
         // Allows API to set http-only cookies with AJAX calls
         // @see http://www.redotheweb.com/2015/11/09/api-security.html
         // credentials: 'include',

@@ -78,7 +78,7 @@ class CellList extends React.Component {
         if (nextProps.keydown.event) {
             // prevent infinite loop
             const key = nextProps.keydown.event.key;
-            nextProps.keydown.event = null;
+            nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
             // TODO, get KEYS from reducer user settings
             if (key === KEYS.above) { // above == before
                 this.props.insertBeforeCell(createCell(this.props.cells, this.props.settings.preferred_language, 'paragraph'));
@@ -110,7 +110,7 @@ class CellList extends React.Component {
         const {settings, cells, deleteCell, send, set, setLanguage, setSlate, setActive} = this.props;
         return (<div style={style.main}>
             {cells.map(cell =>
-                <Cell
+                (<Cell
                     key={cell.id}
                     deleteCell={deleteCell}
                     send={send}
@@ -120,9 +120,9 @@ class CellList extends React.Component {
                     setActive={setActive}
                     cell={cell}
                     settings={settings}
-                />,
+                />),
             )}
-            <Button type={'primary'} onClick={this.addCodeCell} icon="plus"/>
+            <Button type={'primary'} onClick={this.addCodeCell} icon="plus" />
             <Button type={'primary'} onClick={this.addTextCell}>Add paragraph</Button>
             <Button type={'primary'} onClick={this.save}>Save</Button>
         </div>);
@@ -142,6 +142,14 @@ CellList.propTypes = {
     setSlate: PropTypes.func,
     setActive: PropTypes.func,
     addCell: PropTypes.func,
+    keydown: PropTypes.shape({
+        event: PropTypes.shape({
+            key: PropTypes.string,
+        }),
+    }),
+
+    insertBeforeCell: PropTypes.func,
+    insertAfterCell: PropTypes.func,
 };
 
 const noop = () => {
@@ -150,6 +158,7 @@ const noop = () => {
 CellList.defaultProps = {
     cells: {},
     settings: {},
+    keydown: null,
     deleteCell: noop,
     send: noop,
     set: noop,
@@ -158,6 +167,9 @@ CellList.defaultProps = {
     setSlate: noop,
     setActive: noop,
     addCell: noop,
+
+    insertBeforeCell: noop,
+    insertAfterCell: noop,
 };
 
 const mapStateToProps = state => ({

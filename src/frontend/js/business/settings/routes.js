@@ -1,3 +1,5 @@
+/* globals window */
+
 import {Route} from 'react-router';
 import React from 'react';
 import {injectSaga} from 'redux-sagas-injector';
@@ -31,6 +33,6 @@ const AsyncSettings = asyncComponent({
 
 // automatically redirect to models pokemon if we signed in and redirection has not been made
 export default props =>
-    <div className="settings">
+    (<div className="settings">
         <Route path="/" component={AsyncSettings} />
-    </div>;
+    </div>);

@@ -51,9 +51,9 @@ const SignIn = (props) => {
                 <p className="error" role="alert">
                     <ul>
                         {signInError.length && Object.keys(signInError).map(o =>
-                            <li key={o}>
+                            (<li key={o}>
                                 {o}: <ul>{signInError[o].map(x => <li key={x}>{x}</li>)}</ul>
-                            </li>,
+                            </li>),
                         )}
                     </ul>
                     {signInError.detail || signInError.message}

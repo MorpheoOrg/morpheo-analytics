@@ -1,11 +1,10 @@
 import {actionTypes} from './actions';
-import {actionTypes as settingsActionTypes} from '../settings/actions';
 
 export default function (localStorage) {
     const initialState = {
         uuid: localStorage.getItem('uuid'),
         access_token: localStorage.getItem('access_token'),
-        //exp: localStorage.getItem('exp') ? parseInt(localStorage.getItem('exp'), 10) : localStorage.getItem('exp'),
+        // exp: localStorage.getItem('exp') ? parseInt(localStorage.getItem('exp'), 10) : localStorage.getItem('exp'),
         authenticated: !!localStorage.getItem('access_token'),
         loading: false,
         modal: false,
@@ -19,7 +18,7 @@ export default function (localStorage) {
                 ...state,
                 authenticated: false,
                 access_token: null,
-                //exp: null,
+                // exp: null,
                 error: false,
                 loading: true,
             };
@@ -41,7 +40,7 @@ export default function (localStorage) {
                 error: payload,
                 loading: false,
                 token: null,
-                //exp: null,
+                // exp: null,
                 registered: false,
             };
 
@@ -53,7 +52,7 @@ export default function (localStorage) {
                 has_permission: false,
                 token: null,
                 loading: false,
-                //exp: null,
+                // exp: null,
             };
         case actionTypes.modal.SET:
             return {

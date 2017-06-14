@@ -1,4 +1,4 @@
-import {Raw} from 'slate';
+// import {Raw} from 'slate';
 
 import {actionTypes} from './actions';
 import {actionTypes as kernelActionTypes} from '../kernel/actions';
@@ -58,21 +58,20 @@ export default (state = initialState, {type, payload}) => {
                     } : c]),
                 []),
         };
-        // TODO rework to use a correct transform
     case actionTypes.SET_LANGUAGE:
         return {
             ...state,
-            results: state.results.reduce((p, c) => {
+            results: state.results.reduce((p, c) =>
 
                 // force slateState to update for updating schema
-                return [
+                [
                     ...p,
                     c.id === payload.id ? {
                         ...c,
                         language: payload.language,
                         slateState: payload.state,
                     } : c,
-                ];
+                ]
 
                 // old one
                 // const nodes = Raw.serialize(c.slateState, {terse: true}).nodes;
@@ -90,7 +89,7 @@ export default (state = initialState, {type, payload}) => {
                 //     } : c,
                 // ];
 
-            }, []),
+            , []),
         };
     case actionTypes.SET_SLATE:
         return {
@@ -185,7 +184,6 @@ export default (state = initialState, {type, payload}) => {
         return {
             ...state,
             results: state.results.reduce((p, c) => {
-
                 const {slateState} = c;
                 const code_block = slateState.document.getParent(slateState.startBlock.key);
 
@@ -218,7 +216,6 @@ export default (state = initialState, {type, payload}) => {
                 //         }, {terse: true}),
                 //     },
                 // ];
-
             }, []),
         };
 

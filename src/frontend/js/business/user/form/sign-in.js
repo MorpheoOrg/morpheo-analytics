@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 
-import {Form, Icon, Input, Button, Checkbox} from 'antd';
+import {Form, Icon, Input, Button} from 'antd';
 
 const FormItem = Form.Item;
 
@@ -69,12 +69,16 @@ SignInForm.propTypes = {
         PropTypes.shape({}),
         PropTypes.string,
     ]),
+    form: PropTypes.shape({
+        validateFields: PropTypes.shape({}),
+    }),
 };
 
 SignInForm.defaultProps = {
     signInError: null,
     signIn: null,
     previousRoute: null,
+    form: null,
 };
 
 export default onlyUpdateForKeys(['signInError', 'previousRoute'])(Form.create()(SignInForm));

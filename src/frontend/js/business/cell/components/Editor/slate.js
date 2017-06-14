@@ -4,7 +4,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Editor, Text, Block, Document} from 'slate';
+import {Editor} from 'slate';
 import PluginEditCode from 'slate-edit-code';
 import PluginPrism from 'slate-prism';
 import {Select} from 'antd';
@@ -15,13 +15,15 @@ import themes from './themes';
 
 import opts from './opts';
 import onKeyDown from './onKeyDown';
+import onPaste from './onPaste';
 import schema from './schema';
 import getCurrentCode from '../../../../../../../node_modules/slate-edit-code/dist/getCurrentCode';
-import deserializeCode from '../../../../../../../node_modules/slate-edit-code/dist/deserializeCode';
 
-const Option = Select.Option;
+import {wrapCodeBlock, wrapParagraph} from './utils';
 
 // make opts available for dealing with custom KeyDown
+
+const Option = Select.Option;
 
 const pluginEditCode = PluginEditCode(opts);
 
@@ -54,11 +56,14 @@ const languagesMap = languages.map(l => ({
     regex: new RegExp(`${regexPrefix}${l}${regexSuffix}`, 'g'),
 }));
 
-// TODO: put a throttle on return key for avoiding lag
 class SlateEditor extends React.Component {
 
     static onKeyDown(e, data, state) {
         return onKeyDown(e, data, state, opts);
+    }
+
+    static onPaste(e, data, state) {
+        return onPaste(e, data, state, opts);
     }
 
     constructor(props) {
@@ -66,9 +71,9 @@ class SlateEditor extends React.Component {
         this.onChange = this.onChange.bind(this);
         this.onBeforeInput = this.onBeforeInput.bind(this);
         SlateEditor.onKeyDown = SlateEditor.onKeyDown.bind(this);
+        SlateEditor.onPaste = SlateEditor.onPaste.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onToggleCode = this.onToggleCode.bind(this);
-        this.onPaste = this.onPaste.bind(this);
     }
 
     onBeforeInput(event, data) {
@@ -98,83 +103,6 @@ class SlateEditor extends React.Component {
         return exit ? this.props.cell.slateState : undefined;
     }
 
-    wrapCodeBlockByKey(opts, transform, key, o) {
-        const {state} = transform;
-        const {document} = state;
-
-        const startBlock = document.getDescendant(key);
-        let text = startBlock.text;
-
-        // Remove all child
-        startBlock.nodes.forEach((node) => {
-            transform.removeNodeByKey(node.key, {normalize: false});
-        });
-
-        // do we need to transform from language markdown
-        const res = o.regex.exec(text);
-
-        if (res) {
-            text = res['1'].substring(1, (res['1'].length - 1) || 1);
-        }
-
-        // Insert new text
-        const toInsert = deserializeCode(opts, text);
-
-        toInsert.nodes.forEach((node, i) => {
-            transform.insertNodeByKey(startBlock.key, i, node);
-        });
-
-        // Set node type
-        transform.setNodeByKey(startBlock.key, {
-            type: opts.containerType,
-            data: {syntax: o.language},
-        });
-
-        return transform;
-    }
-
-    wrapCodeBlock(transform, o) {
-        const {state} = transform;
-        const {startBlock, selection} = state;
-
-        // Convert to code block
-        transform = this.wrapCodeBlockByKey(opts, transform, startBlock.key, o);
-
-        // TODO, find a way to correctly set the offset on a multilines code
-        // Move selection back in the block
-        transform = transform
-            .collapseToStartOf(transform.state.document.getDescendant(startBlock.key))
-            .moveOffsetsTo(0);// selection.startOffset - 7);
-
-        return transform;
-    }
-
-    wrapParagraph(transform) {
-        const {state} = transform;
-        const {startBlock} = state;
-
-        const parentBlock = state.document.getParent(startBlock.key);
-
-        const text = parentBlock.getTexts().map(t => t.text).join('\n');
-
-        // add paragraph and unwrap it for putting it on the same level of code_block
-        transform.insertBlock(Block.create(
-            {
-                type: opts.exitBlockType,
-                nodes: [Text.createFromString(text)],
-            },
-        )).unwrapBlock();
-
-        // remove code line
-        parentBlock.nodes.forEach((node) => {
-            transform.removeNodeByKey(node.key, {normalize: false});
-        });
-        // remove code block
-        transform.removeNodeByKey(parentBlock.key, {normalize: false});
-
-        return transform;
-    }
-
     onChange(state) {
         const {startBlock, startText} = state;
 
@@ -187,7 +115,7 @@ class SlateEditor extends React.Component {
             languages.forEach((language) => {
                 const l = languagesMap.find(o => language === o.language);
                 if (text.match(l.regex)) {
-                    newState = this.wrapCodeBlock(state.transform(), l).focus().apply();
+                    newState = wrapCodeBlock(opts, state.transform(), l).focus().apply();
                 }
             });
         }
@@ -215,45 +143,16 @@ class SlateEditor extends React.Component {
 
         // transform to paragraph
         if (pluginEditCode.utils.isInCodeBlock(this.props.cell.slateState)) {
-            newState = this.wrapParagraph(newState.transform()).focus().apply();
+            newState = wrapParagraph(opts, newState.transform()).focus().apply();
         }
         // transform to code
         else {
             const language = this.props.settings.preferred_language ? languages[this.props.settings.preferred_language] : languages[0];
             const l = languagesMap.find(o => o.language === language);
-            newState = this.wrapCodeBlock(newState.transform(), l).focus().apply();
+            newState = wrapCodeBlock(opts, newState.transform(), l).focus().apply();
         }
 
         this.props.setSlate({state: newState, id: this.props.cell.id});
-    }
-
-    /**
-     * User is pasting content, insert it as text
-     */
-    onPaste(event, data, state) {
-        const currentCode = getCurrentCode(opts, state);
-
-        // Convert to text if needed
-        let text;
-        if (data.type === 'fragment') {
-            text = data.fragment.getTexts().map(t => t.text).join('\n');
-        } else {
-            text = data.text;
-        }
-
-        const {endBlock} = state;
-        if (!currentCode || !currentCode.hasDescendant(endBlock.key)) {
-            return state.transform().insertText(text).apply();
-        }
-
-        // Convert the text to code lines
-        const lines = deserializeCode(opts, text).nodes;
-
-        const fragment = Document.create({nodes: lines});
-
-        return state.transform()
-            .insertFragment(fragment)
-            .apply();
     }
 
     render() {
@@ -287,7 +186,7 @@ class SlateEditor extends React.Component {
                     state={slateState}
                     onChange={this.onChange}
                     onKeyDown={SlateEditor.onKeyDown}
-                    onPaste={this.onPaste}
+                    onPaste={SlateEditor.onPaste}
                     onBeforeInput={this.onBeforeInput}
                     onBlur={this.onBlur}
                     line_numbers={line_numbers}
@@ -305,7 +204,15 @@ SlateEditor.propTypes = {
 
     cell: PropTypes.shape({
         id: PropTypes.number,
-        slateState: PropTypes.shape({}),
+        slateState: PropTypes.shape({
+            selection: PropTypes.shape({
+                anchorKey: PropTypes.string,
+                anchorOffset: PropTypes.number,
+                focusKey: PropTypes.string,
+                focusOffset: PropTypes.number,
+            }),
+            transform: PropTypes.func,
+        }),
     }).isRequired,
     settings: PropTypes.shape({
         preferred_language: PropTypes.number,

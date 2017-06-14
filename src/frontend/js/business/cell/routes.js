@@ -1,3 +1,5 @@
+/* globals window */
+
 import {Route} from 'react-router';
 import React from 'react';
 import {injectReducer} from 'redux-injector';
@@ -36,6 +38,6 @@ const AsyncCell = asyncComponent({
 
 // automatically redirect to models pokemon if we signed in and redirection has not been made
 export default props =>
-    <div className="cells">
+    (<div className="cells">
         <Route path="/" component={AsyncCell} />
-    </div>;
+    </div>);

@@ -41,16 +41,16 @@ class Settings extends React.Component {
         this.setLineNumbers = this.setLineNumbers.bind(this);
     }
 
-    selectTheme(theme) {
-        this.props.setTheme(theme);
+    setLineNumbers(checked) {
+        this.props.setLineNumbers(checked);
     }
 
     selectLanguage(language) {
         this.props.setPreferredLanguage(language);
     }
 
-    setLineNumbers(checked) {
-        this.props.setLineNumbers(checked);
+    selectTheme(theme) {
+        this.props.setTheme(theme);
     }
 
     render() {
@@ -60,7 +60,7 @@ class Settings extends React.Component {
             <h1>Settings</h1>
             <div style={style.main}>
                 <div>
-                    <label style={style.label}>Preferred language:</label>
+                    <label htmlFor={'language'} style={style.label}>Preferred language:</label>
                     <Select
                         style={style.select}
                         defaultValue={`${preferred_language || 0}`}
@@ -72,9 +72,10 @@ class Settings extends React.Component {
                     </Select>
                 </div>
                 <div>
-                    <label style={style.label}>Theme:</label>
+                    <label htmlFor={'theme'} style={style.label}>Theme:</label>
                     <Select
-                        style={style.select} defaultValue={`${theme || 0}`}
+                        style={style.select}
+                        defaultValue={`${theme || 0}`}
                         onChange={this.selectTheme}
                     >
                         {themes.map(o =>
@@ -83,8 +84,8 @@ class Settings extends React.Component {
                     </Select>
                 </div>
                 <div>
-                    <label style={style.label}>Line numbers:</label>
-                    <Switch defaultChecked={line_numbers} onChange={this.setLineNumbers}/>
+                    <label htmlFor={'line_numbers'} style={style.label}>Line numbers:</label>
+                    <Switch defaultChecked={line_numbers} onChange={this.setLineNumbers} />
                 </div>
             </div>
             <p>Use key shortcuts <span style={style.shortcut}>a</span> and <span style={style.shortcut}>b</span> for adding a cell above or below the selected cell.</p>

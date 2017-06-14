@@ -36,7 +36,6 @@ function onBackspace(event, data, state, opts) {
 
     // Otherwise check if we are in an empty code container...
     else if (opts.exitBlockType) {
-
         const currentCode = getCurrentCode(opts, state);
         const isStartOfCode = startOffset === 0
             && currentCode.getFirstText() === startText;

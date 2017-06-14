@@ -35,7 +35,7 @@ const AsyncApp = asyncComponent({
 });
 
 const PrivateRoute = ({component, store}) =>
-    <Route
+    (<Route
         render={({location, ...props}) => {
             const {user} = store.getState();
             return location.pathname.startsWith('/sign-in') ? null : (
@@ -53,7 +53,7 @@ const PrivateRoute = ({component, store}) =>
                     />
                 );
         }}
-    />;
+    />);
 
 PrivateRoute.propTypes = {
     component: PropTypes.func.isRequired,
@@ -67,14 +67,14 @@ PrivateRoute.defaultProps = {
 };
 
 const Routes = ({store}) =>
-    <div id="routes">
+    (<div id="routes">
         <div className="middle">
             <Route path="/" component={AsyncApp} />
             <PrivateRoute component={SettingsRoutes} store={store} />
             <PrivateRoute component={CellRoutes} store={store} />
             <UserRoute />
         </div>
-    </div>;
+    </div>);
 
 Routes.propTypes = {
     store: PropTypes.shape({}).isRequired,

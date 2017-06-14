@@ -5,7 +5,7 @@ import {routerMiddleware} from 'react-router-redux';
 import rootSaga from '../sagas';
 import rootReducer from '../reducers';
 
-import history from '../history/prod';
+import {history} from '../history/prod';
 
 export default function configureStore(initialState) {
     const enhancers = [

@@ -3,9 +3,6 @@
  */
 
 /* globals Prism */
-
-import PluginPrism from 'slate-prism';
-
 import SlateEditor from './slate';
 import PrismPython from '../../../../utils/Prism/languages/python';
 import PrismR from '../../../../utils/Prism/languages/r';

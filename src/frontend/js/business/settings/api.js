@@ -1,4 +1,4 @@
-/* globals localStorage fetch SERVICES_API_URL btoa */
+/* globals localStorage fetch SERVICES_API_URL btoa NOTEBOOK_SERVICES_USER NOTEBOOK_SERVICES_PASSWORD */
 
 const getHeaders = jwt => ({
     Accept: 'application/json',

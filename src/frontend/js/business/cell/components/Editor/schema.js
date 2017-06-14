@@ -23,11 +23,13 @@ const schemaStyle = {
     },
 };
 
+/* eslint-disable */
+
 const schema = ({line_numbers}) => ({
     nodes: {
         code_block: {
             render: (props) => {
-                const {editor, node, state} = props;
+                const {editor, node} = props;
                 const linesNumber = node.getTexts().size;
 
                 return (<pre
@@ -37,7 +39,7 @@ const schema = ({line_numbers}) => ({
                     <code className={`language-${node.data.get('syntax')}`} {...props.attributes}>
                         {editor.props.line_numbers && <span className="line-numbers-rows" contentEditable={false}>
                             {[...Array(linesNumber).keys()].map(o =>
-                                <span key={o}/>,
+                                <span key={o} />,
                             )}
                         </span>
                         }
@@ -47,12 +49,12 @@ const schema = ({line_numbers}) => ({
             },
         },
         paragraph: {
-            render: (props) => {
-                return <p  {...props.attributes} style={schemaStyle.p}>{props.children}</p>;
-            },
+            render: props => <p {...props.attributes} style={schemaStyle.p}>{props.children}</p>,
         },
     },
 });
+
+/* eslint-enable */
 
 export default schema;
 

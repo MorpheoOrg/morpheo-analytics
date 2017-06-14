@@ -1,8 +1,7 @@
-import {call, select, put, takeLatest} from 'redux-saga/effects';
+import {call, select, takeLatest} from 'redux-saga/effects';
 
 import {
     actionTypes,
-    actions,
 } from './actions';
 import {
     storeSettings as storeSettingsApi,
@@ -17,7 +16,7 @@ const storeSettings = settings =>
         const {res} = yield call(updateSettingsApi, state.settings.id, {[settings]: payload});
 
         if (res) {
-            //yield put(actions.update(res));
+            // yield put(actions.update(res));
             yield call(storeSettingsApi, JSON.stringify(res));
         }
     };

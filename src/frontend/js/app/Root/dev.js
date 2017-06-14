@@ -11,14 +11,14 @@ import Routes from '../routes';
 import history from '../history/dev';
 
 const Root = ({store, ...props}) =>
-    <Provider store={store}>
+    (<Provider store={store}>
         <div>
             <ConnectedRouter history={history}>
                 <Routes store={store} />
             </ConnectedRouter>
             <DevTools />
         </div>
-    </Provider>;
+    </Provider>);
 
 Root.propTypes = {
     store: PropTypes.shape({}).isRequired,

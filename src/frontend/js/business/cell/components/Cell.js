@@ -66,21 +66,34 @@ class Cell extends React.Component {
         const {cell} = this.props;
         const {slateState} = cell;
         const code_block = slateState.document.getParent(slateState.startBlock.key);
-        const state = slateState.transform().setNodeByKey(code_block.key, {data: {...code_block.data, syntax: language}}).focus().apply();
+        const state = slateState.transform().setNodeByKey(code_block.key, {
+            data: {
+                ...code_block.data,
+                syntax: language,
+            },
+        }).focus().apply();
         this.props.setLanguage({language, id: cell.id, state});
     }
+
     send() {
         this.props.send({code: this.props.cell.value, id: this.props.cell.id});
     }
+
     remove() {
         this.props.deleteCell(this.props.cell.id);
     }
+
     render() {
         const {cell, settings, set, setSlate} = this.props;
 
         // TODO : create a selector on style
         return (
-            <div style={{...style.cell.main, ...(cell.isActive ? {border: '2px solid #3f8bea'} : {border: '2px solid transparent'})}} onClick={this.setActive}>
+            <div
+                style={{...style.cell.main, ...(cell.isActive ? {border: '2px solid #3f8bea'} : {border: '2px solid transparent'})}}
+                onClick={this.setActive}
+                role="textbox"
+                tabIndex={cell.id}
+            >
                 <div style={style.cell.input}>
                     <Editor
                         set={set}

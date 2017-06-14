@@ -1,4 +1,4 @@
-/* globals SERVICES_API_URL, localStorage, fetch, btoa, */
+/* globals SERVICES_API_URL, localStorage, fetch, btoa, NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD */
 
 export function fetchSignIn(uuid) {
     const basic = `${NOTEBOOK_SERVICES_USER}:${NOTEBOOK_SERVICES_PASSWORD}`;
@@ -31,7 +31,7 @@ export function fetchSignIn(uuid) {
 }
 
 export const storeLocalUser = ({settings, uuid, access_token}) => {
-    //localStorage.setItem('exp', exp);
+    // localStorage.setItem('exp', exp);
     localStorage.setItem('settings', JSON.stringify(settings));
     localStorage.setItem('uuid', uuid);
     localStorage.setItem('access_token', access_token);
@@ -39,7 +39,7 @@ export const storeLocalUser = ({settings, uuid, access_token}) => {
 
 export const removeLocalUser = () => {
     // user
-    //localStorage.removeItem('exp');
+    // localStorage.removeItem('exp');
     localStorage.removeItem('settings');
     localStorage.removeItem('uuid');
     localStorage.removeItem('access_token');

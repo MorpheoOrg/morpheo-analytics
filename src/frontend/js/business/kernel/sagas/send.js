@@ -32,7 +32,7 @@ const sendSocketMessage = socket =>
             buffers: {},
         };
 
-        socket.send(JSON.stringify(message));
+        yield socket.send(JSON.stringify(message));
     };
 
 /* istanbul ignore next */

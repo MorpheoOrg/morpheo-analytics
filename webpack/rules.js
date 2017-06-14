@@ -35,13 +35,13 @@ export default function (appName) {
         use: 'html-loader',
     }, {
         test: /\.s?css$/,
-        exclude: /node_modules/,
+        //exclude: /node_modules/,
         ...(PRODUCTION ? {
             loader: ExtractTextPlugin.extract({
                 fallback: 'style-loader',
-                use: ['css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader']
-            })
-        } : {loaders: ["style-loader", "css-loader?sourceMap", "postcss-loader?sourceMap", "sass-loader?sourceMap&sourceComments"]} )
+                use: ['css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
+            }),
+        } : {loaders: ['style-loader', 'css-loader?sourceMap', 'postcss-loader?sourceMap', 'sass-loader?sourceMap&sourceComments']}),
     }, {
         test: /antd.*\.less$/,
         ...(PRODUCTION ? {
@@ -51,48 +51,48 @@ export default function (appName) {
                     {
                         loader: 'css-loader',
                         options: {
-                            importLoaders: true
-                        }
+                            importLoaders: true,
+                        },
                     },
                     {
                         loader: 'postcss-loader',
                         options: {
-                            sourceMap: true
-                        }
+                            sourceMap: true,
+                        },
                     },
                     {
                         loader: 'less-loader',
                         options: {
                             sourceMap: true,
-                            modifyVars: theme
-                        }
+                            modifyVars: theme,
+                        },
                     },
                 ],
-            })
+            }),
         } : {
             use: [
                 'style-loader',
                 {
                     loader: 'css-loader',
                     options: {
-                        sourceMap: true
-                    }
+                        sourceMap: true,
+                    },
                 },
                 {
                     loader: 'postcss-loader',
                     options: {
-                        sourceMap: true
-                    }
+                        sourceMap: true,
+                    },
                 },
                 {
                     loader: 'less-loader',
                     options: {
                         sourceMap: true,
-                        modifyVars: theme
-                    }
+                        modifyVars: theme,
+                    },
                 },
-            ]
-        } )
+            ],
+        }),
     },
     ];
 }

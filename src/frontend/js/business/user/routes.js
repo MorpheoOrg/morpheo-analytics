@@ -8,6 +8,6 @@ const AsyncSignIn = asyncComponent({
     LoadingComponent: props => <div>Loading</div>});
 
 
-export default props => <Switch>
+export default props => (<Switch>
     <Route exact path="/sign-in" component={AsyncSignIn} />
-</Switch>;
+</Switch>);
