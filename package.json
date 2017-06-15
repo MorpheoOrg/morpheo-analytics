@@ -154,5 +154,6 @@
     "eslint"
   ],
   "author": "Guillaume Cisco",
-  "license": "MIT"
+  "license": "CECILL-2.1",
+  "description": "Notebook frontend"
 }
