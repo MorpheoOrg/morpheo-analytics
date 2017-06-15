@@ -35,7 +35,7 @@ export default function (appName) {
         use: 'html-loader',
     }, {
         test: /\.s?css$/,
-        //exclude: /node_modules/,
+        exclude: /node_modules\/^(?!prismjs)/,
         ...(PRODUCTION ? {
             loader: ExtractTextPlugin.extract({
                 fallback: 'style-loader',
@@ -75,7 +75,7 @@ export default function (appName) {
                 {
                     loader: 'css-loader',
                     options: {
-                        sourceMap: true,
+                        importLoaders: true,
                     },
                 },
                 {
