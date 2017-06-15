@@ -46,7 +46,7 @@ describe('fetchEntitiesFactory', () => {
         expect(fetch).to.have.been.calledWith('http://api/foo/', {
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -58,7 +58,7 @@ describe('fetchEntitiesFactory', () => {
         expect(fetch).to.have.been.calledWith('http://api/foo/', {
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -72,12 +72,7 @@ describe('fetchEntitiesFactory', () => {
         }));
 
         fetchEntitiesFactory('foo')({}).then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.be.equal('Run you fools !');
 
             done();
         }).catch(done);
@@ -115,7 +110,7 @@ describe('fetchEntityFactory', () => {
         expect(fetch).to.have.been.calledWith('http://api/foo/entityId/', {
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -129,12 +124,7 @@ describe('fetchEntityFactory', () => {
         }));
 
         fetchEntityFactory('foo')('entityId').then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.deep.equal('Run you fools !');
             done();
         }).catch(done);
     });
@@ -171,7 +161,7 @@ describe('fetchEntitiesByPathFactory', () => {
         expect(fetch).to.have.been.calledWith('http://api/foo/1/view/', {
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -180,10 +170,10 @@ describe('fetchEntitiesByPathFactory', () => {
 
     it('should call fetch with correct parameters when called with parameters and jwt', () => {
         fetchEntitiesByPathFactory('foo', 'view')({page: 1}, 'token', 1);
-        expect(fetch).to.have.been.calledWith('http://api/foo/', {
+        expect(fetch).to.have.been.calledWith('http://api/foo/1/view/?page=1', {
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -197,12 +187,7 @@ describe('fetchEntitiesByPathFactory', () => {
         }));
 
         fetchEntitiesByPathFactory('foo', 'view')({}).then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.deep.equal('Run you fools !');
 
             done();
         }).catch(done);
@@ -240,7 +225,7 @@ describe('fetchByUrl', () => {
         expect(fetch).to.have.been.calledWith('http://api/toto/', {
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -252,7 +237,7 @@ describe('fetchByUrl', () => {
         expect(fetch).to.have.been.calledWith('http://api/toto/?page=1', {
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -266,12 +251,7 @@ describe('fetchByUrl', () => {
         }));
 
         fetchByUrl('http://api/toto/').then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.deep.equal('Run you fools !');
 
             done();
         }).catch(done);
@@ -310,7 +290,7 @@ describe('deleteEntityFactory', () => {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -324,12 +304,7 @@ describe('deleteEntityFactory', () => {
         }));
 
         deleteEntityFactory('foo')('entityId').then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.deep.equal('Run you fools !');
             done();
         }).catch(done);
     });
@@ -367,7 +342,7 @@ describe('updateEntityFactory', () => {
             method: 'PATCH',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -381,7 +356,7 @@ describe('updateEntityFactory', () => {
             method: 'PATCH',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -396,12 +371,7 @@ describe('updateEntityFactory', () => {
         }));
 
         updateEntityFactory('foo')('entityId').then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.deep.equal('Run you fools !');
             done();
         }).catch(done);
     });
@@ -442,7 +412,7 @@ describe('createEntityFactory', () => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -456,7 +426,7 @@ describe('createEntityFactory', () => {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
                 'Content-Type': 'application/json; charset=utf-8',
             },
             mode: 'cors',
@@ -471,12 +441,7 @@ describe('createEntityFactory', () => {
         }));
 
         createEntityFactory('foo')().then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.deep.equal('Run you fools !');
             done();
         }).catch(done);
     });
@@ -513,7 +478,7 @@ describe('createFormEntityFactory', () => {
         expect(fetch).to.have.been.calledWith('http://api/foo/', {
             method: 'POST',
             headers: {
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
             },
             mode: 'cors',
             body: JSON.stringify(undefined),
@@ -532,7 +497,7 @@ describe('createFormEntityFactory', () => {
     //     expect(fetch).to.have.been.calledWith('http://api/foo/', {
     //         method: 'POST',
     //         headers: {
-    //             Authorization: 'Bearer token',
+    //             Authorization: 'JWT token',
     //         },
     //         mode: 'cors',
     //         body
@@ -546,12 +511,7 @@ describe('createFormEntityFactory', () => {
         }));
 
         createFormEntityFactory('foo')().then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.deep.equal('Run you fools !');
             done();
         }).catch(done);
     });
@@ -589,7 +549,7 @@ describe('updateFormEntityFactory', () => {
         expect(fetch).to.have.been.calledWith('http://api/foo/entityId/', {
             method: 'PATCH',
             headers: {
-                Authorization: 'Bearer token',
+                Authorization: 'JWT token',
             },
             mode: 'cors',
             body: JSON.stringify(undefined),
@@ -608,7 +568,7 @@ describe('updateFormEntityFactory', () => {
     //     expect(fetch).to.have.been.calledWith('http://api/foo/', {
     //         method: 'POST',
     //         headers: {
-    //             Authorization: 'Bearer token',
+    //             Authorization: 'JWT token',
     //         },
     //         mode: 'cors',
     //         body
@@ -622,12 +582,7 @@ describe('updateFormEntityFactory', () => {
         }));
 
         updateFormEntityFactory('foo')().then((result) => {
-            expect(result).to.deep.equal({
-                error: {
-                    body: new Error('Run you fools !'),
-                    status: undefined,
-                },
-            });
+            expect(result.error.body.message).to.deep.equal('Run you fools !');
             done();
         }).catch(done);
     });

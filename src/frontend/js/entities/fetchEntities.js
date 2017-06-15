@@ -114,7 +114,7 @@ export const updateFormEntityFactory = path => (id, jwt, payload) => {
     const headers = {};
 
     if (jwt) {
-        headers.Authorization = `Bearer ${jwt}`;
+        headers.Authorization = `JWT ${jwt}`;
     }
 
     const url = `${API_URL}/${path}/${id}/`;
@@ -166,7 +166,7 @@ export const createFormEntityFactory = path => (jwt, payload) => {
     const headers = {};
 
     if (jwt) {
-        headers.Authorization = `Bearer ${jwt}`;
+        headers.Authorization = `JWT ${jwt}`;
     }
 
     const url = `${API_URL}/${path}/`;
