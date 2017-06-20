@@ -1,0 +1,136 @@
+/*
+ Copyright Morpheo Org. 2017
+ 
+ contact@morpheo.co
+ 
+ This software is part of the Morpheo project, an open-source machine
+ learning platform.
+ 
+ This software is governed by the CeCILL license, compatible with the
+ GNU GPL, under French law and abiding by the rules of distribution of
+ free software. You can  use, modify and/ or redistribute the software
+ under the terms of the CeCILL license as circulated by CEA, CNRS and
+ INRIA at the following URL "http://www.cecill.info".
+ 
+ As a counterpart to the access to the source code and  rights to copy,
+ modify and redistribute granted by the license, users are provided only
+ with a limited warranty  and the software's author,  the holder of the
+ economic rights,  and the successive licensors  have only  limited
+ liability.
+ 
+ In this respect, the user's attention is drawn to the risks associated
+ with loading,  using,  modifying and/or developing or reproducing the
+ software by the user in light of its specific status of free software,
+ that may mean  that it is complicated to manipulate,  and  that  also
+ therefore means  that it is reserved for developers  and  experienced
+ professionals having in-depth computer knowledge. Users are therefore
+ encouraged to load and test the software's suitability as regards their
+ requirements in conditions enabling the security of their systems and/or
+ data to be ensured and,  more generally, to use and operate it in the
+ same conditions as regards security.
+ 
+ The fact that you are presently reading this means that you have had
+ knowledge of the CeCILL license and that you accept its terms.
+ */
+.trial-list {
+    background: #fff;
+    border-radius: 5px;
+    margin: 0;
+    margin-bottom: 40px;
+    padding: 0;
+    box-shadow: 0 5px 10px -3px rgba(0,0,0, 0.1);
+    border: 1px solid #e9e9e9;
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+        position: relative;
+        li {
+            &.trial {
+                background: #fff;
+                height: 60px;
+                padding: 10px;
+                padding-left: 20px;
+                border-bottom: 2px solid #F7F7F7;
+                position: relative;
+
+                &:hover {
+                    background: #F7F7F7;
+                    cursor: pointer;
+                    position: relative;
+                }
+                &:first-child{
+                    border-top-left-radius: 5px !important;
+                    border-top-right-radius: 5px !important;
+                }
+                &:last-child{
+                    border-bottom-left-radius: 5px !important;
+                    border-bottom-right-radius: 5px !important;
+                    border-bottom: 0;
+                }
+                h3 {
+                    font-size: 15px;
+                    padding: 0;
+                    margin: 0;
+                }
+                .date {
+                    font-size: 12px;
+                    padding: 0;
+                    color: #919197;
+                    font-weight: 600;
+                }
+            }
+            &.trial-expanded {
+                min-height: 100px;
+                max-height: none;
+                height: auto;
+                position: relative;
+                box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.05),
+                0px 3px 6px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+                z-index: 100;
+                width: 101%;
+                right: .5%;
+                border-radius: 5px;
+
+                div.trial-expanded-header {
+                    background-color: #F7F7F7;
+                    padding: 15px;
+                    border-bottom: 1px solid #e9e9e9;
+                    cursor: pointer;
+                    border-top-left-radius: 5px !important;
+                    border-top-right-radius: 5px !important;
+                    box-shadow: inset 0px 20px 50px -10px rgba(#fff, 1);
+                    h2 {
+                        font-size: 18px;
+                    }
+                }
+                div.trial-expanded-content {
+                    padding: 15px;
+                }
+                .score {
+                    top: 10px;
+                }
+            }
+            .score {
+                position: absolute;
+                right: 10px;
+                top: 0;
+                font-size: 18px;
+                padding: 10px;
+                padding-top: 15px;
+            }
+        }
+    }
+}
+
+.trial-list li .score span {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    margin-right: 5px;
+    position: relative;
+    font-weight: 800;
+    opacity: 0.7;
+    letter-spacing: 1px;
+    top: -1px;
+}

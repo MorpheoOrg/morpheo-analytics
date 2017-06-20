@@ -1,0 +1,5 @@
+*
+!build/frontend
+!Dockerfile
+!Caddyfile
+!inject_vars_and_run.sh

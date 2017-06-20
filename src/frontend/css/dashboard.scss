@@ -1,0 +1,101 @@
+/*
+ Copyright Morpheo Org. 2017
+ 
+ contact@morpheo.co
+ 
+ This software is part of the Morpheo project, an open-source machine
+ learning platform.
+ 
+ This software is governed by the CeCILL license, compatible with the
+ GNU GPL, under French law and abiding by the rules of distribution of
+ free software. You can  use, modify and/ or redistribute the software
+ under the terms of the CeCILL license as circulated by CEA, CNRS and
+ INRIA at the following URL "http://www.cecill.info".
+ 
+ As a counterpart to the access to the source code and  rights to copy,
+ modify and redistribute granted by the license, users are provided only
+ with a limited warranty  and the software's author,  the holder of the
+ economic rights,  and the successive licensors  have only  limited
+ liability.
+ 
+ In this respect, the user's attention is drawn to the risks associated
+ with loading,  using,  modifying and/or developing or reproducing the
+ software by the user in light of its specific status of free software,
+ that may mean  that it is complicated to manipulate,  and  that  also
+ therefore means  that it is reserved for developers  and  experienced
+ professionals having in-depth computer knowledge. Users are therefore
+ encouraged to load and test the software's suitability as regards their
+ requirements in conditions enabling the security of their systems and/or
+ data to be ensured and,  more generally, to use and operate it in the
+ same conditions as regards security.
+ 
+ The fact that you are presently reading this means that you have had
+ knowledge of the CeCILL license and that you accept its terms.
+ */
+
+.ant-card {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.dashboard-number {
+    text-align: center;
+    padding: 20px 0;
+    border-radius: 5px;
+    border: 1px solid #e9e9e9;
+    margin: 10px;
+    white-space: nowrap;
+    h1{
+        font-size: 30px;
+        font-weight: lighter;
+        text-transform: uppercase;
+    }
+}
+
+.filterer {
+    min-width: 520px;
+    max-width: 1020px;
+    overflow: hidden;
+    width: auto;
+    position: relative;
+    float: right;
+    text-align: right;
+
+    .sort-button {
+        margin:0;
+        border: 0 solid;
+        min-width: 90px;
+        // max-width: 150;
+        outline: none !important;
+
+        > div {
+            border: 1px solid #e9e9e9;
+            border-radius: 0;
+            border-right: 0;
+        }
+    }
+    .sort-button:first-child > div {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    .sort-button:last-child {
+        border-right: 0;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .sort-button.apply {
+        // max-width: 80px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.ant-tabs-bar {
+    border-bottom: 0 solid;
+}
+
+.recharts-rectangle {
+    fill: rgba(237, 237, 237, 0.7) !important;
+}
