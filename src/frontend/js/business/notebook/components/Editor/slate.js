@@ -39,6 +39,7 @@ import {Editor, Block, Text} from 'slate';
 import PluginEditCode from 'slate-edit-code';
 import PluginPrism from 'slate-prism';
 import {Button} from 'antd';
+import keydown from 'react-keydown';
 
 import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 import languages from './languages';
@@ -51,6 +52,8 @@ import schema from './schema';
 import getCurrentCode from '../../../../../../../node_modules/slate-edit-code/dist/getCurrentCode';
 
 import {wrapCodeBlock, wrapParagraph} from './utils';
+import KEYS from './keys';
+
 
 // make opts available for dealing with custom KeyDown
 
@@ -99,16 +102,40 @@ class SlateEditor extends React.Component {
         SlateEditor.onPaste = SlateEditor.onPaste.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onToggleCode = this.onToggleCode.bind(this);
-        this.addInnerCodeCell = this.addInnerCodeCell.bind(this);
         this.addInnerParagraphCell = this.addInnerParagraphCell.bind(this);
+        this.addInnerCodeCell = this.addInnerCodeCell.bind(this);
         this.execute = this.execute.bind(this);
         this.remove = this.remove.bind(this);
         this.selectLanguage = this.selectLanguage.bind(this);
     }
 
+    componentWillMount() {
+        // replace first node with correct language
+        const {state: {document}, settings: {preferred_language}} = this.props;
+        this.selectLanguage(document.nodes.first().key, preferred_language ? languages[preferred_language] : languages[0]);
+    }
+
+
+    componentWillReceiveProps(nextProps) {
+        // handle key from keyboard
+        if (nextProps.keydown.event) {
+            // prevent infinite loop
+            const {key, ctrlKey} = nextProps.keydown.event;
+            nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
+            // TODO, get KEYS from reducer user settings
+            if (key === KEYS.above && ctrlKey) { // above == before
+                this.addInnerParagraphCell();
+            }
+            else if (key === KEYS.below && ctrlKey) { // below == after
+                this.addInnerParagraphCell();
+            }
+        }
+    }
+
     onBeforeInput(event, data) {
-        const {anchorKey, anchorOffset, focusKey, focusOffset} = this.props.cell.slateState.selection;
-        const futureState = this.props.cell.slateState.transform().select({
+        const {state} = this.props;
+        const {anchorKey, anchorOffset, focusKey, focusOffset} = state.selection;
+        const futureState = state.transform().select({
             anchorKey,
             anchorOffset,
             focusKey,
@@ -126,11 +153,11 @@ class SlateEditor extends React.Component {
                 // Notice that is calls event.preventDefault() to prevent the default browser behavior,
                 // and it returns the current state to prevent the editor from continuing to resolve its plugins stack.
                 exit = true;
-                return this.props.cell.slateState;
+                return state;
             }
         });
 
-        return exit ? this.props.cell.slateState : undefined;
+        return exit ? state : undefined;
     }
 
     onChange(state) {
@@ -145,12 +172,12 @@ class SlateEditor extends React.Component {
             languages.forEach((language) => {
                 const l = languagesMap.find(o => language === o.language);
                 if (text.match(l.regex)) {
-                    newState = wrapCodeBlock(opts, state.transform(), l).focus().apply();
+                    newState = wrapCodeBlock(opts, state, startBlock.key, l).focus().apply();
                 }
             });
         }
-
-        this.props.setSlate({state: newState, id: this.props.cell.id});
+        // TODO need to debounce this
+        this.props.setSlate({state: newState});
     }
 
     onBlur(e, data, state) {
@@ -165,33 +192,33 @@ class SlateEditor extends React.Component {
             text = startText.text;
         }
 
-        this.props.set({value: text, id: this.props.cell.id});
+        this.props.set({value: text});
     }
 
     onToggleCode(type, key) {
-        const {cell: {slateState}, settings: {preferred_language}} = this.props;
-        let state = null;
+        const {state, settings: {preferred_language}} = this.props;
+        let newState = null;
 
         // transform to paragraph
         if (type === 'paragraph') {
-            state = wrapParagraph(opts, slateState, key).focus().apply();
+            newState = wrapParagraph(opts, state, key).focus().apply();
         }
         // transform to code
         else {
             const language = preferred_language ? languages[preferred_language] : languages[0];
             const l = languagesMap.find(o => o.language === language);
 
-            state = wrapCodeBlock(opts, slateState, key, l).focus().apply();
+            newState = wrapCodeBlock(opts, state, key, l).focus().apply();
         }
 
-        this.props.setSlate({state, id: this.props.cell.id});
+        this.props.setSlate({state: newState});
     }
 
     addInnerParagraphCell() {
-        const {cell: {slateState}} = this.props;
+        const {state} = this.props;
 
-        const document = slateState.document;
-        const transform = slateState.transform();
+        const document = state.document;
+        const transform = state.transform();
 
         const block = Block.create({
             type: opts.exitBlockType,
@@ -201,14 +228,14 @@ class SlateEditor extends React.Component {
         transform.insertNodeByKey(document.key, document.nodes.size, block);
         const newState = transform.focus().apply();
 
-        this.props.setSlate({state: newState, id: this.props.cell.id});
+        this.props.setSlate({state: newState});
     }
 
     addInnerCodeCell() {
-        const {cell: {slateState}, settings: {preferred_language}} = this.props;
+        const {state, settings: {preferred_language}} = this.props;
 
-        const document = slateState.document;
-        const transform = slateState.transform();
+        const document = state.document;
+        const transform = state.transform();
         const language = preferred_language ? languages[preferred_language] : languages[0];
 
         const block = Block.create({
@@ -224,34 +251,34 @@ class SlateEditor extends React.Component {
 
         transform.insertNodeByKey(document.key, document.nodes.size, block);
         const newState = transform.focus().apply();
-        this.props.setSlate({state: newState, id: this.props.cell.id});
+        this.props.setSlate({state: newState});
     }
 
-    execute(value) {
-        this.props.send({code: value, id: this.props.cell.id});
+    execute(value, key) {
+        this.props.send({code: value, id: key});
     }
 
     remove(key) {
-        const {cell: {slateState}} = this.props;
-        const transform = slateState.transform();
+        const {state} = this.props;
+        const transform = state.transform();
         transform.removeNodeByKey(key, {normalize: false});
         const newState = transform.apply();
-        this.props.setSlate({state: newState, id: this.props.cell.id});
+        this.props.setSlate({state: newState});
     }
 
     selectLanguage(key, syntax) {
-        const {cell: {slateState}} = this.props;
-        const transform = slateState.transform();
+        const {state} = this.props;
+        const transform = state.transform();
         transform.setNodeByKey(key, {
             data: {syntax},
         });
         const newState = transform.focus().apply();
 
-        this.props.setSlate({state: newState, id: this.props.cell.id});
+        this.props.setSlate({state: newState});
     }
 
     render() {
-        const {cell: {slateState}, settings: {theme, preferred_language, line_numbers}} = this.props;
+        const {cells, state, settings: {theme, preferred_language, line_numbers}} = this.props;
 
         // TODO put in a selector
         const defaultLanguage = preferred_language ? languages[preferred_language] : languages[0];
@@ -270,7 +297,7 @@ class SlateEditor extends React.Component {
                     style={style.editor}
                     className={theme ? themes[theme] : 'default'}
                     plugins={plugins}
-                    state={slateState}
+                    state={state}
                     onChange={this.onChange}
                     onKeyDown={SlateEditor.onKeyDown}
                     onPaste={SlateEditor.onPaste}
@@ -284,6 +311,7 @@ class SlateEditor extends React.Component {
                         defaultLanguage,
                         selectLanguage: this.selectLanguage,
                         remove: this.remove,
+                        cells,
                     })}
                 />
             </div>
@@ -296,23 +324,29 @@ SlateEditor.propTypes = {
     set: PropTypes.func.isRequired,
     send: PropTypes.func.isRequired,
 
-    cell: PropTypes.shape({
-        id: PropTypes.number,
-        slateState: PropTypes.shape({
-            selection: PropTypes.shape({
-                anchorKey: PropTypes.string,
-                anchorOffset: PropTypes.number,
-                focusKey: PropTypes.string,
-                focusOffset: PropTypes.number,
-            }),
-            transform: PropTypes.func,
+    state: PropTypes.shape({
+        selection: PropTypes.shape({
+            anchorKey: PropTypes.string,
+            anchorOffset: PropTypes.number,
+            focusKey: PropTypes.string,
+            focusOffset: PropTypes.number,
         }),
+        transform: PropTypes.func,
     }).isRequired,
     settings: PropTypes.shape({
         preferred_language: PropTypes.number,
         theme: PropTypes.number,
     }).isRequired,
+    cells: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+
+    keydown: PropTypes.shape({
+        event: PropTypes.shape({}),
+    }),
 };
 
-export default SlateEditor;
+SlateEditor.defaultProps = {
+    keydown: null,
+};
+
+export default keydown(SlateEditor);
 

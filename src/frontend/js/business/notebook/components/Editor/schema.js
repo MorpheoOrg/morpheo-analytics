@@ -62,12 +62,18 @@ const style = {
         width: '50%',
         border: `1px solid ${isFocused ? '#3f8bea' : 'transparent'}`,
     }),
+    rows: {
+        khtmlUserSelect: 'none',
+        msUserSelect: 'none',
+        userSelect: 'none',
+    },
     p: isFocused => ({
         display: 'inline-block',
         verticalAlign: 'top',
         border: `1px solid ${isFocused ? '#3f8bea' : 'rgba(0, 0,0, 0.1)'}`,
         padding: 10,
-        width: '70%',
+        width: '50%',
+        margin: '5px 10px',
     }),
     pActions: {
         display: 'inline-block',
@@ -78,13 +84,15 @@ const style = {
 
 /* eslint-disable */
 
-const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectLanguage, remove}) => ({
+const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectLanguage, remove, cells}) => ({
     nodes: {
         code_block: {
             render: (props) => {
                 const {editor, node, state} = props;
                 const linesNumber = node.getTexts().size;
                 const isFocused = state.selection.hasEdgeIn(node);
+
+                const cell = cells.find(o => o.id === node.key);
 
                 return (<div style={style.code}
                              contentEditable={false}>
@@ -108,14 +116,15 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
                     </div>
                     <pre
                         style={style.pre(isFocused)}
-                        className={`language-${node.data.get('syntax')} line-numbers`}
+                        className={`language-${node.data.get('syntax')}${editor.props.line_numbers ? ' line-numbers' : ''}`}
                         contentEditable={true}
                         suppressContentEditableWarning
                     >
                         <code className={`language-${node.data.get('syntax')}`}
                               {...props.attributes}
                         >
-                            {editor.props.line_numbers && <span className="line-numbers-rows">
+                            {editor.props.line_numbers &&
+                            <span className="line-numbers-rows" style={style.rows} contentEditable={false}>
                                 {[...Array(linesNumber).keys()].map(o =>
                                     <span key={o}/>,
                                 )}
@@ -124,6 +133,19 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
                             {props.children}
                         </code>
                     </pre>
+                    {cell && <div>
+                        {cell.content && cell.type === 'text' &&
+                        <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}}/>}
+                        {cell.content && cell.type === 'img' &&
+                        <img style={style.cell.output} alt="result" src={`data:image/png;base64,${cell.content}`}/>}
+                        {cell.content && cell.type === 'error' &&
+                        <div style={style.cell.error}>
+                            <span>{cell.content.ename}</span>
+                            <p>{cell.content.evalue}</p>
+                        </div>
+                        }
+                    </div>
+                    }
                 </div>);
             },
         },
@@ -139,7 +161,8 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
                         </Button>
                         <Button onMouseDown={(e) => remove(node.key)} icon="delete"/>
                     </div>
-                    <p {...props.attributes} style={style.p(isFocused)} contentEditable={true} suppressContentEditableWarning>{props.children}</p>
+                    <p {...props.attributes} style={style.p(isFocused)} contentEditable={true}
+                       suppressContentEditableWarning>{props.children}</p>
                 </div>);
             },
         },
