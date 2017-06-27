@@ -36,7 +36,6 @@
 import {Text, Block} from 'slate';
 
 const wrapParagraph = (opts, slateState, key) => {
-
     const transform = slateState.transform();
     const {document} = slateState;
     const node = document.nodes.find(o => o.key === key);

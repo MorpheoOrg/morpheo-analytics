@@ -86,40 +86,38 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
                 const linesNumber = node.getTexts().size;
                 const isFocused = state.selection.hasEdgeIn(node);
 
-                return (<div style={style.code}>
+                return (<div style={style.code}
+                             contentEditable={false}>
                     <Select
                         style={style.select}
                         defaultValue={node.data.get('syntax') || defaultLanguage}
                         onChange={(e) => selectLanguage(node.key, e)}
-                        contentEditable={false}
                     >
                         {languages.map(o =>
-                            <Select.Option key={o} value={o} contentEditable={false}>
-                                <span contentEditable={false}>{o}</span>
+                            <Select.Option key={o} value={o}>
+                                <span>{o}</span>
                             </Select.Option>,
                         )}
                     </Select>
                     <div style={style.left}>
                         <Button type={'primary'}
-                                onMouseDown={(e) => onToggleCode('paragraph', node.key)}
-                                contentEditable={false}>Toggle</Button>
+                                onMouseDown={(e) => onToggleCode('paragraph', node.key)}>Toggle</Button>
                         <Button type={'primary'}
-                                onMouseDown={(e) => onExecute(node.getTexts().map(t => t.text).join('\n'))}
-                                contentEditable={false}>Execute</Button>
-                        <Button onClick={(e) => remove(node.key)}
-                                icon="delete"
-                                contentEditable={false}/>
+                                onMouseDown={(e) => onExecute(node.getTexts().map(t => t.text).join('\n'))}>Execute</Button>
+                        <Button onClick={(e) => remove(node.key)} icon="delete"/>
                     </div>
                     <pre
                         style={style.pre(isFocused)}
                         className={`language-${node.data.get('syntax')} line-numbers`}
+                        contentEditable={true}
+                        suppressContentEditableWarning
                     >
                         <code className={`language-${node.data.get('syntax')}`}
                               {...props.attributes}
                         >
-                            {editor.props.line_numbers && <span className="line-numbers-rows" contentEditable={false}>
+                            {editor.props.line_numbers && <span className="line-numbers-rows">
                                 {[...Array(linesNumber).keys()].map(o =>
-                                    <span contentEditable={false} key={o}/>,
+                                    <span key={o}/>,
                                 )}
                             </span>
                             }
@@ -133,16 +131,17 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
             render: props => {
                 const {node, state} = props;
                 const isFocused = state.selection.hasEdgeIn(node);
-                return (<div>
+                return (<div contentEditable={false}>
                     <div style={style.pActions}>
                         <Button type={'primary'}
-                                onMouseDown={(e) => onToggleCode('code', node.key)}
-                                contentEditable={false}>Toggle</Button>
+                                onMouseDown={(e) => onToggleCode('code', node.key)}>
+                            Toggle
+                        </Button>
                         <Button onMouseDown={(e) => remove(node.key)} icon="delete"/>
                     </div>
-                    <p {...props.attributes} style={style.p(isFocused)}>{props.children}</p>
+                    <p {...props.attributes} style={style.p(isFocused)} contentEditable={true} suppressContentEditableWarning>{props.children}</p>
                 </div>);
-            }
+            },
         },
     },
 });

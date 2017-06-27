@@ -37,7 +37,6 @@
 
 import {PropTypes} from 'prop-types';
 import React from 'react';
-import {Button} from 'antd';
 import {onlyUpdateForKeys} from 'recompose';
 
 import Editor from './Editor';

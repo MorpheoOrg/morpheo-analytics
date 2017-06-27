@@ -201,8 +201,6 @@ class SlateEditor extends React.Component {
         transform.insertNodeByKey(document.key, document.nodes.size, block);
         const newState = transform.focus().apply();
 
-        console.log(newState);
-
         this.props.setSlate({state: newState, id: this.props.cell.id});
     }
 
