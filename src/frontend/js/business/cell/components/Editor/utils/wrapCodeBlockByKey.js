@@ -49,7 +49,6 @@ const wrapCodeBlockByKey = (opts, transform, key, o) => {
 
     // do we need to transform from language markdown
     const res = o.regex.exec(text);
-
     if (res) {
         text = res['1'].substring(1, (res['1'].length - 1) || 1);
     }

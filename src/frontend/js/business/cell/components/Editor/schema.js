@@ -34,47 +34,115 @@
  */
 
 import React from 'react';
+import {Select, Button} from 'antd';
 
+import languages from './languages';
 import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 
 // Define a schema.
-const schemaStyle = {
+
+const style = {
     code: {
-        width: '100%',
+        position: 'relative',
     },
-    p: {
-        border: '1px solid rgba(0, 0, 0, 0.1)',
+    left: {
+        display: 'inline-block',
+        verticalAlign: 'top',
+        margin: '0 1% 0 0',
+        width: '29%',
+    },
+    select: {
+        position: 'absolute',
+        top: 10,
+        right: 0,
+    },
+    pre: isFocused => ({
+        display: 'inline-block',
+        verticalAlign: 'top',
+        width: '50%',
+        border: `1px solid ${isFocused ? '#3f8bea' : 'transparent'}`,
+    }),
+    p: isFocused => ({
+        display: 'inline-block',
+        verticalAlign: 'top',
+        border: `1px solid ${isFocused ? '#3f8bea' : 'rgba(0, 0,0, 0.1)'}`,
         padding: 10,
+        width: '70%',
+    }),
+    pActions: {
+        display: 'inline-block',
+        verticalAlign: 'top',
+        width: '29%',
     },
 };
 
 /* eslint-disable */
 
-const schema = ({line_numbers}) => ({
+const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectLanguage, remove}) => ({
     nodes: {
         code_block: {
             render: (props) => {
-                const {editor, node} = props;
+                const {editor, node, state} = props;
                 const linesNumber = node.getTexts().size;
+                const isFocused = state.selection.hasEdgeIn(node);
 
-                return (<pre
-                    style={schemaStyle.code}
-                    className={`language-${node.data.get('syntax')} line-numbers`}
-                >
-                    <code className={`language-${node.data.get('syntax')}`} {...props.attributes}>
-                        {editor.props.line_numbers && <span className="line-numbers-rows" contentEditable={false}>
-                            {[...Array(linesNumber).keys()].map(o =>
-                                <span key={o} />,
-                            )}
-                        </span>
-                        }
-                        {props.children}
-                    </code>
-                </pre>);
+                return (<div style={style.code}>
+                    <Select
+                        style={style.select}
+                        defaultValue={node.data.get('syntax') || defaultLanguage}
+                        onChange={(e) => selectLanguage(node.key, e)}
+                        contentEditable={false}
+                    >
+                        {languages.map(o =>
+                            <Select.Option key={o} value={o} contentEditable={false}>
+                                <span contentEditable={false}>{o}</span>
+                            </Select.Option>,
+                        )}
+                    </Select>
+                    <div style={style.left}>
+                        <Button type={'primary'}
+                                onMouseDown={(e) => onToggleCode('paragraph', node.key)}
+                                contentEditable={false}>Toggle</Button>
+                        <Button type={'primary'}
+                                onMouseDown={(e) => onExecute(node.getTexts().map(t => t.text).join('\n'))}
+                                contentEditable={false}>Execute</Button>
+                        <Button onClick={(e) => remove(node.key)}
+                                icon="delete"
+                                contentEditable={false}/>
+                    </div>
+                    <pre
+                        style={style.pre(isFocused)}
+                        className={`language-${node.data.get('syntax')} line-numbers`}
+                    >
+                        <code className={`language-${node.data.get('syntax')}`}
+                              {...props.attributes}
+                        >
+                            {editor.props.line_numbers && <span className="line-numbers-rows" contentEditable={false}>
+                                {[...Array(linesNumber).keys()].map(o =>
+                                    <span contentEditable={false} key={o}/>,
+                                )}
+                            </span>
+                            }
+                            {props.children}
+                        </code>
+                    </pre>
+                </div>);
             },
         },
         paragraph: {
-            render: props => <p {...props.attributes} style={schemaStyle.p}>{props.children}</p>,
+            render: props => {
+                const {node, state} = props;
+                const isFocused = state.selection.hasEdgeIn(node);
+                return (<div>
+                    <div style={style.pActions}>
+                        <Button type={'primary'}
+                                onMouseDown={(e) => onToggleCode('code', node.key)}
+                                contentEditable={false}>Toggle</Button>
+                        <Button onMouseDown={(e) => remove(node.key)} icon="delete"/>
+                    </div>
+                    <p {...props.attributes} style={style.p(isFocused)}>{props.children}</p>
+                </div>);
+            }
         },
     },
 });

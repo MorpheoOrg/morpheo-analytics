@@ -35,34 +35,23 @@
 
 import {Text, Block} from 'slate';
 
-const wrapParagraph = (opts, transform) => {
-    const {state} = transform;
-    const {startBlock} = state;
+const wrapParagraph = (opts, slateState, key) => {
 
-    const parentBlock = state.document.getParent(startBlock.key);
+    const transform = slateState.transform();
+    const {document} = slateState;
+    const node = document.nodes.find(o => o.key === key);
 
-    const text = parentBlock.getTexts().map(t => t.text).join('\n');
+    const block = Block.create({
+        type: opts.exitBlockType,
+        kind: 'text',
+        nodes: [Text.createFromString(node.getTexts().map(t => t.text).join('\n'))],
+    });
+    const index = document.nodes.findIndex(o => o.key === node.key);
 
-    // add paragraph and unwrap it for putting it on the same level of code_block
-    transform.insertBlock(Block.create(
-        {
-            type: opts.exitBlockType,
-            nodes: [Text.createFromString(text)],
-        },
-    )).unwrapBlock();
+    transform.insertNodeByKey(document.key, index, block)
+        .removeNodeByKey(node.key, {normalize: false});
 
-    // if need to delete remaining code_block with code lines in new state
-    if (transform.state.document.getNode(parentBlock.key)) {
-        // remove code line
-        // parentBlock.nodes.forEach((node) => {
-        //     console.log(state.document, node.key, state.document.getDescendant(node.key));
-        //     transform.removeNodeByKey(node.key, {normalize: false});
-        // });
-
-        transform.removeNodeByKey(parentBlock.key, {normalize: false});
-    }
-
-    return transform;
+    return transform.moveOffsetsTo(0);
 };
 
 export default wrapParagraph;

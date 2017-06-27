@@ -35,10 +35,10 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Editor} from 'slate';
+import {Editor, Block, Text} from 'slate';
 import PluginEditCode from 'slate-edit-code';
 import PluginPrism from 'slate-prism';
-import {Select} from 'antd';
+import {Button} from 'antd';
 
 import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 import languages from './languages';
@@ -54,8 +54,6 @@ import {wrapCodeBlock, wrapParagraph} from './utils';
 
 // make opts available for dealing with custom KeyDown
 
-const Option = Select.Option;
-
 const pluginEditCode = PluginEditCode(opts);
 
 const plugins = [
@@ -67,15 +65,11 @@ const plugins = [
 ];
 
 const style = {
-    main: {
-        float: 'right',
-        margin: '0 0 2px 0',
-    },
-    select: {
-        width: 100,
-    },
     editor: {
         clear: 'right',
+    },
+    actions: {
+        margin: '0 0 25px 0',
     },
 };
 
@@ -105,6 +99,11 @@ class SlateEditor extends React.Component {
         SlateEditor.onPaste = SlateEditor.onPaste.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onToggleCode = this.onToggleCode.bind(this);
+        this.addInnerCodeCell = this.addInnerCodeCell.bind(this);
+        this.addInnerParagraphCell = this.addInnerParagraphCell.bind(this);
+        this.execute = this.execute.bind(this);
+        this.remove = this.remove.bind(this);
+        this.selectLanguage = this.selectLanguage.bind(this);
     }
 
     onBeforeInput(event, data) {
@@ -169,47 +168,106 @@ class SlateEditor extends React.Component {
         this.props.set({value: text, id: this.props.cell.id});
     }
 
-    onToggleCode() {
-        let newState = this.props.cell.slateState;
+    onToggleCode(type, key) {
+        const {cell: {slateState}, settings: {preferred_language}} = this.props;
+        let state = null;
 
         // transform to paragraph
-        if (pluginEditCode.utils.isInCodeBlock(this.props.cell.slateState)) {
-            newState = wrapParagraph(opts, newState.transform()).focus().apply();
+        if (type === 'paragraph') {
+            state = wrapParagraph(opts, slateState, key).focus().apply();
         }
         // transform to code
         else {
-            const language = this.props.settings.preferred_language ? languages[this.props.settings.preferred_language] : languages[0];
+            const language = preferred_language ? languages[preferred_language] : languages[0];
             const l = languagesMap.find(o => o.language === language);
-            newState = wrapCodeBlock(opts, newState.transform(), l).focus().apply();
+
+            state = wrapCodeBlock(opts, slateState, key, l).focus().apply();
         }
+
+        this.props.setSlate({state, id: this.props.cell.id});
+    }
+
+    addInnerParagraphCell() {
+        const {cell: {slateState}} = this.props;
+
+        const document = slateState.document;
+        const transform = slateState.transform();
+
+        const block = Block.create({
+            type: opts.exitBlockType,
+            nodes: [Text.createFromString('')],
+        });
+
+        transform.insertNodeByKey(document.key, document.nodes.size, block);
+        const newState = transform.focus().apply();
+
+        console.log(newState);
+
+        this.props.setSlate({state: newState, id: this.props.cell.id});
+    }
+
+    addInnerCodeCell() {
+        const {cell: {slateState}, settings: {preferred_language}} = this.props;
+
+        const document = slateState.document;
+        const transform = slateState.transform();
+        const language = preferred_language ? languages[preferred_language] : languages[0];
+
+        const block = Block.create({
+            data: {syntax: language},
+            type: opts.containerType,
+            nodes: [
+                {
+                    type: opts.lineType,
+                    nodes: [Text.createFromString('')],
+                },
+            ],
+        });
+
+        transform.insertNodeByKey(document.key, document.nodes.size, block);
+        const newState = transform.focus().apply();
+        this.props.setSlate({state: newState, id: this.props.cell.id});
+    }
+
+    execute(value) {
+        this.props.send({code: value, id: this.props.cell.id});
+    }
+
+    remove(key) {
+        const {cell: {slateState}} = this.props;
+        const transform = slateState.transform();
+        transform.removeNodeByKey(key, {normalize: false});
+        const newState = transform.apply();
+        this.props.setSlate({state: newState, id: this.props.cell.id});
+    }
+
+    selectLanguage(key, syntax) {
+        const {cell: {slateState}} = this.props;
+        const transform = slateState.transform();
+        transform.setNodeByKey(key, {
+            data: {syntax},
+        });
+        const newState = transform.focus().apply();
 
         this.props.setSlate({state: newState, id: this.props.cell.id});
     }
 
     render() {
-        const {cell: {slateState}, settings: {theme, preferred_language, line_numbers}, selectLanguage} = this.props;
+        const {cell: {slateState}, settings: {theme, preferred_language, line_numbers}} = this.props;
 
         // TODO put in a selector
-        const syntax = slateState.document.getParent(slateState.startBlock.key).data.get('syntax');
+        const defaultLanguage = preferred_language ? languages[preferred_language] : languages[0];
 
         return (
             <div>
-                <button onClick={this.onToggleCode}>
-                    {pluginEditCode.utils.isInCodeBlock(slateState) ? 'Paragraph' : 'Code Block'}
-                </button>
-                {slateState.startBlock.type.startsWith('code') &&
-                <div style={style.main}>
-                    <Select
-                        style={style.select}
-                        defaultValue={syntax || (preferred_language ? languages[preferred_language] : languages[0])}
-                        onChange={selectLanguage}
-                    >
-                        {languages.map(o =>
-                            <Option key={o} value={o}>{o}</Option>,
-                        )}
-                    </Select>
+                <div style={style.actions}>
+                    <Button type={'primary'} onClick={this.addInnerParagraphCell} icon="plus">
+                        Add paragraph
+                    </Button>
+                    <Button type={'primary'} onClick={this.addInnerCodeCell} icon="plus">
+                        Add code block
+                    </Button>
                 </div>
-                }
                 <Editor
                     style={style.editor}
                     className={theme ? themes[theme] : 'default'}
@@ -221,7 +279,14 @@ class SlateEditor extends React.Component {
                     onBeforeInput={this.onBeforeInput}
                     onBlur={this.onBlur}
                     line_numbers={line_numbers}
-                    schema={schema({line_numbers})}
+                    schema={schema({
+                        line_numbers,
+                        onExecute: this.execute,
+                        onToggleCode: this.onToggleCode,
+                        defaultLanguage,
+                        selectLanguage: this.selectLanguage,
+                        remove: this.remove,
+                    })}
                 />
             </div>
         );
@@ -231,7 +296,7 @@ class SlateEditor extends React.Component {
 SlateEditor.propTypes = {
     setSlate: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
-    selectLanguage: PropTypes.func.isRequired,
+    send: PropTypes.func.isRequired,
 
     cell: PropTypes.shape({
         id: PropTypes.number,

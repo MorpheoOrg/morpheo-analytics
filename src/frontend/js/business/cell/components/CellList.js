@@ -47,8 +47,12 @@ import actions from '../actions';
 import {message as messageActions} from '../../kernel/actions';
 import KEYS from './keys';
 
-const createCell = (cells, preferred_language, type = 'code_block') => (
-    {
+const createCell = (cells, preferred_language, type = 'code_block') => {
+    if (!['code_block', 'paragraph'].includes(type)) {
+        throw new Error(`type must be of types code_block or paragraph. ${type} is invalid.`);
+    }
+
+    return {
         id: cells.length ? Math.max(...cells.map(o => o.id)) + 1 : 1,
         slateState: Raw.deserialize({
             nodes: [
@@ -82,8 +86,8 @@ const createCell = (cells, preferred_language, type = 'code_block') => (
                 },
             ],
         }, {terse: true}),
-    }
-);
+    };
+};
 
 
 const style = {
@@ -104,7 +108,10 @@ class CellList extends React.Component {
 
     componentWillMount() {
         if (!this.props.cells.length) {
-            this.props.addCell({...createCell(this.props.cells, this.props.settings.preferred_language, 'paragraph'), isActive: true});
+            this.props.addCell({
+                ...createCell(this.props.cells, this.props.settings.preferred_language, 'code_block'),
+                isActive: true,
+            });
         }
     }
 
@@ -157,9 +164,6 @@ class CellList extends React.Component {
                     settings={settings}
                 />),
             )}
-            <Button type={'primary'} onClick={this.addCodeCell} icon="plus" />
-            <Button type={'primary'} onClick={this.addTextCell}>Add paragraph</Button>
-            <Button type={'primary'} onClick={this.save}>Save</Button>
         </div>);
     }
 }

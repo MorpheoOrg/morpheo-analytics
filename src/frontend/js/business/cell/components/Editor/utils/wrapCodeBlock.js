@@ -35,17 +35,16 @@
 
 import wrapCodeBlockByKey from './wrapCodeBlockByKey';
 
-const wrapCodeBlock = (opts, transform, o) => {
-    const {state} = transform;
-    const {startBlock} = state;
+const wrapCodeBlock = (opts, slateState, key, o) => {
+    let transform = slateState.transform();
 
     // Convert to code block
-    transform = wrapCodeBlockByKey(opts, transform, startBlock.key, o); // eslint-disable-line no-param-reassign
+    transform = wrapCodeBlockByKey(opts, transform, key, o); // eslint-disable-line no-param-reassign
 
     // TODO, find a way to correctly set the offset on a multilines code
     // Move selection back in the block
     transform = transform  // eslint-disable-line no-param-reassign
-        .collapseToStartOf(transform.state.document.getDescendant(startBlock.key))
+        .collapseToStartOf(transform.state.document.getDescendant(key))
         .moveOffsetsTo(0);// selection.startOffset - 7);
 
     return transform;

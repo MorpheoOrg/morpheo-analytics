@@ -119,7 +119,7 @@ class Cell extends React.Component {
     }
 
     render() {
-        const {cell, settings, set, setSlate} = this.props;
+        const {cell, settings, set, send, setSlate} = this.props;
 
         // TODO : create a selector on style
         return (
@@ -136,12 +136,8 @@ class Cell extends React.Component {
                         cell={cell}
                         settings={settings}
                         selectLanguage={this.selectLanguage}
+                        send={send}
                     />
-                    <div style={style.cell.actions}>
-                        <Button style={style.cell.buttons} onClick={this.remove} icon="delete" />
-                        {cell.slateState.startBlock.type.startsWith('code') &&
-                        <Button type={'primary'} onClick={this.send}>Execute</Button>}
-                    </div>
                 </div>
                 {cell.content && cell.type === 'text' &&
                 <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}} />}
