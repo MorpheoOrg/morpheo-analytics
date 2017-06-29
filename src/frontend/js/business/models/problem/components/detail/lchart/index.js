@@ -46,10 +46,10 @@ import {
 import {Card} from 'antd';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {onlyUpdateForKeys} from 'recompose';
+import {onlyUpdateForKeys, shouldUpdate} from 'recompose';
+import {isEqual} from 'lodash';
 
 import learnupletActions from '../../../../learnuplet/actions';
-import {getLChartData} from '../../../../learnuplet/selector';
 
 
 const card = {
@@ -61,7 +61,12 @@ const card = {
 
 const chart = {top: 5, right: 150, left: 0, bottom: 5};
 
-const activeDot = {r: 8};
+const activeDot = {
+        r: 8,
+    },
+    dot = {
+        fill: '#8884d8',
+    };
 
 
 class LearnupletChart extends React.Component {
@@ -72,43 +77,38 @@ class LearnupletChart extends React.Component {
     render() {
         const {data, id} = this.props;
 
-        return data && <Card
-            title={`Performance of algo ${id}`}
-            style={card}
-        >
-            <LineChart width={600} height={300} data={data} margin={chart}>
-                <XAxis dataKey="name" label="Number of trained data" />
-                <YAxis label="Perf" />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="perf" stroke="#8884d8" activeDot={activeDot} dot={{strokeWidth: 3, fill: '#8884d8' }} />
-            </LineChart>
+        return <Card
+                title={`Performance of algo ${id}`}
+                style={card}
+            >
+                <LineChart width={600} height={300} data={data} margin={chart}>
+                    <XAxis dataKey="name" label="Number of trained data"/>
+                    <YAxis label="Perf"/>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <Tooltip />
+                    <Legend />
+                    <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot}/>
+                </LineChart>
             </Card>;
     }
 }
 
 LearnupletChart.propTypes = {
     loadLearnuplet: PropTypes.func,
-    // learnuplet: PropTypes.shape({}),
-    data: PropTypes.arrayOf(PropTypes.shape({})),
     id: PropTypes.string,
 };
 
-const noop = () => {};
+const noop = () => {
+};
 
 LearnupletChart.defaultProps = {
     loadLearnuplet: noop,
-    // learnuplet: null,
-    data: null,
     id: null,
 };
 
 function mapStateToProps(state, ownProps) {
     return {
         ...ownProps,
-        // learnuplet: state.models.learnuplet,
-        data: getLChartData(state, ownProps.id),
     };
 }
 
@@ -118,5 +118,7 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['item', 'data'])(LearnupletChart));
+// only update if data is not deep equal, reference of array can be different
+export default connect(mapStateToProps, mapDispatchToProps)(shouldUpdate((props, nextProps) => {
+    return !isEqual(props.data, nextProps.data);
+})(LearnupletChart));

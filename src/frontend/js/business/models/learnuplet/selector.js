@@ -34,23 +34,29 @@
  */
 
 import {createSelector} from 'reselect';
-import {sortBy} from 'lodash';
+import {sortBy, isEmpty} from 'lodash';
 import createDeepEqualSelector from '../../../utils/selector';
 
 const arr = [];
 
 const error = state => state.models.learnuplet.item.error;
-const results = (state, id) => state.models.learnuplet.list.results ? state.models.learnuplet.list.results[id] : arr;
+const results = state => state.models.learnuplet.list.results;
 
 export const getError = createSelector([error],
     error => error ? (JSON.parse(error.message).message ? JSON.parse(error.message).message : JSON.parse(error.message).non_field_errors) : error,
 );
 
 export const getLChartData = createDeepEqualSelector([results],
-    results => sortBy(results, ['rank']).reduce((previous, current) =>
-        [...previous, {
-            name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
-            perf: current.perf,
-        }],
-            []),
+    results => {
+        return !isEmpty(results) ? Object.keys(results).reduce((p, c) => ({
+                ...p,
+                [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
+                        [...previous, {
+                            name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
+                            perf: current.perf,
+                        }],
+                    []),
+            }),
+            {}) : {};
+    },
 );

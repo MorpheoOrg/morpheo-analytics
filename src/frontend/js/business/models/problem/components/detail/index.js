@@ -43,7 +43,8 @@ import {Link} from 'react-router-dom';
 import FormData from 'form-data';
 
 import algoActions from '../../../algo/actions';
-import LChart from './lchart';
+import {getLChartData} from '../../../learnuplet/selector';
+import Algo from './algo';
 
 const Dragger = Upload.Dragger;
 
@@ -96,7 +97,7 @@ class Detail extends React.PureComponent {
     }
 
     render() {
-        const {algo, id} = this.props;
+        const {algo, id, data} = this.props;
 
         return (<div>
             <h1>Algos for problem {id}</h1>
@@ -120,13 +121,7 @@ class Detail extends React.PureComponent {
             <ul>
                 {algo.list.results.map(o =>
                     (<li key={o.uuid} style={style.li}>
-                        <dl>
-                            <dt>uuid</dt>
-                            <dd>{o.uuid}</dd>
-                            <dt>Created at</dt>
-                            <dd>{format(parse(o.timestamp_upload * 1000), 'DD/MM/YYYY HH:mm:ss.SSSZ')}</dd>
-                        </dl>
-                        <LChart id={o.uuid} />
+                        <Algo id={o.uuid} data={data[o.uuid]} date={format(parse(o.timestamp_upload * 1000), 'DD/MM/YYYY HH:mm:ss.SSSZ')}/>
                     </li>))}
             </ul>
             }
@@ -147,6 +142,8 @@ Detail.propTypes = {
 
     loadList: PropTypes.func,
     postAlgo: PropTypes.func,
+
+    data: PropTypes.shape({}),
 };
 
 const noop = () => {};
@@ -156,12 +153,14 @@ Detail.defaultProps = {
     id: null,
     loadList: noop,
     postAlgo: noop,
+    data: null,
 };
 
 function mapStateToProps(state, ownProps) {
     return {
         algo: state.models.algo,
         id: ownProps.match.params.id,
+        data: getLChartData(state),
     };
 }
 
@@ -173,4 +172,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['algo', 'id'])(Detail));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['algo', 'id', 'data'])(Detail));
