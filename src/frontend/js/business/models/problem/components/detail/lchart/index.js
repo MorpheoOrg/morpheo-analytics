@@ -82,7 +82,7 @@ class LearnupletChart extends React.Component {
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="perf" stroke="#8884d8" activeDot={activeDot} />
+                <Line type="monotone" dataKey="perf" stroke="#8884d8" activeDot={activeDot} dot={{strokeWidth: 3, fill: '#8884d8' }} />
             </LineChart>
             </Card>;
     }
