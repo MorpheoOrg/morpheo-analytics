@@ -110,7 +110,7 @@ function* postAlgo(request) {
 
         yield put(actions.item.post.success({...item, problem: request.payload.id}));
         // Post to orchestrator too
-        yield put(actions.item.postToOrchestrator.request({uuid: item.uuid, problem: request.payload.id}));
+        yield put(actions.item.postToOrchestrator.request({uuid: item.uuid, name: item.name, problem: request.payload.id}));
     }
 }
 

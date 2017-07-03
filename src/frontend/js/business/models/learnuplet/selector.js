@@ -37,8 +37,6 @@ import {createSelector} from 'reselect';
 import {sortBy, isEmpty} from 'lodash';
 import createDeepEqualSelector from '../../../utils/selector';
 
-const arr = [];
-
 const error = state => state.models.learnuplet.item.error;
 const results = state => state.models.learnuplet.list.results;
 

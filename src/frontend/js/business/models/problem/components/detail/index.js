@@ -44,7 +44,7 @@ import FormData from 'form-data';
 
 import algoActions from '../../../algo/actions';
 import {getLChartData} from '../../../learnuplet/selector';
-import Algo from './algo';
+import Algo from '../../../algo/components/detail';
 
 const Dragger = Upload.Dragger;
 
@@ -121,7 +121,10 @@ class Detail extends React.PureComponent {
             <ul>
                 {algo.list.results.map(o =>
                     (<li key={o.uuid} style={style.li}>
-                        <Algo id={o.uuid} data={data[o.uuid]} date={format(parse(o.timestamp_upload * 1000), 'DD/MM/YYYY HH:mm:ss.SSSZ')}/>
+                        <Algo id={o.uuid}
+                              name={o.name}
+                              data={data[o.uuid]}
+                              date={format(parse(o.timestamp_upload * 1000), 'DD/MM/YYYY HH:mm:ss.SSSZ')}/>
                     </li>))}
             </ul>
             }
