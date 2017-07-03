@@ -39,6 +39,8 @@ import {Select, Button} from 'antd';
 import languages from './languages';
 import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 
+const Option = Select.Option;
+
 // Define a schema.
 
 const style = {
@@ -102,9 +104,9 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
                         onChange={(e) => selectLanguage(node.key, e)}
                     >
                         {languages.map(o =>
-                            <Select.Option key={o} value={o}>
+                            <Option key={o} value={o}>
                                 <span>{o}</span>
-                            </Select.Option>,
+                            </Option>,
                         )}
                     </Select>
                     <div style={style.left}>

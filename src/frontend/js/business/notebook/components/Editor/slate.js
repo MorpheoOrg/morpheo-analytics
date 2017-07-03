@@ -123,12 +123,25 @@ class SlateEditor extends React.Component {
             const {key, ctrlKey} = nextProps.keydown.event;
             nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
             // TODO, get KEYS from reducer user settings
-            if (key === KEYS.above && ctrlKey) { // above == before
-                this.addInnerParagraphCell();
+            if (ctrlKey) {
+                const {state} = nextProps;
+                const document = state.document;
+
+                let node = state.startBlock;
+                if (node.type === opts.lineType) {
+                    node = document.getParent(node.key);
+                }
+                const index = document.nodes.findIndex(o => o.key === node.key);
+                if (key === KEYS.above) { // above == before
+                    console.log(index);
+                    this.addInnerParagraphCell(index);
+                }
+                else if (key === KEYS.below) { // below == after
+                    this.addInnerParagraphCell(index + 1);
+                }
             }
-            else if (key === KEYS.below && ctrlKey) { // below == after
-                this.addInnerParagraphCell();
-            }
+
+
         }
     }
 
@@ -214,7 +227,7 @@ class SlateEditor extends React.Component {
         this.props.setSlate({state: newState});
     }
 
-    addInnerParagraphCell() {
+    addInnerParagraphCell(index) {
         const {state} = this.props;
 
         const document = state.document;
@@ -225,7 +238,7 @@ class SlateEditor extends React.Component {
             nodes: [Text.createFromString('')],
         });
 
-        transform.insertNodeByKey(document.key, document.nodes.size, block);
+        transform.insertNodeByKey(document.key, typeof index !== 'undefined' ? index : document.nodes.size, block);
         const newState = transform.focus().apply();
 
         this.props.setSlate({state: newState});

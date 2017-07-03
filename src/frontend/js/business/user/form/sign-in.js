@@ -101,7 +101,7 @@ SignInForm.propTypes = {
         PropTypes.string,
     ]),
     form: PropTypes.shape({
-        validateFields: PropTypes.shape({}),
+        validateFields: PropTypes.func,
     }),
 };
 
