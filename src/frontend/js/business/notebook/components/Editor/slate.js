@@ -102,6 +102,7 @@ class SlateEditor extends React.Component {
         SlateEditor.onPaste = SlateEditor.onPaste.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onToggleCode = this.onToggleCode.bind(this);
+        this.handleAddParagraph = this.handleAddParagraph.bind(this);
         this.addInnerParagraphCell = this.addInnerParagraphCell.bind(this);
         this.addInnerCodeCell = this.addInnerCodeCell.bind(this);
         this.execute = this.execute.bind(this);
@@ -140,8 +141,6 @@ class SlateEditor extends React.Component {
                     this.addInnerParagraphCell(index + 1);
                 }
             }
-
-
         }
     }
 
@@ -227,6 +226,10 @@ class SlateEditor extends React.Component {
         this.props.setSlate({state: newState});
     }
 
+    handleAddParagraph(e) {
+        this.addInnerParagraphCell();
+    }
+
     addInnerParagraphCell(index) {
         const {state} = this.props;
 
@@ -238,13 +241,15 @@ class SlateEditor extends React.Component {
             nodes: [Text.createFromString('')],
         });
 
+        console.log(typeof index !== 'undefined' ? index : document.nodes.size);
+
         transform.insertNodeByKey(document.key, typeof index !== 'undefined' ? index : document.nodes.size, block);
         const newState = transform.focus().apply();
 
         this.props.setSlate({state: newState});
     }
 
-    addInnerCodeCell() {
+    addInnerCodeCell(e) {
         const {state, settings: {preferred_language}} = this.props;
 
         const document = state.document;
@@ -299,7 +304,7 @@ class SlateEditor extends React.Component {
         return (
             <div>
                 <div style={style.actions}>
-                    <Button type={'primary'} onClick={this.addInnerParagraphCell} icon="plus">
+                    <Button type={'primary'} onClick={this.handleAddParagraph} icon="plus">
                         Add paragraph
                     </Button>
                     <Button type={'primary'} onClick={this.addInnerCodeCell} icon="plus">

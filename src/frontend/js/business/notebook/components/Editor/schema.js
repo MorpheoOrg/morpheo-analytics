@@ -50,7 +50,6 @@ const style = {
     left: {
         display: 'inline-block',
         verticalAlign: 'top',
-        margin: '0 1% 0 0',
         width: '29%',
     },
     select: {
@@ -61,7 +60,7 @@ const style = {
     pre: isFocused => ({
         display: 'inline-block',
         verticalAlign: 'top',
-        width: '50%',
+        width: '60%',
         border: `1px solid ${isFocused ? '#3f8bea' : 'transparent'}`,
     }),
     rows: {
@@ -74,8 +73,7 @@ const style = {
         verticalAlign: 'top',
         border: `1px solid ${isFocused ? '#3f8bea' : 'rgba(0, 0,0, 0.1)'}`,
         padding: 10,
-        width: '50%',
-        margin: '5px 10px',
+        width: '60%',
     }),
     pActions: {
         display: 'inline-block',
