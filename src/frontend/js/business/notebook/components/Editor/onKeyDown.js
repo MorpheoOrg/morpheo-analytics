@@ -1,17 +1,3 @@
-import onSelectAll from '../../../../../../../node_modules/slate-edit-code/dist/onSelectAll';
-import onEnter from '../../../../../../../node_modules/slate-edit-code/dist/onEnter';
-import onModEnter from '../../../../../../../node_modules/slate-edit-code/dist/onModEnter';
-import onTab from '../../../../../../../node_modules/slate-edit-code/dist/onTab';
-import onShiftTab from '../../../../../../../node_modules/slate-edit-code/dist/onShiftTab';
-import getCurrentCode from '../../../../../../../node_modules/slate-edit-code/dist/getCurrentCode';
-
-// custom BackSpace
-import onBackspace from './onBackspace';
-
-const KEY_ENTER = 'enter';
-const KEY_TAB = 'tab';
-const KEY_BACKSPACE = 'backspace';
-
 /**
  * Copyright Morpheo Org. 2017
  *
@@ -46,6 +32,21 @@ const KEY_BACKSPACE = 'backspace';
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
+import onSelectAll from '../../../../../../../node_modules/slate-edit-code/dist/onSelectAll';
+import onEnter from '../../../../../../../node_modules/slate-edit-code/dist/onEnter';
+import onModEnter from '../../../../../../../node_modules/slate-edit-code/dist/onModEnter';
+import onTab from '../../../../../../../node_modules/slate-edit-code/dist/onTab';
+import onShiftTab from '../../../../../../../node_modules/slate-edit-code/dist/onShiftTab';
+import getCurrentCode from '../../../../../../../node_modules/slate-edit-code/dist/getCurrentCode';
+
+// custom BackSpace
+import onBackspace from './onBackspace';
+
+const KEY_ENTER = 'enter';
+const KEY_TAB = 'tab';
+const KEY_BACKSPACE = 'backspace';
+
 function onKeyDown(e, data, state, opts) {
     // override onKeyDown
     const currentCode = getCurrentCode(opts, state);
@@ -81,9 +82,13 @@ function onKeyDown(e, data, state, opts) {
             return onTab(...args);
         }
 
-        // User is pressing Shift+Enter
+        // User is pressing Mod+Enter
         else if (data.key === KEY_ENTER && data.isMod && opts.exitBlockType) {
             return onModEnter(...args);
+        }
+        // User is pressing Shift+Enter
+        else if (data.key === KEY_ENTER && data.isShift) {
+            return state;
         }
 
         // User is pressing Enter

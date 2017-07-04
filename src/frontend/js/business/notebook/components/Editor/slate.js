@@ -121,10 +121,10 @@ class SlateEditor extends React.Component {
         // handle key from keyboard
         if (nextProps.keydown.event) {
             // prevent infinite loop
-            const {key, ctrlKey} = nextProps.keydown.event;
+            const {key, ctrlKey, shiftKey} = nextProps.keydown.event;
             nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
             // TODO, get KEYS from reducer user settings
-            if (ctrlKey) {
+            if (ctrlKey || shiftKey) {
                 const {state} = nextProps;
                 const document = state.document;
 
@@ -133,12 +133,20 @@ class SlateEditor extends React.Component {
                     node = document.getParent(node.key);
                 }
                 const index = document.nodes.findIndex(o => o.key === node.key);
-                if (key === KEYS.above) { // above == before
-                    console.log(index);
-                    this.addInnerParagraphCell(index);
+
+                if (ctrlKey) {
+                    if (key === KEYS.above) { // above == before
+                        console.log(index);
+                        this.addInnerParagraphCell(index);
+                    }
+                    else if (key === KEYS.below) { // below == after
+                        this.addInnerParagraphCell(index + 1);
+                    }
                 }
-                else if (key === KEYS.below) { // below == after
-                    this.addInnerParagraphCell(index + 1);
+
+                if (shiftKey && key === KEYS.enter) {
+                    console.log('TODO EXECUTE', node, node.getTexts().map(t => t.text).join('\n'));
+                    this.execute();
                 }
             }
         }

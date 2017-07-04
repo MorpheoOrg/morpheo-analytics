@@ -119,7 +119,10 @@ class Settings extends React.Component {
                     <Switch defaultChecked={line_numbers} onChange={this.setLineNumbers} />
                 </div>
             </div>
-            <p>Use key shortcuts <span style={style.shortcut}>ctrl+a</span> and <span style={style.shortcut}>ctrl+b</span> for adding a cell above or below the selected cell.</p>
+            <p>Use key shortcuts <span style={style.shortcut}>ctrl+a</span> and <span style={style.shortcut}>ctrl+b</span> for adding a cell above or below the selected cell.
+                <br />
+                Use <span style={style.shortcut}>shift+Enter</span> to execute code.
+            </p>
         </div>);
     }
 }
