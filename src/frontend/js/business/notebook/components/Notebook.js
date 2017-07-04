@@ -99,7 +99,7 @@ class Notebook extends React.Component {
 
     send() {
         console.log('send');
-        //this.props.send({code: this.props.cell.value, id: this.props.cell.id});
+        // this.props.send({code: this.props.cell.value, id: this.props.cell.id});
     }
 
     render() {

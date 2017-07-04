@@ -54,7 +54,7 @@ class App extends React.Component {
         super(props);
         this.displayModal = this.displayModal.bind(this);
         this.handleOk = this.handleOk.bind(this);
-        this.jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inpsb3RlbiJ9.6kZ-0Y96-gAzrOXzqH91F9WAgAAFXpRaayVifYjuEv4';
+        this.jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoidXNlcm5hbWUifQ.PIpM3RZYZnHUrHGBPfzISIrRaxU7284JctfQV9gympU';
         this.state = {visible: false};
     }
 

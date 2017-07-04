@@ -98,7 +98,7 @@ const initialState = {
                 },
             ],
         }),
-        //selection: Selection.create(),
+        // selection: Selection.create(),
     }),
     language: null,
     loading: false,

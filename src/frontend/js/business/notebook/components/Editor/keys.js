@@ -38,7 +38,7 @@
 const KEYS = {
     above: 'a',
     below: 'b',
-    enter: 'Enter'
+    enter: 'Enter',
 };
 
 export default KEYS;
