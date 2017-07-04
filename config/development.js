@@ -7,8 +7,8 @@
 // uncomment this for testing with prod data
 import {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} from './devsecret';
 
-const apiUrl = 'http://notebook-proxy.morpheo.io';
-const apiSocketUrl = 'ws://notebook-proxy.morpheo.io';
+const apiUrl = 'https://notebook-proxy.morpheo.io';
+const apiSocketUrl = 'wss://notebook-proxy.morpheo.io';
 const storageApiUrl = 'https://storage.morpheo.io';
 const orchestratorApiUrl = 'https://orchestrator.morpheo.io';
 const servicesApiUrl = 'https://notebook-services.morpheo.io';
