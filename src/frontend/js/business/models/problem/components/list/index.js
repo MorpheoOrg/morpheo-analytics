@@ -50,6 +50,9 @@ const style = {
         margin: '5px 0 0',
         fontWeight: 'bold',
     },
+    dl: {
+        width: '100%',
+    },
     li: {
         display: 'block',
         backgroundColor: 'rgba(255, 255, 255, 0.6)',
@@ -83,7 +86,7 @@ class List extends React.PureComponent {
                     (<li key={o.timestamp_upload} style={style.li}>
                         {o.loading && <Loading />}
                         {!o.loading &&
-                        <dl>
+                        <dl style={style.dl}>
                             {o.name && <dt>name:</dt>}
                             {o.name && <dd>{o.name}</dd>}
                             {o.description && <dt>description:</dt>}
