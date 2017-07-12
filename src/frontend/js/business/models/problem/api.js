@@ -46,17 +46,28 @@ const getHeaders = jwt => ({
 
 export const fetchList = (url, jwt) => fetch(url, {
     headers: getHeaders(jwt),
-        // Allows API to set http-only cookies with AJAX calls
-        // @see http://www.redotheweb.com/2015/11/09/api-security.html
-        // credentials: 'include',
     mode: 'cors',
 })
-        .then(response => handleResponse(response))
-        .then(json => ({list: json}), error => ({error}));
+    .then(response => handleResponse(response))
+    .then(json => ({list: json}), error => ({error}));
 
 export const fetchProblems = (get_parameters) => {
     const url = `${ORCHESTRATOR_API_URL}/problem${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
     const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
     return fetchList(url, jwt);
+};
+
+
+export const fetchItem = (url, jwt) => fetch(url, {
+    headers: getHeaders(jwt),
+    mode: 'cors',
+})
+    .then(response => handleResponse(response))
+    .then(json => ({item: json}), error => ({error}));
+
+export const fetchProblem = (id, get_parameters) => {
+    const url = `${STORAGE_API_URL}/problem/${id}/${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
+    const jwt = btoa(`${STORAGE_USER}:${STORAGE_PASSWORD}`);
+    return fetchItem(url, jwt);
 };
 

@@ -33,15 +33,18 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 import {actions as listActions, actionTypes as listActionTypes} from '../../../actions/list';
+import {actions as itemActions, actionTypes as itemActionTypes} from '../../../actions/item';
 
 const prefix = 'MODELS::PROBLEM';
 
 export const actionTypes = {
     list: listActionTypes(`${prefix}_LIST`),
+    item: itemActionTypes(`${prefix}_ITEM`),
 };
 
 const actions = {
     list: listActions(actionTypes.list),
+    item: itemActions(actionTypes.item),
 };
 
 export default actions;

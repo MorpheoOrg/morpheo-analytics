@@ -77,19 +77,19 @@ class LearnupletChart extends React.Component {
     render() {
         const {data, id} = this.props;
 
-        return <Card
-                title={`Performance of algo ${id}`}
-                style={card}
-            >
-                <LineChart width={600} height={300} data={data} margin={chart}>
-                    <XAxis dataKey="name" label="Number of trained data"/>
-                    <YAxis label="Perf"/>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <Tooltip />
-                    <Legend />
-                    <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot}/>
-                </LineChart>
-            </Card>;
+        return (<Card
+            title={`Performance of algo ${id}`}
+            style={card}
+        >
+            <LineChart width={600} height={300} data={data} margin={chart}>
+                <XAxis dataKey="name" label="Number of trained data" />
+                <YAxis label="Perf" />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
+                <Legend />
+                <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot} />
+            </LineChart>
+        </Card>);
     }
 }
 
@@ -119,6 +119,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 // only update if data is not deep equal, reference of array can be different
-export default connect(mapStateToProps, mapDispatchToProps)(shouldUpdate((props, nextProps) => {
-    return !isEqual(props.data, nextProps.data);
-})(LearnupletChart));
+export default connect(mapStateToProps, mapDispatchToProps)(shouldUpdate((props, nextProps) => !isEqual(props.data, nextProps.data))(LearnupletChart));

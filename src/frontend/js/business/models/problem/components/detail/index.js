@@ -121,10 +121,12 @@ class Detail extends React.PureComponent {
             <ul>
                 {algo.list.results.map(o =>
                     (<li key={o.uuid} style={style.li}>
-                        <Algo id={o.uuid}
-                              name={o.name}
-                              data={data[o.uuid]}
-                              date={format(parse(o.timestamp_upload * 1000), 'DD/MM/YYYY HH:mm:ss.SSSZ')}/>
+                        <Algo
+                            id={o.uuid}
+                            name={o.name}
+                            data={data[o.uuid]}
+                            date={format(parse(o.timestamp_upload * 1000), 'DD/MM/YYYY HH:mm:ss.SSSZ')}
+                        />
                     </li>))}
             </ul>
             }

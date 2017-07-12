@@ -45,16 +45,14 @@ export const getError = createSelector([error],
 );
 
 export const getLChartData = createDeepEqualSelector([results],
-    results => {
-        return !isEmpty(results) ? Object.keys(results).reduce((p, c) => ({
-                ...p,
-                [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
-                        [...previous, {
-                            name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
-                            perf: current.perf,
-                        }],
+    results => !isEmpty(results) ? Object.keys(results).reduce((p, c) => ({
+        ...p,
+        [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
+            [...previous, {
+                name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
+                perf: current.perf,
+            }],
                     []),
-            }),
-            {}) : {};
-    },
+    }),
+            {}) : {},
 );

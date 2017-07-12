@@ -36,7 +36,6 @@ const initialState = {
     error: null,
     id: null,
     results: {},
-    loading: false,
 };
 
 export default actionTypes =>
@@ -50,16 +49,15 @@ export default actionTypes =>
         case actionTypes.item.get.REQUEST:
             return {
                 ...state,
-                loading: true,
+                results: {...state.results, [payload]: {loading: true}},
             };
         case actionTypes.item.get.SUCCESS:
             return {
                 ...state,
                 results: {
                     ...state.results,
-                    ...payload,
+                    ...({...payload, loading: false}),
                 },
-                loading: false,
             };
         case actionTypes.item.delete.SUCCESS:
             return {
@@ -73,13 +71,9 @@ export default actionTypes =>
             return {
                 ...state,
                 error: payload,
-                loading: false,
-            };
-        case actionTypes.modal.create.SET:
-        case actionTypes.modal.update.SET:
-            return {
-                ...state,
-                error: null,
+                results: Object.keys(state.results).reduce((p, c) => (
+                    {...p, c: {...state.results[c], loading: false}}
+                ), {}),
             };
         default:
             return state;

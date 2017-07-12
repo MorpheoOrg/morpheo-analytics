@@ -41,6 +41,8 @@ import {Link} from 'react-router-dom';
 import {parse, format} from 'date-fns';
 
 import actions from '../../actions';
+import {getProblems} from '../../selector';
+import Loading from '../../../../../presentation/loaders/bubble';
 
 const style = {
     link: {
@@ -54,6 +56,7 @@ const style = {
         borderRadius: 5,
         padding: 10,
         margin: '20px 0',
+        overflow: 'auto',
     },
     nested: {
         listStyleType: 'disc',
@@ -64,37 +67,31 @@ const style = {
 
 class List extends React.PureComponent {
     componentWillMount() {
-        if (!this.props.problem.list.loading && !this.props.problem.list.init) {
-            this.props.loadList();
+        const {loading, init, loadList} = this.props;
+        if (!loading && !init) {
+            loadList();
         }
     }
 
     render() {
-        const {problem} = this.props;
+        const {problems, loading} = this.props;
 
         return (<div><h1>Problems</h1>
             <ul>
-                {problem.list.loading && <div>Loading...</div>}
-                {!problem.list.loading && problem.list.results.map(o =>
+                {loading && <div>Loading...</div>}
+                {!loading && problems.map(o =>
                     (<li key={o.timestamp_upload} style={style.li}>
+                        {o.loading && <Loading />}
+                        {!o.loading &&
                         <dl>
+                            {o.name && <dt>name:</dt>}
+                            {o.name && <dd>{o.name}</dd>}
+                            {o.description && <dt>description:</dt>}
+                            {o.description && <dd><a href={o.description} target="_blank">{o.description}</a></dd>}
                             <dt>created at:</dt>
                             <dd>{format(parse(o.timestamp_upload * 1000), 'DD/MM/YYYY HH:mm:ss.SSSZ')}</dd>
-                            <dt>size train dataset:</dt>
-                            <dd>{o.size_train_dataset}</dd>
-                            <dt>test dataset:</dt>
-                            <dd>
-                                <ul>
-                                    {o.test_dataset.map(o =>
-                                        (<li style={style.nested} key={o}>
-                                            {o}
-                                        </li>))}
-                                </ul>
-                            </dd>
-                            <dt>workflow:</dt>
-                            <dd>{o.workflow}</dd>
                         </dl>
-
+                        }
                         <Link style={style.link} to={`/problem/${o.uuid}`}>{'-> Manage related algos'}</Link>
                     </li>),
                 )}
@@ -106,25 +103,28 @@ class List extends React.PureComponent {
 // type := array|bool|func|shape|number|string|oneOf([...])|instanceOf(...)
 // decl := ReactPropTypes.{type}(.isRequired)?
 List.propTypes = {
-    problem: PropTypes.shape({
-        list: PropTypes.shape({
-            loading: PropTypes.bool,
-            init: PropTypes.init,
-        }),
-    }),
+    results: PropTypes.arrayOf(PropTypes.shape({})),
+    loading: PropTypes.bool,
+    storage_loading: PropTypes.bool,
+    init: PropTypes.bool,
     loadList: PropTypes.func,
 };
 
-const noop = () => {};
+const noop = () => {
+};
 
 List.defaultProps = {
-    problem: null,
+    problems: null,
+    loading: true,
+    init: false,
     loadList: noop,
 };
 
 function mapStateToProps(state, ownProps) {
     return {
-        problem: state.models.problem,
+        problems: getProblems(state),
+        loading: state.models.problem.list.loading,
+        init: state.models.problem.list.init,
     };
 }
 
@@ -135,4 +135,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['problem'])(List));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['problems', 'loading'])(List));

@@ -34,14 +34,16 @@
  */
 /* globals */
 
-import {call, put, select, takeLatest} from 'redux-saga/effects';
+import {call, put, select, takeLatest, takeEvery} from 'redux-saga/effects';
 import queryString from 'query-string';
 import generalActions from '../../../app/actions';
 
 import actions, {actionTypes} from './actions';
 import {
     fetchProblems as fetchProblemsApi,
+    fetchProblem as fetchProblemApi,
 } from './api';
+
 
 export const loadList = (actions, fetchList, q) =>
     function* loadListSaga() {
@@ -64,7 +66,45 @@ export const loadList = (actions, fetchList, q) =>
         }
         else {
             yield put(actions.list.success({results: list.problems}));
+
+            // Let's fetch description problem from storage
+            const l = list.problems.length;
+            for (let i = 0; i < l; i++) {
+                yield put(actions.item.get.request(list.problems[i].workflow));
+            }
+
             return list;
+        }
+    };
+
+
+export const loadItem = (actions, fetchItem, query) =>
+    function* loadItemSaga(request) {
+        const state = yield select(),
+            location = state.routing.location,
+            q = location && location.search ? {...query, ...queryString.parse(location.search)} : query;
+
+
+        const {error, item} = yield call(fetchItem, request.payload);
+
+        if (error) {
+            if (error.body && error.body.message) {
+                console.error(error.body.message);
+            }
+            if (error && [401, 403].includes(error.status)) {
+                yield put(signOutActions.request());
+            }
+            else if (error && error.message) {
+                yield put(generalActions.error.set(error.message));
+            }
+            yield put(actions.item.get.failure(error.body));
+        }
+        else {
+            yield put(actions.item.get.success({
+                [request.payload]: item,
+            }));
+
+            return item;
         }
     };
 
@@ -72,6 +112,7 @@ export const loadList = (actions, fetchList, q) =>
 const sagas = function* sagas() {
     yield [
         takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchProblemsApi)),
+        takeEvery(actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)),
     ];
 };
 

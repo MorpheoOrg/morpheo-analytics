@@ -35,8 +35,10 @@
 import {actionTypes} from '../actions';
 import {
     list,
+    item,
 } from '../../../../reducers';
 
 export default {
     list: list(actionTypes),
+    item: item(actionTypes),
 };

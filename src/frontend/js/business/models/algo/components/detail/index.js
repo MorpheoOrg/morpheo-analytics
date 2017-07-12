@@ -6,7 +6,7 @@ import React from 'react';
 import LChart from './lchart/index';
 
 const Detail = ({id, name, date, data}) =>
-    <div>
+    (<div>
         <dl>
             <dt>uuid</dt>
             <dd>{id}</dd>
@@ -15,7 +15,7 @@ const Detail = ({id, name, date, data}) =>
             <dt>Created at</dt>
             <dd>{date}</dd>
         </dl>
-        <LChart id={id} data={data}/>
-    </div>;
+        <LChart id={id} data={data} />
+    </div>);
 
 export default Detail;
