@@ -154,7 +154,7 @@ export const loadList = (actions, fetchList) =>
             yield put(actions.list.failure(error.body));
         }
         else {
-            yield put(actions.list.success({results: list.algos}));
+            yield put(actions.list.success({[request.payload]: list.algos}));
             return list;
         }
     };

@@ -33,10 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 const initialState = {
-    init: false,
-    results: [],
+    results: {},
     error: null,
-    loading: false,
 };
 
 export default actionTypes =>
@@ -51,7 +49,7 @@ export default actionTypes =>
         case actionTypes.list.SUCCESS:
             return {
                 ...state,
-                ...payload,
+                results: {...state.results, ...payload},
                 init: true,
                 error: null,
                 loading: false,
@@ -59,7 +57,7 @@ export default actionTypes =>
         case actionTypes.list.FAILURE:
             return {
                 ...state,
-                results: [],
+                results: {},
                 error: payload,
                 loading: false,
             };
@@ -71,7 +69,15 @@ export default actionTypes =>
         case actionTypes.item.post.SUCCESS:
             return {
                 ...state,
-                results: [...state.results, payload],
+                results: Object.keys(state.results).reduce((p, c) => {
+                    return {
+                        ...p,
+                        ...(c === payload.problem ?
+                            {[c] : [...state.results[c], payload]} :
+                            {[c]: state.results[c]}
+                            )
+                    };
+                }, {})
             };
         default:
             return state;

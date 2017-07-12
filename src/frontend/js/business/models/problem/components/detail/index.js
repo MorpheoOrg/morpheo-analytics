@@ -84,9 +84,9 @@ class Detail extends React.PureComponent {
         this.customRequest = this.customRequest.bind(this);
     }
     componentWillMount() {
-        const {algo, problem, storage_problem, loadList, loadProblem} = this.props;
+        const {algo, id, problem, loadList, loadProblem} = this.props;
 
-        if (!algo.list.loading && !algo.list.init) {
+        if (!algo.list.loading && typeof algo.list.results[id] === 'undefined') {
             loadList(this.props.id);
         }
 
@@ -106,7 +106,7 @@ class Detail extends React.PureComponent {
     }
 
     render() {
-        const {algo, data, name} = this.props;
+        const {algo, data, id, name} = this.props;
 
         return (<div>
             <h1>Algos for Challenge {name}</h1>
@@ -126,9 +126,9 @@ class Detail extends React.PureComponent {
                 </Dragger>
             </div>
             {algo.list.loading && <div>Loading...</div>}
-            {!algo.list.loading && !!algo.list.results.length &&
+            {!algo.list.loading && !!algo.list.results[id] && !!algo.list.results[id].length &&
             <ul>
-                {algo.list.results.map(o =>
+                {algo.list.results[id].map(o =>
                     (<li key={o.uuid} style={style.li}>
                         <Algo
                             id={o.uuid}
