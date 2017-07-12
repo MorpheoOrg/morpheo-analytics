@@ -32,13 +32,47 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import {actionTypes} from '../actions';
-import {
-    item,
-} from '../../../../reducers';
-import list from './list';
-
-export default {
-    list: list(actionTypes),
-    item: item(actionTypes),
+const initialState = {
+    error: null,
+    id: null,
+    loading: false,
 };
+
+export default actionTypes =>
+    (state = initialState, {type, payload}) => {
+        switch (type) {
+        case actionTypes.item.SET:
+            return {
+                ...state,
+                id: payload,
+            };
+        case actionTypes.item.get.REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case actionTypes.item.get.SUCCESS:
+            return {
+                ...state,
+                id: payload.id,
+                loading: false,
+            };
+        case actionTypes.item.delete.SUCCESS:
+            return {
+                ...state,
+                id: null,
+            };
+        case actionTypes.item.get.FAILURE:
+        case actionTypes.item.create.FAILURE:
+        case actionTypes.item.update.FAILURE:
+        case actionTypes.item.delete.FAILURE:
+            return {
+                ...state,
+                error: payload,
+                loading: false,
+            };
+        default:
+            return state;
+        }
+    };
+

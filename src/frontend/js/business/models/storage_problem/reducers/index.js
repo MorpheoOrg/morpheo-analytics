@@ -36,9 +36,7 @@ import {actionTypes} from '../actions';
 import {
     item,
 } from '../../../../reducers';
-import list from './list';
 
 export default {
-    list: list(actionTypes),
     item: item(actionTypes),
 };

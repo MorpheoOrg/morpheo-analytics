@@ -32,13 +32,28 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import {actionTypes} from '../actions';
-import {
-    item,
-} from '../../../../reducers';
-import list from './list';
+/* globals ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD btoa fetch*/
 
-export default {
-    list: list(actionTypes),
-    item: item(actionTypes),
+import queryString from 'query-string';
+import {isEmpty} from 'lodash';
+import {handleResponse} from '../../../entities/fetchEntities';
+
+const getHeaders = jwt => ({
+    Accept: 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
+    Authorization: `Basic ${jwt}`,
+});
+
+export const fetchItem = (url, jwt) => fetch(url, {
+    headers: getHeaders(jwt),
+    mode: 'cors',
+})
+    .then(response => handleResponse(response))
+    .then(json => ({item: json}), error => ({error}));
+
+export const fetchProblem = (id, get_parameters) => {
+    const url = `${STORAGE_API_URL}/problem/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
+    const jwt = btoa(`${STORAGE_USER}:${STORAGE_PASSWORD}`);
+    return fetchItem(url, jwt);
 };
+

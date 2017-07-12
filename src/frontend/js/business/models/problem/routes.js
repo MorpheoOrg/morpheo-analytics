@@ -49,20 +49,24 @@ const createAsyncComponentWith = component_path =>
                     System.import('./sagas'),
                     System.import('../algo/sagas'),
                     System.import('../learnuplet/sagas'),
+                    System.import('../storage_problem/sagas'),
                 ],
                 reducers = [
                     System.import('./reducers'),
                     System.import('../algo/reducers'),
                     System.import('../learnuplet/reducers'),
+                    System.import('../storage_problem/reducers'),
                 ];
 
             return Promise.all([...sagas, ...reducers]).then((values) => {
                 injectSaga('problem', values[0].default);
                 injectSaga('algo', values[1].default);
                 injectSaga('learnuplet', values[2].default);
-                injectReducer('models.problem', values[3].default);
-                injectReducer('models.algo', values[4].default);
-                injectReducer('models.learnuplet', values[5].default);
+                injectSaga('storage_problem', values[3].default);
+                injectReducer('models.problem', values[4].default);
+                injectReducer('models.algo', values[5].default);
+                injectReducer('models.learnuplet', values[6].default);
+                injectReducer('models.storage_problem', values[7].default);
 
                 // Configure hot module replacement for the reducer
                 if (process.env.NODE_ENV !== 'production') {
@@ -75,6 +79,9 @@ const createAsyncComponentWith = component_path =>
                         }));
                         module.hot.accept('../learnuplet/reducers', () => System.import('../learnuplet/reducers').then((module) => {
                             injectReducer('models.learnuplet', module.default);
+                        }));
+                        module.hot.accept('../storage_problem/reducers', () => System.import('../storage_problem/reducers').then((module) => {
+                            injectReducer('models.storage_problem', module.default);
                         }));
                     }
                 }

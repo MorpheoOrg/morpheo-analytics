@@ -42,9 +42,11 @@ import {Icon, Upload, message} from 'antd';
 import {Link} from 'react-router-dom';
 import FormData from 'form-data';
 
+import actions from '../../actions';
 import algoActions from '../../../algo/actions';
 import {getLChartData} from '../../../learnuplet/selector';
 import Algo from '../../../algo/components/detail';
+import {getProblems} from '../../selector';
 
 const Dragger = Upload.Dragger;
 
@@ -82,8 +84,15 @@ class Detail extends React.PureComponent {
         this.customRequest = this.customRequest.bind(this);
     }
     componentWillMount() {
-        if (!this.props.algo.list.loading && !this.props.algo.list.init) {
-            this.props.loadList(this.props.id);
+        const {algo, problem, storage_problem, loadList, loadProblem} = this.props;
+
+        if (!algo.list.loading && !algo.list.init) {
+            loadList(this.props.id);
+        }
+
+        // load problem description if not already loaded
+        if (!problem.list.init) {
+            loadProblem(this.props.id);
         }
     }
 
@@ -97,10 +106,10 @@ class Detail extends React.PureComponent {
     }
 
     render() {
-        const {algo, id, data} = this.props;
+        const {algo, data, name} = this.props;
 
         return (<div>
-            <h1>Algos for problem {id}</h1>
+            <h1>Algos for Challenge {name}</h1>
             <Link to="/problem">Back to problem</Link>
             <div style={style.dropbox}>
                 <Dragger
@@ -162,8 +171,14 @@ Detail.defaultProps = {
 };
 
 function mapStateToProps(state, ownProps) {
+
+    const p = getProblems(state).find(o => o.uuid === ownProps.match.params.id);
+
     return {
         algo: state.models.algo,
+        name: p ? p.name : '',
+        problems: getProblems(state),
+        problem: state.models.problem,
         id: ownProps.match.params.id,
         data: getLChartData(state),
     };
@@ -172,9 +187,10 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         loadList: algoActions.list.request,
+        loadProblem: actions.item.get.request,
         postAlgo: algoActions.item.post.request,
     }, dispatch);
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['algo', 'id', 'data'])(Detail));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['algo', 'id', 'data', 'name'])(Detail));

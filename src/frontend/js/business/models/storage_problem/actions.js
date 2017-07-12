@@ -32,13 +32,16 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import {actionTypes} from '../actions';
-import {
-    item,
-} from '../../../../reducers';
-import list from './list';
+import {actions as itemActions, actionTypes as itemActionTypes} from '../../../actions/item';
 
-export default {
-    list: list(actionTypes),
-    item: item(actionTypes),
+const prefix = 'MODELS::STORAGE_PROBLEM';
+
+export const actionTypes = {
+    item: itemActionTypes(prefix),
 };
+
+const actions = {
+    item: itemActions(actionTypes.item),
+};
+
+export default actions;
