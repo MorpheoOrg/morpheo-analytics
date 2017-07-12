@@ -72,7 +72,7 @@ export default actionTypes =>
                 ...state,
                 error: payload,
                 results: Object.keys(state.results).reduce((p, c) => (
-                    {...p, c: {...state.results[c], loading: false}}
+                    {...p, [c]: {...state.results[c], loading: false}}
                 ), {}),
             };
         default:

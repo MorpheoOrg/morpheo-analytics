@@ -38,8 +38,8 @@ import {actions as itemActions, actionTypes as itemActionTypes} from '../../../a
 const prefix = 'MODELS::PROBLEM';
 
 export const actionTypes = {
-    list: listActionTypes(`${prefix}_LIST`),
-    item: itemActionTypes(`${prefix}_ITEM`),
+    list: listActionTypes(prefix),
+    item: itemActionTypes(prefix),
 };
 
 const actions = {
