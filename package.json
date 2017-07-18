@@ -47,7 +47,7 @@
     "redux-saga": "0.15.3",
     "redux-sagas-injector": "0.1.0",
     "reselect": "3.0.1",
-    "slate": "0.20.2",
+    "slate": "0.20.4",
     "slate-edit-code": "0.10.2",
     "slate-prism": "0.2.2",
     "url": "0.11.0",
