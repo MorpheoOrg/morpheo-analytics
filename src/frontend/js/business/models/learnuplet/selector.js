@@ -39,6 +39,7 @@ import createDeepEqualSelector from '../../../utils/selector';
 
 const error = state => state.models.learnuplet.item.error;
 const results = state => state.models.learnuplet.list.results;
+const algo = state => state.models.algo.list.results;
 
 export const getError = createSelector([error],
     error => error ? (JSON.parse(error.message).message ? JSON.parse(error.message).message : JSON.parse(error.message).non_field_errors) : error,
@@ -57,8 +58,16 @@ export const getLChartData = createDeepEqualSelector([results],
         {}) : {},
 );
 
-export const getBestPerf = createDeepEqualSelector([results],
-    results => !isEmpty(results) ? sortBy(Object.keys(results), [o => Math.max(...results[o].map(x => x.perf))]).reverse() : [],
+const flattenAlgos = createDeepEqualSelector([algo],
+    algo => Object.keys(algo).reduce((p, c) => {
+        return [...p, ...algo[c]];
+    }, []),
+);
+
+export const getBestPerf = createDeepEqualSelector([results, flattenAlgos],
+    (results, algo) => {
+        return !isEmpty(results) ? sortBy(Object.keys(results), [o => Math.max(...results[o].map(x => x.perf))]).reverse().map(o => algo.find(x => x.uuid === o)) : [];
+    },
 );
 
 export default {
