@@ -72,4 +72,3 @@ export default function* sendSagas(socket) {
         takeEvery(actionTypes.message.SEND, sendSocketMessage(socket)),
     ];
 }
-

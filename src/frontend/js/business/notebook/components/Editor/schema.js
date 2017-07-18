@@ -33,6 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
+import {connect} from 'react-redux';
 import React from 'react';
 import {Select, Button} from 'antd';
 
@@ -80,9 +81,31 @@ const style = {
         verticalAlign: 'top',
         width: '29%',
     },
+    cell: {
+        output: {},
+        error: {},
+    },
 };
 
+
 /* eslint-disable */
+const mapStateToProps = (state, props) =>
+    state.notebook.cells.results.find(c => c.id == props.id);
+
+const Cell = connect(mapStateToProps)(({content, type}) => (<div>
+    {content && type === 'text' &&
+    <div style={style.cell.output} dangerouslySetInnerHTML={{__html: content}} />}
+
+    {content && type === 'img' &&
+    <img style={style.cell.output} alt="result" src={`data:image/png;base64,${content}`} />}
+
+    {content && type === 'error' &&
+    <div style={style.cell.error}>
+        <span>{content.ename}</span>
+        <p>{content.evalue}</p>
+    </div>}
+</div>));
+
 
 const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectLanguage, remove, cells}) => ({
     nodes: {
@@ -92,8 +115,14 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
                 const linesNumber = node.getTexts().size;
                 const isFocused = state.selection.hasEdgeIn(node);
 
-                const cell = cells.find(o => o.id === node.key);
+                const cell = cells
+                .filter(c => {
+                    console.log(c.cell_id);
+                    return c.parent_id == node.key;
+                })
+                .map((c) => <Cell key={c.id} id={c.id} />);
 
+                console.log("c", cell, cells, node.key, cell.content);
                 return (<div style={style.code}
                              contentEditable={false}>
                     <Select
@@ -111,7 +140,7 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
                         <Button type={'primary'}
                                 onMouseDown={(e) => onToggleCode('paragraph', node.key)}>Toggle</Button>
                         <Button type={'primary'}
-                                onMouseDown={(e) => onExecute(node.getTexts().map(t => t.text).join('\n'))}>Execute</Button>
+                                onMouseDown={(e) => onExecute(node.getTexts().map(t => t.text).join('\n'), node.key)}>Execute</Button>
                         <Button onClick={(e) => remove(node.key)} icon="delete"/>
                     </div>
                     <pre
@@ -133,19 +162,7 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
                             {props.children}
                         </code>
                     </pre>
-                    {cell && <div>
-                        {cell.content && cell.type === 'text' &&
-                        <div style={style.cell.output} dangerouslySetInnerHTML={{__html: cell.content}}/>}
-                        {cell.content && cell.type === 'img' &&
-                        <img style={style.cell.output} alt="result" src={`data:image/png;base64,${cell.content}`}/>}
-                        {cell.content && cell.type === 'error' &&
-                        <div style={style.cell.error}>
-                            <span>{cell.content.ename}</span>
-                            <p>{cell.content.evalue}</p>
-                        </div>
-                        }
-                    </div>
-                    }
+                    {cell}
                 </div>);
             },
         },
@@ -172,4 +189,3 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
 /* eslint-enable */
 
 export default schema;
-

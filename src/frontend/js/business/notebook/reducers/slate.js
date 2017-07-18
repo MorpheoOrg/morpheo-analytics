@@ -37,6 +37,7 @@ import {Raw, State, Document, Selection} from 'slate';
 
 import {actionTypes} from '../actions';
 import {actionTypes as settingsActionTypes} from '../../settings/actions';
+import {actionTypes as kernelActionTypes} from '../../kernel/actions';
 import languages from '../components/Editor/languages';
 
 const createState = (type = 'code_block') => {
@@ -143,7 +144,13 @@ export default (state = initialState, {type, payload}) => {
             state: state.state.transform().focus().apply(),
             line_numbers: payload,
         };
-
+    case kernelActionTypes.message.RECEIVE:
+        console.log(payload);
+        return {
+            ...state,
+            output: payload,
+            state: state.state.transform().focus().apply(),
+        };
     default:
         return state;
     }

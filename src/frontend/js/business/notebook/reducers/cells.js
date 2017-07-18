@@ -111,17 +111,28 @@ export default (state = initialState, {type, payload}) => {
                 ...state.results.slice(index + 1, state.results.length),
             ],
         };
-    case kernelActionTypes.message.RECEIVE: {
+    case kernelActionTypes.message.SEND:
         return {
             ...state,
-            results: state.results.reduce((p, c) =>
-                    ([...p, payload.parent_header.msg_id && c.id === parseInt(payload.parent_header.msg_id.split('-')[0], 10) ? {
-                        ...c,
-                        content: getContent(payload.content, payload.msg_type) || c.content,
-                        type: getType(payload.content, payload.msg_type) || c.type,
-                        status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
-                    } : c]),
-                []),
+            results: state.results.filter(c => c.parent_id === payload.id),
+        };
+    case kernelActionTypes.message.RECEIVE: {
+        const key = parseInt(payload.parent_header.msg_id.split('-')[0], 10);
+        if (payload.msg_type !== 'stream') {
+            return state;
+        }
+        return {
+            ...state,
+            results: [
+                ...state.results,
+                {
+                    id: payload.parent_header.msg_id,
+                    parent_id: key,
+                    content: getContent(payload.content, payload.msg_type),
+                    type: getType(payload.content, payload.msg_type),
+                    status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
+                },
+            ],
         };
     }
     default:

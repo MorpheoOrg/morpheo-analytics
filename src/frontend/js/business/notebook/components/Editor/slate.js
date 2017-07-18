@@ -375,4 +375,3 @@ SlateEditor.defaultProps = {
 };
 
 export default keydown(SlateEditor);
-
