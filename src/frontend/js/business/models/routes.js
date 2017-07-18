@@ -35,10 +35,12 @@
 import {Route, Redirect} from 'react-router';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {PulseLoader} from 'react-spinners';
 
 import {asyncComponent} from 'react-async-component';
+import variables from '../../../css/variables';
 
-const AsyncHelp = asyncComponent({resolve: () => System.import('./help'), LoadingComponent: props => <div>Loading</div>});
+const AsyncHelp = asyncComponent({resolve: () => System.import('./help'), LoadingComponent: props => <PulseLoader color={variables['primary-color']} size={6}/>});
 const ProblemRoutes = asyncComponent({resolve: () => System.import('./problem/routes')});
 
 const RedirectRoute = ({component}) =>

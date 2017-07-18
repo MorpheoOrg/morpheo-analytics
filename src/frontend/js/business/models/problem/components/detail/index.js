@@ -41,10 +41,14 @@ import {parse, format} from 'date-fns';
 import {Icon, Upload, message} from 'antd';
 import {Link} from 'react-router-dom';
 import FormData from 'form-data';
+import {sortBy, isEmpty} from 'lodash';
+import {PulseLoader} from 'react-spinners';
+
+import variables from '../../../../../../css/variables';
 
 import actions from '../../actions';
 import algoActions from '../../../algo/actions';
-import {getLChartData} from '../../../learnuplet/selector';
+import {getLChartData, getBestPerf} from '../../../learnuplet/selector';
 import Algo from '../../../algo/components/detail';
 import {getProblems} from '../../selector';
 
@@ -62,6 +66,12 @@ const style = {
         marginTop: 16,
         height: 180,
     },
+    span: {
+        display: 'block',
+    },
+    loaderWrapper: {
+        display: 'inline-block',
+    }
 };
 
 const onChange = ({file, fileList, event}) => {
@@ -106,10 +116,11 @@ class Detail extends React.PureComponent {
     }
 
     render() {
-        const {algo, data, id, name} = this.props;
+        const {algo, data, id, name, best_perf, loading} = this.props;
 
         return (<div>
-            <h1>Algos for Challenge {name}</h1>
+            <h1>Algos for Challenge {loading ? <div style={style.loaderWrapper}><PulseLoader color={variables['primary-color']} size={6}/></div> : <span>{name}</span>}</h1>
+            <h2>Algos with best performance are : {best_perf.slice(0, 4).map(o => <span key={o} style={style.span}>{o}</span>)}</h2>
             <Link to="/problem">Back to problem</Link>
             <div style={style.dropbox}>
                 <Dragger
@@ -179,8 +190,10 @@ function mapStateToProps(state, ownProps) {
         name: p ? p.name : '',
         problems: getProblems(state),
         problem: state.models.problem,
+        loading: state.models.problem.item.loading || state.models.storage_problem.item.loading,
         id: ownProps.match.params.id,
         data: getLChartData(state),
+        best_perf: getBestPerf(state),
     };
 }
 
@@ -193,4 +206,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['algo', 'id', 'data', 'name'])(Detail));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['algo', 'id', 'data', 'name', 'loading'])(Detail));

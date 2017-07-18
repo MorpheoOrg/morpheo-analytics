@@ -39,10 +39,12 @@ import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
 import {Link} from 'react-router-dom';
 import {parse, format} from 'date-fns';
+import {PulseLoader} from 'react-spinners';
 
+import variables from '../../../../../../css/variables';
 import actions from '../../actions';
 import {getProblems} from '../../selector';
-import Loading from '../../../../../presentation/loaders/bubble';
+
 
 const style = {
     link: {
@@ -81,10 +83,10 @@ class List extends React.PureComponent {
 
         return (<div><h1>Problems</h1>
             <ul>
-                {loading && <div>Loading...</div>}
+                {loading && <PulseLoader color={variables['primary-color']} size={6}/>}
                 {!loading && problems.map(o =>
                     (<li key={o.timestamp_upload} style={style.li}>
-                        {o.loading && <Loading />}
+                        {o.loading && <PulseLoader color={variables['primary-color']} size={6}/>}
                         {!o.loading &&
                         <dl style={style.dl}>
                             {o.name && <dt>name:</dt>}

@@ -39,7 +39,10 @@ import {injectSaga} from 'redux-sagas-injector';
 import {Route, Switch} from 'react-router';
 import React from 'react';
 
+import {PulseLoader} from 'react-spinners';
+
 import {asyncComponent} from 'react-async-component';
+import variables from '../../../../css/variables';
 
 
 const createAsyncComponentWith = component_path =>
@@ -89,7 +92,7 @@ const createAsyncComponentWith = component_path =>
                 return System.import(`${component_path}`);
             });
         },
-        LoadingComponent: props => <div>Loading</div>,
+        LoadingComponent: props => <PulseLoader color={variables['primary-color']} size={6}/>,
     });
 
 const List = createAsyncComponentWith('./components/list/index');

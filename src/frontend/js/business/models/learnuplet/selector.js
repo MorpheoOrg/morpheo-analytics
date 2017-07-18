@@ -46,13 +46,23 @@ export const getError = createSelector([error],
 
 export const getLChartData = createDeepEqualSelector([results],
     results => !isEmpty(results) ? Object.keys(results).reduce((p, c) => ({
-        ...p,
-        [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
-            [...previous, {
-                name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
-                perf: current.perf,
-            }],
-                    []),
-    }),
-            {}) : {},
+            ...p,
+            [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
+                    [...previous, {
+                        name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
+                        perf: current.perf,
+                    }],
+                []),
+        }),
+        {}) : {},
 );
+
+export const getBestPerf = createDeepEqualSelector([results],
+    results => !isEmpty(results) ? sortBy(Object.keys(results), [o => Math.max(...results[o].map(x => x.perf))]).reverse() : [],
+);
+
+export default {
+    getError,
+    getLChartData,
+    getBestPerf,
+};

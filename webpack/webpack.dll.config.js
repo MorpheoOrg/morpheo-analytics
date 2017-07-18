@@ -33,13 +33,13 @@ export default {
             'redux-sagas-injector',
         ],
         App: [
-            'classnames',
             'fastclick',
             'history',
             'isomorphic-fetch',
             'query-string',
             'reselect',
             'url',
+            'date-fns',
         ]
     },
     devtool: '#source-map',

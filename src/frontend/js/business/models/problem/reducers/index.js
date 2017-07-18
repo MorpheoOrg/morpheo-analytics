@@ -33,10 +33,9 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 import {actionTypes} from '../actions';
-import {
-    item,
-} from '../../../../reducers';
+
 import list from './list';
+import item from './item';
 
 export default {
     list: list(actionTypes),

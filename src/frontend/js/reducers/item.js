@@ -36,6 +36,7 @@ const initialState = {
     error: null,
     id: null,
     results: {},
+    loading: false,
 };
 
 export default actionTypes =>
@@ -50,6 +51,7 @@ export default actionTypes =>
             return {
                 ...state,
                 results: {...state.results, [payload]: {loading: true}},
+                loading: true,
             };
         case actionTypes.item.get.SUCCESS:
             return {
@@ -58,11 +60,13 @@ export default actionTypes =>
                     ...state.results,
                     ...({...payload, loading: false}),
                 },
+                loading: false,
             };
         case actionTypes.item.delete.SUCCESS:
             return {
                 ...state,
                 id: null,
+                loading: false,
             };
         case actionTypes.item.get.FAILURE:
         case actionTypes.item.create.FAILURE:
@@ -74,6 +78,7 @@ export default actionTypes =>
                 results: Object.keys(state.results).reduce((p, c) => (
                     {...p, [c]: {...state.results[c], loading: false}}
                 ), {}),
+                loading: false,
             };
         default:
             return state;
