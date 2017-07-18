@@ -40,6 +40,7 @@ import createDeepEqualSelector from '../../../utils/selector';
 const error = state => state.models.learnuplet.item.error;
 const results = state => state.models.learnuplet.list.results;
 const algo = state => state.models.algo.list.results;
+const problem = state => state.models.problem.list.results;
 
 export const getError = createSelector([error],
     error => error ? (JSON.parse(error.message).message ? JSON.parse(error.message).message : JSON.parse(error.message).non_field_errors) : error,
@@ -64,11 +65,18 @@ const flattenAlgos = createDeepEqualSelector([algo],
     }, []),
 );
 
-export const getBestPerf = createDeepEqualSelector([results, flattenAlgos],
-    (results, algo) => {
-        return !isEmpty(results) ? sortBy(Object.keys(results), [o => Math.max(...results[o].map(x => x.perf))]).reverse().map(o => algo.find(x => x.uuid === o)) : [];
-    },
-);
+export const getBestPerf = createDeepEqualSelector([problem, results, flattenAlgos],
+    (problem, results, algo) => {
+        return !isEmpty(results) ? problem.reduce((prev, cur) => {
+            const learnuplets = Object.keys(results).filter(x => algo.filter(o => o.problem === cur.uuid).map(o => o.uuid).includes(x));
+            return {
+                ...prev,
+                [cur.uuid]: sortBy(learnuplets, [o => Math.max(...results[o].map(x => x.perf))])
+                    .reverse()
+                    .map(o => algo.find(x => x.uuid === o)),
+            };
+        }, {}) : {};
+    });
 
 export default {
     getError,

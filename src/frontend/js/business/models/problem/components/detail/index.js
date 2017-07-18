@@ -120,15 +120,17 @@ class Detail extends React.PureComponent {
     render() {
         const {algo, data, id, name, best_perf, loading} = this.props;
 
+        //console.log(best_perf);
+
         return (<div>
             <h1>Algos for Challenge {loading ?
                 <div style={style.loaderWrapper}>
                     <PulseLoader color={variables['primary-color']} size={6}/>
                 </div> : <span>{name}</span>}</h1>
-            <h2>Algos with best performance are : {best_perf.slice(0, 4).map(o => <div key={o.uuid}>
+            <h2>Algos with best performance are : {best_perf[id] ? best_perf[id].slice(0, 4).map(o => <div key={o.uuid}>
                 <span>{o.name}</span>
                 <span style={style.span}>({o.uuid})</span>
-            </div>)}</h2>
+            </div>) : ''}</h2>
             <Link to="/problem">Back to problem</Link>
             <div style={style.dropbox}>
                 <Dragger
