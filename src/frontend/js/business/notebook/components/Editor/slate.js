@@ -48,7 +48,7 @@ import themes from './themes';
 import opts from './opts';
 import onKeyDown from './onKeyDown';
 import onPaste from './onPaste';
-import schema from './schema';
+import schema from './schema/index';
 import getCurrentCode from '../../../../../../../node_modules/slate-edit-code/dist/getCurrentCode';
 
 import {wrapCodeBlock, wrapParagraph} from './utils';
@@ -136,7 +136,6 @@ class SlateEditor extends React.Component {
 
                 if (ctrlKey) {
                     if (key === KEYS.above) { // above == before
-                        console.log(index);
                         this.addInnerParagraphCell(index);
                     }
                     else if (key === KEYS.below) { // below == after
@@ -145,8 +144,7 @@ class SlateEditor extends React.Component {
                 }
 
                 if (shiftKey && key === KEYS.enter) {
-                    console.log('TODO EXECUTE', node, node.getTexts().map(t => t.text).join('\n'));
-                    this.execute();
+                    this.execute(node.key);
                 }
             }
         }
@@ -204,15 +202,18 @@ class SlateEditor extends React.Component {
         const {startBlock, startText} = state;
         const currentCode = getCurrentCode(opts, state);
 
+        let node = currentCode;
+
         let text = '';
         if (currentCode) {
             text = currentCode.getTexts().map(t => t.text).join('\n');
         }
         else if (startBlock.type === 'paragraph') {
-            text = startText.text;
+            node = startText;
+            text = node.text;
         }
 
-        this.props.set({value: text});
+        this.props.set({value: text, id: parseInt(node.key, 10)});
     }
 
     onToggleCode(type, key) {
@@ -249,8 +250,6 @@ class SlateEditor extends React.Component {
             nodes: [Text.createFromString('')],
         });
 
-        console.log(typeof index !== 'undefined' ? index : document.nodes.size);
-
         transform.insertNodeByKey(document.key, typeof index !== 'undefined' ? index : document.nodes.size, block);
         const newState = transform.focus().apply();
 
@@ -280,8 +279,18 @@ class SlateEditor extends React.Component {
         this.props.setSlate({state: newState});
     }
 
-    execute(value, key) {
-        this.props.send({code: value, id: key});
+    execute(id) {
+        const {state} = this.props;
+        const {document} = state;
+
+        let node = state.startBlock;
+        if (node.type === opts.lineType) {
+            node = document.getParent(node.key);
+        }
+
+        const code = node.getTexts().map(t => t.text).join('\n');
+
+        this.props.send({id, code});
     }
 
     remove(key) {
@@ -304,7 +313,7 @@ class SlateEditor extends React.Component {
     }
 
     render() {
-        const {cells, state, settings: {theme, preferred_language, line_numbers}} = this.props;
+        const {state, settings: {theme, preferred_language, line_numbers}} = this.props;
 
         // TODO put in a selector
         const defaultLanguage = preferred_language ? languages[preferred_language] : languages[0];
@@ -331,13 +340,11 @@ class SlateEditor extends React.Component {
                     onBlur={this.onBlur}
                     line_numbers={line_numbers}
                     schema={schema({
-                        line_numbers,
                         onExecute: this.execute,
                         onToggleCode: this.onToggleCode,
                         defaultLanguage,
                         selectLanguage: this.selectLanguage,
                         remove: this.remove,
-                        cells,
                     })}
                 />
             </div>

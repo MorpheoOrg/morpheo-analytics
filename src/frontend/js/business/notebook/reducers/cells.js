@@ -37,7 +37,7 @@ import {actionTypes} from '../actions';
 import {actionTypes as kernelActionTypes} from '../../kernel/actions';
 
 
-const getContent = (content, type) => {
+export const getContent = (content, type) => {
     switch (type) {
     case 'stream':
         return content.text;
@@ -80,16 +80,27 @@ export default (state = initialState, {type, payload}) => {
             ...state,
             results: state.results.filter(o => o.id !== payload),
         };
-    case actionTypes.SET:
+    case actionTypes.SET: {
+        // exists ?
+        const exists = state.results.find(o => o.parent_id === payload.id);
+
         return {
             ...state,
-            results: state.results.reduce((p, c) =>
-                    ([...p, c.id === payload.id ? {
-                        ...c,
-                        value: payload.value,
-                    } : c]),
-                []),
+            results: exists ? state.results.reduce((p, c) => [
+                ...p, c.parent_id === payload.id ? {
+                    ...c,
+                    parent_id: payload.id,
+                    value: payload.value,
+                } : c],
+                []) :
+            [
+                ...state.results,
+                {
+                    parent_id: payload.id,
+                    value: payload.value,
+                }],
         };
+    }
     case actionTypes.INSERT_AFTER:
         return {
             ...state,
@@ -111,19 +122,30 @@ export default (state = initialState, {type, payload}) => {
                 ...state.results.slice(index + 1, state.results.length),
             ],
         };
-    case kernelActionTypes.message.SEND:
-        return {
-            ...state,
-            results: state.results.filter(c => c.parent_id === payload.id),
-        };
     case kernelActionTypes.message.RECEIVE: {
-        const key = parseInt(payload.parent_header.msg_id.split('-')[0], 10);
-        if (payload.msg_type !== 'stream') {
+        if (!['stream', 'error', 'display_data'].includes(payload.msg_type)) {
             return state;
         }
+
+
+        const key = parseInt(payload.parent_header.msg_id.split('-')[0], 10);
+
+        // exists ?
+        const exists = state.results.find(o => o.parent_id === key);
+
         return {
             ...state,
-            results: [
+            results: exists ? state.results.reduce((p, c) =>
+                    ([...p, c.parent_id === key ? {
+                        ...c,
+                        id: payload.parent_header.msg_id,
+                        parent_id: key,
+                        content: getContent(payload.content, payload.msg_type),
+                        type: getType(payload.content, payload.msg_type),
+                        status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
+                    } : c]),
+                []) :
+            [
                 ...state.results,
                 {
                     id: payload.parent_header.msg_id,
@@ -131,8 +153,7 @@ export default (state = initialState, {type, payload}) => {
                     content: getContent(payload.content, payload.msg_type),
                     type: getType(payload.content, payload.msg_type),
                     status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
-                },
-            ],
+                }],
         };
     }
     default:

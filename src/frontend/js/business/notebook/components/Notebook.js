@@ -81,7 +81,6 @@ class Notebook extends React.Component {
 
     constructor(props) {
         super(props);
-        this.send = this.send.bind(this);
         this.selectLanguage = this.selectLanguage.bind(this);
     }
 
@@ -95,11 +94,6 @@ class Notebook extends React.Component {
             },
         }).focus().apply();
         this.props.setLanguage({language, state});
-    }
-
-    send() {
-        console.log('send');
-        // this.props.send({code: this.props.cell.value, id: this.props.cell.id});
     }
 
     render() {

@@ -33,51 +33,13 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import {Raw, State, Document, Selection} from 'slate';
+import {State, Document} from 'slate';
 
 import {actionTypes} from '../actions';
 import {actionTypes as settingsActionTypes} from '../../settings/actions';
 import {actionTypes as kernelActionTypes} from '../../kernel/actions';
 import languages from '../components/Editor/languages';
-
-const createState = (type = 'code_block') => {
-    if (!['code_block', 'paragraph'].includes(type)) {
-        throw new Error(`type must be of types code_block or paragraph. ${type} is invalid.`);
-    }
-
-    return Raw.deserialize({
-        nodes: [
-            {
-                kind: 'block',
-                type,
-                ...(type === 'code_block' ? {
-                    data: {syntax: languages[0]},
-                    nodes: [
-                        {
-                            kind: 'block',
-                            type: 'code_line',
-                            nodes: [{
-                                kind: 'text',
-                                text: '',
-                            }],
-                        },
-                    ],
-                } : {
-                    nodes: [
-                        {
-                            kind: 'text',
-                            ranges: [
-                                {
-                                    text: '', // initialize to empty
-                                },
-                            ],
-                        },
-                    ],
-                }),
-            },
-        ],
-    }, {terse: true});
-};
+import {getContent} from './cells';
 
 const initialState = {
     state: State.create({
@@ -145,10 +107,9 @@ export default (state = initialState, {type, payload}) => {
             line_numbers: payload,
         };
     case kernelActionTypes.message.RECEIVE:
-        console.log(payload);
         return {
             ...state,
-            output: payload,
+            output: getContent(payload.content, payload.msg_type),
             state: state.state.transform().focus().apply(),
         };
     default:
