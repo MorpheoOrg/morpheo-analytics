@@ -283,7 +283,8 @@ class SlateEditor extends React.Component {
         const {state} = this.props;
         const {document} = state;
 
-        let node = state.startBlock;
+        // get node in last state result
+        let node = document.nodes.find(o => o.key === id);
         if (node.type === opts.lineType) {
             node = document.getParent(node.key);
         }
@@ -370,7 +371,6 @@ SlateEditor.propTypes = {
         preferred_language: PropTypes.number,
         theme: PropTypes.number,
     }).isRequired,
-    cells: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 
     keydown: PropTypes.shape({
         event: PropTypes.shape({}),
