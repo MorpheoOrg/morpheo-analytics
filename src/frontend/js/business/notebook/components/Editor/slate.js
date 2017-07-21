@@ -314,7 +314,7 @@ class SlateEditor extends React.Component {
     }
 
     render() {
-        const {state, settings: {theme, preferred_language, line_numbers}} = this.props;
+        const {state, settings: {theme, preferred_language}} = this.props;
 
         // TODO put in a selector
         const defaultLanguage = preferred_language ? languages[preferred_language] : languages[0];
@@ -339,7 +339,6 @@ class SlateEditor extends React.Component {
                     onPaste={SlateEditor.onPaste}
                     onBeforeInput={this.onBeforeInput}
                     onBlur={this.onBlur}
-                    line_numbers={line_numbers}
                     schema={schema({
                         onExecute: this.execute,
                         onToggleCode: this.onToggleCode,

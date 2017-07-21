@@ -37,7 +37,7 @@ const style = {
 
 class CodeBlock extends React.Component {
     render() {
-        const {editor, node, state, cells, selectLanguage, onExecute, onToggleCode, remove, defaultLanguage} = this.props;
+        const {editor, node, state, cells, line_numbers, selectLanguage, onExecute, onToggleCode, remove, defaultLanguage} = this.props;
 
         const linesNumber = node.getTexts().size;
         const isFocused = state.selection.hasEdgeIn(node);
@@ -77,7 +77,7 @@ class CodeBlock extends React.Component {
                 suppressContentEditableWarning
             >
                 <code className={`language-${node.data.get('syntax')}`} {...this.props.attributes}>
-                    {editor.props.line_numbers &&
+                    {line_numbers &&
                     <span
                         className="line-numbers-rows"
                         style={style.rows}
@@ -98,6 +98,7 @@ class CodeBlock extends React.Component {
 const mapStateToProps = (state, props) => ({
     ...props,
     cells: state.notebook.cells.results,
+    line_numbers: state.notebook.slate.line_numbers,
 });
 
 // we need to connect to cells for bypassing slate schema rendering

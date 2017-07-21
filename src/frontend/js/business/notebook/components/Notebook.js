@@ -105,7 +105,6 @@ class Notebook extends React.Component {
                     set={set}
                     setSlate={setSlate}
                     state={slateState}
-                    cells={cells}
                     settings={settings}
                     selectLanguage={this.selectLanguage}
                     send={send}
@@ -115,7 +114,6 @@ class Notebook extends React.Component {
 }
 
 Notebook.propTypes = {
-    cells: PropTypes.arrayOf(PropTypes.shape({})),
     slateState: PropTypes.shape({}),
     settings: PropTypes.shape({
         preferred_language: PropTypes.number,
@@ -128,15 +126,12 @@ Notebook.propTypes = {
 };
 
 Notebook.defaultProps = {
-    cells: [],
     slateState: undefined,
     settings: undefined,
 };
 
 const mapStateToProps = state => ({
     slateState: state.notebook.slate.state,
-    line_numbers: state.notebook.slate.line_numbers,
-    cells: state.notebook.cells.results,
     settings: state.settings,
 });
 
@@ -148,4 +143,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     send: messageActions.send,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['slateState', 'settings', 'cells', 'line_numbers'])(Notebook));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['slateState', 'settings',])(Notebook));
