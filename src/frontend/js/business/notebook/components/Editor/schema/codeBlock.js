@@ -72,7 +72,7 @@ class CodeBlock extends React.Component {
             </div>
             <pre
                 style={style.pre(isFocused)}
-                className={`language-${node.data.get('syntax')}${editor.props.line_numbers ? ' line-numbers' : ''}`}
+                className={`language-${node.data.get('syntax')}${line_numbers ? ' line-numbers' : ''}`}
                 contentEditable
                 suppressContentEditableWarning
             >
