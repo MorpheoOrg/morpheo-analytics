@@ -22,11 +22,11 @@ const style = {
 const Cell = ({content, type}) =>
     (<div>
         {content && type === 'text' &&
-        <div style={style.output} dangerouslySetInnerHTML={{__html: content}} />
+        <div style={style.output} dangerouslySetInnerHTML={{__html: content}}/>
         }
 
         {content && type === 'img' &&
-        <img style={style.output} alt="result" src={`data:image/png;base64,${content}`} />
+        <img style={style.output} alt="result" src={`data:image/png;base64,${content}`}/>
         }
 
         {content && type === 'error' &&
@@ -37,8 +37,13 @@ const Cell = ({content, type}) =>
     </div>);
 
 Cell.propTypes = {
-    content: PropTypes.shape({}).isRequired,
-    type: PropTypes.string.isRequired,
+    content: PropTypes.string,
+    type: PropTypes.string,
+};
+
+Cell.defaultProps = {
+    content: null,
+    type: '',
 };
 
 export default Cell;

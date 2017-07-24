@@ -2,12 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Select, Button} from 'antd';
-import keydown from 'react-keydown';
 
 import languages from '../languages';
 import Cell from './cell';
-import KEYS from '../keys';
-import opts from '../opts';
 import '../../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 
 const Option = Select.Option;
@@ -40,28 +37,6 @@ const style = {
 };
 
 class CodeBlock extends React.Component {
-    componentWillReceiveProps(nextProps) {
-        // handle key from keyboard
-        if (nextProps.keydown.event) {
-            // prevent infinite loop
-            const {key, ctrlKey, shiftKey} = nextProps.keydown.event;
-            nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
-            // TODO, get KEYS from reducer user settings
-            if (ctrlKey || shiftKey) {
-                const {state} = nextProps;
-                const document = state.document;
-
-                let node = state.startBlock;
-                if (node.type === opts.lineType) {
-                    node = document.getParent(node.key);
-                }
-                if (shiftKey && key === KEYS.enter) {
-                    this.props.onExecute(node.key);
-                }
-            }
-        }
-    }
-
     render() {
         const {
             node, state, cells, line_numbers, selectLanguage, defaultLanguage,
@@ -134,11 +109,8 @@ CodeBlock.propTypes = {
     onToggleCode: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
     defaultLanguage: PropTypes.string.isRequired,
-    keydown: PropTypes.shape({
-        event: PropTypes.shape({}),
-    }),
     attributes: PropTypes.shape({}).isRequired,
-    children: PropTypes.shape({}).isRequired,
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 CodeBlock.defaultProps = {
@@ -152,4 +124,4 @@ const mapStateToProps = (state, props) => ({
 });
 
 // we need to connect to cells for bypassing slate schema rendering
-export default connect(mapStateToProps)(keydown(CodeBlock));
+export default connect(mapStateToProps)(CodeBlock);

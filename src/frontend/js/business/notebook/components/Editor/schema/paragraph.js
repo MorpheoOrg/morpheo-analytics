@@ -44,7 +44,7 @@ Paragraph.propTypes = {
     onToggleCode: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
     attributes: PropTypes.shape({}).isRequired,
-    children: PropTypes.shape({}).isRequired,
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default Paragraph;

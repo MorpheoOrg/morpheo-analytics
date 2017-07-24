@@ -145,6 +145,10 @@ class SlateEditor extends React.Component {
                         this.addInnerParagraphCell(index + 1);
                     }
                 }
+
+                if (shiftKey && key === KEYS.enter) {
+                    this.props.onExecute(node.key);
+                }
             }
         }
     }
