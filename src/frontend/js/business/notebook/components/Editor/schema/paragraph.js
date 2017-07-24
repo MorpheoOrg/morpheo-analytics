@@ -19,8 +19,8 @@ const style = {
 
 const Paragraph = ({node, state, remove, onToggleCode, attributes, children}) => {
     const isFocused = state.selection.hasEdgeIn(node);
-    return (<div contentEditable={false}>
-        <div style={style.pActions}>
+    return (<div>
+        <div style={style.pActions} contentEditable={false}>
             <Button
                 type={'primary'}
                 onMouseDown={e => onToggleCode('code', node.key)}

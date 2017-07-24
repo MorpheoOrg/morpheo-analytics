@@ -34,6 +34,9 @@ const style = {
         msUserSelect: 'none',
         userSelect: 'none',
     },
+    actions: {
+        display: 'inline',
+    },
 };
 
 class CodeBlock extends React.Component {
@@ -48,31 +51,30 @@ class CodeBlock extends React.Component {
 
         const cell = cells.find(c => c.parent_id === parseInt(node.key, 10));
 
-        return (<div
-            style={style.code}
-            contentEditable={false}
-        >
-            <Select
-                style={style.select}
-                defaultValue={node.data.get('syntax') || defaultLanguage}
-                onChange={e => selectLanguage(node.key, e)}
-            >
-                {languages.map(o =>
-                    (<Option key={o} value={o}>
-                        <span>{o}</span>
-                    </Option>),
-                )}
-            </Select>
-            <div style={style.left}>
-                <Button
-                    type={'primary'}
-                    onMouseDown={e => onToggleCode('paragraph', node.key)}
-                >Toggle</Button>
-                <Button
-                    type={'primary'}
-                    onMouseDown={e => onExecute(node.key)}
-                >Execute</Button>
-                <Button onClick={e => remove(node.key)} icon="delete" />
+        return (<div style={style.code}>
+            <div style={style.actions} contentEditable={false}>
+                <Select
+                    style={style.select}
+                    defaultValue={node.data.get('syntax') || defaultLanguage}
+                    onChange={e => selectLanguage(node.key, e)}
+                >
+                    {languages.map(o =>
+                        (<Option key={o} value={o}>
+                            <span>{o}</span>
+                        </Option>),
+                    )}
+                </Select>
+                <div style={style.left}>
+                    <Button
+                        type={'primary'}
+                        onMouseDown={e => onToggleCode('paragraph', node.key)}
+                    >Toggle</Button>
+                    <Button
+                        type={'primary'}
+                        onMouseDown={e => onExecute(node.key)}
+                    >Execute</Button>
+                    <Button onClick={e => remove(node.key)} icon="delete"/>
+                </div>
             </div>
             <pre
                 style={style.pre(isFocused)}
@@ -88,13 +90,13 @@ class CodeBlock extends React.Component {
                         contentEditable={false}
                     >
                         {[...Array(linesNumber).keys()].map(o =>
-                            <span key={o} />,
+                            <span key={o}/>,
                         )}
                     </span>}
                     {this.props.children}
                 </code>
             </pre>
-            {cell && <Cell content={cell.content} type={cell.type} />}
+            {cell && <Cell content={cell.content} type={cell.type}/>}
         </div>);
     }
 }

@@ -147,7 +147,7 @@ class SlateEditor extends React.Component {
                 }
 
                 if (shiftKey && key === KEYS.enter) {
-                    this.props.onExecute(node.key);
+                    this.execute(node.key);
                 }
             }
         }
