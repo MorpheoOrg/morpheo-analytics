@@ -48,7 +48,7 @@ const storeSettings = settings =>
     function* storeSettingsSaga({payload}) {
         const state = yield select();
 
-        const {res} = yield call(updateSettingsApi, state.settings.id, {[settings]: payload});
+        const {res} = yield call(updateSettingsApi, state.settings.id, {[settings]: payload}, state.user.access_token);
 
         if (res) {
             // yield put(actions.update(res));

@@ -33,48 +33,15 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-/* globals localStorage fetch SERVICES_API_URL btoa NOTEBOOK_SERVICES_USER NOTEBOOK_SERVICES_PASSWORD */
+import languages from './components/Editor/languages';
+import createDeepEqualSelector from '../../utils/selector';
 
-const getHeaders = (basic, jwt) => ({
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
-    Authorization: `Basic ${basic}`,
-    TOKEN: `JWT ${jwt}`,
-});
+const preferred_language = state => state.settings.preferred_language;
 
-export const updateSettings = (id, payload, jwt) => {
-    const basic = btoa(`${NOTEBOOK_SERVICES_USER}:${NOTEBOOK_SERVICES_PASSWORD}`);
-    const headers = getHeaders(basic, jwt);
-    const url = `${SERVICES_API_URL}/settings/${id}/`;
+export const getDefaultLanguage = createDeepEqualSelector([preferred_language],
+    preferred_language => preferred_language ? languages[preferred_language] : languages[0],
+);
 
-    return fetch(url, {
-        method: 'PATCH',
-        headers,
-        // Allows API to set http-only cookies with AJAX calls
-        // @see http://www.redotheweb.com/2015/11/09/api-security.html
-        // credentials: 'include',
-        mode: 'cors',
-        body: JSON.stringify(payload),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                return response.text().then(result =>
-                    Promise.reject({
-                        body: new Error(result),
-                        status: response.status,  // read status
-                    }),
-                );
-            }
-
-            return response.json();
-        })
-        .then(json => ({res: json}), error => ({
-            error,
-        }));
+export default {
+    getDefaultLanguage,
 };
-
-export const storeSettings = (value) => {
-    localStorage.setItem('settings', value);
-};
-
-export default storeSettings;

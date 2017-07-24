@@ -97,7 +97,7 @@ class Notebook extends React.Component {
     }
 
     render() {
-        const {slateState, cells, settings, set, send, setSlate} = this.props;
+        const {slateState, settings, set, send, setSlate} = this.props;
 
         return (
             <div style={style.main}>
@@ -143,4 +143,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     send: messageActions.send,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['slateState', 'settings',])(Notebook));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['slateState', 'settings'])(Notebook));

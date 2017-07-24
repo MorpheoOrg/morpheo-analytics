@@ -36,7 +36,6 @@
 import {State, Document} from 'slate';
 
 import {actionTypes} from '../actions';
-import {actionTypes as settingsActionTypes} from '../../settings/actions';
 import {actionTypes as kernelActionTypes} from '../../kernel/actions';
 import languages from '../components/Editor/languages';
 import {getContent} from './cells';
@@ -67,7 +66,6 @@ const initialState = {
     loading: false,
     version: null,
     error: null,
-    line_numbers: false,
 };
 
 export default (state = initialState, {type, payload}) => {
@@ -99,12 +97,6 @@ export default (state = initialState, {type, payload}) => {
             ...state,
             loading: false,
             error: payload.error,
-        };
-    case settingsActionTypes.line_numbers.SET:
-        return {
-            ...state,
-            state: state.state.transform().focus().apply(),
-            line_numbers: payload,
         };
     case kernelActionTypes.message.RECEIVE:
         return {

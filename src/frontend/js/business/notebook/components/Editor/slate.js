@@ -34,6 +34,7 @@
  */
 
 import React from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Editor, Block, Text} from 'slate';
 import PluginEditCode from 'slate-edit-code';
@@ -41,18 +42,20 @@ import PluginPrism from 'slate-prism';
 import {Button} from 'antd';
 import keydown from 'react-keydown';
 
+import {getDefaultLanguage} from '../../selector';
+
 import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 import languages from './languages';
 import themes from './themes';
 
 import opts from './opts';
+import KEYS from './keys';
 import onKeyDown from './onKeyDown';
 import onPaste from './onPaste';
 import schema from './schema/index';
 import getCurrentCode from '../../../../../../../node_modules/slate-edit-code/dist/getCurrentCode';
 
 import {wrapCodeBlock, wrapParagraph} from './utils';
-import KEYS from './keys';
 
 
 // make opts available for dealing with custom KeyDown
@@ -112,8 +115,8 @@ class SlateEditor extends React.Component {
 
     componentWillMount() {
         // replace first node with correct language
-        const {state: {document}, settings: {preferred_language}} = this.props;
-        this.selectLanguage(document.nodes.first().key, preferred_language ? languages[preferred_language] : languages[0]);
+        const {state: {document}} = this.props;
+        this.selectLanguage(document.nodes.first().key, this.props.defaultLanguage);
     }
 
 
@@ -141,10 +144,6 @@ class SlateEditor extends React.Component {
                     else if (key === KEYS.below) { // below == after
                         this.addInnerParagraphCell(index + 1);
                     }
-                }
-
-                if (shiftKey && key === KEYS.enter) {
-                    this.execute(node.key);
                 }
             }
         }
@@ -314,10 +313,7 @@ class SlateEditor extends React.Component {
     }
 
     render() {
-        const {state, settings: {theme, preferred_language}} = this.props;
-
-        // TODO put in a selector
-        const defaultLanguage = preferred_language ? languages[preferred_language] : languages[0];
+        const {state, settings: {theme}, defaultLanguage} = this.props;
 
         return (
             <div>
@@ -371,6 +367,8 @@ SlateEditor.propTypes = {
         theme: PropTypes.number,
     }).isRequired,
 
+    defaultLanguage: PropTypes.string,
+
     keydown: PropTypes.shape({
         event: PropTypes.shape({}),
     }),
@@ -378,6 +376,11 @@ SlateEditor.propTypes = {
 
 SlateEditor.defaultProps = {
     keydown: null,
+    defaultLanguage: languages[0],
 };
 
-export default keydown(SlateEditor);
+const mapStateToProps = state => ({
+    defaultLanguage: getDefaultLanguage(state),
+});
+
+export default connect(mapStateToProps)(keydown(SlateEditor));

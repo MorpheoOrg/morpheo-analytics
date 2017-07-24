@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const box = {
     backgroundColor: '#1b1b1b',
@@ -21,10 +22,12 @@ const style = {
 const Cell = ({content, type}) =>
     (<div>
         {content && type === 'text' &&
-        <div style={style.output} dangerouslySetInnerHTML={{__html: content}} />}
+        <div style={style.output} dangerouslySetInnerHTML={{__html: content}} />
+        }
 
         {content && type === 'img' &&
-        <img style={style.output} alt="result" src={`data:image/png;base64,${content}`} />}
+        <img style={style.output} alt="result" src={`data:image/png;base64,${content}`} />
+        }
 
         {content && type === 'error' &&
         <div style={style.error}>
@@ -32,5 +35,10 @@ const Cell = ({content, type}) =>
             <p>{content.evalue}</p>
         </div>}
     </div>);
+
+Cell.propTypes = {
+    content: PropTypes.shape({}).isRequired,
+    type: PropTypes.string.isRequired,
+};
 
 export default Cell;

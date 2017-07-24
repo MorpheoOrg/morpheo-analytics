@@ -42,17 +42,20 @@ import Paragraph from './paragraph';
 
 const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectLanguage, remove}) => ({
     nodes: {
-        code_block: props => <CodeBlock {...props}
-                                        onToggleCode={onToggleCode}
-                                        defaultLanguage={defaultLanguage}
-                                        onExecute={onExecute}
-                                        remove={remove}/>,
-        paragraph: props => <Paragraph {...props}
-                                       remove={remove}
-                                       onToggleCode={onToggleCode}/>,
+        code_block: props => (<CodeBlock
+            {...props}
+            onToggleCode={onToggleCode}
+            selectLanguage={selectLanguage}
+            defaultLanguage={defaultLanguage}
+            onExecute={onExecute}
+            remove={remove}
+        />),
+        paragraph: props => (<Paragraph
+            {...props}
+            remove={remove}
+            onToggleCode={onToggleCode}
+        />),
     },
 });
-
-/* eslint-enable */
 
 export default schema;

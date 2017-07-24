@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Button} from 'antd';
 
 const style = {
@@ -35,6 +36,15 @@ const Paragraph = ({node, state, remove, onToggleCode, attributes, children}) =>
             suppressContentEditableWarning
         >{children}</p>
     </div>);
+};
+
+Paragraph.propTypes = {
+    node: PropTypes.shape({}).isRequired,
+    state: PropTypes.shape({}).isRequired,
+    onToggleCode: PropTypes.func.isRequired,
+    remove: PropTypes.func.isRequired,
+    attributes: PropTypes.shape({}).isRequired,
+    children: PropTypes.shape({}).isRequired,
 };
 
 export default Paragraph;
