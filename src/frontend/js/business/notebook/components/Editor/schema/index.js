@@ -40,14 +40,16 @@ import Paragraph from './paragraph';
 
 // Define a schema.
 
-const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectLanguage, remove}) => ({
+const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectLanguage, remove, setSlate, addInnerParagraphCell}) => ({
     nodes: {
         code_block: props => (<CodeBlock
             {...props}
+            setSlate={setSlate}
             onToggleCode={onToggleCode}
             selectLanguage={selectLanguage}
             defaultLanguage={defaultLanguage}
             onExecute={onExecute}
+            addInnerParagraphCell={addInnerParagraphCell}
             remove={remove}
         />),
         paragraph: props => (<Paragraph

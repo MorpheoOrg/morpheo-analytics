@@ -317,7 +317,7 @@ class SlateEditor extends React.Component {
     }
 
     render() {
-        const {state, settings: {theme}, defaultLanguage} = this.props;
+        const {state, settings: {theme}, defaultLanguage, setSlate} = this.props;
 
         return (
             <div>
@@ -345,6 +345,8 @@ class SlateEditor extends React.Component {
                         defaultLanguage,
                         selectLanguage: this.selectLanguage,
                         remove: this.remove,
+                        setSlate,
+                        addInnerParagraphCell: this.addInnerParagraphCell,
                     })}
                 />
             </div>

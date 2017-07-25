@@ -20,8 +20,6 @@ const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NO
     DEBUG_BASE_NAME = config.apps.frontend.baseName.debug;
 
 
-console.log(PRODUCTION_BASE_NAME, DEBUG_BASE_NAME);
-
 const DllArray = ['React', 'Redux', 'App'];
 const DllReferencePlugins = () => {
     const arr = [];
