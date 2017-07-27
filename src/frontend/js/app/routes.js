@@ -41,6 +41,7 @@ import {injectReducer} from 'redux-injector';
 import {injectSaga} from 'redux-sagas-injector';
 
 import UserRoute from '../business/user/routes';
+import commonRoutes from '../business/common/routes';
 import NotebookRoutes from '../business/notebook/routes';
 import SettingsRoutes from '../business/settings/routes';
 
@@ -105,6 +106,7 @@ const Routes = ({store}) =>
     (<div id="routes">
         <div className="middle">
             <Route path="/" component={AsyncApp} />
+            <PrivateRoute component={commonRoutes} store={store} />
             <PrivateRoute component={SettingsRoutes} store={store} />
             <PrivateRoute component={NotebookRoutes} store={store} />
             <UserRoute />

@@ -56,7 +56,8 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
         const {error, res} = yield call(fetchSignIn, uuid);
 
         if (error) {
-            yield put(signInActions.failure(error));
+            console.error(error);
+            yield put(signInActions.failure(new Error('{"message": "Unauthorized"}')));
         }
         else {
             const {settings, access_token} = res;

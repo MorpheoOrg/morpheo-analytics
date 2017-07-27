@@ -50,6 +50,9 @@ const style = {
         display: 'block',
         width: '100%',
     },
+    input: {
+        width: '100%',
+    },
 };
 
 
@@ -79,7 +82,7 @@ class SignInForm extends React.Component {
                 {getFieldDecorator('uuid', {
                     rules: [{required: true, message: 'please specify your uuid.'}],
                 })(
-                    <Input addonBefore={<Icon type="user" />} placeholder="uuid" />,
+                    <Input style={style.input} addonBefore={<Icon type="user" />} placeholder="uuid" />,
                 )}
             </FormItem>
             <Button type={signInError ? 'danger' : 'primary'} htmlType="submit" style={style.submit}>

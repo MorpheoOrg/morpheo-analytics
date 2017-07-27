@@ -83,7 +83,7 @@ const SignIn = (props) => {
                 <h1>Login to Notebook</h1>
                 <p style={style.p}>For getting an uuid please ask to an administrator</p>
                 {signInError &&
-                <p className="error" role="alert">
+                <div className="error" role="alert">
                     <ul>
                         {signInError.length && Object.keys(signInError).map(o =>
                             (<li key={o}>
@@ -92,7 +92,7 @@ const SignIn = (props) => {
                         )}
                     </ul>
                     {signInError.detail || signInError.message}
-                </p>
+                </div>
                 }
                 <FormTemplate
                     signInError={signInError}
