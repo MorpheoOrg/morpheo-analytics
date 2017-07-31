@@ -117,7 +117,7 @@ class CodeBlock extends React.Component {
                             type={'primary'}
                             onMouseDown={e => onExecute(node.key)}
                         >Execute</Button>
-                        <Button onClick={e => remove(node.key)} icon="delete"/>
+                        <Button onClick={e => remove(node.key)} icon="delete" />
                     </div>
                 </div>
                 <pre
@@ -134,20 +134,39 @@ class CodeBlock extends React.Component {
                             contentEditable={false}
                         >
                             {[...Array(linesNumber).keys()].map(o =>
-                                <span key={o}/>,
+                                <span key={o} />,
                             )}
                         </span>}
                         {this.props.children}
                     </code>
                 </pre>
-                {cell && <Cell content={cell.content} type={cell.type}/>}
+                {cell && <Cell content={cell.content} type={cell.type} />}
             </div>);
     }
 }
 
 CodeBlock.propTypes = {
+    keydown: PropTypes.shape({
+        event: PropTypes.shape({}),
+    }),
+    state: PropTypes.shape({
+        selection: PropTypes.shape({
+            anchorKey: PropTypes.string,
+            anchorOffset: PropTypes.number,
+            focusKey: PropTypes.string,
+            focusOffset: PropTypes.number,
+            hasEdgeIn: PropTypes.func,
+        }),
+        transform: PropTypes.func,
+    }).isRequired,
+    editor: PropTypes.shape({
+        props: PropTypes.shape({
+            state: PropTypes.shape({
+                transform: PropTypes.func,
+            }),
+        }),
+    }).isRequired,
     node: PropTypes.shape({}).isRequired,
-    state: PropTypes.shape({}).isRequired,
     cells: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     line_numbers: PropTypes.bool.isRequired,
     selectLanguage: PropTypes.func.isRequired,
@@ -157,6 +176,8 @@ CodeBlock.propTypes = {
     defaultLanguage: PropTypes.string.isRequired,
     attributes: PropTypes.shape({}).isRequired,
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    setSlate: PropTypes.func.isRequired,
+    addInnerParagraphCell: PropTypes.func.isRequired,
 };
 
 CodeBlock.defaultProps = {
