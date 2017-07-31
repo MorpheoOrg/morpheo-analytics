@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button} from 'antd';
+import withUserAgent from 'react-useragent';
+import theme from '../../../../../../css/variables';
 
 const left = 200;
 
@@ -22,24 +24,52 @@ const style = {
         display: 'inline-block',
         verticalAlign: 'top',
     },
+    button: {
+        cursor: 'pointer',
+        color: '#fff',
+        backgroundColor: theme['primary-color'],
+        borderColor: theme['primary-color'],
+        border: '1px solid transparent',
+        outline: 0,
+        lineHeight: 1.5,
+        fontSize: 12,
+        borderRadius: 4,
+        padding: '4px 15px',
+    },
 };
 
 class Paragraph extends React.Component {
+    toggleCode = e => this.props.onToggleCode('code', this.props.node.key);
+    remove = e => this.props.remove(this.props.node.key);
+
     render() {
-        const {node, state, remove, onToggleCode, attributes, children} = this.props;
+        const {node, state, attributes, children} = this.props;
         const isFocused = state.selection.hasEdgeIn(node);
+        const isFirefox = !!~this.props.ua.md.ua.indexOf('Firefox/');
 
         return (
             <div style={style.wrapper}>
                 <div style={style.actions} contentEditable={false}>
+                    {isFirefox && <button
+                        type="button"
+                        className="toggle"
+                        style={style.button}
+                        onMouseDown={this.toggleCode}
+                        contentEditable={false}/>
+                    }
+                    {!isFirefox &&
                     <Button
                         type={'primary'}
-                        onMouseDown={e => onToggleCode('code', node.key)}
+                        onMouseDown={this.toggleCode}
                         contentEditable={false}
-                    >
-                        Toggle
-                    </Button>
-                    <Button onMouseDown={e => remove(node.key)} icon="delete"/>
+                    >Toggle</Button>}
+
+                    <Button
+                        onMouseDown={this.remove}
+                        icon="delete"
+                        contentEditable={false}
+                        readOnly
+                        unselectable="ON"/>
                 </div>
                 <p
                     {...attributes}
@@ -52,7 +82,9 @@ class Paragraph extends React.Component {
 }
 
 Paragraph.propTypes = {
-    node: PropTypes.shape({}).isRequired,
+    node: PropTypes.shape({
+        key: PropTypes.string,
+    }).isRequired,
     state: PropTypes.shape({}).isRequired,
     onToggleCode: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
@@ -60,4 +92,4 @@ Paragraph.propTypes = {
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
-export default Paragraph;
+export default withUserAgent(Paragraph);

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Select, Button} from 'antd';
 import keydown from 'react-keydown';
+import withUserAgent from 'react-useragent';
 
 import opts from '../opts';
 import KEYS from '../keys';
@@ -10,6 +11,7 @@ import KEYS from '../keys';
 import languages from '../languages';
 import Cell from './cell';
 import '../../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
+import theme from '../../../../../../css/variables';
 
 const Option = Select.Option;
 
@@ -48,6 +50,18 @@ const style = {
         position: 'absolute',
         bottom: 0,
     },
+    button: {
+        cursor: 'pointer',
+        color: '#fff',
+        backgroundColor: theme['primary-color'],
+        borderColor: theme['primary-color'],
+        border: '1px solid transparent',
+        outline: 0,
+        lineHeight: 1.5,
+        fontSize: 12,
+        borderRadius: 4,
+        padding: '4px 15px',
+    },
 };
 
 class CodeBlock extends React.Component {
@@ -83,14 +97,18 @@ class CodeBlock extends React.Component {
         }
     }
 
+    toggleCode = e => this.props.onToggleCode('paragraph', this.props.node.key);
+    execute = e => this.props.onExecute(this.props.node.key);
+    remove = e => this.props.remove(this.props.node.key);
+
     render() {
         const {
             node, state, cells, line_numbers, selectLanguage, defaultLanguage,
-            onExecute, onToggleCode, remove,
         } = this.props;
 
         const linesNumber = node.getTexts().size;
         const isFocused = state.selection.hasEdgeIn(node);
+        const isFirefox = !!~this.props.ua.md.ua.indexOf('Firefox/');
 
         const cell = cells.find(c => c.parent_id === parseInt(node.key, 10));
 
@@ -109,15 +127,33 @@ class CodeBlock extends React.Component {
                     </Select>
                 </div>
                 <div style={style.actions} contentEditable={false}>
+                    {isFirefox && <button
+                        type="button"
+                        className="toggle"
+                        style={style.button}
+                        onMouseDown={this.toggleCode}
+                        contentEditable={false}/>
+                    }
+                    {isFirefox && <button
+                        type="button"
+                        className="execute"
+                        style={style.button}
+                        onMouseDown={this.execute}
+                        contentEditable={false}/>
+                    }
+                    {!isFirefox &&
                     <Button
                         type={'primary'}
-                        onMouseDown={e => onToggleCode('paragraph', node.key)}
+                        onMouseDown={this.toggleCode}
                     >Toggle</Button>
+                    }
+                    {!isFirefox &&
                     <Button
                         type={'primary'}
-                        onMouseDown={e => onExecute(node.key)}
+                        onMouseDown={this.execute}
                     >Execute</Button>
-                    <Button onClick={e => remove(node.key)} icon="delete"/>
+                    }
+                    <Button onClick={this.remove} icon="delete"/>
                 </div>
                 <pre
                     style={style.pre(isFocused)}
@@ -175,7 +211,6 @@ CodeBlock.propTypes = {
     defaultLanguage: PropTypes.string.isRequired,
     attributes: PropTypes.shape({}).isRequired,
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    setSlate: PropTypes.func.isRequired,
     addInnerParagraphCell: PropTypes.func.isRequired,
 };
 
@@ -190,4 +225,4 @@ const mapStateToProps = (state, props) => ({
 });
 
 // we need to connect to cells for bypassing slate schema rendering
-export default connect(mapStateToProps)(keydown(CodeBlock));
+export default connect(mapStateToProps)(keydown(withUserAgent(CodeBlock)));

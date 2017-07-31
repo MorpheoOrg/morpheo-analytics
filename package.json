@@ -39,6 +39,7 @@
     "react-router-redux": "5.0.0-alpha.6",
     "react-select": "1.0.0-rc.5",
     "react-tap-event-plugin": "2.0.1",
+    "react-useragent": "^0.4.4",
     "recompose": "0.23.5",
     "redux": "3.6.0",
     "redux-actions": "2.0.3",
