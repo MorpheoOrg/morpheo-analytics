@@ -72,7 +72,7 @@ class CodeBlock extends React.Component {
         const cell = cells.find(c => c.parent_id === parseInt(node.key, 10));
 
         return (
-            <div style={style.code} onKeyDown={e => console.log('keydown')}>
+            <div style={style.code}>
                 <div contentEditable={false} style={style.select}>
                     <Select
                         defaultValue={node.data.get('syntax') || defaultLanguage}
@@ -91,14 +91,16 @@ class CodeBlock extends React.Component {
                         className="toggle"
                         style={style.button}
                         onMouseDown={this.toggleCode}
-                        contentEditable={false}/>
+                        contentEditable={false}
+                    />
                     }
                     {isFirefox && <button
                         type="button"
                         className="execute"
                         style={style.button}
                         onMouseDown={this.execute}
-                        contentEditable={false}/>
+                        contentEditable={false}
+                    />
                     }
                     {!isFirefox &&
                     <Button
@@ -112,14 +114,13 @@ class CodeBlock extends React.Component {
                         onMouseDown={this.execute}
                     >Execute</Button>
                     }
-                    <Button onClick={this.remove} icon="delete"/>
+                    <Button onClick={this.remove} icon="delete" />
                 </div>
                 <pre
                     style={style.pre(isFocused)}
                     className={`language-${node.data.get('syntax')}${line_numbers ? ' line-numbers' : ''}`}
                     contentEditable
                     suppressContentEditableWarning
-                    onKeyDown={e => console.log('keydown')}
                 >
                     <code className={`language-${node.data.get('syntax')}`} {...this.props.attributes}>
                         {line_numbers &&
@@ -129,13 +130,13 @@ class CodeBlock extends React.Component {
                             contentEditable={false}
                         >
                             {[...Array(linesNumber).keys()].map(o =>
-                                <span key={o}/>,
+                                <span key={o} />,
                             )}
                         </span>}
                         {this.props.children}
                     </code>
                 </pre>
-                {cell && <Cell content={cell.content} type={cell.type}/>}
+                {cell && <Cell content={cell.content} type={cell.type} />}
             </div>);
     }
 }
@@ -151,7 +152,9 @@ CodeBlock.propTypes = {
         }),
         transform: PropTypes.func,
     }).isRequired,
-    node: PropTypes.shape({}).isRequired,
+    node: PropTypes.shape({
+        key: PropTypes.string,
+    }).isRequired,
     cells: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     line_numbers: PropTypes.bool.isRequired,
     selectLanguage: PropTypes.func.isRequired,
@@ -161,6 +164,11 @@ CodeBlock.propTypes = {
     defaultLanguage: PropTypes.string.isRequired,
     attributes: PropTypes.shape({}).isRequired,
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    ua: PropTypes.shape({
+        md: PropTypes.shape({
+            ua: PropTypes.string,
+        }),
+    }).isRequired,
 };
 
 CodeBlock.defaultProps = {

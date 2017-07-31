@@ -24,6 +24,7 @@ module.exports = {
         "max-len": [0],
         "no-unused-vars": [2, {"args": "none"}],
         "consistent-return": [0],
+        "no-bitwise": [0],
 
         // helper for fixing common lint errors
         "func-names": [2],

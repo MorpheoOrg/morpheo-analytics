@@ -55,7 +55,8 @@ class Paragraph extends React.Component {
                         className="toggle"
                         style={style.button}
                         onMouseDown={this.toggleCode}
-                        contentEditable={false}/>
+                        contentEditable={false}
+                    />
                     }
                     {!isFirefox &&
                     <Button
@@ -69,7 +70,8 @@ class Paragraph extends React.Component {
                         icon="delete"
                         contentEditable={false}
                         readOnly
-                        unselectable="ON"/>
+                        unselectable="ON"
+                    />
                 </div>
                 <p
                     {...attributes}
@@ -90,6 +92,11 @@ Paragraph.propTypes = {
     remove: PropTypes.func.isRequired,
     attributes: PropTypes.shape({}).isRequired,
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    ua: PropTypes.shape({
+        md: PropTypes.shape({
+            ua: PropTypes.string,
+        }),
+    }).isRequired,
 };
 
 export default withUserAgent(Paragraph);

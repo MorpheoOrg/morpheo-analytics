@@ -189,7 +189,6 @@ class SlateEditor extends React.Component {
     }
 
     onKeyDown(e, data, state) {
-
         const {document} = state;
         let node = state.startBlock;
         if (node.type === opts.lineType) {
@@ -217,44 +216,43 @@ class SlateEditor extends React.Component {
                 .apply();
         }
         // Inside code ?
-        else {
+
             // Add opts in the argument list
-            const args = [e, data, state, opts];
+        const args = [e, data, state, opts];
 
             // Select all the code in the block (Mod+a)
-            if (data.key === 'a' && data.isMod && opts.selectAll) {
-                return onSelectAll(...args);
-            }
+        if (data.key === 'a' && data.isMod && opts.selectAll) {
+            return onSelectAll(...args);
+        }
 
             // User is pressing Shift+Tab
-            else if (data.key === KEY_TAB && data.isShift) {
-                return onShiftTab(...args);
-            }
+        else if (data.key === KEY_TAB && data.isShift) {
+            return onShiftTab(...args);
+        }
 
             // User is pressing Tab
-            else if (data.key === KEY_TAB) {
-                return onTab(...args);
-            }
+        else if (data.key === KEY_TAB) {
+            return onTab(...args);
+        }
 
             // User is pressing Mod+Enter
-            else if (data.key === KEY_ENTER && data.isMod && opts.exitBlockType) {
-                return onModEnter(...args);
-            }
+        else if (data.key === KEY_ENTER && data.isMod && opts.exitBlockType) {
+            return onModEnter(...args);
+        }
             // User is pressing Shift+Enter
-            else if (data.key === KEY_ENTER && data.isShift) {
-                this.execute(node.key);
-                return state;
-            }
+        else if (data.key === KEY_ENTER && data.isShift) {
+            this.execute(node.key);
+            return state;
+        }
 
             // User is pressing Enter
-            else if (data.key === KEY_ENTER) {
-                return onEnter(...args);
-            }
+        else if (data.key === KEY_ENTER) {
+            return onEnter(...args);
+        }
 
             // User is pressing Backspace
-            else if (data.key === KEY_BACKSPACE) {
-                return onBackspace(...args);
-            }
+        else if (data.key === KEY_BACKSPACE) {
+            return onBackspace(...args);
         }
     }
 
@@ -413,10 +411,6 @@ SlateEditor.propTypes = {
     }).isRequired,
 
     defaultLanguage: PropTypes.string,
-
-    keydown: PropTypes.shape({
-        event: PropTypes.shape({}),
-    }),
 };
 
 SlateEditor.defaultProps = {
