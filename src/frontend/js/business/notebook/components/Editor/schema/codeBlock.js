@@ -2,25 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Select, Button} from 'antd';
-import keydown from 'react-keydown';
-
-import opts from '../opts';
-import KEYS from '../keys';
+import withUserAgent from 'react-useragent';
 
 import languages from '../languages';
 import Cell from './cell';
 import '../../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
+import theme from '../../../../../../css/variables';
 
 const Option = Select.Option;
+
+const left = 200;
 
 const style = {
     code: {
         position: 'relative',
-    },
-    left: {
-        display: 'inline-block',
-        verticalAlign: 'top',
-        width: '29%',
+        marginLeft: left,
     },
     select: {
         position: 'absolute',
@@ -39,66 +35,46 @@ const style = {
         userSelect: 'none',
     },
     actions: {
-        display: 'inline',
+        position: 'absolute',
+        top: 10,
+        left: left * -1,
+        display: 'inline-block',
+        verticalAlign: 'top',
+        width: '29%',
+    },
+    button: {
+        cursor: 'pointer',
+        color: '#fff',
+        backgroundColor: theme['primary-color'],
+        borderColor: theme['primary-color'],
+        border: '1px solid transparent',
+        outline: 0,
+        lineHeight: 1.5,
+        fontSize: 12,
+        borderRadius: 4,
+        padding: '4px 15px',
     },
 };
 
 class CodeBlock extends React.Component {
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.keydown.event) {
-            // prevent infinite loop
-            const {key, ctrlKey, shiftKey} = nextProps.keydown.event;
-            nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
-            // TODO, get KEYS from reducer user settings
-            if (ctrlKey || shiftKey) {
-                const {state} = nextProps;
-                const document = state.document;
-
-                let node = state.startBlock;
-                if (node.type === opts.lineType) {
-                    node = document.getParent(node.key);
-                }
-                const index = document.nodes.findIndex(o => o.key === node.key);
-
-                if (ctrlKey) {
-                    if (key === KEYS.above) { // above == before
-                        this.props.addInnerParagraphCell(index);
-                    }
-                    else if (key === KEYS.below) { // below == after
-                        this.props.addInnerParagraphCell(index + 1);
-                    }
-                }
-
-                if (shiftKey && key === KEYS.enter) {
-                    this.props.onExecute(node.key);
-                }
-            }
-        }
-    }
-
-    onFocus = () => {
-        const state = this.props.editor.props.state.transform().collapseToStartOf(this.props.node).focus().apply();
-        if (!this.props.state.selection.hasEdgeIn(this.props.node)) {
-            this.props.setSlate({state});
-        }
-    };
-
+    toggleCode = e => this.props.onToggleCode('paragraph', this.props.node.key);
+    execute = e => this.props.onExecute(this.props.node.key);
+    remove = e => this.props.remove(this.props.node.key);
     render() {
         const {
             node, state, cells, line_numbers, selectLanguage, defaultLanguage,
-            onExecute, onToggleCode, remove,
         } = this.props;
 
         const linesNumber = node.getTexts().size;
         const isFocused = state.selection.hasEdgeIn(node);
+        const isFirefox = !!~this.props.ua.md.ua.indexOf('Firefox/');
 
         const cell = cells.find(c => c.parent_id === parseInt(node.key, 10));
 
         return (
-            <div style={style.code} onFocus={this.onFocus} contentEditable={false}>
-                <div style={style.actions} contentEditable={false}>
+            <div style={style.code} onKeyDown={e => console.log('keydown')}>
+                <div contentEditable={false} style={style.select}>
                     <Select
-                        style={style.select}
                         defaultValue={node.data.get('syntax') || defaultLanguage}
                         onChange={e => selectLanguage(node.key, e)}
                     >
@@ -108,23 +84,42 @@ class CodeBlock extends React.Component {
                             </Option>),
                         )}
                     </Select>
-                    <div style={style.left}>
-                        <Button
-                            type={'primary'}
-                            onMouseDown={e => onToggleCode('paragraph', node.key)}
-                        >Toggle</Button>
-                        <Button
-                            type={'primary'}
-                            onMouseDown={e => onExecute(node.key)}
-                        >Execute</Button>
-                        <Button onClick={e => remove(node.key)} icon="delete"/>
-                    </div>
+                </div>
+                <div style={style.actions} contentEditable={false}>
+                    {isFirefox && <button
+                        type="button"
+                        className="toggle"
+                        style={style.button}
+                        onMouseDown={this.toggleCode}
+                        contentEditable={false}/>
+                    }
+                    {isFirefox && <button
+                        type="button"
+                        className="execute"
+                        style={style.button}
+                        onMouseDown={this.execute}
+                        contentEditable={false}/>
+                    }
+                    {!isFirefox &&
+                    <Button
+                        type={'primary'}
+                        onMouseDown={this.toggleCode}
+                    >Toggle</Button>
+                    }
+                    {!isFirefox &&
+                    <Button
+                        type={'primary'}
+                        onMouseDown={this.execute}
+                    >Execute</Button>
+                    }
+                    <Button onClick={this.remove} icon="delete"/>
                 </div>
                 <pre
                     style={style.pre(isFocused)}
                     className={`language-${node.data.get('syntax')}${line_numbers ? ' line-numbers' : ''}`}
                     contentEditable
                     suppressContentEditableWarning
+                    onKeyDown={e => console.log('keydown')}
                 >
                     <code className={`language-${node.data.get('syntax')}`} {...this.props.attributes}>
                         {line_numbers &&
@@ -146,8 +141,17 @@ class CodeBlock extends React.Component {
 }
 
 CodeBlock.propTypes = {
+    state: PropTypes.shape({
+        selection: PropTypes.shape({
+            anchorKey: PropTypes.string,
+            anchorOffset: PropTypes.number,
+            focusKey: PropTypes.string,
+            focusOffset: PropTypes.number,
+            hasEdgeIn: PropTypes.func,
+        }),
+        transform: PropTypes.func,
+    }).isRequired,
     node: PropTypes.shape({}).isRequired,
-    state: PropTypes.shape({}).isRequired,
     cells: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     line_numbers: PropTypes.bool.isRequired,
     selectLanguage: PropTypes.func.isRequired,
@@ -170,4 +174,4 @@ const mapStateToProps = (state, props) => ({
 });
 
 // we need to connect to cells for bypassing slate schema rendering
-export default connect(mapStateToProps)(keydown(CodeBlock));
+export default connect(mapStateToProps)(withUserAgent(CodeBlock));

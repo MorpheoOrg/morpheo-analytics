@@ -40,7 +40,6 @@ import {Editor, Block, Text} from 'slate';
 import PluginEditCode from 'slate-edit-code';
 import PluginPrism from 'slate-prism';
 import {Button} from 'antd';
-import keydown from 'react-keydown';
 
 import {getDefaultLanguage} from '../../selector';
 
@@ -50,12 +49,23 @@ import themes from './themes';
 
 import opts from './opts';
 import KEYS from './keys';
-import onKeyDown from './onKeyDown';
 import onPaste from './onPaste';
 import schema from './schema/index';
 import getCurrentCode from '../../../../../../../node_modules/slate-edit-code/dist/getCurrentCode';
+import onSelectAll from '../../../../../../../node_modules/slate-edit-code/dist/onSelectAll';
+import onEnter from '../../../../../../../node_modules/slate-edit-code/dist/onEnter';
+import onModEnter from '../../../../../../../node_modules/slate-edit-code/dist/onModEnter';
+import onTab from '../../../../../../../node_modules/slate-edit-code/dist/onTab';
+import onShiftTab from '../../../../../../../node_modules/slate-edit-code/dist/onShiftTab';
+
+// custom BackSpace
+import onBackspace from './onBackspace';
 
 import {wrapCodeBlock, wrapParagraph} from './utils';
+
+const KEY_ENTER = 'enter';
+const KEY_TAB = 'tab';
+const KEY_BACKSPACE = 'backspace';
 
 
 // make opts available for dealing with custom KeyDown
@@ -89,20 +99,13 @@ const languagesMap = languages.map(l => ({
 
 class SlateEditor extends React.Component {
 
-    static onKeyDown(e, data, state) {
-        return onKeyDown(e, data, state, opts);
-    }
-
-    static onPaste(e, data, state) {
-        return onPaste(e, data, state, opts);
-    }
+    static onPaste = (e, data, state) => onPaste(e, data, state, opts);
 
     constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
         this.onBeforeInput = this.onBeforeInput.bind(this);
-        SlateEditor.onKeyDown = SlateEditor.onKeyDown.bind(this);
-        SlateEditor.onPaste = SlateEditor.onPaste.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onToggleCode = this.onToggleCode.bind(this);
         this.handleAddParagraph = this.handleAddParagraph.bind(this);
@@ -117,40 +120,6 @@ class SlateEditor extends React.Component {
         // replace first node with correct language
         const {state: {document}} = this.props;
         this.selectLanguage(document.nodes.first().key, this.props.defaultLanguage);
-    }
-
-
-    componentWillReceiveProps(nextProps) {
-        // handle key from keyboard
-        if (nextProps.keydown.event) {
-            // prevent infinite loop
-            const {key, ctrlKey, shiftKey} = nextProps.keydown.event;
-            nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
-            // TODO, get KEYS from reducer user settings
-            if (ctrlKey || shiftKey) {
-                const {state} = nextProps;
-                const document = state.document;
-
-                let node = state.startBlock;
-                if (node.type === opts.lineType) {
-                    node = document.getParent(node.key);
-                }
-                const index = document.nodes.findIndex(o => o.key === node.key);
-
-                if (ctrlKey) {
-                    if (key === KEYS.above) { // above == before
-                        this.addInnerParagraphCell(index);
-                    }
-                    else if (key === KEYS.below) { // below == after
-                        this.addInnerParagraphCell(index + 1);
-                    }
-                }
-
-                if (shiftKey && key === KEYS.enter) {
-                    this.execute(node.key);
-                }
-            }
-        }
     }
 
     onBeforeInput(event, data) {
@@ -217,6 +186,76 @@ class SlateEditor extends React.Component {
         }
 
         this.props.set({value: text, id: parseInt(node.key, 10)});
+    }
+
+    onKeyDown(e, data, state) {
+
+        const {document} = state;
+        let node = state.startBlock;
+        if (node.type === opts.lineType) {
+            node = document.getParent(node.key);
+        }
+
+        const index = document.nodes.findIndex(o => o.key === node.key);
+        if (data.isMod && data.isShift) {
+            if (data.key === KEYS.above) { // above == before
+                this.addInnerParagraphCell(index);
+            }
+            else if (data.key === KEYS.below) { // below == after
+                this.addInnerParagraphCell(index + 1);
+            }
+        }
+
+        if (node.type === 'paragraph') {
+            if (data.key !== 'enter') return;
+            if (opts.onlyIn && !opts.onlyIn.includes(node.type)) return;
+            if (opts.ignoreIn && opts.ignoreIn.includes(node.type)) return;
+
+            return state
+                .transform()
+                .insertText('\n')
+                .apply();
+        }
+        // Inside code ?
+        else {
+            // Add opts in the argument list
+            const args = [e, data, state, opts];
+
+            // Select all the code in the block (Mod+a)
+            if (data.key === 'a' && data.isMod && opts.selectAll) {
+                return onSelectAll(...args);
+            }
+
+            // User is pressing Shift+Tab
+            else if (data.key === KEY_TAB && data.isShift) {
+                return onShiftTab(...args);
+            }
+
+            // User is pressing Tab
+            else if (data.key === KEY_TAB) {
+                return onTab(...args);
+            }
+
+            // User is pressing Mod+Enter
+            else if (data.key === KEY_ENTER && data.isMod && opts.exitBlockType) {
+                return onModEnter(...args);
+            }
+            // User is pressing Shift+Enter
+            else if (data.key === KEY_ENTER && data.isShift) {
+                this.execute(node.key);
+                return state;
+            }
+
+            // User is pressing Enter
+            else if (data.key === KEY_ENTER) {
+                return onEnter(...args);
+            }
+
+            // User is pressing Backspace
+            else if (data.key === KEY_BACKSPACE) {
+                return onBackspace(...args);
+            }
+        }
     }
 
     onToggleCode(type, key) {
@@ -335,7 +374,7 @@ class SlateEditor extends React.Component {
                     plugins={plugins}
                     state={state}
                     onChange={this.onChange}
-                    onKeyDown={SlateEditor.onKeyDown}
+                    onKeyDown={this.onKeyDown}
                     onPaste={SlateEditor.onPaste}
                     onBeforeInput={this.onBeforeInput}
                     onBlur={this.onBlur}
@@ -389,4 +428,4 @@ const mapStateToProps = state => ({
     defaultLanguage: getDefaultLanguage(state),
 });
 
-export default connect(mapStateToProps)(keydown(SlateEditor));
+export default connect(mapStateToProps)(SlateEditor);

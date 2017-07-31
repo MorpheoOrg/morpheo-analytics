@@ -26,7 +26,7 @@ Common.propTypes = {
     signOut: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state, ownProps) => ({});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     signOut: signOutActions.request,

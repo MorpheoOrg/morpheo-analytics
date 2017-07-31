@@ -8,7 +8,7 @@ const box = {
     borderRadius: 3,
 };
 
-const style = {
+const s = {
     output: {
         ...box,
         color: '#ffffff',
@@ -19,18 +19,18 @@ const style = {
     },
 };
 
-const Cell = ({content, type}) =>
-    (<div>
+const Cell = ({content, type, style}) =>
+    (<div style={style} contentEditable={false}>
         {content && type === 'text' &&
-        <div style={style.output} dangerouslySetInnerHTML={{__html: content}}/>
+        <div style={s.output} dangerouslySetInnerHTML={{__html: content}} />
         }
 
         {content && type === 'img' &&
-        <img style={style.output} alt="result" src={`data:image/png;base64,${content}`}/>
+        <img style={s.output} alt="result" src={`data:image/png;base64,${content}`} />
         }
 
         {content && type === 'error' &&
-        <div style={style.error}>
+        <div style={s.error}>
             <span>{content.ename}</span>
             <p>{content.evalue}</p>
         </div>}
@@ -39,11 +39,13 @@ const Cell = ({content, type}) =>
 Cell.propTypes = {
     content: PropTypes.string,
     type: PropTypes.string,
+    style: PropTypes.shape({}),
 };
 
 Cell.defaultProps = {
     content: null,
     type: '',
+    style: null,
 };
 
 export default Cell;
