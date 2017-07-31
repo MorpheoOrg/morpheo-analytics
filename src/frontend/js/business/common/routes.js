@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import {Route, Switch} from 'react-router';
+import {Route} from 'react-router';
 import React from 'react';
 
 import {asyncComponent} from 'react-async-component';
@@ -43,6 +43,6 @@ const AsyncCommon = asyncComponent({
     LoadingComponent: props => <div>Loading</div>});
 
 
-export default props => (<Switch>
-    <Route exact path="/" component={AsyncCommon} />
-</Switch>);
+export default props => (<div>
+    <Route path="/" component={AsyncCommon} />
+</div>);

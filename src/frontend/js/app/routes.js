@@ -117,5 +117,4 @@ Routes.propTypes = {
     store: PropTypes.shape({}).isRequired,
 };
 
-
 export default Routes;
