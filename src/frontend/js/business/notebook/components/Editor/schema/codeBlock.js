@@ -2,11 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Select, Button} from 'antd';
-import keydown from 'react-keydown';
 import withUserAgent from 'react-useragent';
-
-import opts from '../opts';
-import KEYS from '../keys';
 
 import languages from '../languages';
 import Cell from './cell';
@@ -61,43 +57,9 @@ const style = {
 };
 
 class CodeBlock extends React.Component {
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.keydown.event) {
-            // prevent infinite loop
-            const {key, ctrlKey, shiftKey} = nextProps.keydown.event;
-            console.log(key);
-            nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
-            // TODO, get KEYS from reducer user settings
-            if (ctrlKey || shiftKey) {
-                const {state} = nextProps;
-                const document = state.document;
-
-                let node = state.startBlock;
-                if (node.type === opts.lineType) {
-                    node = document.getParent(node.key);
-                }
-                const index = document.nodes.findIndex(o => o.key === node.key);
-
-                if (ctrlKey) {
-                    if (key === KEYS.above) { // above == before
-                        this.props.addInnerParagraphCell(index);
-                    }
-                    else if (key === KEYS.below) { // below == after
-                        this.props.addInnerParagraphCell(index + 1);
-                    }
-                }
-
-                if (shiftKey && key === KEYS.enter) {
-                    this.props.onExecute(node.key);
-                }
-            }
-        }
-    }
-
     toggleCode = e => this.props.onToggleCode('paragraph', this.props.node.key);
     execute = e => this.props.onExecute(this.props.node.key);
     remove = e => this.props.remove(this.props.node.key);
-
     render() {
         const {
             node, state, cells, line_numbers, selectLanguage, defaultLanguage,
@@ -110,7 +72,7 @@ class CodeBlock extends React.Component {
         const cell = cells.find(c => c.parent_id === parseInt(node.key, 10));
 
         return (
-            <div style={style.code}>
+            <div style={style.code} onKeyDown={e => console.log('keydown')}>
                 <div contentEditable={false} style={style.select}>
                     <Select
                         defaultValue={node.data.get('syntax') || defaultLanguage}
@@ -157,6 +119,7 @@ class CodeBlock extends React.Component {
                     className={`language-${node.data.get('syntax')}${line_numbers ? ' line-numbers' : ''}`}
                     contentEditable
                     suppressContentEditableWarning
+                    onKeyDown={e => console.log('keydown')}
                 >
                     <code className={`language-${node.data.get('syntax')}`} {...this.props.attributes}>
                         {line_numbers &&
@@ -178,9 +141,6 @@ class CodeBlock extends React.Component {
 }
 
 CodeBlock.propTypes = {
-    keydown: PropTypes.shape({
-        event: PropTypes.shape({}),
-    }),
     state: PropTypes.shape({
         selection: PropTypes.shape({
             anchorKey: PropTypes.string,
@@ -190,13 +150,6 @@ CodeBlock.propTypes = {
             hasEdgeIn: PropTypes.func,
         }),
         transform: PropTypes.func,
-    }).isRequired,
-    editor: PropTypes.shape({
-        props: PropTypes.shape({
-            state: PropTypes.shape({
-                transform: PropTypes.func,
-            }),
-        }),
     }).isRequired,
     node: PropTypes.shape({}).isRequired,
     cells: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -208,7 +161,6 @@ CodeBlock.propTypes = {
     defaultLanguage: PropTypes.string.isRequired,
     attributes: PropTypes.shape({}).isRequired,
     children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    addInnerParagraphCell: PropTypes.func.isRequired,
 };
 
 CodeBlock.defaultProps = {
@@ -222,4 +174,4 @@ const mapStateToProps = (state, props) => ({
 });
 
 // we need to connect to cells for bypassing slate schema rendering
-export default connect(mapStateToProps)(withUserAgent(keydown(CodeBlock)));
+export default connect(mapStateToProps)(withUserAgent(CodeBlock));
