@@ -2,7 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button} from 'antd';
 
+const left = 200;
+
 const style = {
+    wrapper: {
+        position: 'relative',
+        marginLeft: left,
+    },
     p: isFocused => ({
         display: 'inline-block',
         verticalAlign: 'top',
@@ -10,33 +16,40 @@ const style = {
         padding: 10,
         width: '60%',
     }),
-    pActions: {
+    actions: {
+        position: 'absolute',
+        left: left * -1,
         display: 'inline-block',
         verticalAlign: 'top',
-        width: '29%',
     },
 };
 
-const Paragraph = ({node, state, remove, onToggleCode, attributes, children}) => {
-    const isFocused = state.selection.hasEdgeIn(node);
-    return (<div>
-        <div style={style.pActions} contentEditable={false}>
-            <Button
-                type={'primary'}
-                onMouseDown={e => onToggleCode('code', node.key)}
-            >
-                Toggle
-            </Button>
-            <Button onMouseDown={e => remove(node.key)} icon="delete" />
-        </div>
-        <p
-            {...attributes}
-            style={style.p(isFocused)}
-            contentEditable
-            suppressContentEditableWarning
-        >{children}</p>
-    </div>);
-};
+class Paragraph extends React.Component {
+    render() {
+        const {node, state, remove, onToggleCode, attributes, children} = this.props;
+        const isFocused = state.selection.hasEdgeIn(node);
+
+        return (
+            <div style={style.wrapper}>
+                <div style={style.actions} contentEditable={false}>
+                    <Button
+                        type={'primary'}
+                        onMouseDown={e => onToggleCode('code', node.key)}
+                        contentEditable={false}
+                    >
+                        Toggle
+                    </Button>
+                    <Button onMouseDown={e => remove(node.key)} icon="delete"/>
+                </div>
+                <p
+                    {...attributes}
+                    style={style.p(isFocused)}
+                    contentEditable
+                    suppressContentEditableWarning
+                >{children}</p>
+            </div>);
+    }
+}
 
 Paragraph.propTypes = {
     node: PropTypes.shape({}).isRequired,

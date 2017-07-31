@@ -19,8 +19,8 @@ const style = {
     },
 };
 
-const Cell = ({content, type}) =>
-    (<div>
+const Cell = ({content, type, style}) =>
+    (<div style={style}>
         {content && type === 'text' &&
         <div style={style.output} dangerouslySetInnerHTML={{__html: content}} />
         }
@@ -39,11 +39,13 @@ const Cell = ({content, type}) =>
 Cell.propTypes = {
     content: PropTypes.string,
     type: PropTypes.string,
+    style: PropTypes.shape({}),
 };
 
 Cell.defaultProps = {
     content: null,
     type: '',
+    style: null,
 };
 
 export default Cell;

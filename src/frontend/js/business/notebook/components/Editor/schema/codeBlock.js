@@ -13,14 +13,12 @@ import '../../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-
 
 const Option = Select.Option;
 
+const left = 200;
+
 const style = {
     code: {
         position: 'relative',
-    },
-    left: {
-        display: 'inline-block',
-        verticalAlign: 'top',
-        width: '29%',
+        marginLeft: left,
     },
     select: {
         position: 'absolute',
@@ -39,7 +37,16 @@ const style = {
         userSelect: 'none',
     },
     actions: {
-        display: 'inline',
+        position: 'absolute',
+        top: 10,
+        left: left * -1,
+        display: 'inline-block',
+        verticalAlign: 'top',
+        width: '29%',
+    },
+    cell: {
+        position: 'absolute',
+        bottom: 0,
     },
 };
 
@@ -76,13 +83,6 @@ class CodeBlock extends React.Component {
         }
     }
 
-    onFocus = () => {
-        const state = this.props.editor.props.state.transform().collapseToStartOf(this.props.node).focus().apply();
-        if (!this.props.state.selection.hasEdgeIn(this.props.node)) {
-            this.props.setSlate({state});
-        }
-    };
-
     render() {
         const {
             node, state, cells, line_numbers, selectLanguage, defaultLanguage,
@@ -95,10 +95,9 @@ class CodeBlock extends React.Component {
         const cell = cells.find(c => c.parent_id === parseInt(node.key, 10));
 
         return (
-            <div style={style.code} onFocus={this.onFocus} contentEditable={false}>
-                <div style={style.actions} contentEditable={false}>
+            <div style={style.code}>
+                <div contentEditable={false} style={style.select}>
                     <Select
-                        style={style.select}
                         defaultValue={node.data.get('syntax') || defaultLanguage}
                         onChange={e => selectLanguage(node.key, e)}
                     >
@@ -108,17 +107,17 @@ class CodeBlock extends React.Component {
                             </Option>),
                         )}
                     </Select>
-                    <div style={style.left}>
-                        <Button
-                            type={'primary'}
-                            onMouseDown={e => onToggleCode('paragraph', node.key)}
-                        >Toggle</Button>
-                        <Button
-                            type={'primary'}
-                            onMouseDown={e => onExecute(node.key)}
-                        >Execute</Button>
-                        <Button onClick={e => remove(node.key)} icon="delete" />
-                    </div>
+                </div>
+                <div style={style.actions} contentEditable={false}>
+                    <Button
+                        type={'primary'}
+                        onMouseDown={e => onToggleCode('paragraph', node.key)}
+                    >Toggle</Button>
+                    <Button
+                        type={'primary'}
+                        onMouseDown={e => onExecute(node.key)}
+                    >Execute</Button>
+                    <Button onClick={e => remove(node.key)} icon="delete"/>
                 </div>
                 <pre
                     style={style.pre(isFocused)}
@@ -134,13 +133,13 @@ class CodeBlock extends React.Component {
                             contentEditable={false}
                         >
                             {[...Array(linesNumber).keys()].map(o =>
-                                <span key={o} />,
+                                <span key={o}/>,
                             )}
                         </span>}
                         {this.props.children}
                     </code>
                 </pre>
-                {cell && <Cell content={cell.content} type={cell.type} />}
+                {cell && <Cell style={style.cell} content={cell.content} type={cell.type}/>}
             </div>);
     }
 }

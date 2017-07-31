@@ -55,6 +55,7 @@ const schema = ({line_numbers, onExecute, onToggleCode, defaultLanguage, selectL
         paragraph: props => (<Paragraph
             {...props}
             remove={remove}
+            setSlate={setSlate}
             onToggleCode={onToggleCode}
         />),
     },
