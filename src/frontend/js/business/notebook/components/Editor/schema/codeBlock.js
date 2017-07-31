@@ -46,12 +46,6 @@ const style = {
         verticalAlign: 'top',
         width: '29%',
     },
-    cell: {
-        position: 'absolute',
-        bottom: -40,
-        left: 0,
-        right: 0,
-    },
     button: {
         cursor: 'pointer',
         color: '#fff',
@@ -178,7 +172,7 @@ class CodeBlock extends React.Component {
                         {this.props.children}
                     </code>
                 </pre>
-                {cell && <Cell style={style.cell} content={cell.content} type={cell.type}/>}
+                {cell && <Cell content={cell.content} type={cell.type}/>}
             </div>);
     }
 }

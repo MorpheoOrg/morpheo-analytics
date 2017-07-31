@@ -20,7 +20,7 @@ const s = {
 };
 
 const Cell = ({content, type, style}) =>
-    (<div style={style}>
+    (<div style={style} contentEditable={false}>
         {content && type === 'text' &&
         <div style={s.output} dangerouslySetInnerHTML={{__html: content}} />
         }
