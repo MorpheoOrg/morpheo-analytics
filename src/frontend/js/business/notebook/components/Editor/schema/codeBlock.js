@@ -48,7 +48,9 @@ const style = {
     },
     cell: {
         position: 'absolute',
-        bottom: 0,
+        bottom: -40,
+        left: 0,
+        right: 0,
     },
     button: {
         cursor: 'pointer',
@@ -69,6 +71,7 @@ class CodeBlock extends React.Component {
         if (nextProps.keydown.event) {
             // prevent infinite loop
             const {key, ctrlKey, shiftKey} = nextProps.keydown.event;
+            console.log(key);
             nextProps.keydown.event = null; // eslint-disable-line no-param-reassign
             // TODO, get KEYS from reducer user settings
             if (ctrlKey || shiftKey) {
@@ -225,4 +228,4 @@ const mapStateToProps = (state, props) => ({
 });
 
 // we need to connect to cells for bypassing slate schema rendering
-export default connect(mapStateToProps)(keydown(withUserAgent(CodeBlock)));
+export default connect(mapStateToProps)(withUserAgent(keydown(CodeBlock)));
