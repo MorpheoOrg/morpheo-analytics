@@ -42,57 +42,5 @@ export default function (appName) {
                 use: ['css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
             }),
         } : {loaders: ['style-loader', 'css-loader?sourceMap', 'postcss-loader?sourceMap', 'sass-loader?sourceMap&sourceComments']}),
-    }, {
-        test: /antd.*\.less$/,
-        ...(PRODUCTION ? {
-            use: ExtractTextPlugin.extract({
-                fallback: 'style-loader',
-                use: [
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            importLoaders: true,
-                        },
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            sourceMap: true,
-                        },
-                    },
-                    {
-                        loader: 'less-loader',
-                        options: {
-                            sourceMap: true,
-                            modifyVars: theme,
-                        },
-                    },
-                ],
-            }),
-        } : {
-            use: [
-                'style-loader',
-                {
-                    loader: 'css-loader',
-                    options: {
-                        importLoaders: true,
-                    },
-                },
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        sourceMap: true,
-                    },
-                },
-                {
-                    loader: 'less-loader',
-                    options: {
-                        sourceMap: true,
-                        modifyVars: theme,
-                    },
-                },
-            ],
-        }),
-    },
-    ];
+    }];
 }

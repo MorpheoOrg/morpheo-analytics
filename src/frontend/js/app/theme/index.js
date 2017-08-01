@@ -33,34 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Provider} from 'react-redux';
-import {MuiThemeProvider} from 'material-ui/styles';
-
-// support react-router v4
-import {ConnectedRouter} from 'react-router-redux';
-
-import DevTools from '../DevTools';
-
-import Routes from '../routes';
-import history from '../history/dev';
-import theme from '../theme';
-
-const Root = ({store, ...props}) =>
-    (<Provider store={store}>
-        <MuiThemeProvider theme={theme}>
-            <div>
-                <ConnectedRouter history={history}>
-                    <Routes store={store}/>
-                </ConnectedRouter>
-                <DevTools/>
-            </div>
-        </MuiThemeProvider>
-    </Provider>);
-
-Root.propTypes = {
-    store: PropTypes.shape({}).isRequired,
-};
-
-export default Root;
+module.exports = process.env.NODE_ENV === 'production' ?
+    require('./prod.js') :
+    require('./dev.js');

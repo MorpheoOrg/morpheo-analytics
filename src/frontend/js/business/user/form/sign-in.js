@@ -37,9 +37,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 
-import {Form, Icon, Input, Button} from 'antd';
+import {reduxForm, Field} from 'redux-form';
+import Button from 'material-ui/Button';
 
-const FormItem = Form.Item;
+import TextInput from '../../../utils/inputs/TextInput';
 
 const style = {
     main: {
@@ -55,39 +56,23 @@ const style = {
     },
 };
 
-
 class SignInForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                this.props.signIn(this.props.previousRoute, {
-                    uuid: values.uuid,
-                });
-            }
-        });
-    }
-
     render() {
-        const {signInError, form: {getFieldDecorator}} = this.props;
+        const {signInError, signIn, handleSubmit} = this.props;
 
-        return (<Form onSubmit={this.handleSubmit} style={style.main}>
-            <FormItem>
-                {getFieldDecorator('uuid', {
-                    rules: [{required: true, message: 'please specify your uuid.'}],
-                })(
-                    <Input style={style.input} addonBefore={<Icon type="user" />} placeholder="uuid" />,
-                )}
-            </FormItem>
-            <Button type={signInError ? 'danger' : 'primary'} htmlType="submit" style={style.submit}>
+        return (<form onSubmit={handleSubmit(signIn)} style={style.main}>
+            <Field name="uuid" component={TextInput} type="text" placeholder="uuid"/>
+            {signInError && signInError.uuid && signInError.uuid.map((error, i) => (
+                <span key={error} className="error">{error}</span>))
+            }
+            <Button
+                raised
+                color={signInError ? 'accent' : 'primary'}
+                style={style.submit}
+                onClick={handleSubmit(signIn)}>
                 Log in
             </Button>
-        </Form>);
+        </form>);
     }
 }
 
@@ -102,16 +87,25 @@ SignInForm.propTypes = {
         PropTypes.shape({}),
         PropTypes.string,
     ]),
-    form: PropTypes.shape({
-        validateFields: PropTypes.func,
-    }),
 };
 
 SignInForm.defaultProps = {
     signInError: null,
     signIn: null,
     previousRoute: null,
-    form: null,
 };
 
-export default onlyUpdateForKeys(['signInError', 'previousRoute'])(Form.create()(SignInForm));
+export default onlyUpdateForKeys(['signInError', 'previousRoute'])(reduxForm(
+    {
+        form: 'signIn',
+        validate: (values) => {
+            const errors = {};
+            const requiredFields = ['uuid'];
+            requiredFields.forEach((field) => {
+                if (values && !values[field]) {
+                    errors[field] = 'Required';
+                }
+            });
+            return errors;
+        },
+    })(SignInForm));

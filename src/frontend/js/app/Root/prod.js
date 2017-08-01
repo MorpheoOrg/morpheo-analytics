@@ -40,14 +40,15 @@ import {Provider} from 'react-redux';
 // import syncHistoryWithStore from '../../../lib/react-router-redux/sync';
 // import ConnectedRouter from '../../../lib/react-router-redux/connectedRouter';
 import {ConnectedRouter} from 'react-router-redux';
+import {MuiThemeProvider} from 'material-ui/styles';
 
 import Routes from '../routes';
 import {history} from '../history/prod';
+import theme from '../theme';
 
 // For using browserHistory with amazon s3, we need our own domain name (for not impacting customer and record)
 // and a custom routerHistory
 // http://stackoverflow.com/questions/16267339/s3-static-website-hosting-route-all-paths-to-index-html
-
 /*
  <RoutingRules>
  <RoutingRule>
@@ -73,9 +74,11 @@ const Root = ({store}) => {
 
     return (
         <Provider store={store}>
-            <ConnectedRouter history={history}>
-                <Routes store={store} />
-            </ConnectedRouter>
+            <MuiThemeProvider theme={theme}>
+                <ConnectedRouter history={history}>
+                    <Routes store={store}/>
+                </ConnectedRouter>
+            </MuiThemeProvider>
         </Provider>
     );
 };

@@ -39,7 +39,7 @@ import PropTypes from 'prop-types';
 import {Editor, Block, Text} from 'slate';
 import PluginEditCode from 'slate-edit-code';
 import PluginPrism from 'slate-prism';
-import {Button} from 'antd';
+import Button from 'material-ui/Button';
 
 import {getDefaultLanguage} from '../../selector';
 
@@ -86,6 +86,9 @@ const style = {
     },
     actions: {
         margin: '0 0 25px 0',
+    },
+    button: {
+        marginRight: 5,
     },
 };
 
@@ -358,10 +361,10 @@ class SlateEditor extends React.Component {
         return (
             <div>
                 <div style={style.actions}>
-                    <Button type={'primary'} onClick={this.handleAddParagraph} icon="plus">
+                    <Button style={style.button} raised color={'primary'} onClick={this.handleAddParagraph}>
                         Add paragraph
                     </Button>
-                    <Button type={'primary'} onClick={this.addInnerCodeCell} icon="plus">
+                    <Button raised color={'primary'} onClick={this.addInnerCodeCell}>
                         Add code block
                     </Button>
                 </div>

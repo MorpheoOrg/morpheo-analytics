@@ -37,14 +37,14 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {Select, Switch} from 'antd';
+import Menu, {MenuItem} from 'material-ui/Menu';
+import Button from 'material-ui/Button';
+import Switch from 'material-ui/Switch';
 
 import languages from '../../notebook/components/Editor/languages';
 import themes from '../../notebook/components/Editor/themes';
 
 import {actions} from '../actions';
-
-const Option = Select.Option;
 
 const style = {
     main: {
@@ -65,24 +65,47 @@ const style = {
 };
 
 class Settings extends React.Component {
+    state = {
+        languages: {
+            anchorEl: undefined,
+            open: false,
+            selectedIndex: this.props.settings.preferred_language || 0,
+        },
+        theme: {
+            anchorEl: undefined,
+            open: false,
+            selectedIndex: this.props.settings.theme || 0,
+        },
+    };
     constructor(props) {
         super(props);
-        this.selectTheme = this.selectTheme.bind(this);
-        this.selectLanguage = this.selectLanguage.bind(this);
         this.setLineNumbers = this.setLineNumbers.bind(this);
     }
 
-    setLineNumbers(checked) {
+    setLineNumbers(e, checked) {
         this.props.setLineNumbers(checked);
     }
 
-    selectLanguage(language) {
-        this.props.setPreferredLanguage(language);
-    }
-
-    selectTheme(theme) {
-        this.props.setTheme(theme);
-    }
+    handleLanguagesClick = (event) => {
+        this.setState({languages: {...this.state.languages, open: true, anchorEl: event.currentTarget}});
+    };
+    handleThemeClick = (event) => {
+        this.setState({theme: {...this.state.theme, open: true, anchorEl: event.currentTarget}});
+    };
+    handleLanguagesRequestClose = (e) => {
+        this.setState({languages: {...this.state.languages, open: false}});
+    };
+    handleThemeRequestClose = (e) => {
+        this.setState({theme: {...this.state.theme, open: false}});
+    };
+    selectLanguage = (o) => {
+        this.props.setPreferredLanguage(languages.findIndex(x => x === o));
+        this.setState({languages: {...this.state.languages, open: false, selectedIndex: languages.findIndex(x => x === o)}});
+    };
+    selectTheme = (o) => {
+        this.props.setTheme(themes.findIndex(x => x === o));
+        this.setState({theme: {...this.state.theme, open: false, selectedIndex: themes.findIndex(x => x === o)}});
+    };
 
     render() {
         const {settings: {preferred_language, theme, line_numbers}} = this.props;
@@ -92,31 +115,45 @@ class Settings extends React.Component {
             <div style={style.main}>
                 <div>
                     <label htmlFor={'language'} style={style.label}>Preferred language:</label>
-                    <Select
+                    <Button aria-owns="simple-menu" aria-haspopup="true" onClick={this.handleLanguagesClick}>
+                        {languages[preferred_language || 0]}
+                    </Button>
+                    <Menu
                         style={style.select}
-                        defaultValue={`${preferred_language || 0}`}
-                        onChange={this.selectLanguage}
+                        anchorEl={this.state.languages.anchorEl}
+                        open={this.state.languages.open}
+                        onRequestClose={this.handleLanguagesRequestClose}
                     >
-                        {languages.map(o =>
-                            <Option key={o} value={`${languages.findIndex(a => a === o)}`}>{o}</Option>,
+                        {languages.map((o, i) =>
+                            (<MenuItem
+                                key={o}
+                                selected={i === this.state.languages.selectedIndex}
+                                onClick={e => this.selectLanguage(o, i)}>{o}</MenuItem>),
                         )}
-                    </Select>
+                    </Menu>
                 </div>
                 <div>
                     <label htmlFor={'theme'} style={style.label}>Theme:</label>
-                    <Select
+                    <Button aria-owns="simple-menu" aria-haspopup="true" onClick={this.handleThemeClick}>
+                        {themes[theme || 0] || 'morpheo'}
+                    </Button>
+                    <Menu
                         style={style.select}
-                        defaultValue={`${theme || 0}`}
-                        onChange={this.selectTheme}
+                        anchorEl={this.state.theme.anchorEl}
+                        open={this.state.theme.open}
+                        onRequestClose={this.handleThemeRequestClose}
                     >
-                        {themes.map(o =>
-                            <Option key={o} value={`${themes.findIndex(a => a === o)}`}>{o || 'morpheo'}</Option>,
+                        {themes.map((o, i) =>
+                            (<MenuItem
+                                key={o}
+                                selected={i === this.state.theme.selectedIndex}
+                                onClick={e => this.selectTheme(o, i)}>{o || 'morpheo'}</MenuItem>),
                         )}
-                    </Select>
+                    </Menu>
                 </div>
                 <div>
                     <label htmlFor={'line_numbers'} style={style.label}>Line numbers:</label>
-                    <Switch defaultChecked={line_numbers} onChange={this.setLineNumbers} />
+                    <Switch checked={line_numbers} onChange={this.setLineNumbers} />
                 </div>
             </div>
             <p>Use key shortcuts <span style={style.shortcut}>meta+shift+a</span> and <span style={style.shortcut}>meta+shift+b</span> for adding a cell above or below the selected cell.

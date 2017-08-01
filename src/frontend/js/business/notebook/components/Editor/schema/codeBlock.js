@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Select, Button} from 'antd';
+import IconButton from 'material-ui/IconButton';
+import DeleteIcon from 'material-ui-icons/Delete';
+import Menu, {MenuItem} from 'material-ui/Menu';
+import Button from 'material-ui/Button';
 import withUserAgent from 'react-useragent';
 
 import languages from '../languages';
@@ -9,9 +12,8 @@ import Cell from './cell';
 import '../../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 import theme from '../../../../../../css/variables';
 
-const Option = Select.Option;
 
-const left = 200;
+const left = 250;
 
 const style = {
     code: {
@@ -36,11 +38,10 @@ const style = {
     },
     actions: {
         position: 'absolute',
-        top: 10,
+        top: 0,
         left: left * -1,
         display: 'inline-block',
         verticalAlign: 'top',
-        width: '29%',
     },
     button: {
         cursor: 'pointer',
@@ -54,15 +55,34 @@ const style = {
         borderRadius: 4,
         padding: '4px 15px',
     },
+    b: {
+        marginRight: 5,
+    },
 };
 
 class CodeBlock extends React.Component {
+    state = {
+        anchorEl: undefined,
+        open: false,
+        selectedIndex: languages.findIndex(o => o === (this.props.node.data.get('syntax') || this.props.defaultLanguage)),
+    };
     toggleCode = e => this.props.onToggleCode('paragraph', this.props.node.key);
     execute = e => this.props.onExecute(this.props.node.key);
     remove = e => this.props.remove(this.props.node.key);
+    handleClick = (event) => {
+        this.setState({open: true, anchorEl: event.currentTarget});
+    };
+    handleRequestClose = (e) => {
+        this.setState({open: false});
+    };
+    selectLanguage = (o) => {
+        this.props.selectLanguage(this.props.node.key, o);
+        this.setState({open: false});
+    };
+
     render() {
         const {
-            node, state, cells, line_numbers, selectLanguage, defaultLanguage,
+            node, state, cells, line_numbers, defaultLanguage,
         } = this.props;
 
         const linesNumber = node.getTexts().size;
@@ -74,16 +94,21 @@ class CodeBlock extends React.Component {
         return (
             <div style={style.code}>
                 <div contentEditable={false} style={style.select}>
-                    <Select
-                        defaultValue={node.data.get('syntax') || defaultLanguage}
-                        onChange={e => selectLanguage(node.key, e)}
+                    <Button aria-owns="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
+                        {node.data.get('syntax') || defaultLanguage}
+                    </Button>
+                    <Menu
+                        anchorEl={this.state.anchorEl}
+                        open={this.state.open}
+                        onRequestClose={this.handleRequestClose}
                     >
-                        {languages.map(o =>
-                            (<Option key={o} value={o}>
-                                <span>{o}</span>
-                            </Option>),
+                        {languages.map((o, i) =>
+                            (<MenuItem
+                                key={o}
+                                selected={i === this.state.selectedIndex}
+                                onClick={e => this.selectLanguage(o, i)}>{o}</MenuItem>),
                         )}
-                    </Select>
+                    </Menu>
                 </div>
                 <div style={style.actions} contentEditable={false}>
                     {isFirefox && <button
@@ -104,17 +129,22 @@ class CodeBlock extends React.Component {
                     }
                     {!isFirefox &&
                     <Button
-                        type={'primary'}
+                        raised
+                        color={'primary'}
+                        style={style.b}
                         onMouseDown={this.toggleCode}
                     >Toggle</Button>
                     }
                     {!isFirefox &&
                     <Button
-                        type={'primary'}
+                        raised
+                        color={'primary'}
                         onMouseDown={this.execute}
                     >Execute</Button>
                     }
-                    <Button onClick={this.remove} icon="delete" />
+                    <IconButton onClick={this.remove}>
+                        <DeleteIcon/>
+                    </IconButton>
                 </div>
                 <pre
                     style={style.pre(isFocused)}
@@ -130,13 +160,13 @@ class CodeBlock extends React.Component {
                             contentEditable={false}
                         >
                             {[...Array(linesNumber).keys()].map(o =>
-                                <span key={o} />,
+                                <span key={o}/>,
                             )}
                         </span>}
                         {this.props.children}
                     </code>
                 </pre>
-                {cell && <Cell content={cell.content} type={cell.type} />}
+                {cell && <Cell content={cell.content} type={cell.type}/>}
             </div>);
     }
 }

@@ -38,16 +38,11 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Konami from 'react-konami';
-import {Modal, Button} from 'antd';
+import Dialog, {DialogActions, DialogContent, DialogTitle} from 'material-ui/Dialog';
+import Button from 'material-ui/Button';
 
 import Morpheo from '!!file-loader!../../img/konami.jpg';
 import {create} from '../business/kernel/actions';
-
-const Footer = onClick => [
-    <Button key="submit" type="primary" size="large" onClick={onClick}>
-        Ok
-    </Button>,
-];
 
 class App extends React.Component {
     constructor(props) {
@@ -76,16 +71,18 @@ class App extends React.Component {
 
     render() {
         return (<div>
-            <Konami easterEgg={this.displayModal} />
-            <Modal
-                title="Hello from the team"
-                visible={this.state.visible}
-                width={800}
-                onCancel={this.handleOk}
-                footer={Footer(this.handleOk)}
-            >
-                <img src={Morpheo} alt="Konami" />
-            </Modal>
+            <Konami easterEgg={this.displayModal}/>
+            <Dialog open={this.state.visible} maxWidth="md">
+                <DialogTitle>Hello from the team</DialogTitle>
+                <DialogContent>
+                    <img src={Morpheo} alt="Konami"/>
+                </DialogContent>
+                <DialogActions>
+                    <Button color="primary" onClick={this.handleOk}>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>);
     }
 }

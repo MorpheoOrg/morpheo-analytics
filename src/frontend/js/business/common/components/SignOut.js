@@ -1,26 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button} from 'antd';
+import Button from 'material-ui/Button';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {shouldUpdate} from 'recompose';
 
 import {signOut as signOutActions} from '../../user/actions';
 
-class Common extends React.Component {
-    constructor(props) {
-        super(props);
-        this.signOut = this.signOut.bind(this);
-    }
+const style = {
+    signout: {
+        float: 'right',
+    },
+};
 
-    signOut(e) {
-        const {signOut} = this.props;
-        signOut();
-    }
-
-    render() {
-        return <Button onClick={this.signOut}>Signout</Button>;
-    }
-}
+const Common = ({signOut}) =>
+    <Button style={style.signout} raised onClick={signOut}>Signout</Button>;
 
 Common.propTypes = {
     signOut: PropTypes.func.isRequired,
@@ -32,4 +26,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     signOut: signOutActions.request,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Common);
+export default connect(mapStateToProps, mapDispatchToProps)(shouldUpdate((props, nextProps) => false)(Common));

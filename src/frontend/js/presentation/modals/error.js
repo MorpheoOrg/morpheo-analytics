@@ -35,7 +35,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Modal, Button} from 'antd';
+import Button from 'material-ui/Button';
+import Dialog, {DialogActions, DialogContent, DialogTitle} from 'material-ui/Dialog';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 
 const style = {
@@ -43,30 +44,22 @@ const style = {
     display: 'block',
 };
 
-const getButtons = onClick => [
-    <Button key="ok" type="primary" onClick={onClick}>
-        Ok
-    </Button>,
-];
-
-const ErrorModal = ({isVisible, error, onClose}) => {
-    // TODO memoize function
-    const Buttons = getButtons(onClose);
-
-    return (<Modal
-        title="Server Error 5xx"
-        visible={isVisible}
-        onOk={onClose}
-        onCancel={onClose}
-        footer={Buttons}
-    >
-        <h1>An error occured from the server</h1>
-        <p>Please report this issue to Etienne or Guillaume.
-            Sometimes the server struggles to serve our data.
-            Please retry in a few minutes</p>
-        {error && <span className="error" style={style}>{error}</span>}
-    </Modal>);
-};
+const ErrorModal = ({isVisible, error, onClose}) =>
+    <Dialog open={isVisible}>
+        <DialogTitle>Server Error</DialogTitle>
+        <DialogContent>
+            <h1>An error occured from the server</h1>
+            <p>Please report this issue to Guillaume.
+                Sometimes the server struggles to serve our data.
+                Please retry in a few minutes</p>
+            {error && <span className="error" style={style}>{error}</span>}
+        </DialogContent>
+        <DialogActions>
+            <Button color="primary" onClick={onClose}>
+                Ok
+            </Button>
+        </DialogActions>
+    </Dialog>;
 
 ErrorModal.propTypes = {
     isVisible: PropTypes.bool.isRequired,

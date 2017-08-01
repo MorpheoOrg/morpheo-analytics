@@ -72,36 +72,43 @@ const style = {
     },
 };
 
-const SignIn = (props) => {
-    const {signInError, signIn, previousRoute} = props;
+class SignIn extends React.Component {
+    signIn = (values) => {
+        this.props.signIn(this.props.previousRoute, {uuid: values.uuid});
+    };
 
-    return (
-        <div style={style.main}>
-            <HelmetTitle title="Sign in" />
-            <Morpheo width={73} style={style.logo} color={theme['primary-color']} />
-            <div style={style.form}>
-                <h1>Login to Notebook</h1>
-                <p style={style.p}>For getting an uuid please ask to an administrator</p>
-                {signInError &&
-                <div className="error" role="alert">
-                    <ul>
-                        {signInError.length && Object.keys(signInError).map(o =>
-                            (<li key={o}>
-                                {o}: <ul>{signInError[o].map(x => <li key={x}>{x}</li>)}</ul>
-                            </li>),
-                        )}
-                    </ul>
-                    {signInError.detail || signInError.message}
+    render() {
+        const {signInError, previousRoute} = this.props;
+
+        return (
+            <div style={style.main}>
+                <HelmetTitle title="Sign in"/>
+                <Morpheo width={73} style={style.logo} color={theme['primary-color']}/>
+                <div style={style.form}>
+                    <h1>Login to Notebook</h1>
+                    <p style={style.p}>For getting an uuid please ask to an administrator</p>
+                    {signInError &&
+                    <div className="error" role="alert">
+                        <ul>
+                            {signInError.length && Object.keys(signInError).map(o =>
+                                (<li key={o}>
+                                    {o}:
+                                    <ul>{signInError[o].map(x => <li key={x}>{x}</li>)}</ul>
+                                </li>),
+                            )}
+                        </ul>
+                        {signInError.detail || signInError.message}
+                    </div>
+                    }
+                    <FormTemplate
+                        signInError={signInError}
+                        signIn={this.signIn}
+                        previousRoute={previousRoute}
+                    />
                 </div>
-                }
-                <FormTemplate
-                    signInError={signInError}
-                    signIn={signIn}
-                    previousRoute={previousRoute}
-                />
             </div>
-        </div>
-    );
+        );
+    }
 };
 
 SignIn.propTypes = {

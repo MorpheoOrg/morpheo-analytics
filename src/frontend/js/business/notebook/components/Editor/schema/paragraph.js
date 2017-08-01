@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button} from 'antd';
+import IconButton from 'material-ui/IconButton';
+import DeleteIcon from 'material-ui-icons/Delete';
+import Button from 'material-ui/Button';
 import withUserAgent from 'react-useragent';
 import theme from '../../../../../../css/variables';
 
-const left = 200;
+const left = 250;
 
 const style = {
     wrapper: {
@@ -20,6 +22,7 @@ const style = {
     }),
     actions: {
         position: 'absolute',
+        top: 0,
         left: left * -1,
         display: 'inline-block',
         verticalAlign: 'top',
@@ -60,18 +63,20 @@ class Paragraph extends React.Component {
                     }
                     {!isFirefox &&
                     <Button
-                        type={'primary'}
+                        raised
+                        color="primary"
                         onMouseDown={this.toggleCode}
                         contentEditable={false}
                     >Toggle</Button>}
 
-                    <Button
+                    <IconButton
                         onMouseDown={this.remove}
-                        icon="delete"
                         contentEditable={false}
                         readOnly
                         unselectable="ON"
-                    />
+                    >
+                        <DeleteIcon />
+                    </IconButton>
                 </div>
                 <p
                     {...attributes}
