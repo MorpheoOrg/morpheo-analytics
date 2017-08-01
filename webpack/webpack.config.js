@@ -76,7 +76,7 @@ export default {
         cachedAssets: DEVELOPMENT,
     },
     output: {
-        filename: '[name].js',
+        filename: `[name]${PRODUCTION ? '-[hash:6]' : ''}.js`,
         path: `${__dirname}/../build/frontend`,
         // https://blog.jetbrains.com/webstorm/2015/09/debugging-webpack-applications-in-webstorm/
         publicPath: DEBUG ? DEBUG_BASE_NAME : PRODUCTION_BASE_NAME,

@@ -25,7 +25,6 @@ export default {
             'react-router-redux',
             'react-select',
             'react-tap-event-plugin',
-            'antd',
         ],
         Redux: [
             'redux',
@@ -35,13 +34,13 @@ export default {
             'redux-sagas-injector',
         ],
         App: [
-            'classnames',
             'fastclick',
             'history',
             'isomorphic-fetch',
             'query-string',
             'reselect',
             'url',
+            'material-ui',
         ],
     },
     devtool: '#source-map',

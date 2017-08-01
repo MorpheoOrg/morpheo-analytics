@@ -1,5 +1,4 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import theme from '../src/frontend/css/variables';
 
 const DEBUG = !(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production');
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
