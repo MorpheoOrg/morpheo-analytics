@@ -61,7 +61,7 @@ export const updateSettings = (id, payload, jwt) => {
                 return response.text().then(result =>
                     Promise.reject({
                         body: new Error(result),
-                        status: response.status,  // read status
+                        status: response.status, // read status
                     }),
                 );
             }

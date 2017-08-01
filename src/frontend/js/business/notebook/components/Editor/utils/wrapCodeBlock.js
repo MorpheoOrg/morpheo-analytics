@@ -43,7 +43,7 @@ const wrapCodeBlock = (opts, slateState, key, o) => {
 
     // TODO, find a way to correctly set the offset on a multilines code
     // Move selection back in the block
-    transform = transform  // eslint-disable-line no-param-reassign
+    transform = transform // eslint-disable-line no-param-reassign
         .collapseToStartOf(transform.state.document.getDescendant(key))
         .moveOffsetsTo(0);// selection.startOffset - 7);
 

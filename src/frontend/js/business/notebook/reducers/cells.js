@@ -92,13 +92,13 @@ export default (state = initialState, {type, payload}) => {
                     parent_id: payload.id,
                     value: payload.value,
                 } : c],
-                []) :
-            [
-                ...state.results,
-                {
-                    parent_id: payload.id,
-                    value: payload.value,
-                }],
+            []) :
+                [
+                    ...state.results,
+                    {
+                        parent_id: payload.id,
+                        value: payload.value,
+                    }],
         };
     }
     case actionTypes.INSERT_AFTER:
@@ -136,24 +136,24 @@ export default (state = initialState, {type, payload}) => {
         return {
             ...state,
             results: exists ? state.results.reduce((p, c) =>
-                    ([...p, c.parent_id === key ? {
-                        ...c,
-                        id: payload.parent_header.msg_id,
-                        parent_id: key,
-                        content: getContent(payload.content, payload.msg_type),
-                        type: getType(payload.content, payload.msg_type),
-                        status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
-                    } : c]),
-                []) :
-            [
-                ...state.results,
-                {
+                ([...p, c.parent_id === key ? {
+                    ...c,
                     id: payload.parent_header.msg_id,
                     parent_id: key,
                     content: getContent(payload.content, payload.msg_type),
                     type: getType(payload.content, payload.msg_type),
                     status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
-                }],
+                } : c]),
+            []) :
+                [
+                    ...state.results,
+                    {
+                        id: payload.parent_header.msg_id,
+                        parent_id: key,
+                        content: getContent(payload.content, payload.msg_type),
+                        type: getType(payload.content, payload.msg_type),
+                        status: payload.msg_type === 'error' ? 'ERROR' : 'DONE',
+                    }],
         };
     }
     default:

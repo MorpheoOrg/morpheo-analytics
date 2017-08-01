@@ -87,7 +87,7 @@ const PrivateRoute = ({component, store}) =>
                             },
                         }}
                     />
-                );
+            );
         }}
     />);
 

@@ -78,7 +78,6 @@ const style = {
 };
 
 class Notebook extends React.Component {
-
     constructor(props) {
         super(props);
         this.selectLanguage = this.selectLanguage.bind(this);

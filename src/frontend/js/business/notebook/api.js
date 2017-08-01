@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-/* globals API_URL fetch*/
+/* globals API_URL fetch */
 
 export const Save = path => (payload) => {
     // const headers = getHeaders(jwt);
@@ -53,7 +53,7 @@ export const Save = path => (payload) => {
                 return response.text().then(result =>
                     Promise.reject({
                         body: new Error(result),
-                        status: response.status,  // read status
+                        status: response.status, // read status
                     }),
                 );
             }

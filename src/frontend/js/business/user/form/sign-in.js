@@ -57,7 +57,6 @@ const style = {
 
 
 class SignInForm extends React.Component {
-
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);

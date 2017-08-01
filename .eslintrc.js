@@ -25,6 +25,9 @@ module.exports = {
         "no-unused-vars": [2, {"args": "none"}],
         "consistent-return": [0],
         "no-bitwise": [0],
+        "jsx-a11y/label-has-for": [0],
+        "jsx-a11y/href-no-hash": "off",
+        "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
 
         // helper for fixing common lint errors
         "func-names": [2],
@@ -40,7 +43,6 @@ module.exports = {
         "react/prefer-es6-class": [2],
         "react/prefer-stateless-function": [2],
         "react/prop-types": [2],
-        "jsx-a11y/label-has-for": [2],
         "jsx-a11y/no-static-element-interactions": [2],
         "no-param-reassign": [2],
         "no-undef": [2],
