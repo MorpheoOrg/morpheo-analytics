@@ -34,87 +34,39 @@
  */
 
 import React from 'react';
-import {Route, Redirect} from 'react-router';
-import {asyncComponent} from 'react-async-component';
-import {PropTypes} from 'prop-types';
-import {injectReducer} from 'redux-injector';
-import {injectSaga} from 'redux-sagas-injector';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
 import UserRoute from '../business/user/routes';
-import commonRoutes from '../business/common/routes';
+import CommonRoutes from '../business/common/routes';
 import NotebookRoutes from '../business/notebook/routes';
 import SettingsRoutes from '../business/settings/routes';
 
-/* globals window */
+const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
 
-const AsyncApp = asyncComponent({
-    resolve: () => {
-        const sagas = [System.import('../business/kernel/sagas/index')],
-            reducers = [System.import('../business/kernel/reducers')];
-
-        return Promise.all([...sagas, ...reducers]).then((values) => {
-            injectSaga('kernel', values[0].default);
-            injectReducer('kernel', values[1].default(window.localStorage));
-
-            // Configure hot module replacement for the reducer
-            if (process.env.NODE_ENV !== 'production') {
-                if (module.hot) {
-                    module.hot.accept('../business/kernel/reducers', () => System.import('../business/kernel/reducers').then((module) => {
-                        injectReducer('kernel', module.default(window.localStorage));
-                    }));
-                }
-            }
-
-            return System.import('./App');
-        });
-    },
-});
-
-const PrivateRoute = ({component, store}) =>
-    (<Route
-        render={({location, ...props}) => {
-            const {user} = store.getState();
-            return location.pathname.startsWith('/sign-in') ? null : (
-                user && user.authenticated ?
-                    React.createElement(component, props) :
-                    <Redirect
-                        to={{ // jsx literal -> rerender, need to avoid it
-                            pathname: '/sign-in',
-                            // save previous route if set
-                            state: {
-                                ...location,
-                                ...(location.state ? location.state : null),
-                            },
-                        }}
-                    />
-            );
-        }}
-    />);
-
-PrivateRoute.propTypes = {
-    component: PropTypes.func.isRequired,
-    store: PropTypes.shape({
-        getState: PropTypes.func,
-    }).isRequired,
-};
-
-PrivateRoute.defaultProps = {
-    location: null,
-};
-
-const Routes = ({store}) =>
-    (<div id="routes">
-        <div className="middle">
-            <Route path="/" component={AsyncApp} />
-            <PrivateRoute component={commonRoutes} store={store} />
-            <PrivateRoute component={SettingsRoutes} store={store} />
-            <PrivateRoute component={NotebookRoutes} store={store} />
-            <UserRoute />
-        </div>
+const Base = ({children}) =>
+    (<div>
+        <CommonRoutes />
+        {children}
     </div>);
 
-Routes.propTypes = {
-    store: PropTypes.shape({}).isRequired,
+Base.propTypes = {
+    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
-export default Routes;
+export default connect(mapStateToProps)(({location}) => {
+    switch (location.type) {
+    case 'HOME':
+        return (<Base>
+            <SettingsRoutes />
+            <NotebookRoutes />
+            <UserRoute />
+        </Base>);
+    case 'HELP':
+        return (<Base>
+            <h1>help</h1>
+        </Base>);
+    default:
+        return <h1>Not Found</h1>;
+    }
+});

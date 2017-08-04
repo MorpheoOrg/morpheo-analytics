@@ -36,7 +36,6 @@
 /* globals window */
 
 import {reducer as formReducer} from 'redux-form';
-import {routerReducer} from 'react-router-redux';
 
 import userReducerFactory from '../business/user/reducer';
 import {actionTypes} from './actions';
@@ -58,7 +57,6 @@ const general = (state = initialState, {type, payload}) => {
 
 export default {
     form: formReducer,
-    routing: routerReducer,
     user: userReducerFactory(window.localStorage),
     general,
 };

@@ -64,4 +64,16 @@ MultiAutocompleteInput.propTypes = {
     ),
 };
 
+const noop = () => {};
+
+MultiAutocompleteInput.defaultProps = {
+    name: '',
+    input: null,
+    placholder: '',
+    meta: null,
+    onChange: noop,
+    options: null,
+    placeholder: '',
+};
+
 export default MultiAutocompleteInput;

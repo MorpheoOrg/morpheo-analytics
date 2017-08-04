@@ -35,8 +35,8 @@
 
 /* globals atob */
 
-import {routerActions} from 'react-router-redux';
-import {call, put, select, takeLatest} from 'redux-saga/effects';
+import {redirect} from 'redux-first-router';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
 import {
     signIn as signInActions,
@@ -58,7 +58,7 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
         if (error) {
             console.error(error);
             yield put(signInActions.failure(error));
-            //yield put(signInActions.failure(new Error('{"message": "Unauthorized"}')));
+            // yield put(signInActions.failure(new Error('{"message": "Unauthorized"}')));
         }
         else {
             const {settings, access_token} = res;
@@ -68,27 +68,18 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
             yield put(signInActions.success({uuid}));
             yield put(settingsActions.update(...settings));
 
-            yield put(routerActions.push({
-                ...previousRoute,
-                // make sure we don't push history on same location
-                pathname: previousRoute.pathname === '/' || previousRoute.pathname.startsWith('/sign-in') ? '/' : previousRoute.pathname,
-            }));
+            yield put(redirect(previousRoute));
         }
     };
 
 export const signOut = removeLocalUser =>
     function* signOutSaga() {
-        const state = yield select();
         yield call(removeLocalUser);
         yield put(signOutActions.success());
+        // TODO should be handle in settings reducer
         yield put(settingsActions.update({theme: null, preferred_language: null, keybindings: null}));
-        yield put(routerActions.push({
-            pathname: '/',
-            // store current location if relogin
-            state: {
-                ...state.routing.location,
-            },
-        }));
+
+        yield put(redirect({type: 'HOME'}));
     };
 
 /* istanbul ignore next */

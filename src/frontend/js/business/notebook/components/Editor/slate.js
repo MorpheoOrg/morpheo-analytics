@@ -43,7 +43,6 @@ import Button from 'material-ui/Button';
 
 import {getDefaultLanguage} from '../../selector';
 
-import '../../../../../../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css';
 import languages from './languages';
 import themes from './themes';
 

@@ -77,15 +77,10 @@ class Settings extends React.Component {
             selectedIndex: this.props.settings.theme || 0,
         },
     };
-    constructor(props) {
-        super(props);
-        this.setLineNumbers = this.setLineNumbers.bind(this);
-    }
 
-    setLineNumbers(e, checked) {
+    setLineNumbers = (e, checked) => {
         this.props.setLineNumbers(checked);
-    }
-
+    };
     handleLanguagesClick = (event) => {
         this.setState({languages: {...this.state.languages, open: true, anchorEl: event.currentTarget}});
     };
@@ -100,7 +95,13 @@ class Settings extends React.Component {
     };
     selectLanguage = (o) => {
         this.props.setPreferredLanguage(languages.findIndex(x => x === o));
-        this.setState({languages: {...this.state.languages, open: false, selectedIndex: languages.findIndex(x => x === o)}});
+        this.setState({
+            languages: {
+                ...this.state.languages,
+                open: false,
+                selectedIndex: languages.findIndex(x => x === o),
+            },
+        });
     };
     selectTheme = (o) => {
         this.props.setTheme(themes.findIndex(x => x === o));
@@ -128,7 +129,8 @@ class Settings extends React.Component {
                             (<MenuItem
                                 key={o}
                                 selected={i === this.state.languages.selectedIndex}
-                                onClick={e => this.selectLanguage(o, i)}>{o}</MenuItem>),
+                                onClick={e => this.selectLanguage(o, i)}
+                            >{o}</MenuItem>),
                         )}
                     </Menu>
                 </div>
@@ -147,7 +149,8 @@ class Settings extends React.Component {
                             (<MenuItem
                                 key={o}
                                 selected={i === this.state.theme.selectedIndex}
-                                onClick={e => this.selectTheme(o, i)}>{o || 'morpheo'}</MenuItem>),
+                                onClick={e => this.selectTheme(o, i)}
+                            >{o || 'morpheo'}</MenuItem>),
                         )}
                     </Menu>
                 </div>
@@ -156,7 +159,8 @@ class Settings extends React.Component {
                     <Switch checked={line_numbers} onChange={this.setLineNumbers} />
                 </div>
             </div>
-            <p>Use key shortcuts <span style={style.shortcut}>meta+shift+a</span> and <span style={style.shortcut}>meta+shift+b</span> for adding a cell above or below the selected cell.
+            <p>Use key shortcuts <span style={style.shortcut}>meta+shift+a</span> and <span style={style.shortcut}>meta+shift+b</span>
+                for adding a cell above or below the selected cell.
                 <br />
                 Use <span style={style.shortcut}>shift+Enter</span> to execute code.
             </p>

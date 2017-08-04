@@ -35,39 +35,40 @@
 
 /* globals window */
 
-import {Route} from 'react-router';
 import React from 'react';
+import universal from 'react-universal-component';
 import {injectSaga} from 'redux-sagas-injector';
 import {injectReducer} from 'redux-injector';
+import {PulseLoader} from 'react-spinners';
+import {connect} from 'react-redux';
 
-import {asyncComponent} from 'react-async-component';
+import theme from '../../../css/variables';
 
-const AsyncSettings = asyncComponent({
-    resolve: () => {
-        const sagas = [System.import('./sagas')],
-            reducers = [System.import('./reducers')];
+// second way with onLoad
+const Universal = universal(import('./preload'), {
+    loading: <PulseLoader color={theme['primary-color']} size={6} />,
+    onLoad: (module) => {
+        injectSaga('settings', module.sagas);
+        injectReducer('settings', module.reducer(window.localStorage));
 
-        return Promise.all([...sagas, ...reducers]).then((values) => {
-            injectSaga('settings', values[0].default);
-            injectReducer('settings', values[1].default(window.localStorage));
-
-            // Configure hot module replacement for the reducer
-            if (process.env.NODE_ENV !== 'production') {
-                if (module.hot) {
-                    module.hot.accept('./reducers', () => System.import('./reducers').then((module) => {
-                        injectReducer('settings', module.default(window.localStorage));
-                    }));
-                }
+        // Configure hot module replacement for the reducer
+        if (process.env.NODE_ENV !== 'production') {
+            if (module.hot) {
+                module.hot.accept('./reducer', () => import('./reducer').then((module) => {
+                    injectReducer('settings', module.default(window.localStorage));
+                }));
+                module.hot.accept('../user/reducer', () => import('../user/reducer').then((module) => {
+                    injectReducer('user', module.default(window.localStorage));
+                }));
             }
-
-            return System.import('./components/Settings');
-        });
+        }
     },
+    // key: 'default' -- this is the default, and what the component will be, i.e. module.default
 });
 
+const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
 
-// automatically redirect to models pokemon if we signed in and redirection has not been made
-export default props =>
-    (<div className="settings">
-        <Route path="/" component={AsyncSettings} />
-    </div>);
+export default connect(mapStateToProps)((props) => {
+    const {user} = props;
+    return user && !user.authenticated ? null : <Universal />;
+});

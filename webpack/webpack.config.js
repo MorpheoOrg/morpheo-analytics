@@ -91,6 +91,7 @@ export default {
                     plugins: [
                         'lodash',
                         'date-fns',
+                        'universal-import',
                         ['import', {
                             libraryName: 'antd',
                             style: true,
@@ -112,7 +113,7 @@ export default {
             }],
             threads: 4,
         }),
-        //new webpack.optimize.ModuleConcatenationPlugin(),
+        new webpack.optimize.ModuleConcatenationPlugin(),
         ...(DEVELOPMENT ? [new webpack.NamedModulesPlugin()] : []),
         new webpack.ProvidePlugin({
             fetch: 'imports-loader?this=>global!exports-loader?global.fetch!isomorphic-fetch',

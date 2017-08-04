@@ -34,12 +34,14 @@ export default function (appName) {
         use: 'html-loader',
     }, {
         test: /\.s?css$/,
-        exclude: /node_modules\/^(?!prismjs)/,
+        //exclude: /node_modules\/^(?!prismjs)/,
         ...(PRODUCTION ? {
             loader: ExtractTextPlugin.extract({
                 fallback: 'style-loader',
-                use: ['css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
+                use: ['css-loader?importLoaders=1&modules&localIdentName=[name]__[local]--[hash:base64:5]', 'postcss-loader?sourceMap', 'sass-loader'],
             }),
-        } : {loaders: ['style-loader', 'css-loader?sourceMap', 'postcss-loader?sourceMap', 'sass-loader?sourceMap&sourceComments']}),
+        } : {
+            loaders: ['style-loader', 'css-loader?sourceMap', 'postcss-loader?sourceMap', 'sass-loader?sourceMap&sourceComments'],
+        }),
     }];
 }

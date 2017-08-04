@@ -41,8 +41,8 @@ import Konami from 'react-konami';
 import Dialog, {DialogActions, DialogContent, DialogTitle} from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 
-import Morpheo from '!!file-loader!../../img/konami.jpg';
-import {create} from '../business/kernel/actions';
+import Morpheo from '!!file-loader!../../../../img/konami.jpg';
+import {create} from '../../kernel/actions';
 
 class App extends React.Component {
     constructor(props) {
@@ -71,11 +71,11 @@ class App extends React.Component {
 
     render() {
         return (<div>
-            <Konami easterEgg={this.displayModal}/>
+            <Konami easterEgg={this.displayModal} />
             <Dialog open={this.state.visible} maxWidth="md">
                 <DialogTitle>Hello from the team</DialogTitle>
                 <DialogContent>
-                    <img src={Morpheo} alt="Konami"/>
+                    <img src={Morpheo} alt="Konami" />
                 </DialogContent>
                 <DialogActions>
                     <Button color="primary" onClick={this.handleOk}>

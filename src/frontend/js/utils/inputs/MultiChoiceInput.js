@@ -36,14 +36,14 @@ class MultiChoiceInput extends Component {
         return (<div style={{marginTop: 15}}>
             <span style={{marginBottom: 5, display: 'block'}}>{label}</span>
             {options.map(o =>
-                <Button
+                (<Button
                     raised
                     key={o.label}
                     label={o.label}
                     onClick={() => this.onChange(o.value)}
                     style={{margin: '0 6px 0 0', ...(+input.value === +o.value ? {backgroundColor: 'blue'} : {})}}
                     onBlur={this.onBlur}
-                />,
+                />),
             )}
             {(error && <span className="error">{error}</span>) || (warning && <span className="error">{warning}</span>)}
         </div>);
@@ -58,6 +58,13 @@ MultiChoiceInput.propTypes = {
     options: PropTypes.arrayOf(PropTypes.shape({})),
     meta: PropTypes.shape({}),
     label: PropTypes.string,
+};
+
+MultiChoiceInput.defaultProps = {
+    input: null,
+    options: null,
+    meta: null,
+    label: '',
 };
 
 export default MultiChoiceInput;

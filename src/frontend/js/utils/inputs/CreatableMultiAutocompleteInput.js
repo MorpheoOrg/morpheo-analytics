@@ -62,4 +62,15 @@ CreatableMultiAutocompleteInput.propTypes = {
     onChange: PropTypes.func,
 };
 
+const noop = () => {};
+
+CreatableMultiAutocompleteInput.defaultProps = {
+    name: '',
+    input: null,
+    placeholder: '',
+    options: null,
+    meta: null,
+    onChange: noop,
+};
+
 export default CreatableMultiAutocompleteInput;

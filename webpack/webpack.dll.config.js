@@ -21,8 +21,6 @@ export default {
             'react-dom',
             'react-helmet',
             'react-redux',
-            'react-router',
-            'react-router-redux',
             'react-select',
             'react-tap-event-plugin',
         ],

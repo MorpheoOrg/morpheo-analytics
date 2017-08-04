@@ -41,8 +41,8 @@ import {bindActionCreators} from 'redux';
 import Morpheo from '../../../presentation/icons/morpheo';
 import {signIn as signInActions} from '../actions';
 import HelmetTitle from '../../../utils/HelmetTitle';
-import FormTemplate from '../form/sign-in';
-import {getPreviousRoute, getError} from '../selector';
+import FormTemplate from '../form/signIn';
+import {getError} from '../selector';
 import theme from '../../../../css/variables';
 
 const style = {
@@ -74,16 +74,16 @@ const style = {
 
 class SignIn extends React.Component {
     signIn = (values) => {
-        this.props.signIn(this.props.previousRoute, {uuid: values.uuid});
+        this.props.signIn(this.props.location.prev, {uuid: values.uuid});
     };
 
     render() {
-        const {signInError, previousRoute} = this.props;
+        const {signInError} = this.props;
 
         return (
             <div style={style.main}>
-                <HelmetTitle title="Sign in"/>
-                <Morpheo width={73} style={style.logo} color={theme['primary-color']}/>
+                <HelmetTitle title="Sign in" />
+                <Morpheo width={73} style={style.logo} color={theme['primary-color']} />
                 <div style={style.form}>
                     <h1>Login to Notebook</h1>
                     <p style={style.p}>For getting an uuid please ask to an administrator</p>
@@ -103,13 +103,12 @@ class SignIn extends React.Component {
                     <FormTemplate
                         signInError={signInError}
                         signIn={this.signIn}
-                        previousRoute={previousRoute}
                     />
                 </div>
             </div>
         );
     }
-};
+}
 
 SignIn.propTypes = {
     signInError: PropTypes.oneOfType([
@@ -117,22 +116,20 @@ SignIn.propTypes = {
         PropTypes.bool,
     ]),
     signIn: PropTypes.func,
-    previousRoute: PropTypes.oneOfType([
-        PropTypes.shape({}),
-        PropTypes.string,
-    ]),
+    location: PropTypes.shape({
+        prev: PropTypes.shape({}),
+    }).isRequired,
 };
 
 SignIn.defaultProps = {
     signInError: null,
     signIn: null,
-    previousRoute: null,
 };
 
 function mapStateToProps(state) {
     return {
         // get previousRoute from state
-        previousRoute: getPreviousRoute(state),
+        location: state.location,
         signInError: getError(state),
     };
 }

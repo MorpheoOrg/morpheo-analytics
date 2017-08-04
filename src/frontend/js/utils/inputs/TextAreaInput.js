@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 
 const TextAreaInput = ({input, placeholder, floatingLabelText, type, meta: {touched, error}, style}) =>
-    <TextField
+    (<TextField
         inputStyle={{WebkitBoxShadow: '0 0 0 1000px white inset'}}
         type={type}
         hintStyle={{zIndex: '1'}}
@@ -16,7 +16,7 @@ const TextAreaInput = ({input, placeholder, floatingLabelText, type, meta: {touc
         floatingLabelText={floatingLabelText}
         style={style}
         {...input}
-    />;
+    />);
 
 TextAreaInput.propTypes = {
     input: PropTypes.shape({}),
@@ -28,6 +28,15 @@ TextAreaInput.propTypes = {
         error: PropTypes.string,
     }),
     style: PropTypes.shape({}),
+};
+
+TextAreaInput.defaultProps = {
+    input: null,
+    placeholder: '',
+    floatingLabelText: '',
+    type: 'text',
+    meta: null,
+    style: null,
 };
 
 export default TextAreaInput;

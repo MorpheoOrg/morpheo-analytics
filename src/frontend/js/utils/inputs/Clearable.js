@@ -5,7 +5,6 @@ import Clear from 'material-ui-icons/Clear';
 
 const Clearable = (ComposedComponent) => {
     class Component extends React.Component {
-
         constructor(props) {
             super(props);
             this.clear = this.clear.bind(this);
@@ -22,7 +21,8 @@ const Clearable = (ComposedComponent) => {
                     <ComposedComponent
                         ref={(c) => {
                             this.component = c;
-                        }} {...this.props}
+                        }}
+                        {...this.props}
                     />
                     {this.props.input.value &&
                     <IconButton
@@ -63,8 +63,15 @@ const Clearable = (ComposedComponent) => {
         error: PropTypes.string,
     };
 
+    Component.defaultProps = {
+        input: null,
+        meta: null,
+        error: null,
+    };
+
     return Component;
 };
+
 
 export default Clearable;
 

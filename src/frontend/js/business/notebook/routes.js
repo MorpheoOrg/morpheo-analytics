@@ -35,44 +35,42 @@
 
 /* globals window */
 
-import {Route} from 'react-router';
 import React from 'react';
+import universal from 'react-universal-component';
 import {injectReducer} from 'redux-injector';
 import {injectSaga} from 'redux-sagas-injector';
+import {PulseLoader} from 'react-spinners';
+import {connect} from 'react-redux';
 
-import {asyncComponent} from 'react-async-component';
+import theme from '../../../css/variables';
 
-const AsyncNotebook = asyncComponent({
-    resolve: () => {
-        const sagas = [System.import('./sagas')],
-            reducers = [System.import('./reducers/index'), System.import('../settings/reducers')];
+// second way with onLoad
+const Universal = universal(import('./preload'), {
+    loading: <PulseLoader color={theme['primary-color']} size={6} />,
+    onLoad: (module) => {
+        injectSaga('notebook', module.notebookSagas);
+        injectReducer('notebook', module.notebookReducer);
+        injectReducer('settings', module.settingsReducer(window.localStorage));
 
-        return Promise.all([...sagas, ...reducers]).then((values) => {
-            injectSaga('notebook', values[0].default);
-            injectReducer('notebook', values[1].default);
-            injectReducer('settings', values[2].default(window.localStorage));
+        // Configure hot module replacement for the reducer
+        if (process.env.NODE_ENV !== 'production') {
+            if (module.hot) {
+                module.hot.accept('./reducers/index', () => import('./reducers/index').then((module) => {
+                    injectReducer('notebook', module.default);
+                }));
 
-            // Configure hot module replacement for the reducer
-            if (process.env.NODE_ENV !== 'production') {
-                if (module.hot) {
-                    module.hot.accept('./reducers/index', () => System.import('./reducers/index').then((module) => {
-                        injectReducer('notebook', module.default);
-                    }));
-
-                    module.hot.accept('../settings/reducers', () => System.import('../settings/reducers').then((module) => {
-                        injectReducer('settings', module.default(window.localStorage));
-                    }));
-                }
+                module.hot.accept('../settings/reducer', () => import('../settings/reducer').then((module) => {
+                    injectReducer('settings', module.default(window.localStorage));
+                }));
             }
-
-            return System.import('./components/Notebook');
-        });
+        }
     },
+    // key: 'default' -- this is the default, and what the component will be, i.e. module.default
 });
 
+const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
 
-// automatically redirect to models pokemon if we signed in and redirection has not been made
-export default props =>
-    (<div className="cells">
-        <Route path="/" component={AsyncNotebook} />
-    </div>);
+export default connect(mapStateToProps)((props) => {
+    const {user} = props;
+    return user && !user.authenticated ? null : <Universal />;
+});

@@ -38,23 +38,17 @@ import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
 import {MuiThemeProvider} from 'material-ui/styles';
 
-// support react-router v4
-import {ConnectedRouter} from 'react-router-redux';
-
 import DevTools from '../DevTools';
+import theme from '../theme';
 
 import Routes from '../routes';
-import history from '../history/dev';
-import theme from '../theme';
 
 const Root = ({store, ...props}) =>
     (<Provider store={store}>
         <MuiThemeProvider theme={theme}>
             <div>
-                <ConnectedRouter history={history}>
-                    <Routes store={store}/>
-                </ConnectedRouter>
-                <DevTools/>
+                <Routes store={store} />
+                <DevTools />
             </div>
         </MuiThemeProvider>
     </Provider>);

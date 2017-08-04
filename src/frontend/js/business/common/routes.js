@@ -33,16 +33,48 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import {Route} from 'react-router';
+/* globals window */
+
 import React from 'react';
+import universal from 'react-universal-component';
+import {injectReducer} from 'redux-injector';
+import {injectSaga} from 'redux-sagas-injector';
+import {PulseLoader} from 'react-spinners';
+import {connect} from 'react-redux';
 
-import {asyncComponent} from 'react-async-component';
+import theme from '../../../css/variables';
 
-const AsyncCommon = asyncComponent({
-    resolve: () => System.import('./components/SignOut'),
-    LoadingComponent: props => <div>Loading</div>});
+const SignOut = universal(
+    props => import('./components/SignOut'),
+    {
+        loading: <PulseLoader color={theme['primary-color']} size={6} />,
+    });
 
+const Konami = universal(
+    props => import('./preload'),
+    {
+        loading: <div />,
+        onLoad: (module) => {
+            injectSaga('kernel', module.sagas);
+            injectReducer('kernel', module.reducers(window.localStorage));
 
-export default props => (<div>
-    <Route path="/" component={AsyncCommon} />
-</div>);
+            // Configure hot module replacement for the reducer
+            if (process.env.NODE_ENV !== 'production') {
+                if (module.hot) {
+                    module.hot.accept('../kernel/reducers', () => import('../kernel/reducers').then((module) => {
+                        injectReducer('kernel', module.default(window.localStorage));
+                    }));
+                }
+            }
+        },
+    });
+
+const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
+
+export default connect(mapStateToProps)((props) => {
+    const {user} = props;
+    return user && !user.authenticated ? null : <div>
+        <SignOut />
+        <Konami />
+    </div>;
+});

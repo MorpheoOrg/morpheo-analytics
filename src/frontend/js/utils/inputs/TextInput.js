@@ -41,13 +41,22 @@ TextInput.propTypes = {
         onChange: PropTypes.func,
     }),
     placeholder: PropTypes.string,
-    floatingLabelText: PropTypes.string,
     type: PropTypes.string,
     onChange: PropTypes.func,
     meta: PropTypes.shape({
         touched: PropTypes.bool,
         error: PropTypes.string,
     }),
+};
+
+const noop = () => {};
+
+TextInput.defaultProps = {
+    input: null,
+    placeholder: '',
+    type: 'text',
+    onChange: noop,
+    meta: null,
 };
 
 export default TextInput;

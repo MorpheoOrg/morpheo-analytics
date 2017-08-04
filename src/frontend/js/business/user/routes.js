@@ -33,16 +33,20 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import {Route, Switch} from 'react-router';
 import React from 'react';
+import universal from 'react-universal-component';
+import {PulseLoader} from 'react-spinners';
+import {connect} from 'react-redux';
 
-import {asyncComponent} from 'react-async-component';
+import theme from '../../../css/variables';
 
-const AsyncSignIn = asyncComponent({
-    resolve: () => System.import('./components/SignIn'),
-    LoadingComponent: props => <div>Loading</div>});
+const Universal = universal(import('./components/SignIn'), {
+    loading: <PulseLoader color={theme['primary-color']} size={6} />,
+});
 
+const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
 
-export default props => (<Switch>
-    <Route exact path="/sign-in" component={AsyncSignIn} />
-</Switch>);
+export default connect(mapStateToProps)((props) => {
+    const {user} = props;
+    return user && user.authenticated ? null : <Universal />;
+});

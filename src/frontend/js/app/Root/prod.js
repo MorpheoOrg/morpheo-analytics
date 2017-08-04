@@ -76,7 +76,7 @@ const Root = ({store}) => {
         <Provider store={store}>
             <MuiThemeProvider theme={theme}>
                 <ConnectedRouter history={history}>
-                    <Routes store={store}/>
+                    <Routes store={store} />
                 </ConnectedRouter>
             </MuiThemeProvider>
         </Provider>

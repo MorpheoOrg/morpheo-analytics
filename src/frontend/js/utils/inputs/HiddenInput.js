@@ -16,4 +16,10 @@ HiddenInput.propTypes = {
     type: PropTypes.string,
 };
 
+HiddenInput.defaultProps = {
+    input: null,
+    id: null,
+    type: 'text',
+};
+
 export default HiddenInput;

@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import Checkbox from 'material-ui/Checkbox';
 
 class CheckboxInput extends Component {
-
     constructor(props) {
         super(props);
         this.onCheck = this.onCheck.bind(this);
@@ -35,6 +34,12 @@ CheckboxInput.propTypes = {
     }),
     label: PropTypes.string,
     style: PropTypes.shape({}),
+};
+
+CheckboxInput.defaultProps = {
+    input: null,
+    label: '',
+    style: null,
 };
 
 export default CheckboxInput;

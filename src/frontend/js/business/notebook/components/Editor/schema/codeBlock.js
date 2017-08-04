@@ -106,7 +106,8 @@ class CodeBlock extends React.Component {
                             (<MenuItem
                                 key={o}
                                 selected={i === this.state.selectedIndex}
-                                onClick={e => this.selectLanguage(o, i)}>{o}</MenuItem>),
+                                onClick={e => this.selectLanguage(o, i)}
+                            >{o}</MenuItem>),
                         )}
                     </Menu>
                 </div>
@@ -143,7 +144,7 @@ class CodeBlock extends React.Component {
                     >Execute</Button>
                     }
                     <IconButton onClick={this.remove}>
-                        <DeleteIcon/>
+                        <DeleteIcon />
                     </IconButton>
                 </div>
                 <pre
@@ -160,13 +161,13 @@ class CodeBlock extends React.Component {
                             contentEditable={false}
                         >
                             {[...Array(linesNumber).keys()].map(o =>
-                                <span key={o}/>,
+                                <span key={o} />,
                             )}
                         </span>}
                         {this.props.children}
                     </code>
                 </pre>
-                {cell && <Cell content={cell.content} type={cell.type}/>}
+                {cell && <Cell content={cell.content} type={cell.type} />}
             </div>);
     }
 }
@@ -184,6 +185,9 @@ CodeBlock.propTypes = {
     }).isRequired,
     node: PropTypes.shape({
         key: PropTypes.string,
+        data: PropTypes.shape({
+            get: PropTypes.func,
+        }),
     }).isRequired,
     cells: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     line_numbers: PropTypes.bool.isRequired,

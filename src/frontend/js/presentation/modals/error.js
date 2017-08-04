@@ -45,7 +45,7 @@ const style = {
 };
 
 const ErrorModal = ({isVisible, error, onClose}) =>
-    <Dialog open={isVisible}>
+    (<Dialog open={isVisible}>
         <DialogTitle>Server Error</DialogTitle>
         <DialogContent>
             <h1>An error occured from the server</h1>
@@ -59,7 +59,7 @@ const ErrorModal = ({isVisible, error, onClose}) =>
                 Ok
             </Button>
         </DialogActions>
-    </Dialog>;
+    </Dialog>);
 
 ErrorModal.propTypes = {
     isVisible: PropTypes.bool.isRequired,

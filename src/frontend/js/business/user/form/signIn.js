@@ -56,25 +56,21 @@ const style = {
     },
 };
 
-class SignInForm extends React.Component {
-    render() {
-        const {signInError, signIn, handleSubmit} = this.props;
-
-        return (<form onSubmit={handleSubmit(signIn)} style={style.main}>
-            <Field name="uuid" component={TextInput} type="text" placeholder="uuid"/>
-            {signInError && signInError.uuid && signInError.uuid.map((error, i) => (
-                <span key={error} className="error">{error}</span>))
-            }
-            <Button
-                raised
-                color={signInError ? 'accent' : 'primary'}
-                style={style.submit}
-                onClick={handleSubmit(signIn)}>
-                Log in
-            </Button>
-        </form>);
-    }
-}
+const SignInForm = ({signInError, signIn, handleSubmit}) =>
+    (<form onSubmit={handleSubmit(signIn)} style={style.main}>
+        <Field name="uuid" component={TextInput} type="text" placeholder="uuid" />
+        {signInError && signInError.uuid && signInError.uuid.map((error, i) => (
+            <span key={error} className="error">{error}</span>))
+        }
+        <Button
+            raised
+            color={signInError ? 'accent' : 'primary'}
+            style={style.submit}
+            onClick={handleSubmit(signIn)}
+        >
+            Log in
+        </Button>
+    </form>);
 
 
 SignInForm.propTypes = {
@@ -83,19 +79,15 @@ SignInForm.propTypes = {
         PropTypes.bool,
     ]),
     signIn: PropTypes.func,
-    previousRoute: PropTypes.oneOfType([
-        PropTypes.shape({}),
-        PropTypes.string,
-    ]),
+    handleSubmit: PropTypes.func.isRequired,
 };
 
 SignInForm.defaultProps = {
     signInError: null,
     signIn: null,
-    previousRoute: null,
 };
 
-export default onlyUpdateForKeys(['signInError', 'previousRoute'])(reduxForm(
+export default onlyUpdateForKeys(['signInError'])(reduxForm(
     {
         form: 'signIn',
         validate: (values) => {
