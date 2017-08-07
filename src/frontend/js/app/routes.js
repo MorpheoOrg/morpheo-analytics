@@ -46,21 +46,24 @@ const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
 
 const Base = ({children}) =>
     (<div>
-        <CommonRoutes />
+        <CommonRoutes/>
         {children}
     </div>);
 
 Base.propTypes = {
-    children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.shape({})),
+        PropTypes.shape({}),
+    ]).isRequired,
 };
 
 export default connect(mapStateToProps)(({location}) => {
     switch (location.type) {
     case 'HOME':
         return (<Base>
-            <SettingsRoutes />
-            <NotebookRoutes />
-            <UserRoute />
+            <SettingsRoutes/>
+            <NotebookRoutes/>
+            <UserRoute/>
         </Base>);
     case 'HELP':
         return (<Base>

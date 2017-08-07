@@ -33,21 +33,34 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
+import {connectRoutes} from 'redux-first-router';
 import {applyMiddleware, compose} from 'redux';
 import {createInjectSagasStore, sagaMiddleware} from 'redux-sagas-injector';
-import {routerMiddleware} from 'react-router-redux';
 
+import options from '../options';
 import rootSaga from '../sagas';
 import rootReducer from '../reducers';
+import history from '../history/prod';
+import routesMap from '../routesMap';
 
-import {history} from '../history/prod';
 
-export default function configureStore(initialState) {
+const {reducer, middleware, enhancer, initialDispatch} = connectRoutes(history, routesMap, {
+    initialDispatch: false,
+    ...options,
+}); // yes, 3 redux aspects
+
+const configureStore = (initialState) => {
+    // create the saga middleware
+
     const enhancers = [
-        applyMiddleware(
-            sagaMiddleware,
-            routerMiddleware(history),
-        )];
+        applyMiddleware(sagaMiddleware, middleware),
+    ];
 
-    return createInjectSagasStore(rootReducer, rootSaga, initialState, compose(...enhancers));
-}
+    const r = {...rootReducer, location: reducer};
+    const store = createInjectSagasStore(r, rootSaga, initialState, compose(enhancer, ...enhancers));
+    initialDispatch();
+
+    return store;
+};
+
+export default configureStore;

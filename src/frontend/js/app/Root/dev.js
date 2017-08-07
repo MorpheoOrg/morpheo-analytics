@@ -43,11 +43,11 @@ import theme from '../theme';
 
 import Routes from '../routes';
 
-const Root = ({store, ...props}) =>
+const Root = ({store}) =>
     (<Provider store={store}>
         <MuiThemeProvider theme={theme}>
             <div>
-                <Routes store={store} />
+                <Routes />
                 <DevTools />
             </div>
         </MuiThemeProvider>

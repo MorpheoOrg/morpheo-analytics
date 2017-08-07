@@ -36,15 +36,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
-// support react-router v4
-// import syncHistoryWithStore from '../../../lib/react-router-redux/sync';
-// import ConnectedRouter from '../../../lib/react-router-redux/connectedRouter';
-import {ConnectedRouter} from 'react-router-redux';
 import {MuiThemeProvider} from 'material-ui/styles';
 
-import Routes from '../routes';
-import {history} from '../history/prod';
 import theme from '../theme';
+import Routes from '../routes';
+import history from '../history/prod';
 
 // For using browserHistory with amazon s3, we need our own domain name (for not impacting customer and record)
 // and a custom routerHistory
@@ -72,16 +68,13 @@ const Root = ({store}) => {
         history.replace(path);
     }
 
-    return (
-        <Provider store={store}>
-            <MuiThemeProvider theme={theme}>
-                <ConnectedRouter history={history}>
-                    <Routes store={store} />
-                </ConnectedRouter>
-            </MuiThemeProvider>
-        </Provider>
-    );
+    return (<Provider store={store}>
+        <MuiThemeProvider theme={theme}>
+            <Routes/>
+        </MuiThemeProvider>
+    </Provider>);
 };
+
 
 Root.propTypes = {
     store: PropTypes.shape({}).isRequired,

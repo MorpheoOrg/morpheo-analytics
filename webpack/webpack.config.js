@@ -92,10 +92,6 @@ export default {
                         'lodash',
                         'date-fns',
                         'universal-import',
-                        ['import', {
-                            libraryName: 'antd',
-                            style: true,
-                        }],
                         'transform-runtime',
                         ...(PRODUCTION ? [
                             'transform-react-constant-elements',
