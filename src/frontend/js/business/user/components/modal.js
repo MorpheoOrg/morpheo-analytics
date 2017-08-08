@@ -39,7 +39,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import UserSettings from './settings';
-import CreateModalHOC from '../../../components/hoc/createModal';
+import CreateModalHOC from '../../common/components/hoc/createModal';
 import {modal} from '../actions';
 
 const Modal = CreateModalHOC(UserSettings, 'My settings');

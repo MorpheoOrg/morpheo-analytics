@@ -32,14 +32,15 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import {call, put, select} from 'redux-saga/effects';
-import {routerActions} from 'react-router-redux';
 import queryString from 'query-string';
 import url from 'url';
+import {redirect} from 'redux-first-router';
 
 import {signOut as signOutActions} from '../user/actions';
 import {fetchByUrl} from '../../entities/fetchEntities';
-import generalActions from '../../app/actions';
+import generalActions from '../common/actions';
 
 // helpers for pagination cache
 export function getUrl(baseUrl, query, page, action = 'next') {
@@ -62,7 +63,7 @@ export function getPrevious(baseUrl, query, page) {
 export const loadList = (actions, fetchList, action = 'list', q) =>
     function* loadListSaga() {
         const state = yield select(),
-            location = state.routing.location;
+            location = state.location;
 
         // override query if needed, default to current url query
         const query = q || (location && location.search ? queryString.parse(location.search) : {});
@@ -99,7 +100,7 @@ export const loadByUrlRef = actions =>
     function* loadByUrlRefSaga(request) {
         const state = yield select();
         const jwt = state.user.token,
-            location = state.routing.location,
+            location = state.location,
             query = location && location.search ? queryString.parse(location.search) : {};
 
         // need to remove page from query, as already in url
@@ -131,17 +132,11 @@ export const loadByUrlRef = actions =>
 
             // update page in url
             if (page > 1) {
-                yield put(routerActions.replace({
-                    ...location,
-                    search: queryString.stringify({...query, page}),
-                }));
+                yield put(redirect({type: location.type, payload: {...query, page}}));
             }
             else {
                 delete query.page;
-                yield put(routerActions.replace({
-                    ...location,
-                    search: queryString.stringify(query),
-                }));
+                yield put(redirect({type: location.type, payload: query}));
             }
 
             // return list
@@ -153,7 +148,7 @@ export const loadByUrlRef = actions =>
 export const loadListFromPath = (actions, fetchList, subreducer) =>
     function* loadListFromPathSaga(request) {
         const state = yield select(),
-            location = state.routing.location,
+            location = state.location,
             query = location && location.search ? queryString.parse(location.search) : {};
 
         const {error, list} = yield call(fetchList, query, state.user.token, request.payload);
@@ -206,7 +201,7 @@ export const loadListNext = (actions, type) =>
 export const loadItemFactory = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {
         const state = yield select(),
-            location = state.routing.location,
+            location = state.location,
             q = location && location.search ? {...query, ...queryString.parse(location.search)} : query;
 
 
@@ -298,7 +293,7 @@ export const deleteItemFactory = (actions, deleteItem) =>
 export const loadAdditionnal = (fetchList, action) =>
     function* loadAdditionnalSaga(request) {
         const state = yield select(),
-            location = state.routing.location;
+            location = state.location;
 
         // override query if needed, default to current url query
         const q = {experiment: request.payload};

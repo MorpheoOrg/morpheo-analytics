@@ -32,10 +32,8 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import {Route, Switch} from 'react-router';
-import React from 'react';
 
-import {asyncComponent} from 'react-async-component';
+import React from 'react';
 
 const AsyncSignIn = asyncComponent({resolve: () => System.import('./components/SignIn'), LoadingComponent: props => <div>Loading</div>});
 const AsyncSignUp = asyncComponent({resolve: () => System.import('./components/SignUp'), LoadingComponent: props => <div>Loading</div>});

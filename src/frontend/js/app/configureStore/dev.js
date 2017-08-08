@@ -32,33 +32,46 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import {applyMiddleware, compose} from 'redux';
-import {createInjectSagasStore, sagaMiddleware} from 'redux-sagas-injector';
-import {routerMiddleware} from 'react-router-redux';
 
+import {connectRoutes} from 'redux-first-router';
+import {applyMiddleware, compose} from 'redux';
+import queryString from 'query-string';
+import {createInjectSagasStore, sagaMiddleware} from 'redux-sagas-injector';
+
+import options from '../options';
 import rootSaga from '../sagas';
 import rootReducer from '../reducers';
 import DevTools from '../DevTools';
 import history from '../history/dev';
+import routesMap from '../routesMap';
 
-export default function configureStore(initialState) {
+
+const {reducer, middleware, enhancer, initialDispatch} = connectRoutes(history, routesMap, {
+    initialDispatch: false,
+    querySerializer: queryString,
+    ...options,
+}); // yes, 3 redux aspects
+
+const configureStore = (initialState) => {
     // create the saga middleware
 
     const enhancers = [
-        applyMiddleware(
-            sagaMiddleware,
-            routerMiddleware(history),
-        ),
-        DevTools.instrument()];
+        applyMiddleware(sagaMiddleware, middleware),
+        DevTools.instrument(),
+    ];
 
-    const store = createInjectSagasStore(rootReducer, rootSaga, initialState, compose(...enhancers));
+    const r = {...rootReducer, location: reducer};
+    const store = createInjectSagasStore(r, rootSaga, initialState, compose(enhancer, ...enhancers));
+    initialDispatch();
 
     // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
     if (module.hot) {
-        module.hot.accept('../reducers', () =>
-            store.replaceReducer(rootReducer),
-        );
+        module.hot.accept('../reducers', () => import('../reducers').then((module) => {
+            store.replaceReducer({...rootReducer, location: reducer});
+        }));
     }
 
     return store;
-}
+};
+
+export default configureStore;

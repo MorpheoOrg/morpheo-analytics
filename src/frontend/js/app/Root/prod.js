@@ -32,16 +32,13 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
-// support react-router v4
-// import syncHistoryWithStore from '../../../lib/react-router-redux/sync';
-// import ConnectedRouter from '../../../lib/react-router-redux/connectedRouter';
-import {ConnectedRouter} from 'react-router-redux';
 
 import Routes from '../routes';
-import {history} from '../history/prod';
+import history from '../history/prod';
 
 // For using browserHistory with amazon s3, we need our own domain name (for not impacting customer and record)
 // and a custom routerHistory
@@ -72,9 +69,7 @@ const Root = ({store}) => {
 
     return (
         <Provider store={store}>
-            <ConnectedRouter history={history}>
-                <Routes store={store} />
-            </ConnectedRouter>
+            <Routes />
         </Provider>
     );
 };

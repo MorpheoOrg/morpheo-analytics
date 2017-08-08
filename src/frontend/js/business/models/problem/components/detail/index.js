@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
@@ -39,17 +40,16 @@ import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
 import {parse, format} from 'date-fns';
 import {Icon, Upload, message} from 'antd';
-import {Link} from 'react-router-dom';
+import Link from 'redux-first-router-link'
 import FormData from 'form-data';
-import {sortBy, isEmpty} from 'lodash';
 import {PulseLoader} from 'react-spinners';
 
-import variables from '../../../../../../css/variables';
+import theme from '../../../../../../css/variables';
 
+import Algo from '../../../algo/components/detail';
 import actions from '../../actions';
 import algoActions from '../../../algo/actions';
 import {getLChartData, getBestPerf} from '../../../learnuplet/selector';
-import Algo from '../../../algo/components/detail';
 import {getProblems} from '../../selector';
 
 const Dragger = Upload.Dragger;
@@ -120,12 +120,10 @@ class Detail extends React.PureComponent {
     render() {
         const {algo, data, id, name, best_perf, loading} = this.props;
 
-        //console.log(best_perf);
-
         return (<div>
             <h1>Algos for Challenge {loading ?
                 <div style={style.loaderWrapper}>
-                    <PulseLoader color={variables['primary-color']} size={6}/>
+                    <PulseLoader color={theme['primary-color']} size={6}/>
                 </div> : <span>{name}</span>}</h1>
             <h2>Algos with best performance are : {best_perf[id] ? best_perf[id].slice(0, 4).map(o => <div key={o.uuid}>
                 <span>{o.name}</span>
@@ -181,8 +179,7 @@ Detail.propTypes = {
     data: PropTypes.shape({}),
 };
 
-const noop = () => {
-};
+const noop = () => {};
 
 Detail.defaultProps = {
     algo: null,
@@ -193,8 +190,7 @@ Detail.defaultProps = {
 };
 
 function mapStateToProps(state, ownProps) {
-
-    const p = getProblems(state).find(o => o.uuid === ownProps.match.params.id);
+    const p = getProblems(state).find(o => o.uuid === state.location.payload.id);
 
     return {
         algo: state.models.algo,
@@ -202,7 +198,7 @@ function mapStateToProps(state, ownProps) {
         problems: getProblems(state),
         problem: state.models.problem,
         loading: state.models.problem.item.loading || state.models.storage_problem.item.loading,
-        id: ownProps.match.params.id,
+        id: state.location.payload.id,
         data: getLChartData(state),
         best_perf: getBestPerf(state),
     };

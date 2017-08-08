@@ -34,7 +34,7 @@
  */
 /* globals atob */
 
-import {routerActions} from 'react-router-redux';
+import {redirect} from 'redux-first-router';
 import {call, put, select, takeLatest} from 'redux-saga/effects';
 
 import {
@@ -57,6 +57,7 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
         const {error, res} = yield call(fetchSignIn, email, password);
 
         if (error) {
+            console.error(error);
             yield put(signInActions.failure(error));
         }
         else {
@@ -71,11 +72,7 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
             yield put(signInActions.success(user));
 
             if (user) {
-                yield put(routerActions.push({
-                    ...previousRoute,
-                    // make sure we don't push history on same location
-                    pathname: previousRoute.pathname === '/' ? '/experiments' : previousRoute.pathname,
-                }));
+                yield put(redirect(previousRoute));
             }
             else {
                 yield put(signInActions.failure({detail: `You don't have the permission to access this site. Your current permission is ${user.permission} and only admin and team policies are allowed. Please ask Guillaume for modifying your permission on bender service.`}));
@@ -101,13 +98,7 @@ export const signOut = removeLocalUser =>
         const state = yield select();
         yield call(removeLocalUser);
         yield put(signOutActions.success());
-        yield put(routerActions.push({
-            pathname: '/',
-            // store current location if relogin
-            state: {
-                ...state.routing.location,
-            },
-        }));
+        yield put(redirect({type: 'HOME'}));
     };
 
 function* verify(request) {

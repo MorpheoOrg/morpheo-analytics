@@ -1,15 +1,17 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin';
-import rules from './rules';
-import resolve from './resolve';
-import {definePlugin} from './plugins';
+
 import webpack from 'webpack';
 import path from 'path';
 import fs from 'fs';
 import HappyPack from 'happypack';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import config from 'config';
+
+import rules from './rules';
+import resolve from './resolve';
+import {definePlugin} from './plugins';
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
@@ -18,36 +20,33 @@ const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NO
     DEBUG_BASE_NAME = config.apps.frontend.baseName.debug;
 
 
-console.log(PRODUCTION_BASE_NAME, DEBUG_BASE_NAME);
-
 const DllArray = ['React', 'Redux', 'App'];
-const DllReferencePlugins = function () {
-    let arr = [];
+const DllReferencePlugins = () => {
+    const arr = [];
     for (let i = 0, l = DllArray.length; i < l; i++) {
-
-        if (!fs.existsSync('./build/dll' + (!PRODUCTION ? '-dev' : '') + '/' + DllArray[i] + '-manifest.json')) {
-            console.error('The DLL manifest is missing. Please run `npm run dll' + (!PRODUCTION ? ':dev' : '') + '`');
+        if (!fs.existsSync(`./build/dll${!PRODUCTION ? '-dev' : ''}/${DllArray[i]}-manifest.json`)) {
+            console.error(`The DLL manifest is missing. Please run \`npm run dll${!PRODUCTION ? ':dev' : ''}\``);
             process.exit(0);
         }
         else {
             arr.push(new webpack.DllReferencePlugin({
                 context: path.join(__dirname, '..'),
-                manifest: require('../build/dll' + (!PRODUCTION ? '-dev' : '') + '/' + DllArray[i] + '-manifest.json')
+                manifest: require(`../build/dll${!PRODUCTION ? '-dev' : ''}/${DllArray[i]}-manifest.json`),
             }));
         }
     }
     return arr;
 };
-const AddAssetHtmlPlugins = function () {
-    let arr = [];
+const AddAssetHtmlPlugins = () => {
+    const arr = [];
     for (let i = 0, l = DllArray.length; i < l; i++) {
-        if (!fs.existsSync('./build/dll' + (!PRODUCTION ? '-dev' : '') + '/' + DllArray[i] + '.dll.js')) {
-            console.error('The DLL is missing. Please run `npm run dll' + (!PRODUCTION ? ':dev' : '') + '`');
+        if (!fs.existsSync(`./build/dll${!PRODUCTION ? '-dev' : ''}/${DllArray[i]}.dll.js`)) {
+            console.error(`The DLL is missing. Please run \`npm run dll${!PRODUCTION ? ':dev' : ''}\``);
             process.exit(0);
         }
         else {
             arr.push({
-                filepath: require.resolve('../build/dll' + (!PRODUCTION ? '-dev' : '') + '/' + DllArray[i] + '.dll.js'),
+                filepath: require.resolve(`../build/dll${!PRODUCTION ? '-dev' : ''}/${DllArray[i]}.dll.js`),
                 //hash: true, // can break prod
             });
         }
@@ -60,7 +59,7 @@ export default {
         index: [
             `${__dirname}/../src/frontend/js/main.js`,
             (PRODUCTION ? `${__dirname}/../src/frontend/css/main/main.prod.scss` : `${__dirname}/../src/frontend/css/main/main.dev.scss`),
-        ]
+        ],
     },
     module: {
         rules: rules('frontend'),
@@ -80,7 +79,7 @@ export default {
         filename: `[name]${PRODUCTION ? '-[hash:6]' : ''}.js`,
         path: `${__dirname}/../build/frontend`,
         // https://blog.jetbrains.com/webstorm/2015/09/debugging-webpack-applications-in-webstorm/
-        publicPath: DEBUG ? DEBUG_BASE_NAME : PRODUCTION_BASE_NAME
+        publicPath: DEBUG ? DEBUG_BASE_NAME : PRODUCTION_BASE_NAME,
     },
     devtool: DEBUG ? 'source-map' : (DEVELOPMENT ? 'cheap-module-source-map' : '#hidden-source-map'),
     plugins: [
@@ -92,30 +91,32 @@ export default {
                     plugins: [
                         'lodash',
                         'date-fns',
-                        ["import", {
+                        ['import', {
                             libraryName: 'antd',
-                            style: true
+                            style: true,
                         }],
+                        'universal-import',
                         'transform-runtime',
                         ...(PRODUCTION ? [
-                            "transform-react-constant-elements",
-                            "transform-react-inline-elements",
-                            "transform-react-remove-prop-types"
+                            'transform-react-constant-elements',
+                            'transform-react-inline-elements',
+                            'transform-react-remove-prop-types',
                         ] : []),
                         ...(DEVELOPMENT ? ['react-hot-loader/babel'] : []),
                     ],
                     presets: [
-                        "es2015",
-                        "react",
-                        "stage-0",
-                    ]
+                        'es2015',
+                        'react',
+                        'stage-0',
+                    ],
                 },
             }],
             threads: 4,
         }),
+        new webpack.optimize.ModuleConcatenationPlugin(),
         ...(DEVELOPMENT ? [new webpack.NamedModulesPlugin()] : []),
         new webpack.ProvidePlugin({
-            'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!isomorphic-fetch'
+            fetch: 'imports-loader?this=>global!exports-loader?global.fetch!isomorphic-fetch',
         }),
         definePlugin(),
         ...(DllReferencePlugins()),
@@ -136,9 +137,9 @@ export default {
                     keepClosingSlash: true,
                     minifyJS: true,
                     minifyCSS: true,
-                    minifyURLs: true
-                }
-            } : {})
+                    minifyURLs: true,
+                },
+            } : {}),
         }),
         ...(AddAssetHtmlPlugins()),
         new LodashModuleReplacementPlugin({
@@ -147,7 +148,7 @@ export default {
         ...(PRODUCTION ? [
             new ExtractTextPlugin({
                 filename: '[name].css',
-                allChunks: false
+                allChunks: false,
             }),
             new webpack.optimize.UglifyJsPlugin({
                 compress: {
@@ -165,8 +166,8 @@ export default {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT,PATCH',
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization, authorization'
-        }
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization, authorization',
+        },
     },
     watch: true,
     cache: true,

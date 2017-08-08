@@ -36,9 +36,9 @@ import {connect} from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
-import {Link} from 'react-router-dom';
+import Link from 'redux-first-router-link';
 
-import Morpheo from '../../../presentation/icons/morpheo';
+import Morpheo from '../../common/components/presentation/icons/morpheo';
 import {signIn as signInActions} from '../actions';
 import HelmetTitle from '../../../utils/HelmetTitle';
 import FormTemplate from '../form/sign-in';
@@ -71,35 +71,42 @@ const style = {
     },
 };
 
-const SignIn = (props) => {
-    const {signInError, signIn, previousRoute} = props;
+class SignIn extends React.Component {
+    signIn = (values) => {
+        this.props.signIn(this.props.location.prev, {uuid: values.uuid});
+    };
 
-    return (
-        <div style={style.main}>
-            <HelmetTitle title="Sign in" />
-            <Morpheo width={73} style={style.logo} color={theme['primary-color']} />
-            <div style={style.form}>
-                <h1>Login to Analytics</h1>
-                <p style={style.p}>New around here ? <Link to="sign-up/">Signup</Link> instead</p>
-                {signInError &&
-                <p className="error" role="alert">
-                    <ul>
-                        {Object.keys(signInError).map(o =>
-                            <li key={o}>{o}: <ul>{signInError[o].map(x => <li key={x}>{x}</li>)}</ul></li>,
-                        )}
-                    </ul>
-                    {signInError.detail || signInError.message}
-                </p>
-                }
-                <FormTemplate
-                    signInError={signInError}
-                    signIn={signIn}
-                    previousRoute={previousRoute}
-                />
+    render() {
+        const {signInError} = this.props;
+
+        return (
+            <div style={style.main}>
+                <HelmetTitle title="Sign in"/>
+                <Morpheo width={73} style={style.logo} color={theme['primary-color']}/>
+                <div style={style.form}>
+                    <h1>Login to Analytics</h1>
+                    <p style={style.p}>New around here ? <Link to="sign-up/">Signup</Link> instead</p>
+                    {signInError &&
+                    <p className="error" role="alert">
+                        <ul>
+                            {Object.keys(signInError).map(o =>
+                                <li key={o}>{o}:
+                                    <ul>{signInError[o].map(x => <li key={x}>{x}</li>)}</ul>
+                                </li>,
+                            )}
+                        </ul>
+                        {signInError.detail || signInError.message}
+                    </p>
+                    }
+                    <FormTemplate
+                        signInError={signInError}
+                        signIn={this.signIn}
+                    />
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    }
+}
 
 SignIn.propTypes = {
     signInError: PropTypes.oneOfType([
@@ -107,22 +114,20 @@ SignIn.propTypes = {
         PropTypes.bool,
     ]),
     signIn: PropTypes.func,
-    previousRoute: PropTypes.oneOfType([
-        PropTypes.shape({}),
-        PropTypes.string,
-    ]),
+    location: PropTypes.shape({
+        prev: PropTypes.shape({}),
+    }).isRequired,
 };
 
 SignIn.defaultProps = {
     signInError: null,
     signIn: null,
-    previousRoute: null,
 };
 
 function mapStateToProps(state) {
     return {
         // get previousRoute from state
-        previousRoute: getPreviousRoute(state),
+        location: state.location,
         signInError: getError(state),
     };
 }

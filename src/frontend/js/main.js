@@ -40,9 +40,6 @@ import 'babel-polyfill';
 import FastClick from 'fastclick';
 import React from 'react';
 import {render} from 'react-dom';
-import {createRenderer} from 'fela';
-import {Provider as FelaProvider} from 'react-fela';
-import {AsyncComponentProvider} from 'react-async-component';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import ReactHotLoader from './ReactHotLoader';
 import Root from './app/Root/index';
@@ -56,16 +53,10 @@ FastClick.attach(document.body);
 injectTapEventPlugin();
 
 const root = document.getElementById('root');
-const renderer = createRenderer();
-const mountNode = document.getElementById('stylesheet');
 
 const renderApp = (RootElement) => {
     const app = (<ReactHotLoader key={Math.random()}>
-        <AsyncComponentProvider>
-            <FelaProvider renderer={renderer} mountNode={mountNode}>
-                <RootElement {...{store}} />
-            </FelaProvider>
-        </AsyncComponentProvider>
+        <RootElement {...{store}} />
     </ReactHotLoader>);
 
     render(app, root);
@@ -73,7 +64,7 @@ const renderApp = (RootElement) => {
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
     module.hot.accept('./app/Root/index', () =>
-        System.import('./app/Root/index').then(module => renderApp(module.default)),
+        import('./app/Root/index').then(module => renderApp(module.default)),
     );
 }
 

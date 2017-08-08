@@ -34,78 +34,98 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import Link from 'redux-first-router-link'
 import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
-import actions from './actions';
-// import {signOut as signOutActions} from '../business/user/actions';
+import {signOut, modal} from '../../user/actions';
 
-import LeftMenu from '../components/left-menu';
-import ErrorModal from '../presentation/modals/error';
+import Morpheo from './presentation/icons/morpheo';
+import theme from '../../../../css/variables/index';
 
-class App extends React.PureComponent {
+const style = {
+    menu: {
+        width: 60,
+        height: '100%',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        background: '#fff',
+        borderRight: '1px solid rgb(233, 233, 233)',
+        boxShadow: '2px 5px 3px px rgba(0,0,0, 0.08)',
+        zIndex: 1,
+    },
+    bottom: {
+        position: 'absolute',
+        bottom: 0,
+        padding: '7px 14px',
+    },
+    button: {
+        marginBottom: 13,
+    },
+    logo: {
+        margin: '20px 10px 10px 10px',
+    },
+};
+
+class LeftMenu extends React.Component {
 
     constructor(props) {
         super(props);
-        this.onClose = this.onClose.bind(this);
+        this.logout = this.logout.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.showUserModal = this.showUserModal.bind(this);
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     const {user} = nextProps;
-    //     const currentTime = Math.floor(Date.now() / 1000);
-    //
-    //     if (user.token && user.exp && user.exp < currentTime) {
-    //         this.props.signOut();
-    //     }
-    // }
+    logout() {
+        this.props.signOut();
+    }
 
-    onClose() {
-        this.props.onClose('');
+    showModal() {
+        this.props.setExperimentModalCreate(true);
+    }
+
+    showUserModal() {
+        this.props.setUserModal(true);
     }
 
     render() {
-        const {general} = this.props;
         return (
-            <div className="app">
-                {/* {user && user.authenticated && <LeftMenu /> }*/}
-                <LeftMenu />
-                <ErrorModal
-                    isVisible={general.error !== ''}
-                    error={general.error}
-                    onClose={this.onClose}
-                />
+            <div style={style.menu}>
+                <Link to="/">
+                    <Morpheo width={40} height={40} style={style.logo} color={theme['primary-color']} />
+                </Link>
             </div>
         );
     }
 }
 
-App.propTypes = {
-    // user: PropTypes.shape({}),
-    onClose: PropTypes.func,
-    // signOut: PropTypes.func,
-    general: PropTypes.shape({}),
+LeftMenu.propTypes = {
+    // user: PropTypes.shape({}).isRequired,
+    signOut: PropTypes.func,
+    setUserModal: PropTypes.func,
+    setExperimentModalCreate: PropTypes.func,
 };
 
-App.defaultProps = {
-    // user: null,
-    onClose: null,
-    // signOut: null,
-    general: null,
-};
+const noop = () => {};
 
+LeftMenu.defaultProps = {
+    signOut: noop,
+    setUserModal: noop,
+    setExperimentModalCreate: noop,
+};
 
 function mapStateToProps(state, ownProps) {
     return {
-        user: state.user,
-        general: state.general,
+        // user: state.user,
     };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators({
-        onClose: actions.error.set,
-        // signOut: signOutActions.request,
+        signOut: signOut.request,
+        setUserModal: modal.set,
     }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(LeftMenu);

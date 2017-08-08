@@ -33,41 +33,18 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
+/* globals window */
+
 import React from 'react';
 import universal from 'react-universal-component';
 import {PulseLoader} from 'react-spinners';
-import {connect} from 'react-redux';
 
 import theme from '../../../css/variables';
 
-const ProblemRoutes = universal(import('./problem/routes'), {
-    loading: <PulseLoader color={theme['primary-color']} size={6}/>,
-});
+const App = universal(
+    props => import('./components/App'),
+    {
+        loading: <PulseLoader color={theme['primary-color']} size={6} />,
+    });
 
-const Help = universal(import('./help'), {
-    loading: <PulseLoader color={theme['primary-color']} size={6}/>,
-});
-
-const style = {
-    margin: '0 auto',
-    maxWidth: 1050,
-    width: '75%',
-};
-
-
-const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
-
-export default connect(mapStateToProps)(({location}) => {
-    switch (location.type) {
-    case 'HOME':
-    case 'PROBLEMS':
-    case 'PROBLEM':
-        return <div style={style}>
-            <ProblemRoutes />
-        </div>;
-    case 'HELP':
-        return <Help/>;
-    default:
-        return <h1>Not Found</h1>;
-    }
-});
+export default props => <App />

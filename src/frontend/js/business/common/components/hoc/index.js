@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-export CreateModalHOC from './CreateModal';
+export CreateModalHOC from './createModal';
 
 export default {
     CreateModalHOC: System.import('./createModal').then(module => module.default),

@@ -32,28 +32,63 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-const Home = () => null;
+import actions from '../actions';
+import LeftMenu from './left-menu';
+import ErrorModal from './presentation/modals/error';
 
-Home.propTypes = {
-    user: PropTypes.shape({}),
+class App extends React.PureComponent {
+
+    constructor(props) {
+        super(props);
+        this.onClose = this.onClose.bind(this);
+    }
+
+    onClose() {
+        this.props.onClose('');
+    }
+
+    render() {
+        const {general} = this.props;
+        return (
+            <div>
+                <LeftMenu />
+                <ErrorModal
+                    isVisible={general.error !== ''}
+                    error={general.error}
+                    onClose={this.onClose}
+                />
+            </div>
+        );
+    }
+}
+
+App.propTypes = {
+    onClose: PropTypes.func,
+    general: PropTypes.shape({}),
 };
 
-Home.defaultProps = {
+App.defaultProps = {
+    onClose: null,
+    general: null,
 };
+
 
 function mapStateToProps(state, ownProps) {
     return {
         user: state.user,
+        general: state.general,
     };
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
+function mapDispatchToProps(dispatch) {
     return bindActionCreators({
+        onClose: actions.error.set,
     }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

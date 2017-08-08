@@ -37,7 +37,7 @@
 import {call, put, select, takeLatest} from 'redux-saga/effects';
 import {message} from 'antd';
 import queryString from 'query-string';
-import generalActions from '../../../app/actions';
+import generalActions from '../../common/actions';
 
 import {signOut as signOutActions} from '../../user/actions';
 
@@ -53,19 +53,7 @@ import {
 import {
     createItemFactory,
     deleteItemFactory,
-    // loadAdditionnal,
 } from '../sagas';
-
-// function* loadAlgos(request) {
-//     const {error, list} = yield call(loadAdditionnal(fetchAlgosApi), request);
-//
-//     if (error) {
-//         yield put(actions.item.get.failure(error.body));
-//     }
-//     else if (list) {
-//         yield put(actions.item.get.success({id: request.payload, list}));
-//     }
-// }
 
 
 function* createAlgo(request) {
@@ -138,7 +126,7 @@ function* postToOrchestrator(request) {
 export const loadList = (actions, fetchList) =>
     function* loadListSaga(request) {
         const state = yield select(),
-            location = state.routing.location;
+            location = state.location;
 
         // override query if needed, default to current url query
         const query = location && location.search ? queryString.parse(location.search) : {};

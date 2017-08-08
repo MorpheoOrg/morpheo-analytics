@@ -36,7 +36,7 @@
 
 import {call, put, select, takeLatest, takeEvery} from 'redux-saga/effects';
 import queryString from 'query-string';
-import generalActions from '../../../app/actions';
+import generalActions from '../../common/actions';
 import storageProblemActions from '../storage_problem/actions';
 
 import actions, {actionTypes} from './actions';
@@ -49,7 +49,7 @@ import {
 export const loadList = (actions, fetchList, q) =>
     function* loadListSaga() {
         const state = yield select(),
-            location = state.routing.location;
+            location = state.location;
 
         // override query if needed, default to current url query
         const query = q || (location && location.search ? queryString.parse(location.search) : {});
@@ -81,11 +81,6 @@ export const loadList = (actions, fetchList, q) =>
 
 export const loadItem = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {
-        const state = yield select(),
-            location = state.routing.location,
-            q = location && location.search ? {...query, ...queryString.parse(location.search)} : query;
-
-
         const {error, item} = yield call(fetchItem, request.payload);
 
         if (error) {

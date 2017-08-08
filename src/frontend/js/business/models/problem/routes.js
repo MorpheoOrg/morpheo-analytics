@@ -33,73 +33,78 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
+import React from 'react';
+import universal from 'react-universal-component';
 import {injectReducer} from 'redux-injector';
 import {injectSaga} from 'redux-sagas-injector';
-
-import {Route, Switch} from 'react-router';
-import React from 'react';
-
 import {PulseLoader} from 'react-spinners';
+import {connect} from 'react-redux';
+import theme from '../../../../css/variables';
 
-import {asyncComponent} from 'react-async-component';
-import variables from '../../../../css/variables';
+const onLoad = (module) => {
+    injectSaga('problem', module.problemSagas);
+    injectSaga('algo', module.algoSagas);
+    injectSaga('learnuplet', module.learnupletSagas);
+    injectSaga('storage_problem', module.storageProblemSagas);
 
+    injectReducer('models.problem', module.problemReducer);
+    injectReducer('models.algo', module.algoReducer);
+    injectReducer('models.learnuplet', module.learnupletReducer);
+    injectReducer('models.storage_problem', module.storageProblemReducer);
 
-const createAsyncComponentWith = component_path =>
-    asyncComponent({
-        resolve: () => {
-            const sagas = [
-                    System.import('./sagas'),
-                    System.import('../algo/sagas'),
-                    System.import('../learnuplet/sagas'),
-                    System.import('../storage_problem/sagas'),
-                ],
-                reducers = [
-                    System.import('./reducers'),
-                    System.import('../algo/reducers'),
-                    System.import('../learnuplet/reducers'),
-                    System.import('../storage_problem/reducers'),
-                ];
+    // Configure hot module replacement for the reducer
+    if (process.env.NODE_ENV !== 'production') {
+        if (module.hot) {
+            module.hot.accept('./reducers/index', () => import('./reducers/index').then((module) => {
+                injectReducer('models.problem', module.default);
+            }));
 
-            return Promise.all([...sagas, ...reducers]).then((values) => {
-                injectSaga('problem', values[0].default);
-                injectSaga('algo', values[1].default);
-                injectSaga('learnuplet', values[2].default);
-                injectSaga('storage_problem', values[3].default);
-                injectReducer('models.problem', values[4].default);
-                injectReducer('models.algo', values[5].default);
-                injectReducer('models.learnuplet', values[6].default);
-                injectReducer('models.storage_problem', values[7].default);
+            module.hot.accept('../algo/reducers/index', () => import('../algo/reducers/index').then((module) => {
+                injectReducer('models.algo', module.default);
+            }));
 
-                // Configure hot module replacement for the reducer
-                if (process.env.NODE_ENV !== 'production') {
-                    if (module.hot) {
-                        module.hot.accept('./reducers', () => System.import('./reducers').then((module) => {
-                            injectReducer('models.problem', module.default);
-                        }));
-                        module.hot.accept('../algo/reducers', () => System.import('../algo/reducers').then((module) => {
-                            injectReducer('models.algo', module.default);
-                        }));
-                        module.hot.accept('../learnuplet/reducers', () => System.import('../learnuplet/reducers').then((module) => {
-                            injectReducer('models.learnuplet', module.default);
-                        }));
-                        module.hot.accept('../storage_problem/reducers', () => System.import('../storage_problem/reducers').then((module) => {
-                            injectReducer('models.storage_problem', module.default);
-                        }));
-                    }
-                }
+            module.hot.accept('../learnuplet/reducers/index', () => import('../learnuplet/reducers/index').then((module) => {
+                injectReducer('models.learnuplet', module.default);
+            }));
 
-                return System.import(`${component_path}`);
-            });
-        },
-        LoadingComponent: props => <PulseLoader color={variables['primary-color']} size={6}/>,
-    });
+            module.hot.accept('../storage_problem/reducers/index', () => import('../storage_problem/reducers/index').then((module) => {
+                injectReducer('models.storage_problem', module.default);
+            }));
+        }
+    }
+};
 
-const List = createAsyncComponentWith('./components/list/index');
-const Detail = createAsyncComponentWith('./components/detail/index');
+const Detail = universal(import('./components/detail/preload'), {
+    loading: <PulseLoader color={theme['primary-color']} size={6}/>,
+    onLoad,
+});
 
-export default props =>
-    (<Switch>
-        <Route exact path="/problem" component={List} />
-        <Route exact path="/problem/:id" component={Detail} />
-    </Switch>);
+const List = universal(import('./components/list/preload'), {
+    loading: <PulseLoader color={theme['primary-color']} size={6}/>,
+    onLoad: (module) => {
+        injectSaga('problem', module.problemSagas);
+        injectSaga('storage_problem', module.storageProblemSagas);
+
+        injectReducer('models.problem', module.problemReducer);
+        injectReducer('models.storage_problem', module.storageProblemReducer);
+
+        // Configure hot module replacement for the reducer
+        if (process.env.NODE_ENV !== 'production') {
+            if (module.hot) {
+                module.hot.accept('./reducers/index', () => import('./reducers/index').then((module) => {
+                    injectReducer('models.problem', module.default);
+                }));
+
+                module.hot.accept('../storage_problem/reducers/index', () => import('../storage_problem/reducers/index').then((module) => {
+                    injectReducer('models.storage_problem', module.default);
+                }));
+            }
+        }
+    }
+});
+
+const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
+
+export default connect(mapStateToProps)(({location}) => {
+    return location.payload.id ? <Detail/> : <List/>;
+});

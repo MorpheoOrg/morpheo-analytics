@@ -32,68 +32,33 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import {Route, Redirect} from 'react-router';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
-import {asyncComponent} from 'react-async-component';
+//import UserRoute from '../business/user/routes';
+import ModelsRoutes from '../business/models/routes';
+import CommonRoutes from '../business/common/routes';
 
-import ModelsRoute from '../business/models/routes';
-import UserRoute from '../business/user/routes';
+import routesMaps from './routesMap';
 
-const AsyncApp = asyncComponent({
-    resolve: () => System.import('./App'),
-});
+const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
 
-const AsyncHome = asyncComponent({
-    resolve: () => System.import('../components/home'),
-});
-
-
-const PrivateRoute = ({component, store}) =>
-    (<Route
-        render={({location, ...props}) => {
-            const {user} = store.getState();
-            return location.pathname === 'sign-up' || location.pathname.startsWith('/verify/') ? null : (
-                user && user.authenticated ?
-                    React.createElement(component, props) :
-                    <Redirect
-                        to={{ // jsx literal -> rerender
-                            pathname: '/',
-                            // save previous route if set
-                            state: {
-                                ...location,
-                                ...(location.state ? location.state : null),
-                            },
-                        }}
-                    />
-            );
-        }}
-    />);
-
-PrivateRoute.propTypes = {
-    component: PropTypes.func.isRequired,
-    store: PropTypes.shape({
-        getState: PropTypes.func,
-    }).isRequired,
-};
-
-PrivateRoute.defaultProps = {
-    location: null,
-};
-
-const Routes = ({store}) =>
-    (<div id="routes">
-        <Route path="/" component={AsyncApp} />
-        <div className="middle">
-            <Route path="/" component={AsyncHome} />
-            <UserRoute />
-            <Route component={ModelsRoute} store={store} />
-        </div>
+const Base = ({children}) =>
+    (<div>
+        <CommonRoutes/>
+        {children}
     </div>);
 
-Routes.propTypes = {
-    store: PropTypes.shape({}).isRequired,
+Base.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.shape({})),
+        PropTypes.shape({}),
+    ]).isRequired,
 };
 
-export default Routes;
+export default connect(mapStateToProps)(({location}) =>
+    Object.keys(routesMaps).includes(location.type) ? <Base>
+        <ModelsRoutes/>
+    </Base> : <h1>Not Found</h1>,
+);

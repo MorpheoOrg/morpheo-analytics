@@ -32,13 +32,14 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import {connect} from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
-import {Link} from 'react-router-dom';
+import Link from 'redux-first-router-link'
 
-import Morpheo from '../../../presentation/icons/morpheo';
+import Morpheo from '../../common/components/presentation/icons/morpheo';
 import {signUp as signUpActions} from '../actions';
 import HelmetTitle from '../../../utils/HelmetTitle';
 import FormTemplate from '../form/sign-up';

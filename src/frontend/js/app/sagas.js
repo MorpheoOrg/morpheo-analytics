@@ -32,17 +32,18 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import {fork, put, select} from 'redux-saga/effects';
 import {isDate} from 'date-fns';
 import queryString from 'query-string';
-import {routerActions} from 'react-router-redux';
+import {redirect} from 'redux-first-router';
 
 import userSagas from '../business/user/sagas';
 
 export const setFilter = filter =>
     function* setFilterSaga(request) {
         const state = yield select(),
-            location = state.routing.location,
+            location = state.location,
             query = location && location.search ? queryString.parse(location.search) : {};
 
         if (typeof request.payload !== 'undefined' && request.payload !== null) { // is not null ? (0 can be passed)
@@ -58,14 +59,14 @@ export const setFilter = filter =>
 
         const search = queryString.stringify(query);
         if (search !== location.search.slice(1)) { // note that `location.search` automatically prepends a question mark
-            yield put(routerActions.replace({...location, search}));
+            yield put(redirect({type: location.type, payload: query}));
         }
     };
 
 export const setDateFilter = (reducer, filter) =>
     function* setDateFilterSaga(request) {
         const state = yield select(),
-            location = state.routing.location,
+            location = state.location,
             query = location && location.search ? queryString.parse(location.search) : {};
 
         if (request.payload) { // is null ?
@@ -79,7 +80,7 @@ export const setDateFilter = (reducer, filter) =>
 
         const search = queryString.stringify(query);
         if (search !== location.search.slice(1)) { // note that `location.search` automatically prepends a question mark
-            yield put(routerActions.replace({...location, search}));
+            yield put(redirect({type: location.type, payload: query}));
         }
     };
 

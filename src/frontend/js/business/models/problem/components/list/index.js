@@ -32,16 +32,17 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
-import {Link} from 'react-router-dom';
+import Link from 'redux-first-router-link';
 import {parse, format} from 'date-fns';
 import {PulseLoader} from 'react-spinners';
 
-import variables from '../../../../../../css/variables';
+import theme from '../../../../../../css/variables';
 import actions from '../../actions';
 import {getProblems} from '../../selector';
 
@@ -83,10 +84,10 @@ class List extends React.PureComponent {
 
         return (<div><h1>Problems</h1>
             <ul>
-                {loading && <PulseLoader color={variables['primary-color']} size={6}/>}
+                {loading && <PulseLoader color={theme['primary-color']} size={6}/>}
                 {!loading && problems.map(o =>
                     (<li key={o.timestamp_upload} style={style.li}>
-                        {o.loading && <PulseLoader color={variables['primary-color']} size={6}/>}
+                        {o.loading && <PulseLoader color={theme['primary-color']} size={6}/>}
                         {!o.loading &&
                         <dl style={style.dl}>
                             {o.name && <dt>name:</dt>}
