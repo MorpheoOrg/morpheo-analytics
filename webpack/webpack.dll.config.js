@@ -21,7 +21,6 @@ export default {
             'react-redux',
             'react-select',
             'react-tap-event-plugin',
-            'antd',
         ],
         Redux: [
             'redux',
@@ -38,6 +37,7 @@ export default {
             'reselect',
             'url',
             'date-fns',
+            'material-ui',
         ]
     },
     devtool: '#source-map',

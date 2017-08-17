@@ -40,9 +40,8 @@ import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
 import Link from 'redux-first-router-link';
 import {parse, format} from 'date-fns';
-import {PulseLoader} from 'react-spinners';
 
-import theme from '../../../../../../css/variables';
+import BubbleLoading from '../../../../common/components/presentation/loaders/bubble';
 import actions from '../../actions';
 import {getProblems} from '../../selector';
 
@@ -84,7 +83,7 @@ class List extends React.PureComponent {
 
         return (<div><h1>Problems</h1>
             <ul>
-                {loading && <PulseLoader color={theme['primary-color']} size={6}/>}
+                {loading && <BubbleLoading/>}
                 {!loading && problems.map(o =>
                     (<li key={o.timestamp_upload} style={style.li}>
                         {o.loading && <PulseLoader color={theme['primary-color']} size={6}/>}

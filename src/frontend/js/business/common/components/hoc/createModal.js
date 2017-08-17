@@ -34,7 +34,8 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Modal} from 'antd';
+import Button from 'material-ui/Button';
+import Dialog, {DialogActions, DialogContent, DialogTitle} from 'material-ui/Dialog';
 import pure from 'recompose/pure';
 
 
@@ -43,17 +44,20 @@ const HOC = (Component, title = 'Create a new experiment') => {
         const {isVisible, onCancel, onConfirm} = props;
 
         return (
-            <Modal
-                visible={isVisible}
-                title={title}
-                onOk={onConfirm}
-                wrapClassName="vertical-center-modal"
-                onCancel={onCancel}
-                width="600px"
-                footer={null}
-            >
-                <Component {...props} />
-            </Modal>
+            <Dialog open={isVisible}>
+                <DialogTitle>{title}</DialogTitle>
+                <DialogContent>
+                    <Component {...props} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onCancel}>
+                        Cancel
+                    </Button>
+                    <Button color="primary" onClick={onConfirm}>
+                        Ok
+                    </Button>
+                </DialogActions>
+            </Dialog>
         );
     };
 

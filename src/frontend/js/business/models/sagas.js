@@ -38,7 +38,6 @@ import queryString from 'query-string';
 import url from 'url';
 import {redirect} from 'redux-first-router';
 
-import {signOut as signOutActions} from '../user/actions';
 import {fetchByUrl} from '../../entities/fetchEntities';
 import generalActions from '../common/actions';
 
@@ -73,9 +72,6 @@ export const loadList = (actions, fetchList, action = 'list', q) =>
         if (error) {
             if (error.body && error.body.message) {
                 console.error(error.body.message);
-            }
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
             }
             else if (error && error.message) {
                 yield put(generalActions.error.set(error.message));
@@ -117,9 +113,6 @@ export const loadByUrlRef = actions =>
             if (error.body && error.body.message) {
                 console.error(error.body.message);
             }
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
-            }
             else if (error && error.message) {
                 yield put(generalActions.error.set(error.message));
             }
@@ -157,9 +150,6 @@ export const loadListFromPath = (actions, fetchList, subreducer) =>
             if (error.body && error.body.message) {
                 console.error(error.body.message);
             }
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
-            }
             else if (error && error.message) {
                 yield put(generalActions.error.set(error.message));
             }
@@ -180,9 +170,6 @@ export const loadListNext = (actions, type) =>
         if (error) {
             if (error.body && error.body.message) {
                 console.error(error.body.message);
-            }
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
             }
             else if (error && error.message) {
                 yield put(generalActions.error.set(error.message));
@@ -211,9 +198,6 @@ export const loadItemFactory = (actions, fetchItem, query) =>
             if (error.body && error.body.message) {
                 console.error(error.body.message);
             }
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
-            }
             else if (error && error.message) {
                 yield put(generalActions.error.set(error.message));
             }
@@ -234,9 +218,6 @@ export const createItemFactory = (actions, createItem) =>
             {error, item} = yield call(createItem, state.user.token, request.payload);
 
         if (error) {
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
-            }
             yield put(actions.item.create.failure(error.body));
         }
         else {
@@ -256,9 +237,6 @@ export const updateItemFactory = (actions, updateItem) =>
             {error, item} = yield call(updateItem, request.payload.id, state.user.token, request.payload.values);
 
         if (error) {
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
-            }
             yield put(actions.item.update.failure(error.body));
         }
         else {
@@ -275,9 +253,6 @@ export const deleteItemFactory = (actions, deleteItem) =>
 
         if (error) {
             console.error(error.message);
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
-            }
             yield put(actions.item.delete.failure(error.body));
         }
         else {
@@ -304,9 +279,6 @@ export const loadAdditionnal = (fetchList, action) =>
         if (error) {
             if (error.body && error.body.message) {
                 console.error(error.body.message);
-            }
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
             }
             else if (error && error.message) {
                 yield put(generalActions.error.set(error.message));

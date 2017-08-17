@@ -39,12 +39,13 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
 import {parse, format} from 'date-fns';
-import {Icon, Upload, message} from 'antd';
-import Link from 'redux-first-router-link'
+import Link from 'redux-first-router-link';
 import FormData from 'form-data';
-import {PulseLoader} from 'react-spinners';
+import {isEmpty} from 'lodash';
+import Dropzone from 'react-dropzone';
+import CloudUploadIcon from 'material-ui-icons/CloudUpload';
 
-import theme from '../../../../../../css/variables';
+import BubbleLoading from '../../../../common/components/presentation/loaders/bubble';
 
 import Algo from '../../../algo/components/detail';
 import actions from '../../actions';
@@ -52,7 +53,7 @@ import algoActions from '../../../algo/actions';
 import {getLChartData, getBestPerf} from '../../../learnuplet/selector';
 import {getProblems} from '../../selector';
 
-const Dragger = Upload.Dragger;
+import theme from '../../../../../../css/variables';
 
 const style = {
     li: {
@@ -73,49 +74,58 @@ const style = {
     loaderWrapper: {
         display: 'inline-block',
     },
-};
+    dropzone: {
+        style: {
+            margin: '0 auto',
+            width: 350,
+            padding: 10,
+            cursor: 'pointer',
+            border: '1px dashed #d9d9d9',
+            transition: 'border-color .3s ease',
+            borderRadius: 4,
+            textAlign: 'center',
+        },
+        activeStyle: {
+            borderColor: theme['primary-color'],
+        },
+        acceptStyle: {
 
-const onChange = ({file, fileList, event}) => {
-    const status = file.status;
-
-    // if (status !== 'uploading') {
-    //     console.log(file, fileList);
-    // }
-    if (status === 'done') {
-        message.success(`${file.name} file uploaded successfully.`);
-    }
-    else if (status === 'error') {
-        message.error(`${file.name} file upload failed.`);
-    }
+        },
+        rejectStyle: {
+            borderColor: 'red',
+        },
+    },
+    cloud: {
+        color: theme['primary-color'],
+        height: 80,
+        width: 80,
+    },
 };
 
 class Detail extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.customRequest = this.customRequest.bind(this);
-    }
-
     componentWillMount() {
-        const {algo, id, problem, loadList, loadProblem} = this.props;
+        const {algo, id, init, loadList, loadProblem} = this.props;
 
         if (!algo.list.loading && typeof algo.list.results[id] === 'undefined') {
-            loadList(this.props.id);
+            loadList(id);
         }
 
         // load problem description if not already loaded
-        if (!problem.list.init) {
-            loadProblem(this.props.id);
+        if (!init) {
+            loadProblem(id);
         }
     }
 
-    customRequest({onProgress, onError, onSuccess, file}) {
+    onConfirm = (acceptedFiles) => {
+        const file = acceptedFiles[0];
+
         const body = new FormData();
         body.append('name', file.name);
         body.append('size', file.size);
         body.append('blob', file);
 
-        this.props.postAlgo({body, id: this.props.id, onSuccess, onError, onProgress});
-    }
+        this.props.postAlgo({body, id: this.props.id});
+    };
 
     render() {
         const {algo, data, id, name, best_perf, loading} = this.props;
@@ -123,27 +133,25 @@ class Detail extends React.PureComponent {
         return (<div>
             <h1>Algos for Challenge {loading ?
                 <div style={style.loaderWrapper}>
-                    <PulseLoader color={theme['primary-color']} size={6}/>
-                </div> : <span>{name}</span>}</h1>
+                    <BubbleLoading/>
+                </div> :
+                <span>{name}</span>}
+            </h1>
             <h2>Algos with best performance are : {best_perf[id] ? best_perf[id].slice(0, 4).map(o => <div key={o.uuid}>
                 <span>{o.name}</span>
                 <span style={style.span}>({o.uuid})</span>
-            </div>) : ''}</h2>
+            </div>) : ''}
+            </h2>
             <Link to="/problem">Back to problem</Link>
-            <div style={style.dropbox}>
-                <Dragger
-                    onChange={onChange}
-                    customRequest={this.customRequest}
-                    showUploadList={false}
-                    name="algo"
-                    multiple={false}
-                >
-                    <p className="ant-upload-drag-icon">
-                        <Icon type="inbox"/>
-                    </p>
-                    <p className="ant-upload-text">Click or drag file to this area to upload your algo</p>
-                </Dragger>
-            </div>
+
+            <Dropzone multiple={false}
+                      onDrop={this.onConfirm}
+                      style={style.dropzone.style}
+                      activeStyle={style.dropzone.activeStyle}>
+                <CloudUploadIcon style={style.cloud} />
+                <p>Click or drag file to this area to upload</p>
+            </Dropzone>
+
             {algo.list.loading && <div>Loading...</div>}
             {!algo.list.loading && !!algo.list.results[id] && !!algo.list.results[id].length &&
             <ul>
@@ -162,8 +170,6 @@ class Detail extends React.PureComponent {
     }
 }
 
-// type := array|bool|func|shape|number|string|oneOf([...])|instanceOf(...)
-// decl := ReactPropTypes.{type}(.isRequired)?
 Detail.propTypes = {
     algo: PropTypes.shape({
         list: PropTypes.shape({
@@ -179,7 +185,8 @@ Detail.propTypes = {
     data: PropTypes.shape({}),
 };
 
-const noop = () => {};
+const noop = () => {
+};
 
 Detail.defaultProps = {
     algo: null,
@@ -196,7 +203,7 @@ function mapStateToProps(state, ownProps) {
         algo: state.models.algo,
         name: p ? p.name : '',
         problems: getProblems(state),
-        problem: state.models.problem,
+        init: state.models.problem.init,
         loading: state.models.problem.item.loading || state.models.storage_problem.item.loading,
         id: state.location.payload.id,
         data: getLChartData(state),
@@ -211,6 +218,5 @@ function mapDispatchToProps(dispatch) {
         postAlgo: algoActions.item.post.request,
     }, dispatch);
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['algo', 'id', 'data', 'name', 'loading'])(Detail));

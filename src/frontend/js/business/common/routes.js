@@ -33,18 +33,12 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-/* globals window */
-
 import React from 'react';
 import universal from 'react-universal-component';
-import {PulseLoader} from 'react-spinners';
+import BubbleLoading from './components/presentation/loaders/bubble';
 
-import theme from '../../../css/variables';
+const App = universal(props => import('./components/App'), {
+    loading: <BubbleLoading/>,
+});
 
-const App = universal(
-    props => import('./components/App'),
-    {
-        loading: <PulseLoader color={theme['primary-color']} size={6} />,
-    });
-
-export default props => <App />
+export default props => <App/>;

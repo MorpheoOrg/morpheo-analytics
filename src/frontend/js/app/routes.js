@@ -32,11 +32,11 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-//import UserRoute from '../business/user/routes';
 import ModelsRoutes from '../business/models/routes';
 import CommonRoutes from '../business/common/routes';
 

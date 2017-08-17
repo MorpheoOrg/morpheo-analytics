@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
@@ -42,24 +43,18 @@ import LeftMenu from './left-menu';
 import ErrorModal from './presentation/modals/error';
 
 class App extends React.PureComponent {
-
-    constructor(props) {
-        super(props);
-        this.onClose = this.onClose.bind(this);
-    }
-
-    onClose() {
+    onClose = () => {
         this.props.onClose('');
-    }
+    };
 
     render() {
-        const {general} = this.props;
+        const {error} = this.props;
         return (
             <div>
-                <LeftMenu />
+                <LeftMenu/>
                 <ErrorModal
-                    isVisible={general.error !== ''}
-                    error={general.error}
+                    isVisible={error !== ''}
+                    error={error}
                     onClose={this.onClose}
                 />
             </div>
@@ -78,17 +73,12 @@ App.defaultProps = {
 };
 
 
-function mapStateToProps(state, ownProps) {
-    return {
-        user: state.user,
-        general: state.general,
-    };
-}
+const mapStateToProps = ({general}, ownProps) => ({
+    error: general.error,
+});
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        onClose: actions.error.set,
-    }, dispatch);
-}
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    onClose: actions.error.set,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

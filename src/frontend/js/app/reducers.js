@@ -35,7 +35,7 @@
 /* globals window */
 
 import {reducer as formReducer} from 'redux-form';
-import userReducerFactory from '../business/user/reducer';
+//import userReducerFactory from '../business/user/reducer';
 import {actionTypes} from '../business/common/actions';
 
 const initialState = {error: ''};
@@ -54,6 +54,6 @@ const general = (state = initialState, {type, payload}) => {
 
 export default {
     form: formReducer,
-    user: userReducerFactory(window.localStorage),
+    //user: userReducerFactory(window.localStorage),
     general,
 };

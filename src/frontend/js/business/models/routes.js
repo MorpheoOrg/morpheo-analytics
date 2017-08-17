@@ -35,17 +35,16 @@
 
 import React from 'react';
 import universal from 'react-universal-component';
-import {PulseLoader} from 'react-spinners';
 import {connect} from 'react-redux';
 
-import theme from '../../../css/variables';
+import BubbleLoading from '../common/components/presentation/loaders/bubble';
 
 const ProblemRoutes = universal(import('./problem/routes'), {
-    loading: <PulseLoader color={theme['primary-color']} size={6}/>,
+    loading: <BubbleLoading />,
 });
 
 const Help = universal(import('./help'), {
-    loading: <PulseLoader color={theme['primary-color']} size={6}/>,
+    loading: <BubbleLoading />,
 });
 
 const style = {

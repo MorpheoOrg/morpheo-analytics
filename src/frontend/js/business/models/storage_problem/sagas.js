@@ -56,9 +56,6 @@ export const loadItem = (actions, fetchItem, query) =>
             if (error.body && error.body.message) {
                 console.error(error.body.message);
             }
-            if (error && [401, 403].includes(error.status)) {
-                yield put(signOutActions.request());
-            }
             else if (error && error.message) {
                 yield put(generalActions.error.set(error.message));
             }

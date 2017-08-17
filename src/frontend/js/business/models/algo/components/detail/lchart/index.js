@@ -43,10 +43,10 @@ import {
     Tooltip,
     Legend,
 } from 'recharts';
-import {Card} from 'antd';
+import Card, {CardContent} from 'material-ui/Card';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {onlyUpdateForKeys, shouldUpdate} from 'recompose';
+import {shouldUpdate} from 'recompose';
 import {isEqual} from 'lodash';
 
 import learnupletActions from '../../../../learnuplet/actions';
@@ -77,18 +77,18 @@ class LearnupletChart extends React.Component {
     render() {
         const {data, id} = this.props;
 
-        return (<Card
-            title={`Performance of algo ${id}`}
-            style={card}
-        >
-            <LineChart width={600} height={300} data={data} margin={chart}>
-                <XAxis dataKey="name" label="Number of trained data" />
-                <YAxis label="Perf" />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Legend />
-                <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot} />
-            </LineChart>
+        return (<Card style={card}>
+            <CardContent>
+                <h1>{`Performance of algo ${id}`}</h1>
+                <LineChart width={600} height={300} data={data} margin={chart}>
+                    <XAxis dataKey="name" label="Number of trained data"/>
+                    <YAxis label="Perf"/>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <Tooltip/>
+                    <Legend/>
+                    <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot}/>
+                </LineChart>
+            </CardContent>
         </Card>);
     }
 }

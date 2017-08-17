@@ -38,7 +38,7 @@ import Link from 'redux-first-router-link'
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import {signOut, modal} from '../../user/actions';
+//import {signOut, modal} from '../../user/actions';
 
 import Morpheo from './presentation/icons/morpheo';
 import theme from '../../../../css/variables/index';
@@ -78,15 +78,15 @@ class LeftMenu extends React.Component {
     }
 
     logout() {
-        this.props.signOut();
+        //this.props.signOut();
     }
 
     showModal() {
-        this.props.setExperimentModalCreate(true);
+        //this.props.setExperimentModalCreate(true);
     }
 
     showUserModal() {
-        this.props.setUserModal(true);
+        //this.props.setUserModal(true);
     }
 
     render() {
@@ -102,17 +102,17 @@ class LeftMenu extends React.Component {
 
 LeftMenu.propTypes = {
     // user: PropTypes.shape({}).isRequired,
-    signOut: PropTypes.func,
-    setUserModal: PropTypes.func,
-    setExperimentModalCreate: PropTypes.func,
+    //signOut: PropTypes.func,
+    //setUserModal: PropTypes.func,
+    //setExperimentModalCreate: PropTypes.func,
 };
 
 const noop = () => {};
 
 LeftMenu.defaultProps = {
-    signOut: noop,
-    setUserModal: noop,
-    setExperimentModalCreate: noop,
+    //signOut: noop,
+    //setUserModal: noop,
+    //setExperimentModalCreate: noop,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -123,8 +123,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators({
-        signOut: signOut.request,
-        setUserModal: modal.set,
+        //signOut: signOut.request,
+        //setUserModal: modal.set,
     }, dispatch);
 }
 

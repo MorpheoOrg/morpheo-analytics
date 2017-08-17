@@ -37,50 +37,48 @@ import React from 'react';
 import universal from 'react-universal-component';
 import {injectReducer} from 'redux-injector';
 import {injectSaga} from 'redux-sagas-injector';
-import {PulseLoader} from 'react-spinners';
 import {connect} from 'react-redux';
-import theme from '../../../../css/variables';
 
-const onLoad = (module) => {
-    injectSaga('problem', module.problemSagas);
-    injectSaga('algo', module.algoSagas);
-    injectSaga('learnuplet', module.learnupletSagas);
-    injectSaga('storage_problem', module.storageProblemSagas);
-
-    injectReducer('models.problem', module.problemReducer);
-    injectReducer('models.algo', module.algoReducer);
-    injectReducer('models.learnuplet', module.learnupletReducer);
-    injectReducer('models.storage_problem', module.storageProblemReducer);
-
-    // Configure hot module replacement for the reducer
-    if (process.env.NODE_ENV !== 'production') {
-        if (module.hot) {
-            module.hot.accept('./reducers/index', () => import('./reducers/index').then((module) => {
-                injectReducer('models.problem', module.default);
-            }));
-
-            module.hot.accept('../algo/reducers/index', () => import('../algo/reducers/index').then((module) => {
-                injectReducer('models.algo', module.default);
-            }));
-
-            module.hot.accept('../learnuplet/reducers/index', () => import('../learnuplet/reducers/index').then((module) => {
-                injectReducer('models.learnuplet', module.default);
-            }));
-
-            module.hot.accept('../storage_problem/reducers/index', () => import('../storage_problem/reducers/index').then((module) => {
-                injectReducer('models.storage_problem', module.default);
-            }));
-        }
-    }
-};
+import BubbleLoading from '../../common/components/presentation/loaders/bubble';
 
 const Detail = universal(import('./components/detail/preload'), {
-    loading: <PulseLoader color={theme['primary-color']} size={6}/>,
-    onLoad,
+    loading: <BubbleLoading />,
+    onLoad: (module) => {
+        injectSaga('problem', module.problemSagas);
+        injectSaga('algo', module.algoSagas);
+        injectSaga('learnuplet', module.learnupletSagas);
+        injectSaga('storage_problem', module.storageProblemSagas);
+
+        injectReducer('models.problem', module.problemReducer);
+        injectReducer('models.algo', module.algoReducer);
+        injectReducer('models.learnuplet', module.learnupletReducer);
+        injectReducer('models.storage_problem', module.storageProblemReducer);
+
+        // Configure hot module replacement for the reducer
+        if (process.env.NODE_ENV !== 'production') {
+            if (module.hot) {
+                module.hot.accept('./reducers/index', () => import('./reducers/index').then((module) => {
+                    injectReducer('models.problem', module.default);
+                }));
+
+                module.hot.accept('../algo/reducers/index', () => import('../algo/reducers/index').then((module) => {
+                    injectReducer('models.algo', module.default);
+                }));
+
+                module.hot.accept('../learnuplet/reducers/index', () => import('../learnuplet/reducers/index').then((module) => {
+                    injectReducer('models.learnuplet', module.default);
+                }));
+
+                module.hot.accept('../storage_problem/reducers/index', () => import('../storage_problem/reducers/index').then((module) => {
+                    injectReducer('models.storage_problem', module.default);
+                }));
+            }
+        }
+    },
 });
 
 const List = universal(import('./components/list/preload'), {
-    loading: <PulseLoader color={theme['primary-color']} size={6}/>,
+    loading: <BubbleLoading />,
     onLoad: (module) => {
         injectSaga('problem', module.problemSagas);
         injectSaga('storage_problem', module.storageProblemSagas);
@@ -103,8 +101,8 @@ const List = universal(import('./components/list/preload'), {
     }
 });
 
-const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
+const Routes = ({location}) => location.payload.id ? <Detail/> : <List/>;
 
-export default connect(mapStateToProps)(({location}) => {
-    return location.payload.id ? <Detail/> : <List/>;
-});
+const mapStateToProps = ({location}) => ({location});
+
+export default connect(mapStateToProps)(Routes);

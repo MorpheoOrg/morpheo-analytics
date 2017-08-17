@@ -35,11 +35,9 @@
 /* globals */
 
 import {call, put, select, takeLatest} from 'redux-saga/effects';
-import {message} from 'antd';
 import queryString from 'query-string';
-import generalActions from '../../common/actions';
 
-import {signOut as signOutActions} from '../../user/actions';
+import generalActions from '../../common/actions';
 
 
 import actions, {actionTypes} from './actions';
@@ -60,8 +58,6 @@ function* createAlgo(request) {
     const item = yield call(createItemFactory(actions, createAlgoApi), request);
 
     if (item) {
-        message.success('Algo successfully created!');
-
         if (actions.modal.create) {
             yield put(actions.modal.create.set(false));
         }
@@ -70,11 +66,7 @@ function* createAlgo(request) {
 
 
 function* deleteAlgo(request) {
-    const payload = yield call(deleteItemFactory(actions, deleteAlgoApi), request);
-
-    if (payload) {
-        message.success('Algo deleted!');
-    }
+    yield call(deleteItemFactory(actions, deleteAlgoApi), request);
 }
 
 function* postAlgo(request) {
@@ -82,20 +74,9 @@ function* postAlgo(request) {
 
     if (error) {
         console.error(error.message);
-        if (error && [401, 403].includes(error.status)) {
-            yield put(signOutActions.request());
-        }
-
-        request.payload.onError(error.message, error.body);
         yield put(actions.item.post.failure(error.body));
     }
     else {
-        if (actions.modal && actions.modal.post) {
-            yield put(actions.modal.post.set(false));
-        }
-
-        request.payload.onSuccess(item);
-
         yield put(actions.item.post.success({...item, problem: request.payload.id}));
         // Post to orchestrator too
         yield put(actions.item.postToOrchestrator.request({uuid: item.uuid, name: item.name, problem: request.payload.id}));
@@ -107,10 +88,6 @@ function* postToOrchestrator(request) {
 
     if (error) {
         console.error(error.message);
-        if (error && [401, 403].includes(error.status)) {
-            yield put(signOutActions.request());
-        }
-
         yield put(actions.item.postToOrchestrator.failure(error.body));
     }
     else {
