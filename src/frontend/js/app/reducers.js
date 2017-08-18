@@ -32,10 +32,9 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals window */
 
 import {reducer as formReducer} from 'redux-form';
-//import userReducerFactory from '../business/user/reducer';
+// import userReducerFactory from '../business/user/reducer';
 import {actionTypes} from '../business/common/actions';
 
 const initialState = {error: ''};
@@ -54,6 +53,6 @@ const general = (state = initialState, {type, payload}) => {
 
 export default {
     form: formReducer,
-    //user: userReducerFactory(window.localStorage),
+    // user: userReducerFactory(window.localStorage),
     general,
 };

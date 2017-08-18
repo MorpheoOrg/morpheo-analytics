@@ -48,7 +48,7 @@ export const handleResponse = (response) => {
         return response.text().then(result =>
             Promise.reject({
                 body: new Error(result),
-                status: response.status,  // read status
+                status: response.status, // read status
             }),
         );
     }
@@ -118,7 +118,7 @@ export const deleteEntityFactory = path => (id, jwt) => {
                 return response.text().then(result =>
                     Promise.reject({
                         body: new Error(result),
-                        status: response.status,  // read status
+                        status: response.status, // read status
                     }),
                 );
             }
@@ -184,7 +184,7 @@ export const createEntityFactory = path => (jwt, payload) => {
                 return response.text().then(result =>
                     Promise.reject({
                         body: new Error(result),
-                        status: response.status,  // read status
+                        status: response.status, // read status
                     }),
                 );
             }
@@ -219,7 +219,7 @@ export const createFormEntityFactory = path => (jwt, payload) => {
                 return response.text().then(result =>
                     Promise.reject({
                         body: new Error(result),
-                        status: response.status,  // read status
+                        status: response.status, // read status
                     }),
                 );
             }

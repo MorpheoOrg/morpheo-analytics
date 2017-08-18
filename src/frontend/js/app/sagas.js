@@ -38,7 +38,7 @@ import {isDate} from 'date-fns';
 import queryString from 'query-string';
 import {redirect} from 'redux-first-router';
 
-//import userSagas from '../business/user/sagas';
+// import userSagas from '../business/user/sagas';
 
 export const setFilter = filter =>
     function* setFilterSaga(request) {
@@ -86,5 +86,5 @@ export const setDateFilter = (reducer, filter) =>
 
 /* istanbul ignore next */
 export default function* () {
-    //yield fork(userSagas);
+    // yield fork(userSagas);
 }

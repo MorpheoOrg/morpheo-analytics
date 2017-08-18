@@ -120,7 +120,7 @@ export const loadByUrlRef = actions =>
         }
         else {
             // add page in url
-            const page = parsedUrlQuery.offset ? ((+parsedUrlQuery.offset + 20) / 20) : (+parsedUrlQuery.page || 1);  // 20 is default limit from pokemon api
+            const page = parsedUrlQuery.offset ? ((+parsedUrlQuery.offset + 20) / 20) : (+parsedUrlQuery.page || 1); // 20 is default limit from pokemon api
             yield put(actions.pagination.set.success(page));
 
             // update page in url

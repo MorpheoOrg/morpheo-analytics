@@ -42,7 +42,7 @@ export const parseUTC = date =>
         date.getMinutes(),
         date.getSeconds(),
         date.getMilliseconds(),
-        ),
+    ),
     );
 
 export default parseUTC;

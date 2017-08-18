@@ -83,10 +83,10 @@ class List extends React.PureComponent {
 
         return (<div><h1>Problems</h1>
             <ul>
-                {loading && <BubbleLoading/>}
+                {loading && <BubbleLoading />}
                 {!loading && problems.map(o =>
                     (<li key={o.timestamp_upload} style={style.li}>
-                        {o.loading && <PulseLoader color={theme['primary-color']} size={6}/>}
+                        {o.loading && <BubbleLoading />}
                         {!o.loading &&
                         <dl style={style.dl}>
                             {o.name && <dt>name:</dt>}
@@ -108,11 +108,10 @@ class List extends React.PureComponent {
 // type := array|bool|func|shape|number|string|oneOf([...])|instanceOf(...)
 // decl := ReactPropTypes.{type}(.isRequired)?
 List.propTypes = {
-    results: PropTypes.arrayOf(PropTypes.shape({})),
     loading: PropTypes.bool,
-    storage_loading: PropTypes.bool,
     init: PropTypes.bool,
     loadList: PropTypes.func,
+    problems: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 const noop = () => {

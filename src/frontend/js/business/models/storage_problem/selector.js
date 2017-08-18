@@ -20,5 +20,5 @@ export const getProblems = createDeepEqualSelector([results, storage_results],
 
 export default {
     getProblems,
-    //getStorageProblem
+    // getStorageProblem
 };

@@ -41,7 +41,6 @@ import {onlyUpdateForKeys} from 'recompose';
 import {parse, format} from 'date-fns';
 import Link from 'redux-first-router-link';
 import FormData from 'form-data';
-import {isEmpty} from 'lodash';
 import Dropzone from 'react-dropzone';
 import CloudUploadIcon from 'material-ui-icons/CloudUpload';
 
@@ -133,21 +132,23 @@ class Detail extends React.PureComponent {
         return (<div>
             <h1>Algos for Challenge {loading ?
                 <div style={style.loaderWrapper}>
-                    <BubbleLoading/>
+                    <BubbleLoading />
                 </div> :
                 <span>{name}</span>}
             </h1>
-            <h2>Algos with best performance are : {best_perf[id] ? best_perf[id].slice(0, 4).map(o => <div key={o.uuid}>
+            <h2>Algos with best performance are : {best_perf[id] ? best_perf[id].slice(0, 4).map(o => (<div key={o.uuid}>
                 <span>{o.name}</span>
                 <span style={style.span}>({o.uuid})</span>
-            </div>) : ''}
+            </div>)) : ''}
             </h2>
             <Link to="/problem">Back to problem</Link>
 
-            <Dropzone multiple={false}
-                      onDrop={this.onConfirm}
-                      style={style.dropzone.style}
-                      activeStyle={style.dropzone.activeStyle}>
+            <Dropzone
+                multiple={false}
+                onDrop={this.onConfirm}
+                style={style.dropzone.style}
+                activeStyle={style.dropzone.activeStyle}
+            >
                 <CloudUploadIcon style={style.cloud} />
                 <p>Click or drag file to this area to upload</p>
             </Dropzone>
@@ -178,9 +179,15 @@ Detail.propTypes = {
         }),
     }),
     id: PropTypes.string,
+    init: PropTypes.bool,
+    loading: PropTypes.bool,
 
     loadList: PropTypes.func,
+    loadProblem: PropTypes.func,
     postAlgo: PropTypes.func,
+
+    name: PropTypes.string,
+    best_perf: PropTypes.arrayOf(PropTypes.shape({})),
 
     data: PropTypes.shape({}),
 };
@@ -193,7 +200,12 @@ Detail.defaultProps = {
     id: null,
     loadList: noop,
     postAlgo: noop,
+    loadProblem: noop,
     data: null,
+    name: '',
+    loading: false,
+    init: false,
+    best_perf: null,
 };
 
 function mapStateToProps(state, ownProps) {

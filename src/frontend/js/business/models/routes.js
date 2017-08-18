@@ -61,11 +61,11 @@ export default connect(mapStateToProps)(({location}) => {
     case 'HOME':
     case 'PROBLEMS':
     case 'PROBLEM':
-        return <div style={style}>
+        return (<div style={style}>
             <ProblemRoutes />
-        </div>;
+        </div>);
     case 'HELP':
-        return <Help/>;
+        return <Help />;
     default:
         return <h1>Not Found</h1>;
     }

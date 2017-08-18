@@ -52,9 +52,9 @@ function* loadList(request) {
 /* istanbul ignore next */
 const learnupletSagas = function* learnupletSagas() {
     yield [
-        /** ***********/
+        /** ********** */
         /* learnuplet */
-        /** ***********/
+        /** ********** */
         takeEvery(actionTypes.list.REQUEST, loadList),
     ];
 };

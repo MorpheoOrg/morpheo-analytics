@@ -81,12 +81,12 @@ class LearnupletChart extends React.Component {
             <CardContent>
                 <h1>{`Performance of algo ${id}`}</h1>
                 <LineChart width={600} height={300} data={data} margin={chart}>
-                    <XAxis dataKey="name" label="Number of trained data"/>
-                    <YAxis label="Perf"/>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <Tooltip/>
-                    <Legend/>
-                    <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot}/>
+                    <XAxis dataKey="name" label="Number of trained data" />
+                    <YAxis label="Perf" />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Tooltip />
+                    <Legend />
+                    <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot} />
                 </LineChart>
             </CardContent>
         </Card>);
@@ -96,6 +96,7 @@ class LearnupletChart extends React.Component {
 LearnupletChart.propTypes = {
     loadLearnuplet: PropTypes.func,
     id: PropTypes.string,
+    data: PropTypes.shape({}),
 };
 
 const noop = () => {
@@ -104,19 +105,14 @@ const noop = () => {
 LearnupletChart.defaultProps = {
     loadLearnuplet: noop,
     id: null,
+    data: null,
 };
 
-function mapStateToProps(state, ownProps) {
-    return {
-        ...ownProps,
-    };
-}
+const mapStateToProps = (state, ownProps) => ownProps;
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        loadLearnuplet: learnupletActions.list.request,
-    }, dispatch);
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    loadLearnuplet: learnupletActions.list.request,
+}, dispatch);
 
 // only update if data is not deep equal, reference of array can be different
 export default connect(mapStateToProps, mapDispatchToProps)(shouldUpdate((props, nextProps) => !isEqual(props.data, nextProps.data))(LearnupletChart));

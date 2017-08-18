@@ -71,7 +71,7 @@ export const postAlgo = (payload) => {
                 return response.text().then(result =>
                     Promise.reject({
                         body: new Error(result),
-                        status: response.status,  // read status
+                        status: response.status, // read status
                     }),
                 );
             }
@@ -104,7 +104,7 @@ export const postAlgoToOrchestrator = (payload) => {
                 return response.text().then(result =>
                     Promise.reject({
                         body: new Error(result),
-                        status: response.status,  // read status
+                        status: response.status, // read status
                     }),
                 );
             }
@@ -123,13 +123,13 @@ const getHeaders = jwt => ({
 
 export const fetchList = (url, jwt) => fetch(url, {
     headers: getHeaders(jwt),
-        // Allows API to set http-only cookies with AJAX calls
-        // @see http://www.redotheweb.com/2015/11/09/api-security.html
-        // credentials: 'include',
+    // Allows API to set http-only cookies with AJAX calls
+    // @see http://www.redotheweb.com/2015/11/09/api-security.html
+    // credentials: 'include',
     mode: 'cors',
 })
-        .then(response => handleResponse(response))
-        .then(json => ({list: json}), error => ({error}));
+    .then(response => handleResponse(response))
+    .then(json => ({list: json}), error => ({error}));
 
 export const fetchAlgos = (get_parameters) => {
     const url = `${ORCHESTRATOR_API_URL}/algo${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;

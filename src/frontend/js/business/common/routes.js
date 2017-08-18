@@ -38,7 +38,7 @@ import universal from 'react-universal-component';
 import BubbleLoading from './components/presentation/loaders/bubble';
 
 const App = universal(props => import('./components/App'), {
-    loading: <BubbleLoading/>,
+    loading: <BubbleLoading />,
 });
 
-export default props => <App/>;
+export default props => <App />;

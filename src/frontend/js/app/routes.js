@@ -46,7 +46,7 @@ const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
 
 const Base = ({children}) =>
     (<div>
-        <CommonRoutes/>
+        <CommonRoutes />
         {children}
     </div>);
 
@@ -59,6 +59,6 @@ Base.propTypes = {
 
 export default connect(mapStateToProps)(({location}) =>
     Object.keys(routesMaps).includes(location.type) ? <Base>
-        <ModelsRoutes/>
+        <ModelsRoutes />
     </Base> : <h1>Not Found</h1>,
 );

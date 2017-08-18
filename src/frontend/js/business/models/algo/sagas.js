@@ -127,9 +127,9 @@ export const loadList = (actions, fetchList) =>
 /* istanbul ignore next */
 const algoSagas = function* algoSagas() {
     yield [
-        /** ***********/
+        /** ********** */
         /* algo */
-        /** ***********/
+        /** ********** */
 
         takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchAlgosApi)),
 

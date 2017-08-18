@@ -34,6 +34,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import universal from 'react-universal-component';
 import {injectReducer} from 'redux-injector';
 import {injectSaga} from 'redux-sagas-injector';
@@ -98,10 +99,14 @@ const List = universal(import('./components/list/preload'), {
                 }));
             }
         }
-    }
+    },
 });
 
-const Routes = ({location}) => location.payload.id ? <Detail/> : <List/>;
+const Routes = ({location}) => location.payload.id ? <Detail /> : <List />;
+
+Routes.propTypes = {
+    location: PropTypes.shape({}).isRequired,
+};
 
 const mapStateToProps = ({location}) => ({location});
 

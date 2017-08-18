@@ -82,10 +82,10 @@ export default (state = initialState, {type, payload}) => {
         return {
             ...state,
             results: Object.keys(state.results).reduce((previous, current) =>
-                    ({
-                        ...previous,
-                        [current]: state.results[current].filter(o => o.id !== payload),
-                    })
+                ({
+                    ...previous,
+                    [current]: state.results[current].filter(o => o.id !== payload),
+                })
                 , {}),
             loading: false,
         };

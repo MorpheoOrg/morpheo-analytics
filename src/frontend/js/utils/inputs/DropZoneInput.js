@@ -36,7 +36,6 @@ class DropZoneInput extends Component {
                 this.dropzone = dropzone;
             },
             addedfile: (file) => {
-
                 this.files = this.files || [];
                 this.files.push(file);
 
@@ -62,7 +61,6 @@ class DropZoneInput extends Component {
     }
 
     render() {
-
         return (<DropzoneComponent
             {...this.props.input}
             config={this.config}
@@ -75,10 +73,19 @@ class DropZoneInput extends Component {
 DropZoneInput.propTypes = {
     config: PropTypes.shape({}),
     djsConfig: PropTypes.shape({}),
-    onDrop: PropTypes.func,
+    onConfirm: PropTypes.func,
     input: PropTypes.shape({
         onChange: PropTypes.func,
     }),
+};
+
+const noop = () => {};
+
+DropZoneInput.defaultProps = {
+    config: null,
+    djsConfig: null,
+    onConfirm: noop,
+    input: PropTypes.shape({}),
 };
 
 export default DropZoneInput;

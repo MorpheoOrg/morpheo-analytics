@@ -51,7 +51,7 @@ class App extends React.PureComponent {
         const {error} = this.props;
         return (
             <div>
-                <LeftMenu/>
+                <LeftMenu />
                 <ErrorModal
                     isVisible={error !== ''}
                     error={error}
@@ -64,12 +64,12 @@ class App extends React.PureComponent {
 
 App.propTypes = {
     onClose: PropTypes.func,
-    general: PropTypes.shape({}),
+    error: PropTypes.shape({}),
 };
 
 App.defaultProps = {
     onClose: null,
-    general: null,
+    error: null,
 };
 
 
@@ -77,7 +77,7 @@ const mapStateToProps = ({general}, ownProps) => ({
     error: general.error,
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
+const mapDispatchToProps = dispatch => bindActionCreators({
     onClose: actions.error.set,
 }, dispatch);
 

@@ -69,15 +69,13 @@ export default actionTypes =>
         case actionTypes.item.post.SUCCESS:
             return {
                 ...state,
-                results: Object.keys(state.results).reduce((p, c) => {
-                    return {
-                        ...p,
-                        ...(c === payload.problem ?
-                            {[c] : [...state.results[c], payload]} :
-                            {[c]: state.results[c]}
-                            )
-                    };
-                }, {})
+                results: Object.keys(state.results).reduce((p, c) => ({
+                    ...p,
+                    ...(c === payload.problem ?
+                        {[c]: [...state.results[c], payload]} :
+                        {[c]: state.results[c]}
+                    ),
+                }), {}),
             };
         default:
             return state;

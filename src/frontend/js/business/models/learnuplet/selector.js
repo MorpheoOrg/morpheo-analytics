@@ -48,35 +48,31 @@ export const getError = createSelector([error],
 
 export const getLChartData = createDeepEqualSelector([results],
     results => !isEmpty(results) ? Object.keys(results).reduce((p, c) => ({
-            ...p,
-            [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
-                    [...previous, {
-                        name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
-                        perf: current.perf,
-                    }],
-                []),
-        }),
-        {}) : {},
+        ...p,
+        [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
+            [...previous, {
+                name: current.train_data.length + (previous.length ? previous[previous.length - 1].name : 0),
+                perf: current.perf,
+            }],
+        []),
+    }),
+    {}) : {},
 );
 
 const flattenAlgos = createDeepEqualSelector([algo],
-    algo => Object.keys(algo).reduce((p, c) => {
-        return [...p, ...algo[c]];
-    }, []),
+    algo => Object.keys(algo).reduce((p, c) => [...p, ...algo[c]], []),
 );
 
 export const getBestPerf = createDeepEqualSelector([problem, results, flattenAlgos],
-    (problem, results, algo) => {
-        return !isEmpty(results) ? problem.reduce((prev, cur) => {
-            const learnuplets = Object.keys(results).filter(x => algo.filter(o => o.problem === cur.uuid).map(o => o.uuid).includes(x));
-            return {
-                ...prev,
-                [cur.uuid]: sortBy(learnuplets, [o => Math.max(...results[o].map(x => x.perf))])
-                    .reverse()
-                    .map(o => algo.find(x => x.uuid === o)),
-            };
-        }, {}) : {};
-    });
+    (problem, results, algo) => !isEmpty(results) ? problem.reduce((prev, cur) => {
+        const learnuplets = Object.keys(results).filter(x => algo.filter(o => o.problem === cur.uuid).map(o => o.uuid).includes(x));
+        return {
+            ...prev,
+            [cur.uuid]: sortBy(learnuplets, [o => Math.max(...results[o].map(x => x.perf))])
+                .reverse()
+                .map(o => algo.find(x => x.uuid === o)),
+        };
+    }, {}) : {});
 
 export default {
     getError,

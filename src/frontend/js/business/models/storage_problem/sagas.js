@@ -34,8 +34,7 @@
  */
 /* globals */
 
-import {call, put, select, takeEvery} from 'redux-saga/effects';
-import queryString from 'query-string';
+import {call, put, takeEvery} from 'redux-saga/effects';
 import generalActions from '../../common/actions';
 
 import actions, {actionTypes} from './actions';
@@ -45,11 +44,6 @@ import {
 
 export const loadItem = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {
-        const state = yield select(),
-            location = state.location,
-            q = location && location.search ? {...query, ...queryString.parse(location.search)} : query;
-
-
         const {error, item} = yield call(fetchItem, request.payload);
 
         if (error) {

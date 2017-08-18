@@ -41,7 +41,7 @@ import {createInjectSagasStore, sagaMiddleware} from 'redux-sagas-injector';
 import options from '../options';
 import rootSaga from '../sagas';
 import rootReducer from '../reducers';
-import history from '../history/prod';
+import {history} from '../history/prod';
 import routesMap from '../routesMap';
 
 
