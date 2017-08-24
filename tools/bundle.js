@@ -8,7 +8,7 @@
  */
 
 import webpack from 'webpack';
-import webpackConfig from '../webpack/webpack.config';
+import webpackConfig from '../webpack/client';
 
 
 const handleError = (resolve, reject) =>
