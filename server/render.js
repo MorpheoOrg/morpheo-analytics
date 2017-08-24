@@ -1,29 +1,37 @@
-import React from 'react'
-import ReactDOM from 'react-dom/server'
-import { Provider } from 'react-redux'
-import { flushChunkNames } from 'react-universal-component/server'
-import flushChunks from 'webpack-flush-chunks'
-import configureStore from './configureStore'
+import React from 'react';
+import ReactDOM from 'react-dom/server';
+import {Provider} from 'react-redux';
+import {flushChunkNames} from 'react-universal-component/server';
+import flushChunks from 'webpack-flush-chunks';
+import configureStore from './configureStore';
 import {MuiThemeProvider} from 'material-ui/styles';
 
 import theme from '../src/common/theme/index';
 import App from '../src/common/routes';
 
-export default ({ clientStats }) => async (req, res, next) => {
-  const store = await configureStore(req, res)
-  if (!store) return // no store means redirect was already served
+const createApp = (App, store) =>
+    <Provider store={store}>
+        <MuiThemeProvider theme={theme}>
+            <App/>
+        </MuiThemeProvider>
+    </Provider>;
 
-  const app = createApp(App, store)
-  const appString = ReactDOM.renderToString(app)
-  const stateJson = JSON.stringify(store.getState())
-  const chunkNames = flushChunkNames()
-  const { js, styles, cssHash } = flushChunks(clientStats, { chunkNames })
 
-  console.log('REQUESTED PATH:', req.path)
-  console.log('CHUNK NAMES', chunkNames)
+export default ({clientStats}) => async (req, res, next) => {
+    const store = await configureStore(req, res);
+    if (!store) return; // no store means redirect was already served
 
-  return res.send(
-    `<!doctype html>
+    const app = createApp(App, store);
+    const appString = ReactDOM.renderToString(app);
+    const stateJson = JSON.stringify(store.getState());
+    const chunkNames = flushChunkNames();
+    const {js, styles, cssHash} = flushChunks(clientStats, {chunkNames});
+
+    console.log('REQUESTED PATH:', req.path);
+    console.log('CHUNK NAMES', chunkNames);
+
+    return res.send(
+        `<!doctype html>
       <html>
         <head>
           <meta charset="utf-8">
@@ -40,13 +48,6 @@ export default ({ clientStats }) => async (req, res, next) => {
           <script type='text/javascript' src='/vendors.js'></script>
           ${js}
         </body>
-      </html>`
-  )
+      </html>`,
+    );
 }
-
-const createApp = (App, store) =>
-    <Provider store={store}>
-        <MuiThemeProvider theme={theme}>
-            <App/>
-        </MuiThemeProvider>
-    </Provider>;

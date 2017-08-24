@@ -51,13 +51,8 @@ import {
     storeLocalUser as storeLocalUserApi,
 } from './api';
 
-
-console.log('load user sagas');
-
 export const signIn = (fetchSignIn, storeLocalUser) =>
     function* signInSaga({payload: {uuid, previousRoute}}) {
-
-        console.log('sagas');
 
         const {error, res} = yield call(fetchSignIn, uuid);
 

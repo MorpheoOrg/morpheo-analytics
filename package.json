@@ -1,6 +1,6 @@
 {
     "engines": {
-        "node": ">=7.4.0",
+        "node": ">=8.4.0",
         "npm": ">=5.3.0"
     },
     "repository": {
@@ -8,7 +8,7 @@
         "url": "https://github.com/MorpheoOrg/morpheo-notebook"
     },
     "dependencies": {
-        "babel-polyfill": "6.23.0",
+        "babel-polyfill": "6.26.0",
         "babel-runtime": "6.26.0",
         "date-fns": "1.28.5",
         "ends-with": "1.0.1",
@@ -48,22 +48,23 @@
     "devDependencies": {
         "autodll-webpack-plugin": "0.2.1",
         "autoprefixer": "7.1.2",
-        "babel-cli": "6.24.1",
-        "babel-core": "6.25.0",
+        "babel-cli": "6.26.0",
+        "babel-core": "6.26.0",
         "babel-eslint": "7.2.3",
-        "babel-loader": "7.1.1",
+        "babel-loader": "7.1.2",
         "babel-plugin-add-module-exports": "0.2.1",
         "babel-plugin-date-fns": "0.1.0",
         "babel-plugin-lodash": "3.2.11",
+        "babel-plugin-module-resolver": "2.6.2",
         "babel-plugin-transform-react-constant-elements": "6.23.0",
         "babel-plugin-transform-react-inline-elements": "6.22.0",
         "babel-plugin-transform-react-remove-prop-types": "0.4.8",
         "babel-plugin-transform-runtime": "6.23.0",
-        "babel-plugin-universal-import": "1.2.6",
+        "babel-plugin-universal-import": "1.2.7",
         "babel-preset-es2015": "6.24.1",
         "babel-preset-react": "6.24.1",
         "babel-preset-stage-0": "6.24.1",
-        "babel-register": "6.24.1",
+        "babel-register": "6.26.0",
         "babel-watch": "2.0.7",
         "browser-sync": "2.18.13",
         "browser-sync-webpack-plugin": "1.2.0",
@@ -117,7 +118,7 @@
         "sinon": "2.4.1",
         "sinon-chai": "2.12.0",
         "stats-webpack-plugin": "0.6.1",
-        "webpack": "3.5.4",
+        "webpack": "3.5.5",
         "webpack-dev-middleware": "1.12.0",
         "webpack-flush-chunks": "1.1.23",
         "webpack-hot-middleware": "2.18.2",
