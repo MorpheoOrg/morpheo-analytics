@@ -34,9 +34,10 @@
  */
 
 import {connectRoutes} from 'redux-first-router';
-import {applyMiddleware, compose, combineReducers} from 'redux';
+import {applyMiddleware, compose} from 'redux';
 
-import {createInjectSagasStore, sagaMiddleware} from 'redux-sagas-injector';
+import {createInjectSagasStore, sagaMiddleware, reloadSaga} from 'redux-sagas-injector';
+import {combineReducersRecurse} from 'redux-injector';
 
 import options from '../options';
 import rootSaga from '../sagas';
@@ -57,16 +58,20 @@ const configureStore = (history, initialState) => {
         DevTools.instrument(),
     ];
 
-    const reducers = combineReducers({...rootReducer, location: reducer});
-    const store = createInjectSagasStore(reducers, rootSaga, initialState, compose(enhancer, ...enhancers));
+    const reducers = {...rootReducer, location: reducer};
+    const store = createInjectSagasStore({rootSaga}, reducers, initialState, compose(enhancer, ...enhancers));
     initialDispatch();
 
     // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
     if (module.hot) {
         module.hot.accept('../reducer', () => {
-            const rootReducer = require('../reducer');
-            //injectReducer('settings', module.default(localStorage));
-            store.replaceReducer(combineReducers({...rootReducer, location: reducer}));
+            const rootReducer = require('../reducer').default;
+            const replacedReducers = {...store.injectedReducers, ...rootReducer, location: reducer};
+            store.replaceReducer(combineReducersRecurse(replacedReducers));
+        });
+
+        module.hot.accept('../sagas', () => {
+            reloadSaga('rootSaga', require('../sagas').default);
         });
     }
 

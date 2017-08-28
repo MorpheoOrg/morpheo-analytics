@@ -46,31 +46,18 @@ import theme from '../../../css/variables';
 
 // second way with onLoad
 const Universal = universal(import('./preload'), {
-    loading: <div>Loading notebook...</div>,
-    onLoad: (module) => {
-        injectSaga('notebook', module.notebookSagas);
-        injectReducer('notebook', module.notebookReducer);
-        injectReducer('settings', module.settingsReducer(localStorage));
-
-        // Configure hot module replacement for the reducer
-        if (process.env.NODE_ENV !== 'production') {
-            if (module.hot) {
-                module.hot.accept('./reducers/index', () => import('./reducers/index').then((module) => {
-                    injectReducer('notebook', module.default);
-                }));
-
-                module.hot.accept('../settings/reducer', () => import('../settings/reducer').then((module) => {
-                    injectReducer('settings', module.default(localStorage));
-                }));
-            }
-        }
+    loading: <PulseLoader size={6} color={theme['primary-color']}/>,
+    onLoad: (preload) => {
+        injectSaga('notebook', preload.notebookSagas);
+        injectSaga('settings', preload.settingsSagas);
+        injectReducer('notebook', preload.notebookReducer);
+        injectReducer('settings', preload.settingsReducer(localStorage));
     },
-    // key: 'default' -- this is the default, and what the component will be, i.e. module.default
 });
 
 const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
 
 export default connect(mapStateToProps)((props) => {
     const {user} = props;
-    return user && !user.authenticated ? null : <Universal />;
+    return user && !user.authenticated ? null : <Universal/>;
 });

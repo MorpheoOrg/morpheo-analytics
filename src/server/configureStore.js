@@ -1,6 +1,6 @@
 import createHistory from 'history/createMemoryHistory';
 import {NOT_FOUND} from 'redux-first-router';
-import configureStore from '../src/common/configureStore/index';
+import configureStore from '../common/configureStore/index';
 
 export default async (req, res) => {
     // TODO set user reducer

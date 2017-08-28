@@ -42,7 +42,6 @@ import {
     save as saveApi,
 } from './api';
 
-
 function* save({payload}) {
     const {error, item} = yield call(saveApi, payload);
 
@@ -58,9 +57,9 @@ function* save({payload}) {
 
 /* istanbul ignore next */
 const sagas = function* sagas() {
-    yield all([
+    yield [
         takeLatest(actionTypes.save.REQUEST, save),
-    ]);
+    ];
 };
 
 

@@ -41,7 +41,7 @@ import localStorage from './localStorage';
 
 const initialState = {error: ''};
 
-const general = (state = initialState, {type, payload}) => {
+export const general = (state = initialState, {type, payload}) => {
     switch (type) {
     case actionTypes.error.SET:
         return {

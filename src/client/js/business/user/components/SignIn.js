@@ -73,9 +73,8 @@ const style = {
 };
 
 class SignIn extends React.Component {
-    signIn = (values) => {
-        console.log(values);
-        this.props.signIn(this.props.location.prev, {uuid: values.uuid});
+    signIn = ({uuid}) => {
+        this.props.signIn({uuid, previousRoute: this.props.location.prev});
     };
 
     render() {

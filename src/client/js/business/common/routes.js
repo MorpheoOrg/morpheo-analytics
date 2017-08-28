@@ -47,28 +47,17 @@ import theme from '../../../css/variables';
 const SignOut = universal(
     props => import('./components/SignOut'),
     {
-        loading: <div>Loading signout...</div>,
+        loading:  <PulseLoader size={6} color={theme['primary-color']}/>,
     });
 
 const Konami = universal(
     props => import(/* webpackChunkName: 'preload konami for kernel' */'./preload'),
     {
-        loading: <div>Loading Konami...</div>,
-
+        loading: <PulseLoader size={6} color={theme['primary-color']}/>,
         //TODO move this preloading after login
-        onLoad: (module, {isSync, isServer}, props, context) => {
-
-            injectSaga('kernel', module.sagas);
-            injectReducer('kernel', module.reducers(localStorage));
-
-            // Configure hot module replacement for the reducer
-            if (process.env.NODE_ENV !== 'production') {
-                if (module.hot) {
-                    module.hot.accept('../kernel/reducer', () => import('../kernel/reducer').then((module) => {
-                        injectReducer('kernel', module.default(localStorage));
-                    }));
-                }
-            }
+        onLoad: (preload, {isSync, isServer}, props, context) => {
+            injectSaga('kernel', preload.sagas);
+            injectReducer('kernel', preload.reducers(localStorage));
         },
     });
 
@@ -76,7 +65,7 @@ const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
 
 export default connect(mapStateToProps)((props) => {
     const {user} = props;
-    return user && user.authenticated ? null : <div>
+    return user && !user.authenticated ? null : <div>
         <SignOut />
         <Konami />
     </div>;

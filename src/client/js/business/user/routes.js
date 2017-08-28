@@ -35,19 +35,18 @@
 
 import React from 'react';
 import universal from 'react-universal-component';
-//import {PulseLoader} from 'react-spinners';
+import PulseLoader from '../common/components/presentation/loaders/pulseLoader';
 import {connect} from 'react-redux';
 
 import theme from '../../../css/variables';
 
-const Universal = universal(import('./components/SignIn'),
-    {
-        loading: <div>Loading sign in...</div>,
-    });
+const Universal = universal(import('./components/SignIn'), {
+    loading: <PulseLoader size={6} color={theme['primary-color']}/>,
+});
 
 const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
 
 export default connect(mapStateToProps)((props) => {
     const {user} = props;
-    return user && user.authenticated ? null : <Universal />;
+    return user && user.authenticated ? null : <Universal/>;
 });

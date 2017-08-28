@@ -6,8 +6,8 @@ import flushChunks from 'webpack-flush-chunks';
 import configureStore from './configureStore';
 import {MuiThemeProvider} from 'material-ui/styles';
 
-import theme from '../src/common/theme/index';
-import App from '../src/common/routes';
+import theme from '../common/theme/index';
+import App from '../common/routes';
 
 const createApp = (App, store) =>
     <Provider store={store}>

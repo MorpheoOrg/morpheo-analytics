@@ -1,5 +1,4 @@
 const webpack = require('webpack')
-const config = require('config')
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')

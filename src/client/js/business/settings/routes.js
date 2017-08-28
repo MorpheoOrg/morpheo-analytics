@@ -36,37 +36,25 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import universal from 'react-universal-component';
-import {injectSaga} from 'redux-sagas-injector';
+import {injectSaga,} from 'redux-sagas-injector';
 import {injectReducer} from 'redux-injector';
 
 import PulseLoader from '../common/components/presentation/loaders/pulseLoader';
-
-import localStorage from '../../../../common/localStorage';
-
 import theme from '../../../css/variables';
+import localStorage from '../../../../common/localStorage';
 
 // second way with onLoad
 const Universal = universal(import(/* webpackChunkName: 'preload settings' */'./preload'), {
     loading: <PulseLoader size={6} color={theme['primary-color']}/>,
-    onLoad: (module, {isSync, isServer}, props, context) => {
-        injectReducer('settings', module.reducer(localStorage));
-        injectSaga('settings', module.sagas);
-
-        // Configure hot module replacement for the reducer
-        if (process.env.NODE_ENV !== 'production') {
-            if (module.hot) {
-                module.hot.accept('./reducer', () => import('./reducer').then((module) => {
-                    injectReducer('settings', module.default(localStorage));
-                }));
-            }
-        }
+    onLoad: (preload, {isSync, isServer}, props, context) => {
+        injectReducer('settings', preload.reducer(localStorage));
+        injectSaga('settings', preload.sagas);
     },
-    // key: 'default' -- this is the default, and what the component will be, i.e. module.default
 });
 
 const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
 
 export default connect(mapStateToProps)((props) => {
     const {user} = props;
-    return user && user.authenticated ? null : <Universal />;
+    return user && !user.authenticated ? null : <Universal />;
 });

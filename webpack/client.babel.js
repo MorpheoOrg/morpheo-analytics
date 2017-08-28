@@ -19,7 +19,7 @@ module.exports = {
         'babel-polyfill',
         'fetch-everywhere',
         ...(DEVELOPMENT ? [
-            'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false',
+            'webpack-hot-middleware/client',
             'react-hot-loader/patch',
         ]: []),
         path.resolve(__dirname, '../src/client/js/index.js'),
@@ -42,7 +42,7 @@ module.exports = {
     output: {
         filename: `[name]${PRODUCTION ? '-[hash:6]' : ''}.js`,
         chunkFilename: '[name].js',
-        path: path.resolve(__dirname, '../buildClient'),
+        path: path.resolve(__dirname, '../build/client'),
         publicPath: DEBUG ? DEBUG_BASE_NAME : PRODUCTION_BASE_NAME,
     },
     // devtool: 'source-map',

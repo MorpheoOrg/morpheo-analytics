@@ -131,10 +131,10 @@ export const connectKernel = fetchConnectKernel =>
 
 /* istanbul ignore next */
 const sagas = function* sagas() {
-    yield all([
+    yield [
         takeLatest(actionTypes.create.REQUEST, createKernel(fetchCreateKernelApi)),
         connectKernel(fetchConnectKernelApi)(),
-    ]);
+    ];
 };
 
 

@@ -36,7 +36,7 @@
 /* globals atob */
 
 import {redirect} from 'redux-first-router';
-import {call, put, takeLatest, all} from 'redux-saga/effects';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
 import {
     signIn as signInActions,
@@ -53,7 +53,6 @@ import {
 
 export const signIn = (fetchSignIn, storeLocalUser) =>
     function* signInSaga({payload: {uuid, previousRoute}}) {
-
         const {error, res} = yield call(fetchSignIn, uuid);
 
         if (error) {
@@ -75,6 +74,7 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
 
 export const signOut = removeLocalUser =>
     function* signOutSaga() {
+
         yield call(removeLocalUser);
         yield put(signOutActions.success());
         // TODO should be handle in settings reducer
@@ -85,10 +85,10 @@ export const signOut = removeLocalUser =>
 
 /* istanbul ignore next */
 const sagas = function* sagas() {
-    yield all([
+    yield [
         takeLatest(actionTypes.signIn.REQUEST, signIn(fetchSignInApi, storeLocalUserApi)),
         takeLatest(actionTypes.signOut.REQUEST, signOut(removeLocalUserApi)),
-    ]);
+    ];
 };
 
 
