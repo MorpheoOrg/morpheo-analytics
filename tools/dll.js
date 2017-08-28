@@ -1,5 +1,5 @@
 import webpack from 'webpack';
-import webpackConfig from '../webpack/webpack.dll.config';
+import webpackConfig from '../webpack/dll';
 
 function dll() {
     return new Promise((resolve, reject) => {
