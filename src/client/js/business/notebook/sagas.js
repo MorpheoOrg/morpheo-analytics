@@ -57,9 +57,9 @@ function* save({payload}) {
 
 /* istanbul ignore next */
 const sagas = function* sagas() {
-    yield [
+    yield all([
         takeLatest(actionTypes.save.REQUEST, save),
-    ];
+    ]);
 };
 
 

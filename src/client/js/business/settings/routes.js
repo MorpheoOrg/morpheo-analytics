@@ -47,8 +47,8 @@ import localStorage from '../../../../common/localStorage';
 const Universal = universal(import(/* webpackChunkName: 'preload settings' */'./preload'), {
     loading: <PulseLoader size={6} color={theme['primary-color']}/>,
     onLoad: (preload, {isSync, isServer}, props, context) => {
-        injectReducer('settings', preload.reducer(localStorage));
         injectSaga('settings', preload.sagas);
+        injectReducer('settings', preload.reducer(localStorage));
     },
 });
 

@@ -8,13 +8,11 @@ import {shouldUpdate} from 'recompose';
 import {signOut as signOutActions} from '../../user/actions';
 
 const style = {
-    signout: {
-        float: 'right',
-    },
+    float: 'right',
 };
 
 const Common = ({signOut}) =>
-    <Button style={style.signout} raised onClick={signOut}>Signout</Button>;
+    <Button style={style} raised onClick={signOut}>Signout</Button>;
 
 Common.propTypes = {
     signOut: PropTypes.func.isRequired,

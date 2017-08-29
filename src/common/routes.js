@@ -40,6 +40,7 @@ import {connect} from 'react-redux';
 import UserRoute from '../client/js/business/user/routes';
 import CommonRoutes from '../client/js/business/common/routes';
 import NotebookRoutes from '../client/js/business/notebook/routes';
+import KernelRoutes from '../client/js/business/kernel/routes';
 import SettingsRoutes from '../client/js/business/settings/routes';
 
 const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
@@ -61,8 +62,9 @@ export default connect(mapStateToProps)(({location, store}) => {
     switch (location.type) {
     case 'HOME':
         return (<Base>
-            <SettingsRoutes store={store}/>
+            <SettingsRoutes/>
             <NotebookRoutes/>
+            <KernelRoutes/>
             <UserRoute/>
         </Base>);
     case 'HELP':

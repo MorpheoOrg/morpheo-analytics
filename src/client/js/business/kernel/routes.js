@@ -44,20 +44,19 @@ import localStorage from '../../../../common/localStorage';
 
 import theme from '../../../css/variables';
 
-// second way with onLoad
-const Universal = universal(import('./preload'), {
-    loading: <PulseLoader size={6} color={theme['primary-color']}/>,
-    onLoad: (preload) => {
-        injectSaga('notebook', preload.notebookSagas);
-        injectSaga('settings', preload.settingsSagas);
-        injectReducer('notebook', preload.notebookReducer);
-        injectReducer('settings', preload.settingsReducer(localStorage));
-    },
-});
+const Kernel = universal(
+    props => import(/* webpackChunkName: 'preload for kernel' */'./preload'),
+    {
+        loading: <PulseLoader size={6} color={theme['primary-color']}/>,
+        onLoad: (preload, {isSync, isServer}, props, context) => {
+            injectSaga('kernel', preload.sagas);
+            injectReducer('kernel', preload.reducer(localStorage));
+        },
+    });
 
 const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
 
 export default connect(mapStateToProps)((props) => {
     const {user} = props;
-    return user && user.authenticated && typeof window !== 'undefined' ? <Universal/> : null;
+    return user && user.authenticated && typeof window !== 'undefined' ?  <Kernel /> : null;
 });

@@ -34,30 +34,41 @@
  */
 
 import React from 'react';
-import universal from 'react-universal-component';
-import {injectReducer} from 'redux-injector';
-import {injectSaga} from 'redux-sagas-injector';
-import PulseLoader from '../common/components/presentation/loaders/pulseLoader';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {create} from '../../kernel/actions';
 
-import localStorage from '../../../../common/localStorage';
+class Kernel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoidXNlcm5hbWUifQ.PIpM3RZYZnHUrHGBPfzISIrRaxU7284JctfQV9gympU';
+    }
 
-import theme from '../../../css/variables';
+    componentWillMount() {
+        this.props.connect({jwt: this.jwt});
+    }
 
-// second way with onLoad
-const Universal = universal(import('./preload'), {
-    loading: <PulseLoader size={6} color={theme['primary-color']}/>,
-    onLoad: (preload) => {
-        injectSaga('notebook', preload.notebookSagas);
-        injectSaga('settings', preload.settingsSagas);
-        injectReducer('notebook', preload.notebookReducer);
-        injectReducer('settings', preload.settingsReducer(localStorage));
-    },
-});
+    render() {
+        return null;
+    }
+}
 
-const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
+const noop = () => {
+};
 
-export default connect(mapStateToProps)((props) => {
-    const {user} = props;
-    return user && user.authenticated && typeof window !== 'undefined' ? <Universal/> : null;
-});
+Kernel.propTypes = {
+    connect: PropTypes.func,
+};
+
+Kernel.defaultProps = {
+    connect: noop,
+};
+
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    connect: create.request,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Kernel);

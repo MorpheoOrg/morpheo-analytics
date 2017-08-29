@@ -74,7 +74,7 @@ export default function (localStorage) {
                 authenticated: false,
                 error: payload,
                 loading: false,
-                token: null,
+                access_token: null,
                 // exp: null,
                 registered: false,
             };
@@ -85,7 +85,7 @@ export default function (localStorage) {
                 uuid: '',
                 authenticated: false,
                 has_permission: false,
-                token: null,
+                access_token: null,
                 loading: false,
                 // exp: null,
             };

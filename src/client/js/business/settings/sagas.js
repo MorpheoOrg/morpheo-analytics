@@ -56,11 +56,11 @@ const storeSettings = settings =>
 
 /* istanbul ignore next */
 const sagas = function* sagas() {
-    yield [
+    yield all([
         takeLatest(actionTypes.preferred_language.SET, storeSettings('preferred_language')),
         takeLatest(actionTypes.theme.SET, storeSettings('theme')),
         takeLatest(actionTypes.line_numbers.SET, storeSettings('line_numbers')),
-    ];
+    ]);
 };
 
 

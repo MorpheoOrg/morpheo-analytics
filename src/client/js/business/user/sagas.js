@@ -36,7 +36,7 @@
 /* globals atob */
 
 import {redirect} from 'redux-first-router';
-import {call, put, takeLatest} from 'redux-saga/effects';
+import {call, put, takeLatest, all} from 'redux-saga/effects';
 
 import {
     signIn as signInActions,
@@ -47,6 +47,7 @@ import {actions as settingsActions} from '../settings/actions';
 
 import {
     fetchSignIn as fetchSignInApi,
+    fetchSignOut as fetchSignOutApi,
     removeLocalUser as removeLocalUserApi,
     storeLocalUser as storeLocalUserApi,
 } from './api';
@@ -65,30 +66,38 @@ export const signIn = (fetchSignIn, storeLocalUser) =>
             const {uuid} = JSON.parse(atob(access_token.split('.')[1]));
 
             yield call(storeLocalUser, {uuid, settings, access_token});
-            yield put(signInActions.success({uuid}));
+            yield put(signInActions.success({uuid, access_token}));
             yield put(settingsActions.update(...settings));
 
             yield put(redirect(previousRoute));
         }
     };
 
-export const signOut = removeLocalUser =>
+export const signOut = (fetchSignOut, removeLocalUser) =>
     function* signOutSaga() {
 
-        yield call(removeLocalUser);
-        yield put(signOutActions.success());
-        // TODO should be handle in settings reducer
-        yield put(settingsActions.update({theme: null, preferred_language: null, keybindings: null}));
+        const {error, res} = yield call(fetchSignOut);
+        if (error) {
+            console.error(error);
+            yield put(signInActions.failure(error));
+            // yield put(signInActions.failure(new Error('{"message": "Unauthorized"}')));
+        }
+        else {
+            yield call(removeLocalUser);
+            yield put(signOutActions.success());
+            // TODO should be handle in settings reducer
+            yield put(settingsActions.update({theme: null, preferred_language: null, keybindings: null}));
 
-        yield put(redirect({type: 'HOME'}));
+            yield put(redirect({type: 'HOME'}));
+        }
     };
 
 /* istanbul ignore next */
 const sagas = function* sagas() {
-    yield [
+    yield all([
         takeLatest(actionTypes.signIn.REQUEST, signIn(fetchSignInApi, storeLocalUserApi)),
-        takeLatest(actionTypes.signOut.REQUEST, signOut(removeLocalUserApi)),
-    ];
+        takeLatest(actionTypes.signOut.REQUEST, signOut(fetchSignOutApi, removeLocalUserApi)),
+    ]);
 };
 
 

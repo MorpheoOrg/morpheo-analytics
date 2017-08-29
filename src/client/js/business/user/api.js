@@ -50,7 +50,35 @@ export function fetchSignIn(uuid) {
         }),
         // Allows API to set http-only cookies with AJAX calls
         // @see http://www.redotheweb.com/2015/11/09/api-security.html
-        // credentials: 'include',
+        credentials: 'include',
+        mode: 'cors',
+    })
+        .then((response) => {
+            if (!response.ok) {
+                return response.text().then(result => Promise.reject(new Error(result)));
+            }
+
+            return response.json();
+        })
+        .then(json => ({res: json}), error => ({
+            error,
+        }));
+}
+
+
+export function fetchSignOut() {
+    const basic = `${NOTEBOOK_SERVICES_USER}:${NOTEBOOK_SERVICES_PASSWORD}`;
+
+    return fetch(`${SERVICES_API_URL}/user/signout/`, {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
+            Authorization: `Basic ${btoa(basic)}`,
+        },
+        // Allows API to set http-only cookies with AJAX calls
+        // @see http://www.redotheweb.com/2015/11/09/api-security.html
+        credentials: 'include',
         mode: 'cors',
     })
         .then((response) => {

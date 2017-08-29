@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import config from 'config';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -11,6 +12,7 @@ import serverConfig from '../../webpack/server.babel';
 const publicPath = clientConfig.output.publicPath;
 const outputPath = clientConfig.output.path;
 const app = express();
+app.use(cookieParser());
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV));

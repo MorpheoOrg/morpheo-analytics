@@ -1,12 +1,24 @@
 import createHistory from 'history/createMemoryHistory';
 import {NOT_FOUND} from 'redux-first-router';
+import atob from 'atob';
+
 import configureStore from '../common/configureStore/index';
 
 export default async (req, res) => {
-    // TODO set user reducer
-    //const jwToken = req.cookies.jwToken; // see server/index.js to change jwToken
-    const jwToken = '';
-    const preLoadedState = {}; // onBeforeChange will authenticate using this
+    const access_token = req.cookies.access_token;
+
+    let preLoadedState;
+    console.log(access_token);
+    if (access_token && typeof access_token === 'string') {
+        let payload;
+        try {
+            payload = JSON.parse(atob(access_token.split('.')[1]));
+        }
+        catch (e) {
+            payload = {};
+        }
+        preLoadedState = {user: {access_token, authenticated: !!access_token, uuid: payload.uuid}}; // onBeforeChange will authenticate using this
+    }
 
     const history = createHistory({initialEntries: [req.path]});
     const {store, thunk} = configureStore(history, preLoadedState);

@@ -36,9 +36,9 @@
 /* globals API_SOCKET_URL, WebSocket */
 /* eslint no-param-reassign: ["error", { "props": false }] */
 /* eslint no-constant-condition: ["error", { "checkLoops": false }] */
+
 import {call, fork, put, take, takeLatest, all} from 'redux-saga/effects';
 import {eventChannel} from 'redux-saga';
-//import WebSocket from 'ws';
 import sendSagas from './send';
 
 import {
@@ -131,10 +131,10 @@ export const connectKernel = fetchConnectKernel =>
 
 /* istanbul ignore next */
 const sagas = function* sagas() {
-    yield [
+    yield all([
         takeLatest(actionTypes.create.REQUEST, createKernel(fetchCreateKernelApi)),
         connectKernel(fetchConnectKernelApi)(),
-    ];
+    ]);
 };
 
 

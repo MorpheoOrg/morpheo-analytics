@@ -34,27 +34,18 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 import Konami from 'react-konami';
 import Dialog, {DialogActions, DialogContent, DialogTitle} from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 
 import Morpheo from '!!file-loader!../../../../img/konami.jpg';
-import {create} from '../../kernel/actions';
 
-class App extends React.Component {
+class KonamiDialog extends React.Component {
     constructor(props) {
         super(props);
         this.displayModal = this.displayModal.bind(this);
         this.handleOk = this.handleOk.bind(this);
-        this.jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoidXNlcm5hbWUifQ.PIpM3RZYZnHUrHGBPfzISIrRaxU7284JctfQV9gympU';
         this.state = {visible: false};
-    }
-
-    componentWillMount() {
-        this.props.connect({jwt: this.jwt});
     }
 
     displayModal() {
@@ -87,21 +78,4 @@ class App extends React.Component {
     }
 }
 
-const noop = () => {
-};
-
-App.propTypes = {
-    connect: PropTypes.func,
-};
-
-App.defaultProps = {
-    connect: noop,
-};
-
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-    connect: create.request,
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default KonamiDialog;

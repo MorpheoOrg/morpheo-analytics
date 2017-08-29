@@ -35,12 +35,9 @@
 
 import React from 'react';
 import universal from 'react-universal-component';
-import {injectReducer} from 'redux-injector';
-import {injectSaga} from 'redux-sagas-injector';
 import PulseLoader from './components/presentation/loaders/pulseLoader';
 import {connect} from 'react-redux';
 
-import localStorage from '../../../../common/localStorage';
 
 import theme from '../../../css/variables';
 
@@ -50,15 +47,10 @@ const SignOut = universal(
         loading:  <PulseLoader size={6} color={theme['primary-color']}/>,
     });
 
-const Konami = universal(
-    props => import(/* webpackChunkName: 'preload konami for kernel' */'./preload'),
+const KonamiDialog = universal(
+    props => import('./components/KonamiDialog'),
     {
-        loading: <PulseLoader size={6} color={theme['primary-color']}/>,
-        //TODO move this preloading after login
-        onLoad: (preload, {isSync, isServer}, props, context) => {
-            injectSaga('kernel', preload.sagas);
-            injectReducer('kernel', preload.reducers(localStorage));
-        },
+        loading:  <PulseLoader size={6} color={theme['primary-color']}/>,
     });
 
 const mapStateToProps = ({user}, ownProps) => ({user, ...ownProps});
@@ -67,6 +59,6 @@ export default connect(mapStateToProps)((props) => {
     const {user} = props;
     return user && !user.authenticated ? null : <div>
         <SignOut />
-        <Konami />
+        <KonamiDialog />
     </div>;
 });
