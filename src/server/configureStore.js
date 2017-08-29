@@ -7,8 +7,9 @@ import configureStore from '../common/configureStore/index';
 export default async (req, res) => {
     const access_token = req.cookies.access_token;
 
+    // TODO: add preloaded settings
+
     let preLoadedState;
-    console.log(access_token);
     if (access_token && typeof access_token === 'string') {
         let payload;
         try {

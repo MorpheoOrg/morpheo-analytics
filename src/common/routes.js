@@ -58,7 +58,7 @@ Base.propTypes = {
     ]).isRequired,
 };
 
-export default connect(mapStateToProps)(({location, store}) => {
+export default connect(mapStateToProps)(({location}) => {
     switch (location.type) {
     case 'HOME':
         return (<Base>

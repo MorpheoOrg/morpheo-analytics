@@ -40,7 +40,7 @@ import {MuiThemeProvider} from 'material-ui/styles';
 
 import theme from '../../../../common/theme';
 import Routes from '../../../../common/routes';
-import history from '../history/prod';
+//import history from '../history/prod';
 
 // For using browserHistory with amazon s3, we need our own domain name (for not impacting customer and record)
 // and a custom routerHistory
@@ -61,19 +61,30 @@ import history from '../history/prod';
  </RoutingRules>
  */
 
-const Root = ({store}) => {
-    // handle custom listen override for replacing fragment url from s3
-    // const path = (/#(.*)$/.exec(history.location.hash) || [])[1];
-    // if (path) {
-    //     history.replace(path);
-    // }
+// put this code INSIDE the component
+// handle custom listen override for replacing fragment url from s3
+// const path = (/#(.*)$/.exec(history.location.hash) || [])[1];
+// if (path) {
+//     history.replace(path);
+// }
 
-    return (<Provider store={store}>
-        <MuiThemeProvider theme={theme}>
-            <Routes/>
-        </MuiThemeProvider>
-    </Provider>);
-};
+class Root extends React.Component {
+    // Remove the server-side injected CSS.
+    componentDidMount() {
+        const jssStyles = document.getElementById('jss-server-side');
+        if (jssStyles && jssStyles.parentNode) {
+            jssStyles.parentNode.removeChild(jssStyles);
+        }
+    }
+
+    render() {
+        return <Provider store={this.props.store}>
+            <MuiThemeProvider theme={theme}>
+                <Routes/>
+            </MuiThemeProvider>
+        </Provider>;
+    }
+}
 
 
 Root.propTypes = {
