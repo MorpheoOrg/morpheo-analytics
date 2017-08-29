@@ -1,14 +1,14 @@
-const webpack = require('webpack')
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
-const WriteFilePlugin = require('write-file-webpack-plugin')
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
-const StatsPlugin = require('stats-webpack-plugin')
-const HappyPack = require('happypack')
+const webpack = require('webpack');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const StatsPlugin = require('stats-webpack-plugin');
+const HappyPack = require('happypack');
 
-const definePlugin = require('./definePlugin').default
-const dll = require('./dll').default
+const definePlugin = require('./definePlugin').default;
+const dll = require('./dll').default;
 
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
@@ -30,13 +30,13 @@ export default (env) => [
                     warnings: false,
                 },
                 mangle: {
-                    screw_ie8: true
+                    screw_ie8: true,
                 },
                 output: {
                     screw_ie8: true,
-                    comments: false
+                    comments: false,
                 },
-                sourceMap: true
+                sourceMap: true,
             }),
             new webpack.optimize.AggressiveMergingPlugin(),
             new StatsPlugin('stats.json'),
@@ -72,7 +72,7 @@ export default (env) => [
             maxChunks: 1,
         }),
     ]),
-     ...(DEVELOPMENT ? [new webpack.NamedModulesPlugin()] : []),
+    ...(DEVELOPMENT ? [new webpack.NamedModulesPlugin()] : []),
     definePlugin(),
     new LodashModuleReplacementPlugin({
         shorthands: true,
@@ -84,6 +84,7 @@ export default (env) => [
             query: {
                 plugins: [
                     'universal-import',
+                    'emotion',
                     'transform-runtime',
                     'lodash',
                     'date-fns',

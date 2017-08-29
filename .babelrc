@@ -1,6 +1,6 @@
 {
     "presets": ["es2015", "react", "stage-0"],
-    "plugins": ["universal-import"],
+    "plugins": ["universal-import", "emotion"],
     "env": {
         "development": {
             "plugins": ["react-hot-loader/babel"]

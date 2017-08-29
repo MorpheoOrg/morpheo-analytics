@@ -6,7 +6,6 @@ import Settings from './components/index';
 export sagas from './sagas';
 export reducer from './reducer';
 
-
 // Configure hot module replacement for the reducer
 if (process.env.NODE_ENV !== 'production') {
     if (module.hot) {

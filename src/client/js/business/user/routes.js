@@ -35,7 +35,7 @@
 
 import React from 'react';
 import universal from 'react-universal-component';
-import PulseLoader from '../common/components/presentation/loaders/pulseLoader';
+import PulseLoader from '../common/components/presentation/loaders/barLoader';
 import {connect} from 'react-redux';
 
 import theme from '../../../css/variables';

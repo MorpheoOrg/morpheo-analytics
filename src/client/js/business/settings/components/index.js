@@ -44,6 +44,9 @@ import Switch from 'material-ui/Switch';
 import languages from '../../notebook/components/Editor/languages';
 import themes from '../../notebook/components/Editor/themes';
 
+import PulseLoader from '../../common/components/presentation/loaders/fadeLoader';
+import variables from '../../../../css/variables';
+
 import {actions} from '../actions';
 
 const style = {
@@ -112,6 +115,7 @@ class Settings extends React.Component {
         const {settings: {preferred_language, theme, line_numbers}} = this.props;
 
         return (<div>
+            <PulseLoader color={variables['primary-color']}/>
             <h1>Settings</h1>
             <div style={style.main}>
                 <div>
