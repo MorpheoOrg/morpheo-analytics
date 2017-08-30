@@ -6,9 +6,10 @@ import preset from 'jss-preset-default';
 import {Provider} from 'react-redux';
 import {flushChunkNames} from 'react-universal-component/server';
 import flushChunks from 'webpack-flush-chunks';
-import configureStore from './configureStore';
 import {MuiThemeProvider} from 'material-ui/styles';
 import createGenerateClassName from 'material-ui/styles/createGenerateClassName';
+
+import configureStore from './configureStore';
 
 import theme from '../common/theme/index';
 import App from '../common/routes';
@@ -21,13 +22,13 @@ const jss = create(preset());
 jss.options.createGenerateClassName = createGenerateClassName;
 
 const createApp = (App, store) =>
-    <Provider store={store}>
+    (<Provider store={store}>
         <JssProvider registry={sheetsRegistry} jss={jss}>
             <MuiThemeProvider theme={theme}>
-                <App/>
+                <App />
             </MuiThemeProvider>
         </JssProvider>
-    </Provider>;
+    </Provider>);
 
 
 export default ({clientStats}) => async (req, res, next) => {
@@ -50,7 +51,7 @@ export default ({clientStats}) => async (req, res, next) => {
       <html>
         <head>
           <meta charset="utf-8">
-          <title>redux-first-router-demo</title>
+          <title>Notebook</title>
           ${styles}
           <link rel="stylesheet prefetch" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         </head>
@@ -66,4 +67,4 @@ export default ({clientStats}) => async (req, res, next) => {
         </body>
       </html>`,
     );
-}
+};
