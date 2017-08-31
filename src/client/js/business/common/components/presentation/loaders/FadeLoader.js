@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {keyframes, css} from 'emotion';
 import {onlyUpdateForKeys} from 'recompose';
 
-
 const fade = keyframes`
   50% {opacity: 0.3} 
   100% {opacity: 1}
@@ -115,4 +114,4 @@ Loader.defaultProps = {
     radius: 2
 };
 
-export default onlyUpdateForKeys(['loading'])(Loader);
+export default onlyUpdateForKeys(['loading', 'color', 'height', 'width', 'margin', 'radius'])(Loader);

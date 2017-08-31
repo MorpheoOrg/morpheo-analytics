@@ -83,4 +83,4 @@ Loader.defaultProps = {
     size: 15
 };
 
-export default onlyUpdateForKeys(['loading'])(Loader);
+export default onlyUpdateForKeys(['loading', 'color', 'size'])(Loader);
