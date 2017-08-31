@@ -35,6 +35,7 @@
 
 import {connectRoutes} from 'redux-first-router';
 import {applyMiddleware, compose} from 'redux';
+import {pick} from 'lodash';
 
 import {createInjectSagasStore, sagaMiddleware, reloadSaga} from 'redux-sagas-injector';
 import {combineReducersRecurse} from 'redux-injector';
@@ -59,7 +60,9 @@ const configureStore = (history, initialState) => {
     ];
 
     const reducers = {...rootReducer, location: reducer};
-    const store = createInjectSagasStore({rootSaga}, reducers, initialState, compose(enhancer, ...enhancers));
+    // create an hmr initialState, when refreshing page, we do not want the injected reducers
+    const hmrInitialState = pick(initialState, Object.keys(reducers));
+    const store = createInjectSagasStore({rootSaga}, reducers, hmrInitialState, compose(enhancer, ...enhancers));
     initialDispatch();
 
     // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
