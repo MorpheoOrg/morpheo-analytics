@@ -39,7 +39,7 @@ import universal from 'react-universal-component';
 import {injectSaga,} from 'redux-sagas-injector';
 import {injectReducer} from 'redux-injector';
 
-import PulseLoader from '../common/components/presentation/loaders/pulseLoader';
+import PulseLoader from '../common/components/presentation/loaders/PulseLoader';
 import theme from '../../../css/variables';
 import localStorage from '../../../../common/localStorage';
 
