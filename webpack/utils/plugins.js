@@ -67,9 +67,9 @@ export default env => [
             // ),
         ]),
     ] : [
-        // new webpack.optimize.LimitChunkCountPlugin({
-        //     maxChunks: 1,
-        // }),
+        new webpack.optimize.LimitChunkCountPlugin({
+            maxChunks: 1,
+        }),
     ]),
     ...(DEVELOPMENT ? [new webpack.NamedModulesPlugin()] : []),
     definePlugin(),
