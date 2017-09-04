@@ -33,6 +33,7 @@ yarn.lock
 .happypack
 
 dll
+main.prod.js*
 
 # Secrets used in dev
 devsecret.js

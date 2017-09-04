@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     require('electron-debug')();
     const path = require('path');
-    const p = path.join(__dirname, '..', '..', 'src', 'node_modules');
+    const p = path.join(__dirname, '..', '..', 'src', 'electron', 'node_modules');
     require('module').globalPaths.push(p);
 }
 

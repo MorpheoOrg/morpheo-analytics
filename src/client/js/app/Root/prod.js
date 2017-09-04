@@ -40,7 +40,6 @@ import {MuiThemeProvider} from 'material-ui/styles';
 
 import theme from '../../../../common/theme';
 import Routes from '../../../../common/routes';
-//import history from '../history/prod';
 
 // For using browserHistory with amazon s3, we need our own domain name (for not impacting customer and record)
 // and a custom routerHistory

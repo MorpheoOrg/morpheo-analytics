@@ -2,7 +2,7 @@
  * Webpack config for production electron main process
  */
 
-//import HappyPack from 'happypack';
+import HappyPack from 'happypack';
 import merge from 'webpack-merge';
 import BabiliPlugin from 'babili-webpack-plugin';
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
@@ -24,30 +24,30 @@ export default merge.smart(baseConfig, {
         rules: rules('electron'),
     },
     plugins: [
-        // new HappyPack({
-        //     id: 'babel',
-        //     loaders: [{
-        //         path: 'babel-loader', // Options to configure babel with
-        //         query: {
-        //             plugins: [
-        //                 'universal-import',
-        //                 'emotion',
-        //                 'transform-runtime',
-        //                 'lodash',
-        //                 'date-fns',
-        //                 'transform-class-properties',
-        //                 'transform-es2015-classes',
-        //                 'react-hot-loader/babel',
-        //             ],
-        //             presets: [
-        //                 'es2015',
-        //                 'react',
-        //                 'stage-0',
-        //             ],
-        //         },
-        //     }],
-        //     threads: 4,
-        // }),
+        new HappyPack({
+            id: 'babel',
+            loaders: [{
+                path: 'babel-loader', // Options to configure babel with
+                query: {
+                    plugins: [
+                        'universal-import',
+                        'emotion',
+                        'transform-runtime',
+                        'lodash',
+                        'date-fns',
+                        'transform-class-properties',
+                        'transform-es2015-classes',
+                        'react-hot-loader/babel',
+                    ],
+                    presets: [
+                        'es2015',
+                        'react',
+                        'stage-0',
+                    ],
+                },
+            }],
+            threads: 4,
+        }),
         new BabiliPlugin(),
         new BundleAnalyzerPlugin({
             analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
