@@ -44,6 +44,7 @@ import ReactHotLoader from './ReactHotLoader';
 import Root from './app/Root';
 import history from './app/history';
 import configureStore from '../../common/configureStore';
+import '../css/main/dev.scss';
 
 const {store} = configureStore(history, window.REDUX_STATE);
 

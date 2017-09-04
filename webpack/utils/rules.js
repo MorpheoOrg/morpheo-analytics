@@ -39,10 +39,36 @@ export default () => [
     }, {
         test: /\.html$/,
         use: 'html-loader',
-    }, {
+    },
+    // {
+    //     test: /\.s?css$/,
+    //     exclude: /node_modules\/^(?!prismjs)/,
+    //     use: ExtractCssChunks.extract({
+    //         use: ['style-loader', 'css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
+    //     }),
+    // },
+    {
         test: /\.s?css$/,
-        exclude: /node_modules\/^(?!prismjs)/,
-        use: ExtractCssChunks.extract({
-            use: ['css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
-        }),
-    }];
+        use: [
+            {
+                loader: 'style-loader',
+            },
+            {
+                loader: 'css-loader',
+                options: {
+                    sourceMap: true,
+                    importLoaders: true,
+                },
+            },
+            {
+                loader: 'postcss-loader',
+                options: {
+                    sourceMap: true,
+                },
+            },
+            {
+                loader: 'sass-loader',
+            },
+        ],
+    },
+    ];

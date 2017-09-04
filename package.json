@@ -28,7 +28,7 @@
         "eslint": "./node_modules/.bin/eslint --fix src/frontend/",
         "dev": "cross-env START_HOT=1 npm run start-renderer-dev",
         "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register --require babel-polyfill ./src/electron/main.dev",
-        "start-renderer-dev": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config ./webpack/electron/renderer.dev.js",
+        "start-renderer-dev": "cross-env NODE_ENV=development node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack-dev-server/bin/webpack-dev-server --config ./webpack/electron/renderer.dev.js",
         "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack/electron/renderer.dev.dll.js --colors"
     },
     "pre-commit": [

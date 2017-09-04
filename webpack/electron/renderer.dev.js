@@ -18,6 +18,9 @@ const publicPath = `http://localhost:${port}/dist`;
 const dll = path.resolve(process.cwd(), 'dll');
 const manifest = path.resolve(dll, 'renderer.json');
 
+const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
+    PRODUCTION = (['production'].includes(process.env.NODE_ENV));
+
 /**
  * Warn if the DLL is not built
  */
