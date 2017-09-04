@@ -15,7 +15,7 @@ const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NO
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
     PRODUCTION = (['production'].includes(process.env.NODE_ENV));
 
-export default (env) => [
+export default env => [
     ...(env === 'frontend' ? [
         new webpack.optimize.CommonsChunkPlugin({
             names: ['bootstrap'], // needed to put webpack bootstrap code before chunks
@@ -68,9 +68,9 @@ export default (env) => [
             // ),
         ]),
     ] : [
-        new webpack.optimize.LimitChunkCountPlugin({
-            maxChunks: 1,
-        }),
+        // new webpack.optimize.LimitChunkCountPlugin({
+        //     maxChunks: 1,
+        // }),
     ]),
     ...(DEVELOPMENT ? [new webpack.NamedModulesPlugin()] : []),
     definePlugin(),
@@ -80,7 +80,7 @@ export default (env) => [
     new HappyPack({
         id: 'babel',
         loaders: [{
-            path: 'babel-loader',         // Options to configure babel with
+            path: 'babel-loader', // Options to configure babel with
             query: {
                 plugins: [
                     'universal-import',
@@ -88,6 +88,8 @@ export default (env) => [
                     'transform-runtime',
                     'lodash',
                     'date-fns',
+                    'transform-class-properties',
+                    'transform-es2015-classes',
                     ...(PRODUCTION && env === 'frontend' ? [
                         'transform-react-constant-elements',
                         'transform-react-inline-elements',

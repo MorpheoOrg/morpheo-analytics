@@ -1,6 +1,18 @@
 {
-    "presets": ["es2015", "react", "stage-0"],
-    "plugins": ["universal-import", "emotion"],
+    "presets": [
+        "es2015",
+        "react",
+        "stage-0"
+    ],
+    "plugins": [
+        "universal-import",
+        "transform-runtime",
+        "emotion",
+        "lodash",
+        "date-fns",
+        "transform-class-properties",
+        "transform-es2015-classes"
+    ],
     "env": {
         "development": {
             "plugins": ["react-hot-loader/babel"]

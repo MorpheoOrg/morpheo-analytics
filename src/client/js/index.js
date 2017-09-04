@@ -35,8 +35,6 @@
 
 /* globals document */
 
-import 'babel-core/register';
-
 import React from 'react';
 import {render} from 'react-dom';
 import FastClick from 'fastclick';
@@ -57,7 +55,7 @@ injectTapEventPlugin();
 const root = document.getElementById('root');
 
 const renderApp = (RootElement) => {
-    const app = (<ReactHotLoader key={Math.random()}>
+    const app = (<ReactHotLoader>
         <RootElement {...{store}} />
     </ReactHotLoader>);
 
@@ -66,9 +64,9 @@ const renderApp = (RootElement) => {
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
     module.hot.accept('./app/Root/index', () => {
-            const app = require('./app/Root/index');
-            renderApp(app.default);
-        },
+        const app = require('./app/Root/index');
+        renderApp(app.default);
+    },
     );
 }
 
