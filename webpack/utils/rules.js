@@ -9,20 +9,7 @@ export default env => [
     {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: {
-            loader: 'babel-loader',
-            options: {
-                cacheDirectory: true,
-                plugins: [
-                    // Here, we include babel plugins that are only required for the
-                    // renderer process. The 'transform-*' plugins must be included
-                    // before react-hot-loader/babel
-                    'transform-class-properties',
-                    'transform-es2015-classes',
-                    'react-hot-loader/babel',
-                ],
-            },
-        },
+        use: 'happypack/loader?id=babel',
     }, {
         test: /\.jpe?g$|\.gif$|\.png$/,
         use: 'url-loader?limit=10000&name=/[hash].[ext]',
@@ -89,7 +76,7 @@ export default env => [
         test: /\.s?css$/,
         exclude: /node_modules\/^(?!prismjs)/,
         use: ExtractCssChunks.extract({
-            use: ['style-loader', 'css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
+            use: ['css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
         }),
     }]),
 ];
