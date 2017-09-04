@@ -4,14 +4,13 @@ import webpack from 'webpack';
 import chalk from 'chalk';
 import merge from 'webpack-merge';
 import {spawn, execSync} from 'child_process';
+import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
+import HappyPack from 'happypack';
+
+
 import baseConfig from './base';
-
 import rules from '../utils/rules';
-
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
-const HappyPack = require('happypack');
-
-const definePlugin = require('../utils/definePlugin').default;
+import definePlugin from '../utils/definePlugin';
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/dist`;
@@ -49,35 +48,35 @@ export default merge.smart(baseConfig, {
     },
 
     module: {
-        rules: rules(),
+        rules: rules('electron'),
     },
 
     plugins: [
         definePlugin(),
-        // new HappyPack({
-        //     id: 'babel',
-        //     loaders: [{
-        //         path: 'babel-loader', // Options to configure babel with
-        //         query: {
-        //             plugins: [
-        //                 'universal-import',
-        //                 'emotion',
-        //                 'transform-runtime',
-        //                 'lodash',
-        //                 'date-fns',
-        //                 'transform-class-properties',
-        //                 'transform-es2015-classes',
-        //                 'react-hot-loader/babel',
-        //             ],
-        //             presets: [
-        //                 'es2015',
-        //                 'react',
-        //                 'stage-0',
-        //             ],
-        //         },
-        //     }],
-        //     threads: 4,
-        // }),
+        new HappyPack({
+            id: 'babel',
+            loaders: [{
+                path: 'babel-loader', // Options to configure babel with
+                query: {
+                    plugins: [
+                        'universal-import',
+                        'emotion',
+                        'transform-runtime',
+                        'lodash',
+                        'date-fns',
+                        'transform-class-properties',
+                        'transform-es2015-classes',
+                        'react-hot-loader/babel',
+                    ],
+                    presets: [
+                        'es2015',
+                        'react',
+                        'stage-0',
+                    ],
+                },
+            }],
+            threads: 4,
+        }),
         new ExtractCssChunks({
             filename: '[name].css',
             allChunks: false,

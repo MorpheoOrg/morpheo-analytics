@@ -1,14 +1,13 @@
-const webpack = require('webpack');
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const StatsPlugin = require('stats-webpack-plugin');
-const HappyPack = require('happypack');
+import webpack from 'webpack';
+import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
+import WriteFilePlugin from 'write-file-webpack-plugin';
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
+import StatsPlugin from 'stats-webpack-plugin';
+import HappyPack from 'happypack';
+import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
 
-const definePlugin = require('./definePlugin').default;
-const dll = require('./dll').default;
-
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+import definePlugin from './definePlugin';
+import dll from './dll';
 
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),

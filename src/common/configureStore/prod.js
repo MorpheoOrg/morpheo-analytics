@@ -54,8 +54,8 @@ const configureStore = (history, initialState) => {
         applyMiddleware(sagaMiddleware, middleware),
     ];
 
-    const r = {...rootReducer, location: reducer};
-    const store = createInjectSagasStore(r, rootSaga, initialState, compose(enhancer, ...enhancers));
+    const reducers = {...rootReducer, location: reducer};
+    const store = createInjectSagasStore({rootSaga}, reducers, initialState, compose(enhancer, ...enhancers));
     initialDispatch();
 
     return {store, thunk};

@@ -8,7 +8,6 @@ import {dependencies as externals} from '../../src/electron/package.json';
 
 export default {
     externals: Object.keys(externals || {}),
-
     module: {
         rules: [{
             test: /\.jsx?$/,
@@ -21,17 +20,12 @@ export default {
             },
         }],
     },
-
     output: {
         path: path.join(__dirname, '../../src'),
         filename: 'renderer.dev.js',
         // https://github.com/webpack/webpack/issues/1114
         libraryTarget: 'commonjs2',
     },
-
-    /**
-   * Determine the array of extensions that should be used to resolve modules.
-   */
     resolve: {
         extensions: ['.js', '.jsx', '.json'],
         modules: [

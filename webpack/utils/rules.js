@@ -1,6 +1,11 @@
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-export default () => [
+const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
+    DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
+    PRODUCTION = (['production'].includes(process.env.NODE_ENV));
+
+export default env => [
     {
         test: /\.jsx?$/,
         exclude: /node_modules/,
@@ -40,35 +45,51 @@ export default () => [
         test: /\.html$/,
         use: 'html-loader',
     },
-    // {
-    //     test: /\.s?css$/,
-    //     exclude: /node_modules\/^(?!prismjs)/,
-    //     use: ExtractCssChunks.extract({
-    //         use: ['style-loader', 'css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
-    //     }),
-    // },
-    {
+    ...(env === 'electron' ? PRODUCTION ? [
+        {
+            test: /\.s?css$/,
+            use: ExtractTextPlugin.extract({
+                use: [
+                    {
+                        loader: 'css-loader',
+                    },
+                    {
+                        loader: 'sass-loader',
+                    },
+                ],
+                fallback: 'style-loader',
+            }),
+        },
+    ] : [
+        {
+            test: /\.s?css$/,
+            use: [
+                {
+                    loader: 'style-loader',
+                },
+                {
+                    loader: 'css-loader',
+                    options: {
+                        sourceMap: true,
+                        importLoaders: true,
+                    },
+                },
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        sourceMap: true,
+                    },
+                },
+                {
+                    loader: 'sass-loader',
+                },
+            ],
+        },
+    ] : [{
         test: /\.s?css$/,
-        use: [
-            {
-                loader: 'style-loader',
-            },
-            {
-                loader: 'css-loader',
-                options: {
-                    sourceMap: true,
-                    importLoaders: true,
-                },
-            },
-            {
-                loader: 'postcss-loader',
-                options: {
-                    sourceMap: true,
-                },
-            },
-            {
-                loader: 'sass-loader',
-            },
-        ],
-    },
-    ];
+        exclude: /node_modules\/^(?!prismjs)/,
+        use: ExtractCssChunks.extract({
+            use: ['style-loader', 'css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
+        }),
+    }]),
+];

@@ -12,7 +12,6 @@ import plugins from '../utils/plugins';
 
 const dist = path.resolve(process.cwd(), 'dll');
 
-console.log(Object.keys(dependencies));
 
 export default merge.smart(baseConfig, {
     context: process.cwd(),
@@ -28,10 +27,8 @@ export default merge.smart(baseConfig, {
         ],
     },
     entry: {
-        renderer: (
-            //Object.keys(dependencies || {}),
-            ['react']
-        ),
+        //renderer: (Object.keys(dependencies || {})),
+        renderer: ['react'],
     },
     output: {
         library: 'renderer',
