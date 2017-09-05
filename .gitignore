@@ -33,7 +33,8 @@ yarn.lock
 .happypack
 
 dll
-main.prod.js*
+release
+src/electron/main.prod.js*
 
 # Secrets used in dev
 devsecret.js

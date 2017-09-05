@@ -1,5 +1,6 @@
 {
-    "name": "Notebook",
+    "name": "notebook",
+    "productName": "Notebook",
     "author": "Guillaume Cisco",
     "version": "0.0.1",
     "license": "CECILL-2.1",
@@ -16,14 +17,14 @@
         "start": "npm run clean && cross-env NODE_ENV=development babel-watch src/server/index.js",
         "start:prod": "npm run build && npm run serve",
         "serve": "cross-env NODE_ENV=production babel-node build/server/index.js",
-        "build": "npm run build:client && npm run build:server && npm run build:node",
+        "build:main": "npm run build:client && npm run build:server && npm run build:node",
         "build:client": "rimraf build/client && cross-env NODE_ENV=production webpack --progress -p --config webpack/client.babel.js",
         "build:server": "rimraf build/server && cross-env NODE_ENV=production webpack --progress -p --config webpack/server.babel.js",
         "build:node": "cross-env NODE_ENV=production babel src/server/index.js -o build/server/index.js",
         "clean": "rimraf build",
         "precommit": "lint-staged --verbose",
         "cm": "git-cz",
-        "lint": "eslint --fix src server webpack",
+        "lint": "eslint --fix src webpack",
         "test": "cross-env NODE_ENV=development ./node_modules/.bin/mocha --compilers js:babel-register \"./src/frontend/js/**/*.spec.js\"",
         "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register \"./src/frontend/js/**/*.spec.js\"",
         "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
@@ -34,7 +35,7 @@
         "start:electron": "cross-env NODE_ENV=production electron ./src/electron",
         "build:electron": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
         "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/renderer.dev.dll.js --colors",
-        "build-main": "cross-env NODE_ENV=production node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/main.prod.js --colors",
+        "build-main": "cross-env NODE_ENV=production node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/main.js --colors",
         "build-renderer": "cross-env NODE_ENV=production node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/renderer.prod.js --colors",
         "package": "npm run build:electron && build --publish never",
         "package-all": "npm run build:electron && build -mwl",
@@ -47,9 +48,10 @@
         "test",
         "eslint"
     ],
+    "browserslist": "electron 1.6",
     "build": {
         "productName": "Notebook",
-        "appId": "org.rythm.notebook",
+        "appId": "org.morpheo.notebook",
         "files": [
             "dist/",
             "node_modules/",
@@ -88,7 +90,8 @@
         },
         "directories": {
             "buildResources": "resources",
-            "output": "release"
+            "output": "release",
+            "app": "./src/electron/"
         }
     },
     "dependencies": {
