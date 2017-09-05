@@ -1,5 +1,7 @@
 {
+    "name": "Notebook",
     "author": "Guillaume Cisco",
+    "version": "0.0.1",
     "license": "CECILL-2.1",
     "description": "Notebook frontend",
     "repository": {
@@ -32,21 +34,69 @@
         "start:electron": "cross-env NODE_ENV=production electron ./src/electron",
         "build:electron": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
         "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/renderer.dev.dll.js --colors",
-        "build-main": "cross-env NODE_ENV=production DEBUG_PROD=true node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/main.prod.js --colors",
-        "build-renderer": "cross-env NODE_ENV=production node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/renderer.prod.js --colors"
+        "build-main": "cross-env NODE_ENV=production node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/main.prod.js --colors",
+        "build-renderer": "cross-env NODE_ENV=production node --trace-warnings -r babel-register --require babel-polyfill ./node_modules/webpack/bin/webpack --config webpack/electron/renderer.prod.js --colors",
+        "package": "npm run build:electron && build --publish never",
+        "package-all": "npm run build:electron && build -mwl",
+        "package-linux": "npm run build:electron && build --linux",
+        "package-win": "npm run build:electron && build --win --x64",
+        "postinstall": "concurrently \"npm run build-dll\" \"electron-builder install-app-deps\""
     },
     "pre-commit": [
         "precommit-msg",
         "test",
         "eslint"
     ],
+    "build": {
+        "productName": "Notebook",
+        "appId": "org.rythm.notebook",
+        "files": [
+            "dist/",
+            "node_modules/",
+            "app.html",
+            "main.prod.js",
+            "main.prod.js.map",
+            "package.json"
+        ],
+        "mac": {
+            "target": "tar.gz"
+        },
+        "dmg": {
+            "contents": [
+                {
+                    "x": 130,
+                    "y": 220
+                },
+                {
+                    "x": 410,
+                    "y": 220,
+                    "type": "link",
+                    "path": "/Applications"
+                }
+            ]
+        },
+        "win": {
+            "target": [
+                "nsis"
+            ]
+        },
+        "linux": {
+            "target": [
+                "deb",
+                "AppImage"
+            ]
+        },
+        "directories": {
+            "buildResources": "resources",
+            "output": "release"
+        }
+    },
     "dependencies": {
         "babel-runtime": "6.26.0",
         "date-fns": "1.28.5",
         "emotion": "^7.2.0",
         "ends-with": "1.0.1",
         "fastclick": "1.0.6",
-        "fetch-everywhere": "1.0.5",
         "history": "4.6.3",
         "jss": "^8.1.0",
         "jss-preset-default": "^3.0.0",
@@ -54,7 +104,6 @@
         "material-ui": "1.0.0-beta.5",
         "material-ui-icons": "1.0.0-beta.5",
         "prismjs": "1.6.0",
-        "prop-types": "15.5.10",
         "query-string": "5.0.0",
         "react": "15.4.2",
         "react-dom": "15.4.2",
@@ -121,6 +170,7 @@
         "cz-conventional-changelog": "2.0.0",
         "devtron": "^1.4.0",
         "electron": "^1.7.5",
+        "electron-builder": "^19.27.3",
         "electron-debug": "^1.4.0",
         "electron-devtools-installer": "^2.2.0",
         "enzyme": "2.9.1",

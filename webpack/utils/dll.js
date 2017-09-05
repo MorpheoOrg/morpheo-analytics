@@ -26,8 +26,8 @@ export default new AutoDllPlugin({
             'redux-first-router-link',
             'redux-form',
             'redux-injector',
-            //'redux-saga',
-            //'redux-sagas-injector',
+            'redux-saga',
+            'redux-sagas-injector',
         ],
         vendors: [
             'fastclick',

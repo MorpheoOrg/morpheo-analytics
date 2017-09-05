@@ -33,7 +33,7 @@ export default env => [
         test: /\.html$/,
         use: 'html-loader',
     },
-    ...(env === 'electron' ? PRODUCTION ? [
+    ...(env === 'electron' ? (PRODUCTION ? [
         {
             test: /\.s?css$/,
             use: ExtractTextPlugin.extract({
@@ -73,11 +73,11 @@ export default env => [
                 },
             ],
         },
-    ] : [{
+    ]) : [{
         test: /\.s?css$/,
         exclude: /node_modules\/^(?!prismjs)/,
         use: ExtractCssChunks.extract({
-            use: ['css-loader?importLoaders=1', 'postcss-loader?sourceMap', 'sass-loader'],
+            use: ['css-loader?importLoaders=1&sourceMap=1', 'postcss-loader?sourceMap', 'sass-loader?sourceMap&sourceComments'],
         }),
     }]),
 ];
