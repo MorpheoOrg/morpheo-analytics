@@ -1,5 +1,8 @@
 {
+    "name": "notebook",
+    "productName": "Notebook",
     "author": "Guillaume Cisco",
+    "version": "0.0.1",
     "license": "CECILL-2.1",
     "description": "Notebook frontend",
     "repository": {
@@ -12,36 +15,90 @@
     },
     "scripts": {
         "start": "npm run clean && cross-env NODE_ENV=development babel-watch src/server/index.js",
-        "start:prod": "npm run build && npm run serve",
+        "start:prod": "npm run build:main && npm run serve",
         "serve": "cross-env NODE_ENV=production babel-node build/server/index.js",
-        "build": "npm run build:client && npm run build:server && npm run build:node",
-        "build:client": "rimraf build/client && cross-env NODE_ENV=production webpack --progress -p --config webpack/client.babel.js",
-        "build:server": "rimraf build/server && cross-env NODE_ENV=production webpack --progress -p --config webpack/server.babel.js",
+        "build:main": "npm run build:client && npm run build:server && npm run build:node",
+        "build:client": "rimraf build/client && cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress -p --config webpack/client.js",
+        "build:server": "rimraf build/server && cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress -p --config webpack/server.js",
         "build:node": "cross-env NODE_ENV=production babel src/server/index.js -o build/server/index.js",
         "clean": "rimraf build",
         "precommit": "lint-staged --verbose",
-        "cm": "git-cz",
-        "lint": "eslint --fix src server webpack",
+        "lint": "eslint --fix src webpack",
         "test": "cross-env NODE_ENV=development ./node_modules/.bin/mocha --compilers js:babel-register \"./src/frontend/js/**/*.spec.js\"",
         "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register \"./src/frontend/js/**/*.spec.js\"",
         "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
-        "eslint": "./node_modules/.bin/eslint --fix src/frontend/"
+        "eslint": "./node_modules/.bin/eslint --fix src/frontend/",
+        "dev": "cross-env START_HOT=1 npm run start-renderer-dev",
+        "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register --require babel-polyfill ./src/electron/main.dev",
+        "start-renderer-dev": "cross-env NODE_ENV=development babel-node ./node_modules/webpack-dev-server/bin/webpack-dev-server --config ./webpack/electron/renderer.dev.js",
+        "start:electron": "cross-env NODE_ENV=production electron ./src/electron",
+        "build:electron": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
+        "build-dll": "cross-env NODE_ENV=development node -r babel-register ./node_modules/webpack/bin/webpack --progress -p --config webpack/electron/renderer.dev.dll.js --colors",
+        "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress -p --config webpack/electron/main.js --colors",
+        "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress -p --config webpack/electron/renderer.prod.js --colors",
+        "package": "npm run build:electron && build --publish never",
+        "package-all": "npm run build:electron && build -mwl",
+        "package-linux": "npm run build:electron && build --linux",
+        "package-win": "npm run build:electron && build --win --x64",
+        "postinstall": "electron-builder install-app-deps"
     },
     "pre-commit": [
         "precommit-msg",
         "test",
         "eslint"
     ],
+    "browserslist": "electron 1.6",
+    "build": {
+        "productName": "Notebook",
+        "appId": "org.morpheo.notebook",
+        "files": [
+            "dist/",
+            "node_modules/",
+            "app.html",
+            "main.prod.js",
+            "main.prod.js.map",
+            "package.json"
+        ],
+        "mac": {
+            "target": "tar.gz"
+        },
+        "dmg": {
+            "contents": [
+                {
+                    "x": 130,
+                    "y": 220
+                },
+                {
+                    "x": 410,
+                    "y": 220,
+                    "type": "link",
+                    "path": "/Applications"
+                }
+            ]
+        },
+        "win": {
+            "target": [
+                "nsis"
+            ]
+        },
+        "linux": {
+            "target": [
+                "deb",
+                "AppImage"
+            ]
+        },
+        "directories": {
+            "buildResources": "resources",
+            "output": "release",
+            "app": "./src/electron/"
+        }
+    },
     "dependencies": {
-        "atob": "^2.0.3",
-        "babel-polyfill": "6.26.0",
         "babel-runtime": "6.26.0",
-        "cookie-parser": "^1.4.3",
         "date-fns": "1.28.5",
         "emotion": "^7.2.0",
         "ends-with": "1.0.1",
         "fastclick": "1.0.6",
-        "fetch-everywhere": "1.0.5",
         "history": "4.6.3",
         "jss": "^8.1.0",
         "jss-preset-default": "^3.0.0",
@@ -49,7 +106,6 @@
         "material-ui": "1.0.0-beta.5",
         "material-ui-icons": "1.0.0-beta.5",
         "prismjs": "1.6.0",
-        "prop-types": "15.5.10",
         "query-string": "5.0.0",
         "react": "15.4.2",
         "react-dom": "15.4.2",
@@ -67,9 +123,9 @@
         "redux-first-router": "1.9.15",
         "redux-first-router-link": "1.1.4",
         "redux-form": "7.0.3",
-        "redux-injector": "git+ssh://git@github.com:GuillaumeCisco/redux-injector",
+        "redux-reducers-injector": "0.1.0",
         "redux-saga": "0.15.6",
-        "redux-sagas-injector": "0.2.1",
+        "redux-sagas-injector": "0.2.2",
         "reselect": "3.0.1",
         "slate": "0.21.3",
         "slate-edit-code": "0.10.3",
@@ -78,6 +134,7 @@
         "uuid": "3.1.0"
     },
     "devDependencies": {
+        "atob": "^2.0.3",
         "autodll-webpack-plugin": "0.2.1",
         "autoprefixer": "7.1.2",
         "babel-cli": "6.26.0",
@@ -88,24 +145,35 @@
         "babel-plugin-date-fns": "0.1.0",
         "babel-plugin-lodash": "3.2.11",
         "babel-plugin-module-resolver": "2.6.2",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-plugin-transform-es2015-classes": "^6.24.1",
         "babel-plugin-transform-react-constant-elements": "6.23.0",
         "babel-plugin-transform-react-inline-elements": "6.22.0",
         "babel-plugin-transform-react-remove-prop-types": "0.4.8",
         "babel-plugin-transform-runtime": "6.23.0",
         "babel-plugin-universal-import": "1.2.7",
+        "babel-polyfill": "6.26.0",
         "babel-preset-es2015": "6.24.1",
         "babel-preset-react": "6.24.1",
         "babel-preset-stage-0": "6.24.1",
         "babel-register": "6.26.0",
         "babel-watch": "2.0.7",
+        "babili-webpack-plugin": "^0.1.2",
         "browser-sync": "2.18.13",
         "browser-sync-webpack-plugin": "1.2.0",
+        "chalk": "^2.1.0",
         "commitizen": "2.9.6",
+        "concurrently": "^3.5.0",
         "config": "1.26.2",
-        "cross-env": "5.0.1",
+        "cookie-parser": "^1.4.3",
+        "cross-env": "^5.0.1",
         "css-loader": "0.28.4",
         "cssnano": "3.10.0",
-        "cz-conventional-changelog": "2.0.0",
+        "devtron": "^1.4.0",
+        "electron": "^1.7.5",
+        "electron-builder": "^19.27.3",
+        "electron-debug": "^1.4.0",
+        "electron-devtools-installer": "^2.2.0",
         "enzyme": "2.9.1",
         "eslint": "4.3.0",
         "eslint-config-airbnb": "15.1.0",
@@ -117,6 +185,7 @@
         "expect": "1.20.2",
         "express": "4.15.2",
         "extract-css-chunks-webpack-plugin": "2.0.16",
+        "extract-text-webpack-plugin": "^3.0.0",
         "fetch-everywhere": "1.0.5",
         "file-loader": "0.11.2",
         "form-data": "2.2.0",
@@ -151,10 +220,13 @@
         "sinon-chai": "2.12.0",
         "stats-webpack-plugin": "0.6.1",
         "webpack": "3.5.5",
+        "webpack-bundle-analyzer": "^2.9.0",
         "webpack-dev-middleware": "1.12.0",
+        "webpack-dev-server": "^2.7.1",
         "webpack-flush-chunks": "1.1.23",
         "webpack-hot-middleware": "2.18.2",
         "webpack-hot-server-middleware": "0.1.0",
+        "webpack-merge": "^4.1.0",
         "why-did-you-update": "0.0.8",
         "write-file-webpack-plugin": "4.1.0"
     }

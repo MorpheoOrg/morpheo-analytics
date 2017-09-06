@@ -37,7 +37,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import universal from 'react-universal-component';
 import {injectSaga,} from 'redux-sagas-injector';
-import {injectReducer} from 'redux-injector';
+import {injectReducer} from 'redux-reducers-injector';
 
 import PulseLoader from '../common/components/presentation/loaders/PulseLoader';
 import theme from '../../../css/variables';

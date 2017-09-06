@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import config from 'config';
@@ -6,8 +5,8 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackHotServerMiddleware from 'webpack-hot-server-middleware';
-import clientConfig from '../../webpack/client.babel';
-import serverConfig from '../../webpack/server.babel';
+import clientConfig from '../../webpack/client';
+import serverConfig from '../../webpack/server';
 
 const publicPath = clientConfig.output.publicPath;
 const outputPath = clientConfig.output.path;

@@ -1,10 +1,8 @@
 import config from 'config';
-
+import path from 'path';
 import rules from './utils/rules';
 import resolve from './utils/resolve';
 import plugins from './utils/plugins';
-
-const path = require('path');
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
@@ -21,9 +19,9 @@ module.exports = {
         ...(DEVELOPMENT ? [
             'webpack-hot-middleware/client',
             'react-hot-loader/patch',
-        ]: []),
+        ] : []),
         path.resolve(__dirname, '../src/client/js/index.js'),
-        (PRODUCTION ? `${__dirname}/../src/client/css/main/prod.scss` : `${__dirname}/../src/client/css/main/dev.scss`),
+        `${__dirname}/../src/client/css/main.scss`,
     ],
     module: {
         rules: rules(),
@@ -46,7 +44,7 @@ module.exports = {
         publicPath: DEBUG ? DEBUG_BASE_NAME : PRODUCTION_BASE_NAME,
     },
     // devtool: 'source-map',
-    //devtool: 'eval',
+    // devtool: 'eval',
     devtool: DEBUG ? 'source-map' : (DEVELOPMENT ? 'cheap-module-source-map' : '#hidden-source-map'),
     plugins: plugins('frontend'),
     resolve: {
@@ -64,5 +62,5 @@ module.exports = {
         },
         watch: true,
         cache: true,
-    }: {}),
+    } : {}),
 };

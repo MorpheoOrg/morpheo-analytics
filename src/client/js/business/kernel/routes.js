@@ -35,7 +35,7 @@
 
 import React from 'react';
 import universal from 'react-universal-component';
-import {injectReducer} from 'redux-injector';
+import {injectReducer} from 'redux-reducers-injector';
 import {injectSaga} from 'redux-sagas-injector';
 import PulseLoader from '../common/components/presentation/loaders/PulseLoader';
 import {connect} from 'react-redux';

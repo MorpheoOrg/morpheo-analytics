@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {keyframes, css} from 'emotion';
-import {onlyUpdateForKeys} from 'recompose';
+import { keyframes, css } from 'emotion';
+import { onlyUpdateForKeys } from 'recompose';
 
 const grid = keyframes`
   0% {transform: scale(1)}
@@ -13,7 +13,7 @@ const random = top => Math.random() * top;
 
 class Loader extends React.Component {
 
-    style = i => css`{
+    style = rand => css`{
         display: inline-block;
         background-color: ${this.props.color};
         width: ${this.props.size};
@@ -21,7 +21,7 @@ class Loader extends React.Component {
         margin: ${this.props.margin};
         border-radius: 100%;
         animation-fill-mode: 'both';
-        animation: ${grid} ${(random(100) / 100) + 0.6}s ${(random(100) / 100) - 0.2}s infinite ease;
+        animation: ${grid} ${(rand / 100) + 0.6}s ${(rand / 100) - 0.2}s infinite ease;
     }`;
 
     wrapper = css`{        
@@ -29,28 +29,27 @@ class Loader extends React.Component {
         font-size: 0;
     }`;
 
-    a = this.style(1);
-    b = this.style(2);
-    c = this.style(3);
-    d = this.style(4);
-    e = this.style(5);
-    f = this.style(6);
-    g = this.style(7);
-    h = this.style(8);
-    i = this.style(8);
-
+    a = this.style(random(100));
+    b = this.style(random(100));
+    c = this.style(random(100));
+    d = this.style(random(100));
+    e = this.style(random(100));
+    f = this.style(random(100));
+    g = this.style(random(100));
+    h = this.style(random(100));
+    i = this.style(random(100));
     render() {
         return this.props.loading ?
             <div className={this.wrapper}>
-                <div className={this.a}/>
-                <div className={this.b}/>
-                <div className={this.c}/>
-                <div className={this.d}/>
-                <div className={this.e}/>
-                <div className={this.f}/>
-                <div className={this.g}/>
-                <div className={this.h}/>
-                <div className={this.i}/>
+                <div className={this.a} />
+                <div className={this.b} />
+                <div className={this.c} />
+                <div className={this.d} />
+                <div className={this.e} />
+                <div className={this.f} />
+                <div className={this.g} />
+                <div className={this.h} />
+                <div className={this.i} />
             </div> : null;
     }
 }

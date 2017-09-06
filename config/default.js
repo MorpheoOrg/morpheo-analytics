@@ -1,4 +1,4 @@
-import {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} from './credentials';
+const {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} = require('./credentials');
 
 const apiPort = process.env.NODE_PORT || 3000;
 const apiUrl = 'https://notebook-proxy.morpheo.io';

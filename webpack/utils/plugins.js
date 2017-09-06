@@ -1,21 +1,20 @@
-const webpack = require('webpack');
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const StatsPlugin = require('stats-webpack-plugin');
-const HappyPack = require('happypack');
+import webpack from 'webpack';
+import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
+import WriteFilePlugin from 'write-file-webpack-plugin';
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
+import StatsPlugin from 'stats-webpack-plugin';
+import HappyPack from 'happypack';
+import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
 
-const definePlugin = require('./definePlugin').default;
-const dll = require('./dll').default;
-
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+import definePlugin from './definePlugin';
+import dll from './dll';
 
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
     PRODUCTION = (['production'].includes(process.env.NODE_ENV));
 
-export default (env) => [
+export default env => [
     ...(env === 'frontend' ? [
         new webpack.optimize.CommonsChunkPlugin({
             names: ['bootstrap'], // needed to put webpack bootstrap code before chunks
@@ -80,7 +79,7 @@ export default (env) => [
     new HappyPack({
         id: 'babel',
         loaders: [{
-            path: 'babel-loader',         // Options to configure babel with
+            path: 'babel-loader', // Options to configure babel with
             query: {
                 plugins: [
                     'universal-import',
@@ -88,6 +87,8 @@ export default (env) => [
                     'transform-runtime',
                     'lodash',
                     'date-fns',
+                    'transform-class-properties',
+                    'transform-es2015-classes',
                     ...(PRODUCTION && env === 'frontend' ? [
                         'transform-react-constant-elements',
                         'transform-react-inline-elements',

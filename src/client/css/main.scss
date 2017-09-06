@@ -33,7 +33,7 @@
  knowledge of the CeCILL license and that you accept its terms.
  */
 
-@import "../base.scss";
-@import "../style.scss";
+@import "./base.scss";
+@import "./style.scss";
 
-@import "../../js/utils/Prism/themes/index.scss";
+@import "../js/utils/Prism/themes/index.scss";

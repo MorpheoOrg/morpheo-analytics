@@ -32,5 +32,9 @@ coverage
 yarn.lock
 .happypack
 
+dll
+release
+src/electron/main.prod.js*
+
 # Secrets used in dev
 devsecret.js

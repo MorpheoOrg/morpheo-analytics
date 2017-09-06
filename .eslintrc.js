@@ -15,7 +15,7 @@ module.exports = {
         "no-confusing-arrow": [0],
         "object-property-newline": [2, {"allowMultiplePropertiesPerLine": true}],
         "no-shadow": [0],
-        "global-require": [2],
+        "global-require": [0],
         "no-console": [0, {"allow": ["warn", "error"]}],
         "no-restricted-syntax": [0],
         "import/no-webpack-loader-syntax": [0],
