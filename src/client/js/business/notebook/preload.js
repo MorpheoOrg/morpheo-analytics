@@ -1,5 +1,5 @@
 import {reloadSaga} from 'redux-sagas-injector';
-import {injectReducer} from 'redux-injector';
+import {injectReducer} from 'redux-reducers-injector';
 
 import Notebook from './components/Notebook';
 

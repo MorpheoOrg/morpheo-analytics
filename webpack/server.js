@@ -1,10 +1,9 @@
 import config from 'config';
+import path from 'path';
+import fs from 'fs';
 import rules from './utils/rules';
 import resolve from './utils/resolve';
 import plugins from './utils/plugins';
-
-const fs = require('fs');
-const path = require('path');
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
@@ -34,10 +33,12 @@ const externals = fs
 module.exports = {
     name: 'server',
     target: 'node',
-    // devtool: 'source-map',
-    // devtool: 'eval',
     devtool: DEBUG ? 'source-map' : (DEVELOPMENT ? 'cheap-module-source-map' : '#hidden-source-map'),
-    entry: ['babel-polyfill', 'fetch-everywhere', res('../src/server/render.js')],
+    entry: [
+        'babel-polyfill',
+        'fetch-everywhere',
+        res('../src/server/render.js')
+    ],
     externals,
     output: {
         path: res('../build/server'),

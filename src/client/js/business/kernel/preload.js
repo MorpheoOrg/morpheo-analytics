@@ -1,7 +1,7 @@
 import Konami from './components/index';
 
 import {reloadSaga} from 'redux-sagas-injector';
-import {injectReducer} from 'redux-injector';
+import {injectReducer} from 'redux-reducers-injector';
 
 export sagas from './sagas';
 export reducer from './reducer';

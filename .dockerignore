@@ -1,6 +1,11 @@
 *
-!build/client
-!build/server
+!build
+!webpack/client.js
+!webpack/server.js
+!webpack/utils
 !Dockerfile
-!Caddyfile
 !inject_vars_and_run.sh
+!package.json
+!package-lock.json
+!config
+!.babelrc

@@ -38,7 +38,7 @@ import {applyMiddleware, compose} from 'redux';
 import {pick} from 'lodash';
 
 import {createInjectSagasStore, sagaMiddleware, reloadSaga} from 'redux-sagas-injector';
-import {combineReducersRecurse} from 'redux-injector';
+import {combineReducersRecurse} from 'redux-reducers-injector';
 
 import options from '../options';
 import rootSaga from '../sagas';
