@@ -27,8 +27,7 @@ export default merge.smart(baseConfig, {
         ],
     },
     entry: {
-        //renderer: (Object.keys(dependencies || {})),
-        renderer: ['react'],
+        renderer: Object.keys(dependencies || {}).filter(o => !['babel-runtime'].includes(o)),
     },
     output: {
         library: 'renderer',
