@@ -95,6 +95,7 @@
     },
     "dependencies": {
         "babel-runtime": "6.26.0",
+        "chai": "^4.1.2",
         "date-fns": "1.28.5",
         "emotion": "^7.2.0",
         "ends-with": "1.0.1",
@@ -105,7 +106,6 @@
         "lodash": "4.17.4",
         "material-ui": "1.0.0-beta.5",
         "material-ui-icons": "1.0.0-beta.5",
-        "prismjs": "1.6.0",
         "query-string": "5.0.0",
         "react": "15.4.2",
         "react-dom": "15.4.2",
@@ -127,9 +127,6 @@
         "redux-saga": "0.15.6",
         "redux-sagas-injector": "0.2.2",
         "reselect": "3.0.1",
-        "slate": "0.21.3",
-        "slate-edit-code": "0.10.3",
-        "slate-prism": "0.2.2",
         "url": "0.11.0",
         "uuid": "3.1.0"
     },

@@ -35,7 +35,6 @@
 
 import {reducer as formReducer} from 'redux-form';
 
-import userReducerFactory from '../client/js/business/user/reducer';
 import {actionTypes} from './actions';
 import localStorage from './localStorage';
 
@@ -55,6 +54,5 @@ export const general = (state = initialState, {type, payload}) => {
 
 export default {
     form: formReducer,
-    user: userReducerFactory(localStorage),
     general,
 };

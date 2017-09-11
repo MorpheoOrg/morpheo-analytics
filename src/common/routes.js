@@ -34,43 +34,21 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-import UserRoute from '../client/js/business/user/routes';
-import CommonRoutes from '../client/js/business/common/routes';
-import NotebookRoutes from '../client/js/business/notebook/routes';
-import KernelRoutes from '../client/js/business/kernel/routes';
-import SettingsRoutes from '../client/js/business/settings/routes';
 
 const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
-
-const Base = ({children}) =>
-    (<div>
-        <CommonRoutes/>
-        {children}
-    </div>);
-
-Base.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.shape({})),
-        PropTypes.shape({}),
-    ]).isRequired,
-};
 
 export default connect(mapStateToProps)(({location}) => {
     switch (location.type) {
     case 'HOME':
-        return (<Base>
-            <SettingsRoutes/>
-            <NotebookRoutes/>
-            <KernelRoutes/>
-            <UserRoute/>
-        </Base>);
+        return (<div>
+            Hello basic components youpi !!
+        </div>);
     case 'HELP':
-        return (<Base>
+        return (<div>
             <h1>help</h1>
-        </Base>);
+        </div>);
     default:
         return <h1>Not Found</h1>;
     }
