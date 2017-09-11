@@ -36,15 +36,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
+import MainRoute from '../client/js/business/ui/route';
+
 
 const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
 
 export default connect(mapStateToProps)(({location}) => {
     switch (location.type) {
     case 'HOME':
-        return (<div>
-            Hello basic components youpi !!
-        </div>);
+        return (<MainRoute />);
     case 'HELP':
         return (<div>
             <h1>help</h1>

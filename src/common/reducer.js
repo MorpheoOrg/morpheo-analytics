@@ -36,7 +36,7 @@
 import {reducer as formReducer} from 'redux-form';
 
 import {actionTypes} from './actions';
-import localStorage from './localStorage';
+import parametersReducer from '../client/js/business/ui/reducer';
 
 const initialState = {error: ''};
 
@@ -53,6 +53,7 @@ export const general = (state = initialState, {type, payload}) => {
 };
 
 export default {
+    parameters: parametersReducer,
     form: formReducer,
     general,
 };
