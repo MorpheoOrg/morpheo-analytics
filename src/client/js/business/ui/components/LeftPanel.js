@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';
 
-import actions from './actions';
+import actions from '../actions/leftPanel';
 
 
 const Container = styled('div')`
@@ -88,6 +88,7 @@ class LeftMenu extends React.Component {
     staticStyle = () => css`
         composes: ${this.props.className};
 
+        background-color: #FAFAFB;
         position: relative;
 
         .openning,.closing,.closed{

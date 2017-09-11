@@ -36,7 +36,7 @@
 import {reducer as formReducer} from 'redux-form';
 
 import {actionTypes} from './actions';
-import parametersReducer from '../client/js/business/ui/reducer';
+import parametersReducer from '../client/js/business/ui/reducer/index';
 
 const initialState = {error: ''};
 

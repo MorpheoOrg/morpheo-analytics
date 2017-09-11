@@ -1,7 +1,7 @@
 import React from 'react';
 
-import AppBar from './Editor/AppBar';
-import LeftPanel from './LeftPanel/LeftPanel';
+import AppBar from './AppBar';
+import LeftPanel from './LeftPanel';
 
 
 class Main extends React.Component {

@@ -5,37 +5,37 @@ import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
 import {bindActionCreators} from 'redux';
 
-import actions from '../LeftPanel/actions';
+import actions from '../actions/leftPanel';
 
 
 class AppBar extends React.Component {
     style = css`{
         display: flex;
         flex-direction: column;
-        background-color: #000;
+        background-color: #EBEDF0;
         justify-content: space-between;
-    }`;
 
-    flex = css`{
-        display: flex;
-        flex-direction: column;
+        & .button-group{
+            display: flex;
+            flex-direction: column;
 
-        margin: 20px 0 20px 0;
-        & button {
-            margin: 5px;
-            height: 42px;
-            width: 42px;
+            margin: 20px 0 20px 0;
+            & button {
+                margin: 5px;
+                height: 42px;
+                width: 42px;
+            }
         }
-    }`
+    }`;
 
     render() {
         return (<div className={this.style}>
-            <div className={this.flex}>
+            <div className={'button-group'}>
                 <button onClick={this.props.toogleVisibility}>Home</button>
                 <button>Experiences</button>
                 <button>Challenge</button>
             </div>
-            <div className={this.flex}>
+            <div className={'button-group'}>
                 <button>Submit</button>
                 <button>Settings</button>
             </div>
