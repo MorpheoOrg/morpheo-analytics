@@ -1,7 +1,8 @@
 import React from 'react';
 
-import AppBar from './AppBar';
-import LeftPanel from './LeftPanel';
+import ActivityBar from './ActivityBar';
+import SideBar from './SideBar';
+import Editor from './Editor';
 
 
 class Main extends React.Component {
@@ -16,9 +17,9 @@ class Main extends React.Component {
                 height: 100vh;
             `}
         >
-            <AppBar />
-            <LeftPanel />
-            Hello this is the main component.
+            <ActivityBar />
+            <SideBar />
+            <Editor />
         </div>);
     }
 }

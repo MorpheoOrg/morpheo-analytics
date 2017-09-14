@@ -1,5 +1,7 @@
-import leftPanel from './leftPanel';
+import sideBar from './sideBar';
+import editor from './editor';
 
 export default {
-    leftPanel,
+    editor,
+    sideBar,
 };
