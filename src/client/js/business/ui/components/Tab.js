@@ -181,23 +181,6 @@ class Tab extends React.Component {
     }
 }
 
-
-// Tab
-// active: is it the active tab ?
-// children: content of the tab
-// translation: how much pixel it must be translated
-
-// onClick: launched when tab is clicked
-// onCloseClick: launched when the close button is pushed (to add)
-// onDragOver: launched when dragged and over the tab
-// onDragOut: launched when dragged and over the tab
-// onDragStart: launched when start to drag a tab
-// onDragEnd: launched when is drop inside an element
-
-// missing ??
-// onDrop
-// droppable
-
 Tab.propTypes = {
     active: PropTypes.bool,
     children: PropTypes.string.isRequired,

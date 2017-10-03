@@ -19,6 +19,8 @@ class Pane extends React.Component {
 
     style = css`
         flex-grow: 1;
+
+        border-right: 1px solid #ccc!important;
     `
 
     renderHeader = () => (

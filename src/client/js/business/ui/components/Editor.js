@@ -72,9 +72,9 @@ class Editor extends React.Component {
     render() {
         console.log('editor state:', this.state.droppableTab);
         return (<div css={this.style}>
-            <button onClick={this.addGroup}>+</button>
+            {/* <button onClick={this.addGroup}>+</button>
             <button onClick={this.addTab}>+</button>
-            <button onClick={this.moveTab}> &gt; </button>
+            <button onClick={this.moveTab}> &gt; </button> */}
             {this.renderPanes()}
         </div>);
     }

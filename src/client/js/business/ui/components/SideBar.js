@@ -8,14 +8,44 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';
+import {ChevronLeft} from 'mdi-material-ui';
 
 import actions from '../actions/sideBar';
 
 
-const Container = styled('div')`
+const Container = styled.div`
     overflow: hidden;
     margin-left:auto;
     margin-right:auto;
+`;
+
+const Header = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & button{
+        position: relative;
+        right: 0;
+    }
+`;
+
+const FlatButton = styled.div`
+    border: none;
+    background-color: inherit;
+    color: #98999F;
+
+    &:hover{
+        color: #45464B;
+    }
+
+    .active{
+        color: #45464B;
+    }
+
+    &:focus{
+        outline: 0;
+    }
 `;
 
 
@@ -33,20 +63,28 @@ const Dragger = styled('div') `
 
 class SideBar extends React.Component {
     state = {
-        status: this.props.visible ? 'openned' : 'closed',
+        selectedIndex: 0,
+        status: this.props.selectedIndex < 0 ? 'closed' : 'openned',
         width: this.props.width,
     };
 
     componentWillReceiveProps(nextProps) {
+        // Keep in mind the previous selectedIndex to display animation
+        if (nextProps.selectedIndex >= 0) {
+            this.setState({
+                selectedIndex: nextProps.selectedIndex,
+            });
+        }
+
         // Add a transition when panel is shown or hidden
-        if (nextProps.visible !== this.props.visible) {
+        if ((nextProps.selectedIndex < 0) !== (this.props.selectedIndex < 0)) {
             this.setState(prevState => ({
-                status: nextProps.visible ? 'openning' : 'closing',
+                status: (nextProps.selectedIndex < 0) ? 'closing' : 'openning',
             }));
 
             // Remove the transition to let the user resize without problems
             setTimeout(() => this.setState(prevState => ({
-                status: nextProps.visible ? 'openned' : 'closed',
+                status: (nextProps.selectedIndex < 0) ? 'closed' : 'openned',
             })), 150);
         }
     }
@@ -120,14 +158,27 @@ class SideBar extends React.Component {
     };
 
     render() {
+        const {menuContent} = this.props;
+        const {selectedIndex} = this.state;
+        const {name = null, content = null} = selectedIndex >= 0 ?
+            menuContent[selectedIndex] : {};
+
         return (<div
             css={this.staticStyle()}
             className={this.state.status}
             style={this.dynamicStyle()}
         >
             <Container>
-                <button onClick={this.props.hide}>Hide</button>
-                {this.props.children}
+                <div>
+                    <Header>
+                        <h3>{name}</h3>
+                        <FlatButton onClick={this.props.hide}>
+                            <ChevronLeft />
+                        </FlatButton>
+                    </Header>
+                    {content}
+                    {this.props.children}
+                </div>
             </Container>
             <Dragger
                 className={this.slider}
@@ -140,6 +191,14 @@ class SideBar extends React.Component {
 SideBar.propTypes = {
     className: PropTypes.string,
     children: PropTypes.node,
+    menuContent: PropTypes.arrayOf(
+        PropTypes.shape({
+            name: PropTypes.string,
+            icon: PropTypes.element,
+            content: PropTypes.element,
+        }),
+    ).isRequired,
+    selectedIndex: PropTypes.number.isRequired,
     visible: PropTypes.bool,
     width: PropTypes.number,
 
@@ -148,6 +207,7 @@ SideBar.propTypes = {
 };
 
 SideBar.defaultProps = {
+    menuContent: [],
     className: '',
     children: null,
     visible: false,
@@ -156,7 +216,8 @@ SideBar.defaultProps = {
 
 const mapStateToProps = ({parameters}, ownProps) => ({
     ...ownProps,
-    visible: parameters.sideBar.visible,
+    selectedIndex: parameters.sideBar.selectedIndex,
+    visible: parameters.sideBar.selectedIndex >= 0,
     width: parameters.sideBar.width,
 });
 
@@ -166,4 +227,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-    onlyUpdateForKeys(['className', 'visible'])(SideBar));
+    onlyUpdateForKeys(['className', 'selectedIndex', 'visible', 'width'])(SideBar));
