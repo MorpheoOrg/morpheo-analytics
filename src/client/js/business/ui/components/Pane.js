@@ -6,7 +6,6 @@ import {bindActionCreators} from 'redux';
 import {css} from 'emotion';
 
 import actions from '../actions/editor';
-import Tab from './Tab';
 import TabNavigation from './TabNavigation';
 
 class Pane extends React.Component {
@@ -14,50 +13,13 @@ class Pane extends React.Component {
         internalDrag: false,
     };
 
-    style = css`
-        flex-grow: 1;
-
-        & nav {
-            width: 100%;
-        }
-
-        & nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            background-color: #f1f1f2;
-        }
-
-        & nav li {
-            float: left;
-        }
-
-        & nav li button {
-            border: none;
-            display: block;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            background-color: #f1f1f2;
-        }
-
-        & nav li button:hover {
-            background-color: white;
-        }
-
-        & nav li button:focus {
-            outline: 0;
-        }
-
-        & .active {
-            background-color: white;
-        }
-    `
-
     selectTab = tabIndex => () => {
         this.props.selectTab(tabIndex);
     }
+
+    style = css`
+        flex-grow: 1;
+    `
 
     renderHeader = () => (
         <TabNavigation

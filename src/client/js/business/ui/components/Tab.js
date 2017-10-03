@@ -12,6 +12,15 @@ class Tab extends React.Component {
         dragged: false,
     }
 
+    componentWillUnmount() {
+        if (this.state.dragged) {
+            console.log('first');
+        }
+
+        // prevent handleDragEnd on unmount component
+        this.handleDragEnd();
+    }
+
     handleMouseDown = (event) => {
         event.preventDefault();
         this.props.onMouseDown(event);
@@ -55,16 +64,59 @@ class Tab extends React.Component {
         this.props.onDrop(event);
     }
 
-    componentWillUnmount() {
-        if (this.state.dragged) {
-            console.log('first');
+    buttonStyle = css`
+        display: flex;
+        align-items: center;
+        position: inherit;
+
+        border: none;
+        padding: 14px 16px;
+
+        text-align: center;
+        text-decoration: none;
+
+        background-color: #f1f1f2;
+
+        & button {
+            border: none;
+            margin-left: 3px;
+            background-color: inherit;
+            color: transparent;
+            box-shadow: none !important;
         }
 
-        // prevent handleDragEnd on unmount component
-        this.handleDragEnd();
-    }
+        &:hover,.active {
+            background-color: white;
+        }
+
+        &:hover button,.active button{
+            color: inherit;
+        }
+
+        & button:hover{
+            color: red;
+        }
+
+        & button:focus {
+            outline: 0;
+
+        }
+
+        & button:active {
+            transform: scale(1.1);
+        }
+
+        .dragged {
+            box-shadow: 0px 3px 10px rgba(0%, 0%, 0%, 0.30);
+            pointer-events: none;
+            transition: none;
+            z-index: 10;
+
+        }
+    `;
 
     style = css`
+        float: left;
         position: relative;
 
         & div{
@@ -75,27 +127,11 @@ class Tab extends React.Component {
             height: 100%;
         }
 
-        & button{
-            z-index: 1;
-        }
-
-        & *{
-            transition: inherit;
-            position: inherit;
-        }
-
         .overred button{
             pointer-events: none;
         }
 
         .dragged {
-            z-index: 10;
-        }
-
-        .dragged button{
-            box-shadow: 0px 3px 10px rgba(0%, 0%, 0%, 0.30);
-            pointer-events: none;
-            transition: none;
         }
     `;
 
@@ -117,7 +153,10 @@ class Tab extends React.Component {
             />
 
             <button
-                className={active ? 'active' : ''}
+                className={dragged ?
+                    'dragged active' :
+                    active ? 'active' : ''}
+                css={this.buttonStyle}
                 style={
                     dragged ? {
                         transform: `translate(${x}px, ${y}px)`,
@@ -129,6 +168,14 @@ class Tab extends React.Component {
                 onMouseDown={this.handleMouseDown}
             >
                 {this.props.children}
+                <button
+                    onMouseDown={(event) => {
+                        event.stopPropagation();
+                    }}
+                    onClick={this.props.onClose}
+                >
+                    x
+                </button>
             </button>
         </li>);
     }
@@ -156,6 +203,7 @@ Tab.propTypes = {
     children: PropTypes.string.isRequired,
     translation: PropTypes.number,
 
+    onClose: PropTypes.func,
     onDragStart: PropTypes.func,
     onDragOver: PropTypes.func,
     onDragOut: PropTypes.func,
@@ -170,7 +218,7 @@ Tab.defaultProps = {
     active: false,
     translation: 0,
 
-    onClick: noop,
+    onClose: noop,
     onDragStart: noop,
     onDragOver: noop,
     onDragOut: noop,

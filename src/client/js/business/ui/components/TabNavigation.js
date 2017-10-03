@@ -45,6 +45,11 @@ class TabNavigation extends React.Component {
         });
     }
 
+    handleTabClose = tabIndex => (event) => {
+        this.props.closeTab(tabIndex);
+        event.preventDefault();
+    }
+
     handleTabDragStart = tabIndex => (event) => {
         // Get the size of the element
         const width = event.target.offsetWidth;
@@ -95,6 +100,20 @@ class TabNavigation extends React.Component {
 
     style = css`
         flex-grow: 1;
+        width: 100%;
+
+        & ul {
+            display: flex;
+            margin: 0;
+            padding: 0;
+
+            list-style-type: none;
+            background-color: #f1f1f2;
+        }
+
+        & div {
+            flex-grow: 1;
+        }
     `;
 
     render() {
@@ -103,25 +122,25 @@ class TabNavigation extends React.Component {
         const lastIndex = droppableTab && droppableTab.groupIndex === groupIndex ?
             children.length - 1 : children.length;
         console.log(lastIndex);
-        return (<nav><ul>
+        return (<nav css={this.style}><ul>
             {children.map(({tabKey, value}, index) => (
                 <Tab
                     key={tabKey}
                     active={selectedIndex === index}
                     translation={this.getTranslation(index)}
 
-                    onMouseDown={this.handleMouseDown(index)}
+                    onClose={this.handleTabClose(index)}
                     onDragStart={this.handleTabDragStart(index)}
                     onDragOver={this.handleTabDragOver(index)}
                     onDragOut={this.handleTabDragOut(index)}
                     onDragEnd={this.handleTabDragEnd(index)}
                     onDrop={this.handleTabDrop(index)}
+                    onMouseDown={this.handleMouseDown(index)}
                 >
                     {value}
                 </Tab>
             ))}
             <div
-                css={this.style}
                 onMouseOver={this.handleTabDragOver(lastIndex)}
                 onMouseOut={this.handleTabDragOut(lastIndex)}
                 onMouseUp={this.handleTabDrop(lastIndex)}
@@ -141,6 +160,7 @@ TabNavigation.propTypes = {
     groupIndex: PropTypes.number.isRequired,
     selectedIndex: PropTypes.number.isRequired,
 
+    closeTab: PropTypes.func.isRequired,
     moveTab: PropTypes.func.isRequired,
     onTabDragStart: PropTypes.func,
     onTabDragEnd: PropTypes.func,
@@ -159,6 +179,10 @@ TabNavigation.defaultProps = {
 const mapStateToProps = (state, ownProps) => ({});
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
+    closeTab: tabIndex => actions.closeTab({
+        tabIndex,
+        groupIndex: ownProps.groupIndex,
+    }),
     selectTab: selectedIndex => actions.selectTab({
         selectedIndex,
         groupIndex: ownProps.groupIndex,

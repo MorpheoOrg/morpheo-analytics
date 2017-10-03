@@ -48,7 +48,7 @@ export default (state = [], {type, payload}) => {
         ];
     }
 
-    case actionsTypes.removeTab: {
+    case actionsTypes.closeTab: {
         const {groupIndex, tabIndex} = payload;
         const {tabs, selectedIndex} = state[groupIndex];
 
