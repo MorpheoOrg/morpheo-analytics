@@ -2,11 +2,24 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {css} from 'emotion';
+import styled from 'emotion/react';
 
-import actions from '../actions/editor';
+import actions from '../../actions/editor';
 import Tab from './Tab';
+import Space from './Space';
 
+const Container = styled.nav`
+    flex-grow: 1;
+    width: 100%;
+`;
+
+const Ul = styled.ul`
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    background-color: #f1f1f2;
+`;
 
 class TabNavigation extends React.Component {
     state = {
@@ -38,19 +51,22 @@ class TabNavigation extends React.Component {
         return this.state.indexTabOver <= index ? width : 0;
     };
 
-    handleMouseDown = tabIndex => () => {
-        this.props.selectTab(tabIndex);
-        this.setState({
-            indexTabOver: tabIndex,
+    handleMouseDown = tabIndex => {
+        this.props.selectTab({
+            selectedIndex: tabIndex,
+            groupIndex: this.props.groupIndex,
+        });
+        this.setState({indexTabOver: tabIndex});
+    };
+
+    handleTabClose = tabIndex => {
+        this.props.closeTab({
+            tabIndex,
+            groupIndex: this.props.groupIndex,
         });
     };
 
-    handleTabClose = tabIndex => (event) => {
-        this.props.closeTab(tabIndex);
-        event.preventDefault();
-    };
-
-    handleTabDragStart = tabIndex => (event) => {
+    handleTabDragStart = (event, tabIndex) => {
         // Get the size of the element
         const width = event.target.offsetWidth;
         // Add a width on the state
@@ -61,7 +77,7 @@ class TabNavigation extends React.Component {
         });
     };
 
-    handleTabDragOver = tabIndex => () => {
+    handleTabDragOver = tabIndex => {
         if (this.props.droppableTab) {
             this.setState({
                 indexTabOver: tabIndex,
@@ -69,24 +85,27 @@ class TabNavigation extends React.Component {
         }
     };
 
-    handleTabDragOut = tabIndex => () => {
-        console.log('hello out');
+    handleTabDragOut = (index) => {
+        console.log('Tab Drag Out');
         this.removeIndexTabOver();
     };
 
-    handleTabDragEnd = tabIndex => () => {
+    handleTabDragEnd = (index) => {
         this.props.onTabDragEnd();
         this.setState({
             indexTabOver: undefined,
         });
     };
 
-    handleTabDrop = tabIndex => () => {
-        const {droppableTab} = this.props;
-        this.props.moveTab(
-            droppableTab.groupIndex, droppableTab.tabIndex,
-            this.props.groupIndex, tabIndex,
-        );
+    handleTabDrop = toTabIndex => {
+        const {droppableTab, groupIndex} = this.props;
+
+        this.props.moveTab({
+            fromIndex: droppableTab.groupIndex,
+            fromTabIndex: droppableTab.tabIndex,
+            toIndex: groupIndex,
+            toTabIndex,
+        });
     };
 
     removeIndexTabOver = () => {
@@ -98,61 +117,44 @@ class TabNavigation extends React.Component {
         }
     };
 
-    style = css`
-        flex-grow: 1;
-        width: 100%;
-
-        & ul {
-            display: flex;
-            margin: 0;
-            padding: 0;
-
-            list-style-type: none;
-            background-color: #f1f1f2;
-        }
-
-        & div {
-            flex-grow: 1;
-        }
-    `;
-
     render() {
-        const {droppableTab, groupIndex, children, selectedIndex} = this.props;
-        // Remove 1 if the groupIndex is the one of the droppableTab
-        const lastIndex = droppableTab && droppableTab.groupIndex === groupIndex ?
-            children.length - 1 : children.length;
-        console.log(lastIndex);
-        return (<nav css={this.style}>
-            <ul>
-                {children.map(({tabKey, value}, index) => (
+        const {droppableTab, groupIndex, tabs, selectedIndex} = this.props;
+
+        return (<Container>
+            <Ul>
+                {tabs.map(({tabKey, value}, index) => (
                     <Tab
                         key={tabKey}
+                        index={index}
                         active={selectedIndex === index}
                         translation={this.getTranslation(index)}
 
-                        onClose={this.handleTabClose(index)}
-                        onDragStart={this.handleTabDragStart(index)}
-                        onDragOver={this.handleTabDragOver(index)}
-                        onDragOut={this.handleTabDragOut(index)}
-                        onDragEnd={this.handleTabDragEnd(index)}
-                        onDrop={this.handleTabDrop(index)}
-                        onMouseDown={this.handleMouseDown(index)}
+                        onClose={this.handleTabClose}
+                        onDragStart={this.handleTabDragStart}
+                        onDragOver={this.handleTabDragOver}
+                        onDragOut={this.handleTabDragOut}
+                        onDragEnd={this.handleTabDragEnd}
+                        onDrop={this.handleTabDrop}
+                        onMouseDown={this.handleMouseDown}
                     >
                         {value}
                     </Tab>
                 ))}
-                <div
-                    onMouseOver={this.handleTabDragOver(lastIndex)}
-                    onMouseOut={this.handleTabDragOut(lastIndex)}
-                    onMouseUp={this.handleTabDrop(lastIndex)}
+                <Space
+                    droppableTab={droppableTab}
+                    length={tabs.length}
+                    groupIndex={groupIndex}
+                    onMouseOver={this.handleTabDragOver}
+                    onMouseOut={this.handleTabDragOut}
+                    onMouseUp={this.handleTabDrop}
                 />
-            </ul>
-        </nav>);
+            </Ul>
+        </Container>);
     }
 }
 
 TabNavigation.propTypes = {
-    children: PropTypes.arrayOf(
+    tabs: PropTypes.arrayOf(
         PropTypes.shape({
             tabKey: PropTypes.number,
             value: PropTypes.string,
@@ -179,19 +181,12 @@ TabNavigation.defaultProps = {
     onTabDragEnd: noop,
 };
 
-const mapStateToProps = (state, ownProps) => ({});
+const mapStateToProps = (state, ownProps) => ({...ownProps});
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-    closeTab: tabIndex => actions.closeTab({
-        tabIndex,
-        groupIndex: ownProps.groupIndex,
-    }),
-    selectTab: selectedIndex => actions.selectTab({
-        selectedIndex,
-        groupIndex: ownProps.groupIndex,
-    }),
-    moveTab: (fromIndex, fromTabIndex, toIndex, toTabIndex) =>
-        actions.moveTab({fromIndex, fromTabIndex, toIndex, toTabIndex}),
+    closeTab: actions.closeTab,
+    selectTab: actions.selectTab,
+    moveTab: actions.moveTab,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabNavigation);
