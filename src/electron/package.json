@@ -1,6 +1,6 @@
 {
-    "name": "notebook",
-    "description": "Notebook",
+    "name": "Analytics",
+    "description": "Analytics",
     "version": "0.0.1",
     "author": "Guillaume Cisco <guillaume@rythm.co>",
     "main": "./main.prod.js"

@@ -12,42 +12,42 @@ let valueToRemove = 0;
 class Editor extends React.Component {
     state = {
         droppableTab: undefined,
-    }
+    };
 
     handleTabDragStart = (tab) => {
         // Activate the droppable mode
         this.setState({
             droppableTab: tab,
         });
-    }
+    };
 
     handleTabDragEnd = () => {
         // Deactivate the droppable mode
         this.setState({
             droppableTab: undefined,
         });
-    }
+    };
 
     // Next functions are provided just for test the component
     removeEditor = key => (event) => {
         event.preventDefault();
-    }
+    };
 
     addGroup = (event) => {
         event.preventDefault();
         this.props.addGroup(1, 'Hello');
-    }
+    };
 
     addTab = (event) => {
         event.preventDefault();
         valueToRemove += 1;
         this.props.addTab(1, 1, `test${valueToRemove}`);
-    }
+    };
 
     moveTab = (event) => {
         event.preventDefault();
         this.props.moveTab(0, 0, 1, 0);
-    }
+    };
 
     style = css`
         width: 100%;

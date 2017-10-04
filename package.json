@@ -99,6 +99,7 @@
         "date-fns": "1.28.5",
         "emotion": "^7.2.0",
         "ends-with": "1.0.1",
+        "error-stack-parser": "^2.0.1",
         "fastclick": "1.0.6",
         "history": "4.6.3",
         "jss": "^8.1.0",

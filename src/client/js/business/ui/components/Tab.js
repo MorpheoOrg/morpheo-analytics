@@ -10,7 +10,7 @@ class Tab extends React.Component {
     state = {
         status: '',
         dragged: false,
-    }
+    };
 
     componentWillUnmount() {
         if (this.state.dragged) {
@@ -35,7 +35,7 @@ class Tab extends React.Component {
 
         // Apply the onDragTabStart
         this.props.onDragStart(event);
-    }
+    };
 
     handleDragMove = (event) => {
         // Drag move by applying a translation
@@ -44,7 +44,7 @@ class Tab extends React.Component {
             x: event.clientX - this.x0,
             y: event.clientY - this.y0,
         });
-    }
+    };
 
     handleDragEnd = (event) => {
         console.log('second');
@@ -57,12 +57,12 @@ class Tab extends React.Component {
         // Remove the event created with handleMouseDown
         window.removeEventListener('mousemove', this.handleDragMove);
         window.removeEventListener('mouseup', this.handleDragEnd);
-    }
+    };
 
     handleDrop = (event) => {
         console.log('drop');
         this.props.onDrop(event);
-    }
+    };
 
     buttonStyle = css`
         display: flex;
@@ -195,7 +195,8 @@ Tab.propTypes = {
     onMouseDown: PropTypes.func,
 };
 
-const noop = () => {};
+const noop = () => {
+};
 
 Tab.defaultProps = {
     active: false,

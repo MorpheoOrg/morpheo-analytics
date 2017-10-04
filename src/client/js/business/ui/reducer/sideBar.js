@@ -2,37 +2,30 @@ import {actionTypes} from '../actions/sideBar';
 
 const initialState = {
     selectedIndex: -1,
-    visible: true,
+    status: 'closed',
     width: 200,
+    duration: 150,
 };
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
-    case actionTypes.toogleIndex: {
-        const {selectedIndex} = payload;
+    case actionTypes.setIndex: {
         return {
             ...state,
-            selectedIndex: state.selectedIndex === selectedIndex ?
-                -1 : selectedIndex,
+            selectedIndex: payload,
         };
     }
-    case actionTypes.toogleVisibility:
+    case actionTypes.setStatus:
         return {
             ...state,
-            visible: !state.visible,
-        };
-
-    case actionTypes.hide:
-        return {
-            ...state,
-            selectedIndex: -1,
-            visible: false,
+            status: payload,
+            selectedIndex: payload === 'closed' ? -1 : state.selectedIndex,
         };
 
     case actionTypes.resize:
         return {
             ...state,
-            width: payload.width,
+            width: payload,
         };
 
     default:

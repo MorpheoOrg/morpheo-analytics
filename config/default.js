@@ -8,7 +8,7 @@ const orchestratorApiUrl = 'https://orchestrator.morpheo.io';
 const servicesApiUrl = 'https://notebook-services.morpheo.io';
 
 module.exports = {
-    appName: 'Notebook',
+    appName: 'Analytics',
     apps: {
         frontend: {
             api_url: apiUrl,
@@ -19,7 +19,7 @@ module.exports = {
             services_api_url: servicesApiUrl,
             baseName: {
                 production: '/',
-                debug: '/morpheo-notebook/build/frontend/',
+                debug: '/morpheo-analytics/build/frontend/',
             },
         },
     },

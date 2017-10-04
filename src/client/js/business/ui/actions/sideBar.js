@@ -1,18 +1,15 @@
 import {createAction} from 'redux-actions';
 
+const prefix = 'SIDE_BAR::';
 
 export const actionTypes = {
-    show: 'SIDE_BAR::SHOW',
-    hide: 'SIDE_BAR::HIDE',
-    resize: 'SIDE_BAR::RESIZE',
-    toogleIndex: 'SIDE_BAR::TOOGLE_INDEX',
-    toogleVisibility: 'SIDE_BAR::TOOGLE_VISIBILITY',
+    resize: `${prefix}RESIZE`,
+    setIndex: `${prefix}SET_INDEX`,
+    setStatus: `${prefix}SET_STATUS`,
 };
 
 export default {
-    show: createAction(actionTypes.show),
-    hide: createAction(actionTypes.hide),
     resize: createAction(actionTypes.resize),
-    toogleIndex: createAction(actionTypes.toogleIndex),
-    toogleVisibility: createAction(actionTypes.toogleVisibility),
+    setIndex: createAction(actionTypes.setIndex),
+    setStatus: createAction(actionTypes.setStatus),
 };

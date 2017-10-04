@@ -1,17 +1,17 @@
-/* eslint react/no-danger: 0 */
 /* globals window */
 
+import React from 'react';
 import {PropTypes} from 'prop-types';
 import {css} from 'emotion';
 import styled from 'emotion/react';
-import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';
 import {ChevronLeft} from 'mdi-material-ui';
 
 import actions from '../actions/sideBar';
-
+import {menuContent} from './iconDefinition';
+import {getVisible} from '../selector';
 
 const Container = styled.div`
     overflow: hidden;
@@ -23,33 +23,30 @@ const Header = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    & button{
-        position: relative;
-        right: 0;
-    }
 `;
 
-const FlatButton = styled.div`
+const FlatButton = styled.button`
     border: none;
     background-color: inherit;
     color: #98999F;
+    position: relative;
+    right: 0;
+    cursor: pointer;
 
-    &:hover{
+    &:hover {
         color: #45464B;
     }
 
-    .active{
+    .active {
         color: #45464B;
     }
 
-    &:focus{
+    &:focus {
         outline: 0;
     }
 `;
 
-
-const Dragger = styled('div') `
+const Dragger = styled.div`
     position: absolute;
     z-index: 1;
     opacity: 100;
@@ -60,171 +57,105 @@ const Dragger = styled('div') `
     cursor: col-resize;
 `;
 
-
 class SideBar extends React.Component {
+    // width is in state for UI responsiveness
     state = {
-        selectedIndex: 0,
-        status: this.props.selectedIndex < 0 ? 'closed' : 'openned',
         width: this.props.width,
     };
-
-    componentWillReceiveProps(nextProps) {
-        // Keep in mind the previous selectedIndex to display animation
-        if (nextProps.selectedIndex >= 0) {
-            this.setState({
-                selectedIndex: nextProps.selectedIndex,
-            });
-        }
-
-        // Add a transition when panel is shown or hidden
-        if ((nextProps.selectedIndex < 0) !== (this.props.selectedIndex < 0)) {
-            this.setState(prevState => ({
-                status: (nextProps.selectedIndex < 0) ? 'closing' : 'openning',
-            }));
-
-            // Remove the transition to let the user resize without problems
-            setTimeout(() => this.setState(prevState => ({
-                status: (nextProps.selectedIndex < 0) ? 'closed' : 'openned',
-            })), 150);
-        }
-    }
-
     onMouseDown = (event) => {
         event.preventDefault();
 
-        this.clientX0 = event.clientX;
+        this.clientX = event.clientX;
+        // TODO need to debounce mousemove
         window.addEventListener('mousemove', this.onMouseMove);
         window.addEventListener('mouseup', this.onMouseUp);
-    }
+    };
 
     onMouseMove = (event) => {
         event.preventDefault();
         this.updateWidth(event);
-    }
+    };
 
     onMouseUp = (event) => {
         event.preventDefault();
         window.removeEventListener('mousemove', this.onMouseMove);
         window.removeEventListener('mouseup', this.onMouseUp);
 
+        // We call resize only on MouseUp for the fluidity of the UI
         const width = this.updateWidth(event);
-        // We call resize only on MouseUp because for the fluidity of the UI
-        this.props.resize({width});
-    }
+        this.props.resize(width);
+    };
 
     updateWidth = (event) => {
-        const width = this.state.width - (this.clientX0 - event.clientX);
-        this.clientX0 = event.clientX;
-        // We call setState instead of redux to preserve the app fluidity
-        this.setState(prevState => ({
-            width,
-        }));
-
+        const width = this.state.width - (this.clientX - event.clientX);
+        this.clientX = event.clientX;
+        this.setState({width});
         return width;
-    }
+    };
 
-    staticStyle = () => css`
-        composes: ${this.props.className};
-
+    style = () => css`
         background-color: #FAFAFB;
         position: relative;
-
-        .openning,.closing,.closed{
-            min-width: 0px;
-        }
-
-        .closing,.closed{
-            visibility: hidden;
-        }
-
-        .openning {
-            transition: flex 150ms linear,
-            width 150ms linear;
-        }
-
-        .closing {
-            transition: flex 150ms linear,
-            width 150ms linear,
-            visibility 0s 150ms;
-        }
+        flex: 0 0 ${['opening', 'opened'].includes(this.props.status) ? this.state.width : 0}px;
+        min-width: ${['closing', 'opening'].includes(this.props.status) ? '0px' : 'auto'};
+        transition: ${['closing', 'opening'].includes(this.props.status) ? `flex ${this.props.duration}ms ease-out` : 'auto'};
     `;
 
-    dynamicStyle = () => {
-        const width = this.props.visible ? this.state.width : 0;
-        return {
-            flex: `0 0 ${width}px`,
-            width: `${width}px`,
-        };
+    close = () => {
+        const {setStatus} = this.props;
+        setStatus('closing');
+        setTimeout(() => {
+            setStatus('closed');
+        }, this.props.duration);
     };
 
     render() {
-        const {menuContent} = this.props;
-        const {selectedIndex} = this.state;
-        const {name = null, content = null} = selectedIndex >= 0 ?
-            menuContent[selectedIndex] : {};
+        const {selectedIndex, visible} = this.props;
 
-        return (<div
-            css={this.staticStyle()}
-            className={this.state.status}
-            style={this.dynamicStyle()}
-        >
-            <Container>
-                <div>
-                    <Header>
-                        <h3>{name}</h3>
-                        <FlatButton onClick={this.props.hide}>
-                            <ChevronLeft />
-                        </FlatButton>
-                    </Header>
-                    {content}
-                    {this.props.children}
-                </div>
+        return (<div className={this.style()}>
+            {visible && <Container>
+                <Header>
+                    <h3>{menuContent[selectedIndex].name}</h3>
+                    <FlatButton onClick={this.close}>
+                        <ChevronLeft/>
+                    </FlatButton>
+                </Header>
             </Container>
-            <Dragger
-                className={this.slider}
-                onMouseDown={this.onMouseDown}
-            />
+            }
+            <Dragger onMouseDown={this.onMouseDown}/>
         </div>);
     }
 }
 
 SideBar.propTypes = {
-    className: PropTypes.string,
-    children: PropTypes.node,
-    menuContent: PropTypes.arrayOf(
-        PropTypes.shape({
-            name: PropTypes.string,
-            icon: PropTypes.element,
-            content: PropTypes.element,
-        }),
-    ).isRequired,
     selectedIndex: PropTypes.number.isRequired,
     visible: PropTypes.bool,
+    status: PropTypes.string,
     width: PropTypes.number,
 
-    hide: PropTypes.func.isRequired,
+    setStatus: PropTypes.func.isRequired,
     resize: PropTypes.func.isRequired,
 };
 
 SideBar.defaultProps = {
     menuContent: [],
-    className: '',
     children: null,
     visible: false,
     width: 400,
 };
 
-const mapStateToProps = ({parameters}, ownProps) => ({
+const mapStateToProps = (state, ownProps) => ({
     ...ownProps,
-    selectedIndex: parameters.sideBar.selectedIndex,
-    visible: parameters.sideBar.selectedIndex >= 0,
-    width: parameters.sideBar.width,
+    selectedIndex: state.parameters.sideBar.selectedIndex,
+    width: state.parameters.sideBar.width,
+    status: state.parameters.sideBar.status,
+    duration: state.parameters.sideBar.duration,
+    visible: getVisible(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    hide: actions.hide,
+    setStatus: actions.setStatus,
     resize: actions.resize,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-    onlyUpdateForKeys(['className', 'selectedIndex', 'visible', 'width'])(SideBar));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['selectedIndex', 'visible', 'status'])(SideBar));

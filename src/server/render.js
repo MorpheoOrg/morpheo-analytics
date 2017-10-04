@@ -1,3 +1,5 @@
+/* global APP_NAME */
+
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import {JssProvider, SheetsRegistry} from 'react-jss';
@@ -51,15 +53,14 @@ export default ({clientStats}) => async (req, res, next) => {
       <html>
         <head>
           <meta charset="utf-8">
-          <title>Notebook</title>
+          <title>${APP_NAME}</title>
           ${styles}
-          <link rel="stylesheet prefetch" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+          <style id="jss-server-side">${css}</style>
         </head>
         <body>
           <script>window.REDUX_STATE = ${stateJson}</script>
           <div id="root">${process.env.NODE_ENV === 'production' ? appString : `<div>${appString}</div>`}</div>
           ${cssHash}
-          <style id="jss-server-side">${css}</style>
           <script type='text/javascript' src='/reactVendors.js'></script>
           <script type='text/javascript' src='/reduxVendors.js'></script>
           <script type='text/javascript' src='/vendors.js'></script>

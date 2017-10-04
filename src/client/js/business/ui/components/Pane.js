@@ -15,13 +15,13 @@ class Pane extends React.Component {
 
     selectTab = tabIndex => () => {
         this.props.selectTab(tabIndex);
-    }
+    };
 
     style = css`
         flex-grow: 1;
 
         border-right: 1px solid #ccc!important;
-    `
+    `;
 
     renderHeader = () => (
         <TabNavigation
@@ -44,7 +44,7 @@ class Pane extends React.Component {
                 hello {selectedIndex} {value}
             </div>
         ) : null);
-    }
+    };
 
     render() {
         return (<div css={this.style}>
@@ -73,7 +73,8 @@ Pane.propTypes = {
     selectTab: PropTypes.func.isRequired,
 };
 
-const noop = () => {};
+const noop = () => {
+};
 
 Pane.defaultProps = {
     droppableTab: undefined,
