@@ -24,17 +24,14 @@ const Header = styled.div`
     position: relative;
     justify-content: space-between;
     align-items: center;
-<<<<<<< db33ded6a6f9dbbb0831774f6d0f2bc531f8f230
-    margin-right: 24px;
-=======
-
     padding-bottom: 30px;
+`;
 
-    & button{
-        position: relative;
-        right: 0;
-    }
->>>>>>> Add experience render.
+const Content = styled.div`
+display: flex;
+position: relative;
+justify-content: space-between;
+align-items: center;
 `;
 
 const FlatButton = styled.button`
@@ -107,6 +104,7 @@ class SideBar extends React.Component {
     style = () => css`
         background-color: #FAFAFB;
         position: relative;
+        padding-top: 30px;
         flex: 0 0 ${['opening', 'opened'].includes(this.props.status) ? this.state.width : 0}px;
         min-width: ${['closing', 'opening'].includes(this.props.status) ? '0px' : 'auto'};
         transition: ${['closing', 'opening'].includes(this.props.status) ? `flex ${this.props.duration}ms ease-out` : 'auto'};
@@ -130,8 +128,10 @@ class SideBar extends React.Component {
                     <FlatButton onClick={this.close}>
                         <ChevronLeft/>
                     </FlatButton>
-                    {menuContent[selectedIndex].content}
                 </Header>
+                <Content>
+                    {menuContent[selectedIndex].content}
+                </Content>
             </Container>
             }
             <Dragger onMouseDown={this.onMouseDown}/>

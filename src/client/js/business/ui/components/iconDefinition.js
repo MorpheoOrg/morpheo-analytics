@@ -1,7 +1,7 @@
 import React from 'react';
 import {Poll, CloudUpload, BookOpen,
     Settings, FlaskOutline} from 'mdi-material-ui';
-import ExperimentList from './ExperimentList';
+import ExperimentList from '../../models/experiment/components/ExperimentList';
 
 
 export const menuContent = [
@@ -12,7 +12,7 @@ export const menuContent = [
     {
         name: 'Experiments',
         icon: <FlaskOutline />,
-        content: <ExperimentList />
+        content: <ExperimentList />,
     },
     {
         name: 'Notebook',

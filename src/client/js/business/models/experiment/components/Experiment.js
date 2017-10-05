@@ -1,7 +1,11 @@
 /* global fetch, btoa,
    ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD
    STORAGE_API_URL STORAGE_USER STORAGE_PASSWORD */
+
+import PropTypes from 'prop-types';
 import React from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {css} from 'emotion';
 import {Calendar, ChartLine, Timer} from 'mdi-material-ui';
 
@@ -53,21 +57,8 @@ class Experiment extends React.Component {
         }
     `;
 
-    getHeaders = jwt => ({
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        Authorization: `Basic ${jwt}`,
-    });
+    handleClick = async () => {
 
-    handleClick = () => {
-        const url = `${ORCHESTRATOR_API_URL}/problem`;
-        const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-        fetch(url, {
-            headers: this.getHeaders(jwt),
-            mode: 'cors',
-        })
-            .then(response => response.json())
-            .then(json => console.log(json), error => ({error}));
     }
 
     render() {
@@ -100,4 +91,10 @@ class Experiment extends React.Component {
     }
 }
 
-export default Experiment;
+const mapStateToProps = (state, ownProps) => ({});
+
+const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
+
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Experiment);
