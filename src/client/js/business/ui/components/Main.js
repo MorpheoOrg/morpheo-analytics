@@ -6,7 +6,7 @@ import ActivityBar from './ActivityBar';
 import SideBar from './SideBar';
 import Editor from './Editor';
 
-import ExperimentList from './ExperimentList';
+import ExperimentList from '../../models/experiment/components/ExperimentList';
 
 
 class Main extends React.Component {
@@ -49,6 +49,7 @@ class Main extends React.Component {
                 overflow: visible;
                 display: flex;
                 height: 100vh;
+                overflow: hidden;
             `}
         >
             <ActivityBar
