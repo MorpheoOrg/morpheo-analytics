@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import styled from 'emotion/react';
 
 import actions from '../../actions/editor';
-import Tab from './Tab';
+import TabTitle from './TabTitle';
 import Space from './Space';
 
 const Container = styled.nav`
@@ -32,55 +32,54 @@ class TabNavigation extends React.Component {
     //     this.removeIndexTabOver();
     // }
 
-    getTranslation = (index) => {
+    getTranslation = (id) => {
+        console.log(id);
         const {indexTabOver} = this.state;
         const {droppableTab} = this.props;
         if (!droppableTab || (indexTabOver === undefined)) {
             return 0;
         }
 
-        const {groupIndex, tabIndex: indexTabDragged, width} = droppableTab;
+        const {groupId, tabId: indexTabDragged, width} = droppableTab;
         // Add the rule for inner-translation
-        if (groupIndex === this.props.groupIndex) {
-            console.log('tabOver', indexTabOver);
+        if (groupId === this.props.id) {
+            //console.log('tabOver', indexTabOver);
             return indexTabOver < indexTabDragged ?
-                ((indexTabOver <= index) && (index < indexTabDragged) ? width : 0) :
-                ((indexTabDragged < index) && (index <= indexTabOver) ? -width : 0);
+                ((indexTabOver <= id) && (id < indexTabDragged) ? width : 0) :
+                ((indexTabDragged < id) && (id <= indexTabOver) ? -width : 0);
         }
 
-        return this.state.indexTabOver <= index ? width : 0;
+        return this.state.indexTabOver <= id ? width : 0;
     };
 
-    handleMouseDown = tabIndex => {
+    handleMouseDown = id => {
         this.props.selectTab({
-            selectedIndex: tabIndex,
-            groupIndex: this.props.groupIndex,
+            selected: id,
+            id: this.props.id,
         });
-        this.setState({indexTabOver: tabIndex});
+        this.setState({indexTabOver: id});
     };
 
-    handleTabClose = tabIndex => {
+    handleTabClose = id => {
         this.props.closeTab({
-            tabIndex,
-            groupIndex: this.props.groupIndex,
+            tabId: id,
+            groupId: this.props.id,
         });
     };
 
-    handleTabDragStart = (event, tabIndex) => {
-        // Get the size of the element
-        const width = event.target.offsetWidth;
+    handleTabDragStart = (tabId, width) => {
         // Add a width on the state
         this.props.onTabDragStart({
-            tabIndex,
-            groupIndex: this.props.groupIndex,
+            tabId,
+            groupId: this.props.id,
             width,
         });
     };
 
-    handleTabDragOver = tabIndex => {
+    handleTabDragOver = id => {
         if (this.props.droppableTab) {
             this.setState({
-                indexTabOver: tabIndex,
+                indexTabOver: id,
             });
         }
     };
@@ -97,15 +96,17 @@ class TabNavigation extends React.Component {
         });
     };
 
-    handleTabDrop = toTabIndex => {
-        const {droppableTab, groupIndex} = this.props;
+    handleTabDrop = toTabId => {
+        const {droppableTab, id, moveTab} = this.props;
 
-        this.props.moveTab({
-            fromIndex: droppableTab.groupIndex,
-            fromTabIndex: droppableTab.tabIndex,
-            toIndex: groupIndex,
-            toTabIndex,
-        });
+        if (droppableTab && droppableTab.tabId !== toTabId) {
+            moveTab({
+                fromGroupId: droppableTab.groupId,
+                fromTabId: droppableTab.tabId,
+                toGroupId: id,
+                toTabId,
+            });
+        }
     };
 
     removeIndexTabOver = () => {
@@ -113,21 +114,22 @@ class TabNavigation extends React.Component {
             this.setState({
                 indexTabOver: Infinity,
             });
-            console.log(this.state);
+            //console.log(this.state);
         }
     };
 
     render() {
-        const {droppableTab, groupIndex, tabs, selectedIndex} = this.props;
+        const {droppableTab, tabs, id, selected} = this.props;
 
         return (<Container>
             <Ul>
-                {tabs.map(({tabKey, value}, index) => (
-                    <Tab
-                        key={tabKey}
-                        index={index}
-                        active={selectedIndex === index}
-                        translation={this.getTranslation(index)}
+                {tabs.map(({id, value}) => (
+                    <TabTitle
+                        key={`title-${this.props.id}-${id}`}
+                        id={id}
+                        value={value}
+                        active={selected === id}
+                        translation={this.getTranslation(id)}
 
                         onClose={this.handleTabClose}
                         onDragStart={this.handleTabDragStart}
@@ -136,14 +138,12 @@ class TabNavigation extends React.Component {
                         onDragEnd={this.handleTabDragEnd}
                         onDrop={this.handleTabDrop}
                         onMouseDown={this.handleMouseDown}
-                    >
-                        {value}
-                    </Tab>
+                    />
                 ))}
                 <Space
                     droppableTab={droppableTab}
                     length={tabs.length}
-                    groupIndex={groupIndex}
+                    id={id}
                     onMouseOver={this.handleTabDragOver}
                     onMouseOut={this.handleTabDragOut}
                     onMouseUp={this.handleTabDrop}
@@ -161,8 +161,8 @@ TabNavigation.propTypes = {
         }),
     ).isRequired,
     droppableTab: PropTypes.shape({}),
-    groupIndex: PropTypes.number.isRequired,
-    selectedIndex: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
+    selected: PropTypes.string.isRequired,
 
     closeTab: PropTypes.func.isRequired,
     moveTab: PropTypes.func.isRequired,

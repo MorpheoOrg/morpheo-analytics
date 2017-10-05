@@ -16,22 +16,21 @@ class Pane extends React.Component {
     };
 
     render() {
-        const {selectedIndex, tabs} = this.props;
+        const {selected, tabs, droppableTab, id, tab, onTabDragStart, onTabDragEnd} = this.props;
 
         return <Container>
             <TabNavigation
-                droppableTab={this.props.droppableTab}
-                selectedIndex={this.props.selectedIndex}
-                groupIndex={this.props.groupIndex}
-                onTabDragStart={this.props.onTabDragStart}
-                onTabDragEnd={this.props.onTabDragEnd}
+                droppableTab={droppableTab}
+                selected={selected}
+                id={id}
+                onTabDragStart={onTabDragStart}
+                onTabDragEnd={onTabDragEnd}
                 tabs={tabs}
             />
-            {tabs.map(({tabKey, value}, index) => index === selectedIndex ?
-                <div key={tabKey}>
-                    tab: {selectedIndex}, value: {value}
-                </div> : null
-            )}
+            {tab && <div key={`content-${id}`}>
+                tab: {selected}, value: {tab.value}
+            </div>
+            }
         </Container>;
     }
 }
@@ -41,14 +40,14 @@ class Pane extends React.Component {
 
 Pane.propTypes = {
     droppableTab: PropTypes.shape({}),
-    groupIndex: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     tabs: PropTypes.arrayOf(
         PropTypes.shape({
-            tabKey: PropTypes.number,
+            id: PropTypes.string,
             value: PropTypes.string,
         }),
     ).isRequired,
-    selectedIndex: PropTypes.number.isRequired,
+    selected: PropTypes.string.isRequired,
 };
 
 Pane.defaultProps = {
@@ -57,6 +56,7 @@ Pane.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => ({
     ...ownProps,
+    tab: ownProps.tabs.find(tab => tab.id === ownProps.selected),
 });
 
 

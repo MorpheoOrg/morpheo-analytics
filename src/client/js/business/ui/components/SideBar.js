@@ -21,15 +21,16 @@ const Container = styled.div`
 
 const Header = styled.div`
     display: flex;
+    position: relative;
     justify-content: space-between;
     align-items: center;
+    margin-right: 24px;
 `;
 
 const FlatButton = styled.button`
     border: none;
     background-color: inherit;
     color: #98999F;
-    position: relative;
     right: 0;
     cursor: pointer;
 

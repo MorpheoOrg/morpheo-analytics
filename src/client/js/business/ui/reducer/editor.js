@@ -1,174 +1,129 @@
 import {actionsTypes} from '../actions/editor';
+import uuidv4 from 'uuid/v4';
 
+const initialState = {
+    panes: [],
+};
 
-let key = 0;
-let tabKey = 0;
-
-export default (state = [], {type, payload}) => {
+export default (state = initialState, {type, payload}) => {
     switch (type) {
     case actionsTypes.addGroup: {
-        const {groupIndex, value} = payload;
-        key += 1;
-        tabKey += 1;
-        return state.length < 3 ? [
-            ...state.slice(0, groupIndex),
-            {
-                key,
-                tabs: [
-                    {
-                        tabKey,
-                        value,
-                    },
-                ],
-                selectedIndex: 0,
-            },
-            ...state.slice(groupIndex),
-        ] : state;
+        const {value, id} = payload;
+        const uuid = uuidv4();  // TODO change by the uuid items from sidebar
+        return {
+            ...state,
+            panes: [
+                ...state.panes,
+                // add default tab to group
+                {
+                    tabs: [{value, id: uuid}],
+                    selected: uuid,
+                    id,
+                },
+            ],
+        };
     }
 
     case actionsTypes.addTab: {
-        const {groupIndex, tabIndex, value} = payload;
-        const {tabs, selectedIndex} = state[groupIndex];
-        tabKey += 1;
-        return [
-            ...state.slice(0, groupIndex),
-            {
-                ...state[groupIndex],
-                tabs: [
-                    ...tabs.slice(0, tabIndex),
-                    {
-                        tabKey,
-                        value,
-                    },
-                    ...tabs.slice(tabIndex),
-                ],
-                selectedIndex: selectedIndex + (tabIndex <= selectedIndex),
-            },
-            ...state.slice(groupIndex + 1),
-        ];
+        const {groupId, tabId, value} = payload;
+
+        return {
+            ...state,
+            panes: state.panes.reduce((p, c) => [
+                ...p,
+                (c.id === groupId ? {
+                    ...c,
+                    tabs: [...c.tabs, {value, id: tabId}], // FIXME for index at pos if necessary, with slice
+                    selected: tabId,
+                } : c),
+            ], []),
+        };
     }
 
     case actionsTypes.closeTab: {
-        const {groupIndex, tabIndex} = payload;
-        const {tabs, selectedIndex} = state[groupIndex];
+        const {groupId, tabId} = payload;
 
-        // We remove the group if empty
-        if (tabs.length <= 1 && tabIndex === 0) {
-            return [
-                ...state.slice(0, groupIndex),
-                ...state.slice(groupIndex + 1),
-            ];
-        }
-
-        // Else we remove the tab by updating the selectIndex if nevessary
-        return [
-            ...state.slice(0, groupIndex),
-            {
-                ...state[groupIndex],
-                tabs: [
-                    ...tabs.slice(0, tabIndex),
-                    ...tabs.slice(tabIndex + 1),
-                ],
-                selectedIndex: selectedIndex - (tabIndex <= selectedIndex),
-            },
-            ...state.slice(groupIndex + 1),
-        ];
+        return {
+            ...state,
+            panes: state.panes.reduce((p, c) => [
+                ...p,
+                ...(c.id === groupId ?
+                    (c.tabs.length > 1 ? [{
+                        ...c,
+                        tabs: c.tabs.filter(tab => tab.id !== tabId),
+                        selected: c.tabs[c.tabs.length - 1].id,
+                    }] : []) :
+                    [c]),
+            ], []),
+        };
     }
 
     case actionsTypes.selectTab: {
-        const {groupIndex, selectedIndex} = payload;
-        const {tabs} = state[groupIndex];
+        const {id, selected} = payload;
 
-        // If a wrong selectedIndex is provided
-        if (tabs.lenght <= selectedIndex) return state;
-
-        return [
-            ...state.slice(0, groupIndex),
-            {
-                ...state[groupIndex],
-                selectedIndex,
-            },
-            ...state.slice(groupIndex + 1),
-        ];
+        return {
+            ...state,
+            panes: state.panes.reduce((p, c) => [
+                ...p,
+                (c.id === id ? {
+                    ...c,
+                    selected,
+                } : c),
+            ], []),
+        };
     }
 
     case actionsTypes.moveTab: {
-        const {fromIndex, fromTabIndex, toIndex, toTabIndex} = payload;
+        const {fromGroupId, fromTabId, toGroupId, toTabId} = payload;
 
-        // Assert the element exists
-        console.log(state[fromIndex].tabs[fromTabIndex]);
-        if (!state[toIndex] ||
-            !state[fromIndex] ||
-            !state[fromIndex].tabs[fromTabIndex]) {
-            // Add a warning !
-            return state;
-        }
+        const fromGroup = state.panes.find(group => group.id === fromGroupId),
+            toGroup = state.panes.find(group => group.id === toGroupId);
 
-        return state.reduce((cumGroups, group, index) => {
-            console.log(index, group);
-            const {selectedIndex, tabs} = group;
-            if (index === fromIndex) {
-                // if origin == destination we internally move the element
-                if (index === toIndex) {
+        return {
+            ...state,
+            panes: state.panes.reduce((p, group) => {
+                // if same group, just swap
+                if (fromGroupId === toGroupId) {
                     return [
-                        ...cumGroups,
-                        {
+                        ...p,
+                        (group.id === fromGroupId ? {
                             ...group,
-                            tabs: fromTabIndex >= toTabIndex ? [
-                                ...tabs.slice(0, toTabIndex),
-                                tabs[fromTabIndex],
-                                ...tabs.slice(toTabIndex, fromTabIndex),
-                                ...tabs.slice(fromTabIndex + 1),
-                            ] : [
-                                ...tabs.slice(0, fromTabIndex),
-                                ...tabs.slice(fromTabIndex + 1, toTabIndex + 1),
-                                tabs[fromTabIndex],
-                                ...tabs.slice(toTabIndex + 1),
-                            ],
-                            selectedIndex: toTabIndex,
-                        },
+                            tabs: group.tabs.reduce((pre, tab) => [
+                                ...pre,
+                                tab.id === toTabId ? fromGroup.tabs.find(o => o.id === fromTabId) :
+                                    tab.id === fromTabId ? toGroup.tabs.find(o => o.id === toTabId) : tab,
+                            ], []),
+                        } : group),
                     ];
                 }
-                // if origin we remove the element at fromTabIndex
-                else if (tabs.length > 1) {
+                // group to another group, add to toGroup at index and remove from fromGroup
+                else {
+                    //memoize
+                    const fromGroupTabs = fromGroup.tabs.filter(tab => tab.id !== fromTabId);
                     return [
-                        ...cumGroups,
-                        {
-                            ...group,
-                            tabs: [
-                                ...tabs.slice(0, fromTabIndex),
-                                ...tabs.slice(fromTabIndex + 1),
-                            ],
-                            selectedIndex: selectedIndex !== tabs.length - 1 ? (
-                                selectedIndex - (fromTabIndex < selectedIndex)
-                            ) : tabs.length - 2,
-                        },
+                        ...p,
+                        // remove fromTab from fromGroup and select first tab from fromGroup, remove fromGroup if last tab
+                        ...(group.id === fromGroupId ? fromGroup.tabs.length > 1 ? [{
+                                ...group,
+                                tabs: fromGroupTabs,
+                                selected: fromGroupTabs[0].id,
+                            }] : [] :
+                            // add at correct index, and select it
+                            group.id === toGroupId ? [{
+                                ...group,
+                                tabs: typeof toTabId === 'undefined' ? // add last
+                                    [...group.tabs, fromGroup.tabs.find(o => o.id === fromTabId)] :
+                                    group.tabs.reduce((pre, tab) => [ // add at index
+                                        ...pre,
+                                        ...(tab.id === toTabId ? [fromGroup.tabs.find(o => o.id === fromTabId), tab] :
+                                            [tab]),
+                                    ], []),
+                                selected: fromTabId,
+                            }] : [group]),
                     ];
                 }
-                // if tab is empty we remove the group
-                return cumGroups;
-            }
-            else if (index === toIndex) {
-                // if destination we add the element at toTabIndex
-                return [
-                    ...cumGroups,
-                    {
-                        ...group,
-                        tabs: [
-                            ...tabs.slice(0, toTabIndex),
-                            state[fromIndex].tabs[fromTabIndex],
-                            ...tabs.slice(toTabIndex),
-                        ],
-                        selectedIndex: toTabIndex,
-                    },
-                ];
-            }
-            // if not origin or destination we return the group
-            return [
-                ...cumGroups,
-                group,
-            ];
-        }, []);
+            }, []),
+        };
     }
 
     default:

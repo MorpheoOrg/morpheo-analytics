@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'emotion/react';
-import {Poll, BookOpen, FlaskOutline} from 'mdi-material-ui';
 
 import ActivityBar from './ActivityBar/index';
 import SideBar from './SideBar';

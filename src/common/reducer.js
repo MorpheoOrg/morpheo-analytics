@@ -53,6 +53,7 @@ export const general = (state = initialState, {type, payload}) => {
 };
 
 export default {
+    // TODO : load on routes with preload
     parameters: parametersReducer,
     form: formReducer,
     general,

@@ -27,6 +27,10 @@ const style = {
         &:hover {
             background-color: white;
         }
+        
+        &:hover button {
+            color: red;
+        }
 
         box-shadow: ${dragged ? '0px 3px 10px rgba(0%, 0%, 0%, 0.30)' : 'inherit'};
         pointer-events: ${dragged ? 'none' : 'inherit'};
@@ -46,9 +50,6 @@ const style = {
         top: 2px;
         right: 2px;
 
-        &:hover {
-            color: red;
-        }
         &:focus {
             outline: 0;
         }
@@ -65,11 +66,8 @@ const Hidden = styled.div`
     height: 100%;
 `;
 
-class Tab extends React.Component {
-    // Maybe introduces a status for dragged, overred, ...
-    // To change the class name
+class TabTitle extends React.Component {
     state = {
-        status: '',
         dragged: false,
     };
 
@@ -84,7 +82,7 @@ class Tab extends React.Component {
 
     handleMouseDown = (event) => {
         event.preventDefault();
-        this.props.onMouseDown(this.props.index);
+        this.props.onMouseDown(this.props.id);
 
         // Manage the drag event
         window.addEventListener('mousemove', this.handleDragMove);
@@ -95,7 +93,8 @@ class Tab extends React.Component {
         this.y0 = event.clientY;
 
         // Apply the onDragTabStart
-        this.props.onDragStart(event, this.props.index);
+        const width = event.currentTarget.offsetWidth;
+        this.props.onDragStart(this.props.id, width);
     };
 
     handleDragMove = (event) => {
@@ -112,28 +111,29 @@ class Tab extends React.Component {
             dragged: false,
         });
 
-        this.props.onDragEnd(this.props.index);
+        this.props.onDragEnd(this.props.id);
 
         // Remove the event created with handleMouseDown
         window.removeEventListener('mousemove', this.handleDragMove);
         window.removeEventListener('mouseup', this.handleDragEnd);
     };
 
-    onClose = () => this.props.onClose(this.props.index);
-    onDragOver = () => this.props.onDragOver(this.props.index);
-    onDragOut = () => this.props.onDragOut(this.props.index);
-    onDrop = () => this.props.onDrop(this.props.index);
+    onClose = () => this.props.onClose(this.props.id);
+    onDragOver = () => this.props.onDragOver(this.props.id);
+    onDragOut = () => this.props.onDragOut(this.props.id);
+    onDrop = () => this.props.onDrop(this.props.id);
 
     onMouseDown = (event) => event.stopPropagation();
+
     render() {
-        const {active, translation} = this.props;
+        const {active, translation, value, id} = this.props;
         const {dragged, x, y} = this.state;
 
-        return (<li className={style.li} onMouseOver={this.onDragOver} >
-            <Hidden onMouseOut={this.onDragOut} onMouseUp={this.onDrop} />
-
-            <div className={style.tab(dragged, active, translation, x, y)} onMouseDown={this.handleMouseDown}>
-                {this.props.children}
+        return <li className={style.li} onMouseOver={this.onDragOver}>
+            <Hidden onMouseOut={this.onDragOut} onMouseUp={this.onDrop}/>
+            <div className={style.tab(dragged, active, translation, x, y)}
+                 onMouseDown={this.handleMouseDown}>
+                <span>{value} {id.slice(0, 8)}</span>
                 <button onMouseDown={this.onMouseDown}
                         onClick={this.onClose}
                         className={style.close(active)}
@@ -141,13 +141,14 @@ class Tab extends React.Component {
                     x
                 </button>
             </div>
-        </li>);
+        </li>;
     }
 }
 
-Tab.propTypes = {
+TabTitle.propTypes = {
     active: PropTypes.bool,
-    children: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
     translation: PropTypes.number,
     onClose: PropTypes.func,
 };
@@ -155,7 +156,7 @@ Tab.propTypes = {
 const noop = () => {
 };
 
-Tab.defaultProps = {
+TabTitle.defaultProps = {
     active: false,
     translation: 0,
 
@@ -163,4 +164,4 @@ Tab.defaultProps = {
 };
 
 
-export default Tab;
+export default TabTitle;

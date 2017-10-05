@@ -4,7 +4,7 @@ const initialState = {
     selectedIndex: -1,
     status: 'closed',
     width: 200,
-    duration: 150,
+    duration: 1500,
 };
 
 export default (state = initialState, {type, payload}) => {
