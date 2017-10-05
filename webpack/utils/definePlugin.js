@@ -16,4 +16,8 @@ export default () => new webpack.DefinePlugin({
     SERVICES_API_URL: JSON.stringify(config.apps.frontend.services_api_url),
     NOTEBOOK_SERVICES_USER: JSON.stringify(config.credentials.NOTEBOOK_SERVICES_USER),
     NOTEBOOK_SERVICES_PASSWORD: JSON.stringify(config.credentials.NOTEBOOK_SERVICES_PASSWORD),
+    ORCHESTRATOR_USER: JSON.stringify(config.credentials.ORCHESTRATOR_USER),
+    ORCHESTRATOR_PASSWORD: JSON.stringify(config.credentials.ORCHESTRATOR_PASSWORD),
+    STORAGE_USER: JSON.stringify(config.credentials.STORAGE_USER),
+    STORAGE_PASSWORD: JSON.stringify(config.credentials.STORAGE_PASSWORD),
 });

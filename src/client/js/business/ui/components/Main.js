@@ -6,6 +6,8 @@ import ActivityBar from './ActivityBar';
 import SideBar from './SideBar';
 import Editor from './Editor';
 
+import ExperimentList from './ExperimentList';
+
 
 class Main extends React.Component {
     menuContent = [
@@ -17,7 +19,7 @@ class Main extends React.Component {
         {
             name: 'Experiments',
             icon: <FlaskOutline />,
-            content: undefined,
+            content: <ExperimentList />,
         },
         {
             name: 'Notebook',

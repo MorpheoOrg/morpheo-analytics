@@ -1,5 +1,5 @@
 module.exports = {
-    appName: 'Notebook Staging',
+    appName: 'Analytics Staging',
     apps: {
         frontend: {
         },

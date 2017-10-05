@@ -3,7 +3,7 @@ import {actionTypes} from '../actions/sideBar';
 const initialState = {
     selectedIndex: -1,
     visible: true,
-    width: 200,
+    width: 400,
 };
 
 export default (state = initialState, {type, payload}) => {

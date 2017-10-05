@@ -24,6 +24,8 @@ const Header = styled.div`
     justify-content: space-between;
     align-items: center;
 
+    padding-bottom: 30px;
+
     & button{
         position: relative;
         right: 0;
@@ -63,12 +65,14 @@ const Dragger = styled('div') `
 
 class SideBar extends React.Component {
     state = {
-        selectedIndex: 0,
+        selectedIndex: this.props.selectedIndex < 0 ?
+            0 : this.props.selectedIndex,
         status: this.props.selectedIndex < 0 ? 'closed' : 'openned',
         width: this.props.width,
     };
 
     componentWillReceiveProps(nextProps) {
+        console.log('update');
         // Keep in mind the previous selectedIndex to display animation
         if (nextProps.selectedIndex >= 0) {
             this.setState({
@@ -129,6 +133,9 @@ class SideBar extends React.Component {
         background-color: #FAFAFB;
         position: relative;
 
+        padding: 20px;
+        padding-top: 40px;
+
         .openning,.closing,.closed{
             min-width: 0px;
         }
@@ -171,7 +178,7 @@ class SideBar extends React.Component {
             <Container>
                 <div>
                     <Header>
-                        <h3>{name}</h3>
+                        <h1>{name}</h1>
                         <FlatButton onClick={this.props.hide}>
                             <ChevronLeft />
                         </FlatButton>
