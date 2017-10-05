@@ -17,14 +17,14 @@ node ('frontend-slave') {
 
     if(env.BRANCH_NAME == "staging" || env.BRANCH_NAME == "master") {
       stage('Push Container Image') {
-        sh 'docker push registry.rythm.co/morpheo-notebook:$(git rev-parse --verify --short HEAD)'
+        sh 'docker push registry.rythm.co/morpheo-analytics:$(git rev-parse --verify --short HEAD)'
       }
     }
 
     if(env.BRANCH_NAME == 'master') {
       stage('Deploy on prod') {
-        sh '/build-scripts/deploy-tested-image.sh morpheo-notebook prod'
-        sh '/build-scripts/bump-stable-tag.sh morpheo-notebook latest'
+        sh '/build-scripts/deploy-tested-image.sh morpheo-analytics prod'
+        sh '/build-scripts/bump-stable-tag.sh morpheo-analytics latest'
       }
     }
   }

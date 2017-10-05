@@ -1,4 +1,8 @@
-const {NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD} = require('./credentials');
+const {
+    NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD,
+    ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
+    STORAGE_USER, STORAGE_PASSWORD,
+} = require('./credentials');
 
 const apiPort = process.env.NODE_PORT || 3000;
 const apiUrl = 'https://notebook-proxy.morpheo.io';
@@ -26,6 +30,10 @@ module.exports = {
     credentials: {
         NOTEBOOK_SERVICES_USER,
         NOTEBOOK_SERVICES_PASSWORD,
+        ORCHESTRATOR_USER,
+        ORCHESTRATOR_PASSWORD,
+        STORAGE_USER,
+        STORAGE_PASSWORD,
     },
     babel_ignore: /node_modules\/(?!admin-config)/,
 };
