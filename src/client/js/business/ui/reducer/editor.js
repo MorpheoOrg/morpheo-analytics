@@ -45,16 +45,19 @@ export default (state = initialState, {type, payload}) => {
 
         return {
             ...state,
-            panes: state.panes.reduce((p, c) => [
-                ...p,
-                ...(c.id === groupId ?
-                    (c.tabs.length > 1 ? [{
-                        ...c,
-                        tabs: c.tabs.filter(tab => tab.id !== tabId),
-                        selected: c.tabs[c.tabs.length - 1].id,
-                    }] : []) :
-                    [c]),
-            ], []),
+            panes: state.panes.reduce((p, c) => {
+                const newTabs = c.tabs.filter(tab => tab.id !== tabId);
+                return [
+                    ...p,
+                    ...(c.id === groupId ?
+                        (c.tabs.length > 1 ? [{
+                            ...c,
+                            tabs: newTabs,
+                            selected: newTabs[newTabs.length - 1].id,
+                        }] : []) :
+                        [c]),
+                ];
+            }, []),
         };
     }
 
