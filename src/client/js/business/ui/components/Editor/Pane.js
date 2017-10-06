@@ -16,11 +16,12 @@ class Pane extends React.Component {
     };
 
     render() {
-        const {selected, tabs, draggedTab, id, tab, onTabDragStart, onTabDragEnd} = this.props;
+        const {selected, tabs, draggedTab, droppedTab, id, tab, onTabDragStart, onTabDragEnd} = this.props;
 
         return <Container>
             <TabNavigation
                 draggedTab={draggedTab}
+                droppedTab={droppedTab}
                 selected={selected}
                 id={id}
                 onTabDragStart={onTabDragStart}

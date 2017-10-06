@@ -38,9 +38,9 @@ class TabNavigation extends React.Component {
         this.props.onTabDragStart(draggedTab);
     };
 
-    handleTabDragEnd = () => {
+    handleTabDragEnd = (id) => {
         // reset draggedTab
-        this.props.onTabDragEnd(null);
+        this.props.onTabDragEnd(this.props.tabs.find(o => o.id === id));
     };
 
     getTranslation = (tabId) => {
@@ -48,8 +48,10 @@ class TabNavigation extends React.Component {
         const {tabs, draggedTab, id} = this.props;
         // we know the draggedTab, the overredTab, the current Tab
 
+        console.log('render with translation');
+
         // if in dragged mode, calculate
-        if (draggedTab && this.state.overredTab !== null) { // null different from undefined
+        if (!!draggedTab && this.state.overredTab !== null) { // null different from undefined
             // retrieve index
             const overredTabIndex = tabs.findIndex(o => o.id === this.state.overredTab);
             const currentTabIndex = tabs.findIndex(o => o.id === tabId);
@@ -120,7 +122,10 @@ class TabNavigation extends React.Component {
     handleTabDrop = toTabId => {
         const {id, moveTab, draggedTab} = this.props;
 
-        this.props.onTabDragEnd(null);
+        console.log('drop', toTabId);
+        // prevent dragged = null, and dropped = draggedTab.id
+        //this.props.onTabDragEnd(draggedTab);
+        // need to render with dropped tab, translated from -width
         this.setState({overredTab: null});
 
         // only trigger moveTab if toTabId is different
@@ -135,7 +140,9 @@ class TabNavigation extends React.Component {
     };
 
     render() {
-        const {tabs, selected, draggedTab} = this.props;
+        const {tabs, selected, draggedTab, droppedTab} = this.props;
+
+        console.log('render');
 
         return (<Container>
             <Ul>
@@ -156,6 +163,7 @@ class TabNavigation extends React.Component {
                         onMouseDown={this.handleMouseDown}
 
                         draggedTab={draggedTab}
+                        droppedTab={droppedTab}
                     />
                 ))}
                 <Space
