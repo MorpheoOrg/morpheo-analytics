@@ -41,11 +41,9 @@ const style = {
         }
 
         box-shadow: ${dragged ? '0px 3px 10px rgba(0%, 0%, 0%, 0.30)' : 'inherit'};
-
-        transition: ${!dragged && draggedTab ? 'transform 0.3s' : 'inherit'};
+        transition: ${dragged ? 'inherit' : 'transform 0.3s'};
         pointer-events: ${dragged ? 'none' : 'inherit'};
         z-index: ${dragged ? '1' : 'inherit'};
-        transform: ${dragged ? `translate(${x}px, ${y}px)` : (translation ? `translate(${translation}px, 0)` : 'inherit')};
     `,
     close: css`
         cursor: pointer;
@@ -129,6 +127,11 @@ class TabTitle extends React.Component {
 
     onMouseDown = (event) => event.stopPropagation();
 
+    transform = () => ({
+        transform: this.state.dragged ? `translate(${this.state.x}px, ${this.state.y}px)` :
+            (this.props.translation ? `translate(${this.props.translation}px, 0)` : 'inherit'),
+    });
+
     render() {
         const {active, value, id, translation, draggedTab} = this.props;
         const {dragged, x, y} = this.state;
@@ -139,6 +142,7 @@ class TabTitle extends React.Component {
                  onMouseUp={this.onDrop}
                  onMouseOver={this.onDragOver}/>
             <div className={style.tab(dragged, active, translation, x, y, draggedTab)}
+                 style={this.transform()}
                  onMouseDown={this.handleMouseDown}>
                 <span>{value} {id.slice(0, 8)}</span>
                 <button onMouseDown={this.onMouseDown}
