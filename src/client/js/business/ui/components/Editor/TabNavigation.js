@@ -120,6 +120,7 @@ class TabNavigation extends React.Component {
     handleTabDrop = toTabId => {
         const {id, moveTab, draggedTab} = this.props;
 
+        this.props.onTabDragEnd(null);
         this.setState({overredTab: null});
 
         // only trigger moveTab if toTabId is different
