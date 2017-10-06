@@ -31,18 +31,19 @@ const Container = styled.div`
 `;
 
 class Editor extends React.Component {
+    // store dragged table which is droppable in state
     state = {
-        droppableTab: undefined,
+        draggedTab: undefined,
     };
 
-    handleTabDragStart = (tab) => {
+    handleTabDragStart = (draggedTab) => {
         // Activate the droppable mode
-        this.setState({droppableTab: tab});
+        this.setState({draggedTab});
     };
 
-    handleTabDragEnd = () => {
+    handleTabDragEnd = (draggedTab) => {
         // Deactivate the droppable mode
-        this.setState({droppableTab: undefined });
+        this.setState({draggedTab});
     };
 
     // Next functions are provided just for test the component
@@ -50,6 +51,8 @@ class Editor extends React.Component {
         event.preventDefault();
     };
 
+
+    // DEBUG
     addGroup = (event) => {
         event.preventDefault();
         // TODO change with uuid from sideBar
@@ -61,7 +64,6 @@ class Editor extends React.Component {
 
     addTab = (event) => {
         event.preventDefault();
-        console.log(this.props.panes);
         // TODO change with uuid from sideBar
         const tabId = uuidv4();
         this.props.addTab({
@@ -98,7 +100,7 @@ class Editor extends React.Component {
                     id={id}
                     tabs={tabs}
                     selected={selected}
-                    droppableTab={this.state.droppableTab}
+                    draggedTab={this.state.draggedTab}
                     onTabDragStart={this.handleTabDragStart}
                     onTabDragEnd={this.handleTabDragEnd}
                 />,

@@ -1,8 +1,14 @@
 import React from 'react';
 import {css} from 'emotion';
 
+const debug = true;
+
 const style = css`
-    flex-grow: 1;
+    display: inline-block;
+    min-width: 30px;
+    width: 100%;
+    background-color: ${debug ? 'rgba(255, 0, 0, 0.2)' : 'inherit'};
+    border: ${debug ? '1px solid yellow' : 'inherit'};
 `;
 
 class Space extends React.Component {

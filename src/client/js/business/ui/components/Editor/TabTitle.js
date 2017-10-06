@@ -3,12 +3,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {css} from 'emotion';
-import styled from 'emotion/react';
+import {onlyUpdateForKeys} from 'recompose';
+
+const debug = true;
 
 const style = {
     li: css`
-        float: left;
         position: relative;
+        display: inline-block;
+        margin-top: 10px;        
     `,
     tab: (dragged, active, translation, x, y) => css`
         cursor: pointer;
@@ -16,11 +19,15 @@ const style = {
         align-items: center;
         position: relative;
 
-        border: none;
-        padding: 14px 16px;
+        border-radius: 4px 4px 0 0;
+        border: 1px solid #ccc;
+        border-width: 1px 1px 0 1px;
+        padding: 6px 20px 6px 10px;
 
         text-align: center;
         text-decoration: none;
+        
+        white-space: nowrap;
 
         background-color: ${dragged || active ? 'white' : '#f1f1f2'};
 
@@ -34,11 +41,11 @@ const style = {
 
         box-shadow: ${dragged ? '0px 3px 10px rgba(0%, 0%, 0%, 0.30)' : 'inherit'};
         pointer-events: ${dragged ? 'none' : 'inherit'};
-        transition: ${dragged ? 'none' : 'inherit'};
-        z-index: ${dragged ? '10' : 'inherit'};
+        transition: ${dragged ? 'transform' : 'inherit'};
+        z-index: ${dragged ? '1' : 'inherit'};
         transform: ${dragged ? `translate(${x}px, ${y}px)` : (translation ? `translate(${translation}px, 0)` : 'inherit')};
     `,
-    close: (active) => css`
+    close: css`
         cursor: pointer;
         border: none;
         margin-left: 3px;
@@ -53,17 +60,19 @@ const style = {
         &:focus {
             outline: 0;
         }
-        
-        transform:${active ? 'scale(1.1)' : 'inherit'};
-    `,
+`,
 };
 
-const Hidden = styled.div`
+const hidden = (draggedTab) => css`
     position: absolute;
+    cursor: pointer;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background-color: ${debug ? 'rgba(255, 0, 0, 0.2)' : 'inherit'};
+    border: ${debug ? '1px solid yellow' : 'inherit'};
+    z-index: ${draggedTab ? '1': 'inherit'};
 `;
 
 class TabTitle extends React.Component {
@@ -72,11 +81,6 @@ class TabTitle extends React.Component {
     };
 
     componentWillUnmount() {
-        if (this.state.dragged) {
-            console.log('dragged');
-        }
-
-        // prevent handleDragEnd on unmount component
         this.handleDragEnd();
     }
 
@@ -85,12 +89,13 @@ class TabTitle extends React.Component {
         this.props.onMouseDown(this.props.id);
 
         // Manage the drag event
+        // TODO debounce
         window.addEventListener('mousemove', this.handleDragMove);
         window.addEventListener('mouseup', this.handleDragEnd);
 
         // Initiate the origin points to apply the drag move
-        this.x0 = event.clientX;
-        this.y0 = event.clientY;
+        this.x = event.clientX;
+        this.y = event.clientY;
 
         // Apply the onDragTabStart
         const width = event.currentTarget.offsetWidth;
@@ -101,17 +106,14 @@ class TabTitle extends React.Component {
         // Drag move by applying a translation
         this.setState({
             dragged: true,
-            x: event.clientX - this.x0,
-            y: event.clientY - this.y0,
+            x: event.clientX - this.x,
+            y: event.clientY - this.y,
         });
     };
 
-    handleDragEnd = (event) => {
-        this.setState({
-            dragged: false,
-        });
-
-        this.props.onDragEnd(this.props.id);
+    handleDragEnd = () => {
+        this.setState({dragged: false});
+        this.props.onDragEnd();
 
         // Remove the event created with handleMouseDown
         window.removeEventListener('mousemove', this.handleDragMove);
@@ -119,24 +121,29 @@ class TabTitle extends React.Component {
     };
 
     onClose = () => this.props.onClose(this.props.id);
-    onDragOver = () => this.props.onDragOver(this.props.id);
+    onDragOver = (event) => {
+        this.props.onDragOver(this.props.id)
+    };
     onDragOut = () => this.props.onDragOut(this.props.id);
     onDrop = () => this.props.onDrop(this.props.id);
 
     onMouseDown = (event) => event.stopPropagation();
 
     render() {
-        const {active, translation, value, id} = this.props;
+        const {active, value, id, translation, draggedTab} = this.props;
         const {dragged, x, y} = this.state;
 
-        return <li className={style.li} onMouseOver={this.onDragOver}>
-            <Hidden onMouseOut={this.onDragOut} onMouseUp={this.onDrop}/>
-            <div className={style.tab(dragged, active, translation, x, y)}
+        return <li className={style.li}>
+            <div className={hidden(draggedTab)}
+                 onMouseOut={this.onDragOut}
+                 onMouseUp={this.onDrop}
+                 onMouseOver={this.onDragOver}/>
+            <div className={style.tab(dragged, active, translation, x, y, debug)}
                  onMouseDown={this.handleMouseDown}>
                 <span>{value} {id.slice(0, 8)}</span>
                 <button onMouseDown={this.onMouseDown}
                         onClick={this.onClose}
-                        className={style.close(active)}
+                        className={style.close}
                 >
                     x
                 </button>
@@ -164,4 +171,4 @@ TabTitle.defaultProps = {
 };
 
 
-export default TabTitle;
+export default onlyUpdateForKeys(['draggedTab', 'active', 'translation'])(TabTitle);

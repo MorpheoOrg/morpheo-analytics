@@ -7,6 +7,7 @@ import styled from 'emotion/react';
 import actions from '../../actions/editor';
 import TabTitle from './TabTitle';
 import Space from './Space';
+import {onlyUpdateForKeys} from 'recompose';
 
 const Container = styled.nav`
     flex-grow: 1;
@@ -23,41 +24,64 @@ const Ul = styled.ul`
 
 class TabNavigation extends React.Component {
     state = {
-        indexTabOver: undefined,
+        overredTab: null,
     };
 
-    // Not sure we don't need it ????
-    // componentWillUpdate() {
-    //     console.log('hey');
-    //     this.removeIndexTabOver();
-    // }
+    // draggedTab need to live in highest parent, because panes need to know it
+    handleTabDragStart = (id, width) => {
+        // store dragged tab, no state, no render
+        const draggedTab = {
+            id,
+            groupId: this.props.id,
+            width,
+        };
+        this.props.onTabDragStart(draggedTab);
+    };
 
-    getTranslation = (id) => {
-        console.log(id);
-        const {indexTabOver} = this.state;
-        const {droppableTab} = this.props;
-        if (!droppableTab || (indexTabOver === undefined)) {
-            return 0;
+    handleTabDragEnd = () => {
+        // reset draggedTab
+        this.props.onTabDragEnd(null);
+    };
+
+    getTranslation = (tabId) => {
+
+        const {tabs, draggedTab, id} = this.props;
+        // we know the draggedTab, the overredTab, the current Tab
+
+        // if in dragged mode, calculate
+        if (draggedTab && this.state.overredTab !== null) { // null different from undefined
+            // retrieve index
+            const overredTabIndex = tabs.findIndex(o => o.id === this.state.overredTab);
+            const currentTabIndex = tabs.findIndex(o => o.id === tabId);
+            const draggedTabIndex = tabs.findIndex(o => o.id === draggedTab.id);
+
+            // same group
+            if (draggedTab.groupId === id) {
+                if (overredTabIndex !== -1 && (currentTabIndex >= overredTabIndex && currentTabIndex < draggedTabIndex)) {
+                    return draggedTab.width;
+                }
+                else if ((currentTabIndex <= overredTabIndex || overredTabIndex === -1) && currentTabIndex > draggedTabIndex) {
+                    return -draggedTab.width;
+                }
+            }
+            // to another group
+            else {
+                if (overredTabIndex !== -1 && currentTabIndex >= overredTabIndex) {
+                    return draggedTab.width;
+                }
+            }
         }
 
-        const {groupId, tabId: indexTabDragged, width} = droppableTab;
-        // Add the rule for inner-translation
-        if (groupId === this.props.id) {
-            //console.log('tabOver', indexTabOver);
-            return indexTabOver < indexTabDragged ?
-                ((indexTabOver <= id) && (id < indexTabDragged) ? width : 0) :
-                ((indexTabDragged < id) && (id <= indexTabOver) ? -width : 0);
-        }
-
-        return this.state.indexTabOver <= id ? width : 0;
+        return 0;
     };
 
     handleMouseDown = id => {
-        this.props.selectTab({
-            selected: id,
-            id: this.props.id,
-        });
-        this.setState({indexTabOver: id});
+        if (this.props.selected !== id) {
+            this.props.selectTab({
+                selected: id,
+                id: this.props.id,
+            });
+        }
     };
 
     handleTabClose = id => {
@@ -67,63 +91,54 @@ class TabNavigation extends React.Component {
         });
     };
 
-    handleTabDragStart = (tabId, width) => {
-        // Add a width on the state
-        this.props.onTabDragStart({
-            tabId,
-            groupId: this.props.id,
-            width,
-        });
-    };
+    handleTabDragOver = (id) => {
+        const {draggedTab} = this.props;
 
-    handleTabDragOver = id => {
-        if (this.props.droppableTab) {
-            this.setState({
-                indexTabOver: id,
-            });
+        if (draggedTab) {
+            // need to translate all tabs following tab overred, multi render
+            if (id !== draggedTab.id) {
+                if (id || this.props.id !== draggedTab.groupId) { // do not trigger render if undefined and same group
+                    this.setState({overredTab: id});
+                }
+            }
+            else {
+                if (this.state.overredTab !== null) {
+                    this.setState({overredTab: null});
+                }
+            }
         }
     };
 
-    handleTabDragOut = (index) => {
-        console.log('Tab Drag Out');
-        this.removeIndexTabOver();
-    };
-
-    handleTabDragEnd = (index) => {
-        this.props.onTabDragEnd();
-        this.setState({
-            indexTabOver: undefined,
-        });
+    handleTabDragOut = (id) => {
+        const {draggedTab} = this.props;
+        // need to reset position if dragged out
+        if (draggedTab && id !== draggedTab.id) {
+            this.setState({overredTab: undefined});
+        }
     };
 
     handleTabDrop = toTabId => {
-        const {droppableTab, id, moveTab} = this.props;
+        const {id, moveTab, draggedTab} = this.props;
 
-        if (droppableTab && droppableTab.tabId !== toTabId) {
+        this.setState({overredTab: null});
+
+        // only trigger moveTab if toTabId is different
+        if (draggedTab && draggedTab.id !== toTabId) {
             moveTab({
-                fromGroupId: droppableTab.groupId,
-                fromTabId: droppableTab.tabId,
+                fromGroupId: draggedTab.groupId,
+                fromTabId: draggedTab.id,
                 toGroupId: id,
-                toTabId,
+                toTabId: toTabId,
             });
-        }
-    };
-
-    removeIndexTabOver = () => {
-        if (this.state.indexTabOver !== undefined) {
-            this.setState({
-                indexTabOver: Infinity,
-            });
-            //console.log(this.state);
         }
     };
 
     render() {
-        const {droppableTab, tabs, id, selected} = this.props;
+        const {tabs, selected, draggedTab} = this.props;
 
         return (<Container>
             <Ul>
-                {tabs.map(({id, value}) => (
+                {tabs.map(({id, value}, index) => (
                     <TabTitle
                         key={`title-${this.props.id}-${id}`}
                         id={id}
@@ -138,12 +153,11 @@ class TabNavigation extends React.Component {
                         onDragEnd={this.handleTabDragEnd}
                         onDrop={this.handleTabDrop}
                         onMouseDown={this.handleMouseDown}
+
+                        draggedTab={draggedTab}
                     />
                 ))}
                 <Space
-                    droppableTab={droppableTab}
-                    length={tabs.length}
-                    id={id}
                     onMouseOver={this.handleTabDragOver}
                     onMouseOut={this.handleTabDragOut}
                     onMouseUp={this.handleTabDrop}
@@ -160,25 +174,19 @@ TabNavigation.propTypes = {
             value: PropTypes.string,
         }),
     ).isRequired,
-    droppableTab: PropTypes.shape({}),
+
     id: PropTypes.string.isRequired,
     selected: PropTypes.string.isRequired,
 
     closeTab: PropTypes.func.isRequired,
     moveTab: PropTypes.func.isRequired,
-    onTabDragStart: PropTypes.func,
-    onTabDragEnd: PropTypes.func,
     selectTab: PropTypes.func.isRequired,
-};
 
-const noop = () => {
+    draggedTab: PropTypes.shape({}),
 };
 
 TabNavigation.defaultProps = {
-    droppableTab: undefined,
-
-    onTabDragStart: noop,
-    onTabDragEnd: noop,
+    draggedTab: null,
 };
 
 const mapStateToProps = (state, ownProps) => ({...ownProps});
@@ -189,4 +197,4 @@ const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
     moveTab: actions.moveTab,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(TabNavigation);
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['draggedTab', 'tabs', 'selected'])(TabNavigation));

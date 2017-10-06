@@ -85,17 +85,23 @@ export default (state = initialState, {type, payload}) => {
         return {
             ...state,
             panes: state.panes.reduce((p, group) => {
-                // if same group, just swap
+                // if same group
                 if (fromGroupId === toGroupId) {
+
+                    // get index where to place
+                    const index = toTabId ? toGroup.tabs.findIndex(tab => tab.id === toTabId) : toGroup.tabs.length - 1;
+                    // exclude
+                    const newTabs = fromGroup.tabs.filter(tab => tab.id !== fromTabId);
+
                     return [
                         ...p,
                         (group.id === fromGroupId ? {
                             ...group,
-                            tabs: group.tabs.reduce((pre, tab) => [
-                                ...pre,
-                                tab.id === toTabId ? fromGroup.tabs.find(o => o.id === fromTabId) :
-                                    tab.id === fromTabId ? toGroup.tabs.find(o => o.id === toTabId) : tab,
-                            ], []),
+                            tabs: [
+                                ...newTabs.slice(0, index),
+                                fromGroup.tabs.find(tab => tab.id === fromTabId) ,
+                                ...newTabs.slice(index, newTabs.length)
+                            ]
                         } : group),
                     ];
                 }
@@ -118,8 +124,7 @@ export default (state = initialState, {type, payload}) => {
                                     [...group.tabs, fromGroup.tabs.find(o => o.id === fromTabId)] :
                                     group.tabs.reduce((pre, tab) => [ // add at index
                                         ...pre,
-                                        ...(tab.id === toTabId ? [fromGroup.tabs.find(o => o.id === fromTabId), tab] :
-                                            [tab]),
+                                        ...(tab.id === toTabId ? [fromGroup.tabs.find(o => o.id === fromTabId), tab] : [tab]),
                                     ], []),
                                 selected: fromTabId,
                             }] : [group]),

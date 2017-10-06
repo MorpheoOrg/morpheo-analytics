@@ -16,11 +16,11 @@ class Pane extends React.Component {
     };
 
     render() {
-        const {selected, tabs, droppableTab, id, tab, onTabDragStart, onTabDragEnd} = this.props;
+        const {selected, tabs, draggedTab, id, tab, onTabDragStart, onTabDragEnd} = this.props;
 
         return <Container>
             <TabNavigation
-                droppableTab={droppableTab}
+                draggedTab={draggedTab}
                 selected={selected}
                 id={id}
                 onTabDragStart={onTabDragStart}
@@ -39,7 +39,7 @@ class Pane extends React.Component {
 // droppable: activate the droppable mode
 
 Pane.propTypes = {
-    droppableTab: PropTypes.shape({}),
+    draggedTab: PropTypes.shape({}),
     id: PropTypes.string.isRequired,
     tabs: PropTypes.arrayOf(
         PropTypes.shape({
@@ -51,7 +51,7 @@ Pane.propTypes = {
 };
 
 Pane.defaultProps = {
-    droppableTab: undefined,
+    draggedTab: undefined,
 };
 
 const mapStateToProps = (state, ownProps) => ({
