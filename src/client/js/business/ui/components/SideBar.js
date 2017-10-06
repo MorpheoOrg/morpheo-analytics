@@ -158,10 +158,10 @@ SideBar.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => ({
     ...ownProps,
-    selectedIndex: state.parameters.sideBar.selectedIndex,
-    width: state.parameters.sideBar.width,
-    status: state.parameters.sideBar.status,
-    duration: state.parameters.sideBar.duration,
+    selectedIndex: state.settings.sideBar.selectedIndex,
+    width: state.settings.sideBar.width,
+    status: state.settings.sideBar.status,
+    duration: state.settings.sideBar.duration,
     visible: getVisible(state),
 });
 

@@ -32,42 +32,32 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
+/* globals */
 
-import queryString from 'query-string';
-import {isEmpty} from 'lodash';
-import {handleResponse} from '../../../utils/entities/fetchEntities';
+import {call, put, takeEvery} from 'redux-saga/effects';
 
-const getHeaders = jwt => ({
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
-    Authorization: `Basic ${jwt}`,
-});
+import actions, {actionTypes} from './actions';
+import {
+    fetchLearnupletByAlgo as fetchLearnupletByAlgoApi,
+} from './api';
 
-export const fetchList = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({list: json}), error => ({error}));
+function* loadList(request) {
+    const {error, list} = yield call(fetchLearnupletByAlgoApi, {algo: request.payload});
+    if (error) {
+        yield put(actions.list.failure(error.body));
+    }
+    yield put(actions.list.success({[request.payload]: list.learnuplets}));
+}
 
-export const fetchProblems = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchList(url, jwt);
+/* istanbul ignore next */
+const learnupletSagas = function* learnupletSagas() {
+    yield [
+        /** ********** */
+        /* learnuplet */
+        /** ********** */
+        takeEvery(actionTypes.list.REQUEST, loadList),
+    ];
 };
 
 
-export const fetchItem = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({item: json}), error => ({error}));
-
-export const fetchProblem = (id, get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchItem(url, jwt);
-};
+export default learnupletSagas;

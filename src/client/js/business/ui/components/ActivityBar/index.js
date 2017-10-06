@@ -8,6 +8,7 @@ import {onlyUpdateForKeys} from 'recompose';
 import {bindActionCreators} from 'redux';
 
 import actions from '../../actions/sideBar';
+import actionsExperiment from '../../../models/experiment/actions';
 
 import MenuButton from './MenuButton';
 import {menuContent, modalContent} from '../iconDefinition';
@@ -28,6 +29,10 @@ const ButtonGroup = styled.div`
 
 class ActivityBar extends React.Component {
     toggleSideBarElement = (index) => {
+        // TODO MOVE TO ANOTHER PLACE
+        // Get experiments
+        this.props.requestExperiments();
+
         const {selectedIndex, status, duration, setIndex, setStatus} = this.props;
 
         // animation management
@@ -57,7 +62,7 @@ class ActivityBar extends React.Component {
     render() {
         const {selectedIndex} = this.props;
 
-        return <Container>
+        return (<Container>
             <ButtonGroup>
                 {menuContent.map(({icon, name}, index) =>
                     <MenuButton
@@ -79,12 +84,13 @@ class ActivityBar extends React.Component {
                     />,
                 )}
             </ButtonGroup>
-        </Container>;
+        </Container>);
     }
 }
 
 
 ActivityBar.propTypes = {
+    requestExperiments: PropTypes.func.isRequired,
     setIndex: PropTypes.func.isRequired,
     setStatus: PropTypes.func.isRequired,
 
@@ -93,13 +99,14 @@ ActivityBar.propTypes = {
     duration: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = ({parameters}) => ({
-    selectedIndex: parameters.sideBar.selectedIndex,
-    status: parameters.sideBar.status,
-    duration: parameters.sideBar.duration,
+const mapStateToProps = ({settings}) => ({
+    selectedIndex: settings.sideBar.selectedIndex,
+    status: settings.sideBar.status,
+    duration: settings.sideBar.duration,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+    requestExperiments: actionsExperiment.list.request,
     setIndex: actions.setIndex,
     setStatus: actions.setStatus,
 }, dispatch);

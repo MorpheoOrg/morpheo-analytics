@@ -124,9 +124,9 @@ Editor.propTypes = {
     moveTab: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({parameters}, ownProps) => ({
+const mapStateToProps = ({settings}, ownProps) => ({
     ...ownProps,
-    panes: parameters.editor.panes,
+    panes: settings.editor.panes,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

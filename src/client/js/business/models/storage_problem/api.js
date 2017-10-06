@@ -32,8 +32,8 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
+
+/* globals STORAGE_API_URL STORAGE_USER STORAGE_PASSWORD btoa fetch */
 
 import queryString from 'query-string';
 import {isEmpty} from 'lodash';
@@ -45,20 +45,6 @@ const getHeaders = jwt => ({
     Authorization: `Basic ${jwt}`,
 });
 
-export const fetchList = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({list: json}), error => ({error}));
-
-export const fetchProblems = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchList(url, jwt);
-};
-
-
 export const fetchItem = (url, jwt) => fetch(url, {
     headers: getHeaders(jwt),
     mode: 'cors',
@@ -67,7 +53,8 @@ export const fetchItem = (url, jwt) => fetch(url, {
     .then(json => ({item: json}), error => ({error}));
 
 export const fetchProblem = (id, get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
+    const url = `${STORAGE_API_URL}/problem/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
+    const jwt = btoa(`${STORAGE_USER}:${STORAGE_PASSWORD}`);
     return fetchItem(url, jwt);
 };
+

@@ -3,8 +3,8 @@ import {actionTypes} from '../actions/sideBar';
 const initialState = {
     selectedIndex: -1,
     status: 'closed',
-    width: 200,
-    duration: 1500,
+    width: 400,
+    duration: 150,
 };
 
 export default (state = initialState, {type, payload}) => {

@@ -1,7 +1,3 @@
-/* global fetch, btoa,
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD
-   STORAGE_API_URL STORAGE_USER STORAGE_PASSWORD */
-
 import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
@@ -57,7 +53,7 @@ class Experiment extends React.Component {
         }
     `;
 
-    handleClick = async () => {
+    handleClick = () => {
 
     }
 

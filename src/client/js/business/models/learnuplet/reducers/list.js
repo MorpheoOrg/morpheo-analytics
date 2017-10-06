@@ -32,42 +32,42 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
-
-import queryString from 'query-string';
-import {isEmpty} from 'lodash';
-import {handleResponse} from '../../../utils/entities/fetchEntities';
-
-const getHeaders = jwt => ({
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
-    Authorization: `Basic ${jwt}`,
-});
-
-export const fetchList = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({list: json}), error => ({error}));
-
-export const fetchProblems = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchList(url, jwt);
+const initialState = {
+    results: {},
+    error: null,
 };
 
+export default actionTypes =>
+    (state = initialState, {type, payload}) => {
+        switch (type) {
+        case actionTypes.list.REQUEST:
+        case actionTypes.list.RESET:
+            return {
+                ...state,
+                loading: true,
+            };
+        case actionTypes.list.SUCCESS:
+            return {
+                ...state,
+                results: {...state.results, ...payload},
+                init: true,
+                error: null,
+                loading: false,
+            };
+        case actionTypes.list.FAILURE:
+            return {
+                ...state,
+                results: {},
+                error: payload,
+                loading: false,
+            };
+        case actionTypes.list.UPDATE:
+            return {
+                ...state,
+                ...payload, // update count, next, previous, results if necessary
+            };
+        default:
+            return state;
+        }
+    };
 
-export const fetchItem = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({item: json}), error => ({error}));
-
-export const fetchProblem = (id, get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchItem(url, jwt);
-};

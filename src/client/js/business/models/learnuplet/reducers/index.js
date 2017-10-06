@@ -32,42 +32,9 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
+import list from './list';
+import {actionTypes} from '../actions';
 
-import queryString from 'query-string';
-import {isEmpty} from 'lodash';
-import {handleResponse} from '../../../utils/entities/fetchEntities';
-
-const getHeaders = jwt => ({
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
-    Authorization: `Basic ${jwt}`,
-});
-
-export const fetchList = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({list: json}), error => ({error}));
-
-export const fetchProblems = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchList(url, jwt);
-};
-
-
-export const fetchItem = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({item: json}), error => ({error}));
-
-export const fetchProblem = (id, get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchItem(url, jwt);
+export default {
+    list: list(actionTypes),
 };

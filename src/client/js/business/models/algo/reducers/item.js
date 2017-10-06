@@ -32,42 +32,67 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
+import {actionTypes} from '../actions';
 
-import queryString from 'query-string';
-import {isEmpty} from 'lodash';
-import {handleResponse} from '../../../utils/entities/fetchEntities';
-
-const getHeaders = jwt => ({
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
-    Authorization: `Basic ${jwt}`,
-});
-
-export const fetchList = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({list: json}), error => ({error}));
-
-export const fetchProblems = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchList(url, jwt);
+const initialState = {
+    results: {},
+    loading: true,
 };
 
+export default (state = initialState, {type, payload}) => {
+    switch (type) {
+    case actionTypes.item.get.FAILURE:
+    case actionTypes.item.post.FAILURE:
+    case actionTypes.item.create.FAILURE:
+    case actionTypes.item.update.FAILURE:
+    case actionTypes.item.delete.FAILURE:
+        return {
+            ...state,
+            loading: false,
+            error: payload,
+        };
+    case actionTypes.item.get.REQUEST:
+    case actionTypes.item.update.REQUEST:
+        return {
+            ...state,
+            loading: true,
+        };
+    case actionTypes.item.get.SUCCESS:
+        return {
+            ...state,
+            results: {
+                ...state.results,
+                [payload.id]: payload.list,
+            },
+            loading: false,
+        };
+    case actionTypes.item.create.SUCCESS:
+        return {
+            ...state,
+            results: {
+                ...state.results,
+                [payload.experiment]: [
+                    ...state.results[payload.experiment],
+                    payload,
+                ],
+            },
+            loading: false,
+        };
+    case actionTypes.item.delete.SUCCESS:
+        return {
+            ...state,
+            results: Object.keys(state.results).reduce((previous, current) =>
+                ({
+                    ...previous,
+                    [current]: state.results[current].filter(o => o.id !== payload),
+                })
+                , {}),
+            loading: false,
+        };
 
-export const fetchItem = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({item: json}), error => ({error}));
 
-export const fetchProblem = (id, get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchItem(url, jwt);
+    default:
+        return state;
+    }
 };
+

@@ -36,8 +36,6 @@
 import {reducer as formReducer} from 'redux-form';
 
 import {actionTypes} from './actions';
-import modelReducer from '../client/js/business/models/reducer';
-import parametersReducer from '../client/js/business/ui/reducer/index';
 
 const initialState = {error: ''};
 
@@ -55,8 +53,6 @@ export const general = (state = initialState, {type, payload}) => {
 
 export default {
     // TODO : load on routes with preload
-    models: modelReducer,
-    parameters: parametersReducer,
     form: formReducer,
     general,
 };

@@ -32,42 +32,44 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
 
-import queryString from 'query-string';
-import {isEmpty} from 'lodash';
-import {handleResponse} from '../../../utils/entities/fetchEntities';
+import {createAction} from 'redux-actions';
 
-const getHeaders = jwt => ({
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
-    Authorization: `Basic ${jwt}`,
-});
+import {actions as itemActions, actionTypes as itemActionTypes} from '../../../actions/item';
+import {actions as modalActions, actionTypes as modalActionTypes} from '../../../actions/modal';
+import {actions as listActions, actionTypes as listActionTypes} from '../../../actions/list';
 
-export const fetchList = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({list: json}), error => ({error}));
+import createRequestActionTypes from '../../../actions/createRequestActionTypes';
 
-export const fetchProblems = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchList(url, jwt);
+
+const prefix = 'MODELS::ALGO';
+
+export const actionTypes = {
+    item: {
+        ...itemActionTypes(`${prefix}`),
+        post: createRequestActionTypes(`${prefix}_ITEM_POST`),
+        postToOrchestrator: createRequestActionTypes(`${prefix}_ITEM_POST_ORCHESTRATOR`),
+    },
+    modal: modalActionTypes(`${prefix}_MODAL`),
+    list: listActionTypes(`${prefix}_LIST`),
 };
 
-
-export const fetchItem = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({item: json}), error => ({error}));
-
-export const fetchProblem = (id, get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchItem(url, jwt);
+const actions = {
+    item: {
+        ...itemActions(actionTypes.item),
+        post: {
+            request: createAction(actionTypes.item.post.REQUEST),
+            success: createAction(actionTypes.item.post.SUCCESS),
+            failure: createAction(actionTypes.item.post.FAILURE),
+        },
+        postToOrchestrator: {
+            request: createAction(actionTypes.item.postToOrchestrator.REQUEST),
+            success: createAction(actionTypes.item.postToOrchestrator.SUCCESS),
+            failure: createAction(actionTypes.item.postToOrchestrator.FAILURE),
+        },
+    },
+    modal: modalActions(actionTypes.modal),
+    list: listActions(actionTypes.list),
 };
+
+export default actions;

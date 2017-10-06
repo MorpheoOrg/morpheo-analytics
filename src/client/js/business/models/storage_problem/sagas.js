@@ -32,42 +32,44 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
+/* globals */
 
-import queryString from 'query-string';
-import {isEmpty} from 'lodash';
-import {handleResponse} from '../../../utils/entities/fetchEntities';
+import {call, put, takeEvery} from 'redux-saga/effects';
+import generalActions from '../../../../../common/actions';
 
-const getHeaders = jwt => ({
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
-    Authorization: `Basic ${jwt}`,
-});
+import actions, {actionTypes} from './actions';
+import {
+    fetchProblem as fetchProblemApi,
+} from './api';
 
-export const fetchList = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({list: json}), error => ({error}));
+export const loadItem = (actions, fetchItem, query) =>
+    function* loadItemSaga(request) {
+        const {error, item} = yield call(fetchItem, request.payload);
 
-export const fetchProblems = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchList(url, jwt);
+        if (error) {
+            if (error.body && error.body.message) {
+                console.error(error.body.message);
+            }
+            else if (error && error.message) {
+                yield put(generalActions.error.set(error.message));
+            }
+            yield put(actions.item.get.failure(error.body));
+        }
+        else {
+            yield put(actions.item.get.success({
+                [request.payload]: item,
+            }));
+
+            return item;
+        }
+    };
+
+/* istanbul ignore next */
+const sagas = function* sagas() {
+    yield [
+        takeEvery(actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)),
+    ];
 };
 
 
-export const fetchItem = (url, jwt) => fetch(url, {
-    headers: getHeaders(jwt),
-    mode: 'cors',
-})
-    .then(response => handleResponse(response))
-    .then(json => ({item: json}), error => ({error}));
-
-export const fetchProblem = (id, get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algos/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-    return fetchItem(url, jwt);
-};
+export default sagas;
