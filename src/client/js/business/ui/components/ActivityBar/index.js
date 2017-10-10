@@ -8,7 +8,7 @@ import {onlyUpdateForKeys} from 'recompose';
 import {bindActionCreators} from 'redux';
 
 import actions from '../../actions/sideBar';
-import actionsExperiment from '../../../models/experiment/actions';
+import actionsChallenge from '../../../models/challenge/actions';
 
 import MenuButton from './MenuButton';
 import {menuContent, modalContent} from '../iconDefinition';
@@ -31,7 +31,7 @@ class ActivityBar extends React.Component {
     toggleSideBarElement = (index) => {
         // TODO MOVE TO ANOTHER PLACE
         // Get experiments
-        this.props.requestExperiments();
+        this.props.requestChallenges();
 
         const {selectedIndex, status, duration, setIndex, setStatus} = this.props;
 
@@ -106,7 +106,7 @@ const mapStateToProps = ({settings}) => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    requestExperiments: actionsExperiment.list.request,
+    requestExperiments: actionsChallenge.list.request,
     setIndex: actions.setIndex,
     setStatus: actions.setStatus,
 }, dispatch);

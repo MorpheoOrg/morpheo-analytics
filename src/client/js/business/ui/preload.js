@@ -5,8 +5,7 @@ import Main from './components/Main';
 
 export settingsReducer from './reducers/index';
 export modelsReducer from '../models/reducer';
-
-export modelsSagas from '../models/experiment/sagas';
+export modelsSaga from '../models/sagas';
 
 // Configure hot module replacement for the reducer
 if (process.env.NODE_ENV !== 'production') {
@@ -15,13 +14,16 @@ if (process.env.NODE_ENV !== 'production') {
             const settingsReducer = require('./reducers/index').default;
             injectReducer('settings', settingsReducer, true);
         });
+
         module.hot.accept('../models/reducer', () => {
             const modelsReducer = require('../models/reducer').default;
             injectReducer('models', modelsReducer, true);
         });
-        module.hot.accept('../models/experiment/sagas', () => {
-            reloadSaga('models', require('../models/experiment/sagas').default);
+
+        module.hot.accept('../models/sagas', () => {
+            reloadSaga('models', require('../models/sagas').default);
         });
+
         // module.hot.accept('../settings/sagas', () => {
         //     reloadSaga('settings', require('../settings/sagas').default);
         // });

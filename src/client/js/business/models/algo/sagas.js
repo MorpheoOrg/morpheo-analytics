@@ -106,8 +106,12 @@ export const loadList = (actions, fetchList) =>
             location = state.location;
 
         // override query if needed, default to current url query
-        const query = location && location.search ? queryString.parse(location.search) : {};
-        const {error, list} = yield call(fetchList, {...query, problem: request.payload});
+        const query = location && location.search ?
+            queryString.parse(location.search) : {};
+        const {error, list} = yield call(fetchList, {
+            ...query,
+            problem: request.payload,
+        });
 
         if (error) {
             if (error.body && error.body.message) {

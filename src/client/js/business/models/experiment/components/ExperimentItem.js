@@ -6,7 +6,7 @@ import {css} from 'emotion';
 import {Calendar, ChartLine, Timer} from 'mdi-material-ui';
 
 
-class Experiment extends React.Component {
+class ExperimentItem extends React.Component {
     style = css`
         background-color: #EAECF0;
         margin-top: 20px;
@@ -72,7 +72,7 @@ class Experiment extends React.Component {
             <ul>
                 <li>
                     <Calendar />
-                    94 days ago
+                    94 days left
                 </li>
                 <li>
                     <Timer />
@@ -93,4 +93,4 @@ const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
 
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Experiment);
+export default connect(mapStateToProps, mapDispatchToProps)(ExperimentItem);

@@ -1,7 +1,7 @@
 import React from 'react';
 import {css} from 'emotion';
 
-import Experiment from './Experiment';
+import ExperimentItem from './ExperimentItem';
 
 
 class ExperimentList extends React.Component {
@@ -13,10 +13,10 @@ class ExperimentList extends React.Component {
             css={this.style}
         >
             <div>Research Field</div>
-            <Experiment />
-            <Experiment />
-            <Experiment />
-            <Experiment />
+            <ExperimentItem />
+            <ExperimentItem />
+            <ExperimentItem />
+            <ExperimentItem />
         </div>);
     }
 }

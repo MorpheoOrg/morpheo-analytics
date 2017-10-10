@@ -1,8 +1,8 @@
 const initialState = {
     init: false,
-    loading: false,
-    error: null,
     results: [],
+    error: null,
+    loading: false,
 };
 
 export default actionTypes =>

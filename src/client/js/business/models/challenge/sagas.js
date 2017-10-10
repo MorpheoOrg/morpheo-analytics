@@ -1,4 +1,5 @@
 import {call, put, select, takeLatest, takeEvery} from 'redux-saga/effects';
+import queryString from 'query-string';
 import generalActions from '../../../../../common/actions';
 import storageProblemActions from '../storage_problem/actions';
 
@@ -9,16 +10,13 @@ import {
 } from './api';
 
 
-export const loadList = (actions, fetchList) =>
-    function* loadListSaga(request) {
+export const loadList = (actions, fetchList, q) =>
+    function* loadListSaga() {
         const state = yield select(),
             location = state.location;
 
-        // TODO Update payload to send query REST
-        console.log('request', request);
-
         // override query if needed, default to current url query
-        const query = undefined;
+        const query = q || (location && location.search ? queryString.parse(location.search) : {});
         const {error, list} = yield call(fetchList, query);
         console.log('sagas: ', error, list);
 
@@ -32,13 +30,14 @@ export const loadList = (actions, fetchList) =>
             yield put(actions.list.failure(error.body));
         }
         else {
-            yield put(actions.list.success({results: list.algos}));
+            yield put(actions.list.success({results: list.problems}));
 
-            // Let's fetch algos results from storage
-            const l = list.algos.length;
-            for (let i = 0; i < 1; i += 1) {
-                yield put()
+            // Let's fetch description problem from storage
+            const l = list.problems.length;
+            for (let i = 0; i < l; i += 1) {
+                yield put(storageProblemActions.item.get.request(list.problems[i].workflow));
             }
+
             return list;
         }
     };
@@ -68,18 +67,12 @@ export const loadItem = (actions, fetchItem, query) =>
     };
 
 /* istanbul ignore next */
-const experimentSagas = function* experimentSagas() {
+const challengeSagas = function* challengeSagas() {
     yield [
-        takeLatest(
-            actionTypes.list.REQUEST,
-            loadList(actions, fetchAlgosApi),
-        ),
-        takeEvery(
-            actionTypes.item.get.REQUEST,
-            loadItem(actions, fetchProblemApi),
-        ),
+        takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchAlgosApi)),
+        takeEvery(actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)),
     ];
 };
 
 
-export default experimentSagas;
+export default challengeSagas;
