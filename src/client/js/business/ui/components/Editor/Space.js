@@ -1,7 +1,7 @@
 import React from 'react';
 import {css} from 'emotion';
 
-const debug = true;
+const debug = false;
 
 const style = css`
     display: inline-block;
@@ -12,16 +12,16 @@ const style = css`
 `;
 
 class Space extends React.Component {
-
+    // important: pass first parameter to undefined
     onMouseOver = () => this.props.onMouseOver();
     onMouseOut = () => this.props.onMouseOut();
     onMouseUp = () => this.props.onMouseUp();
 
     render() {
         return <li className={style}
-                    onMouseOver={this.onMouseOver}
-                    onMouseOut={this.onMouseOut}
-                    onMouseUp={this.onMouseUp}
+                   onMouseOver={this.onMouseOver}
+                   onMouseOut={this.onMouseOut}
+                   onMouseUp={this.onMouseUp}
         />;
     }
 }

@@ -10,34 +10,23 @@ const Container = styled.div`
     border-right: 1px solid #ccc!important;
 `;
 
-class Pane extends React.Component {
-    state = {
-        internalDrag: false,
-    };
-
-    render() {
-        const {selected, tabs, draggedTab, droppedTab, id, tab, onTabDragStart, onTabDragEnd} = this.props;
-
-        return <Container>
-            <TabNavigation
-                draggedTab={draggedTab}
-                droppedTab={droppedTab}
-                selected={selected}
-                id={id}
-                onTabDragStart={onTabDragStart}
-                onTabDragEnd={onTabDragEnd}
-                tabs={tabs}
-            />
-            {tab && <div key={`content-${id}`}>
-                tab: {selected}, value: {tab.value}
-            </div>
-            }
-        </Container>;
-    }
-}
+const Pane = ({selected, tabs, draggedTab, id, tab, onTabDragStart, onTabDragEnd}) =>
+    <Container>
+        <TabNavigation
+            draggedTab={draggedTab}
+            selected={selected}
+            id={id}
+            onTabDragStart={onTabDragStart}
+            onTabDragEnd={onTabDragEnd}
+            tabs={tabs}
+        />
+        {tab && <div key={`content-${id}`}>
+            tab: {selected}, value: {tab.value}
+        </div>
+        }
+    </Container>;
 
 // Pane
-// droppable: activate the droppable mode
 
 Pane.propTypes = {
     draggedTab: PropTypes.shape({}),
@@ -55,6 +44,7 @@ Pane.defaultProps = {
     draggedTab: undefined,
 };
 
+// TODO: put in selector
 const mapStateToProps = (state, ownProps) => ({
     ...ownProps,
     tab: ownProps.tabs.find(tab => tab.id === ownProps.selected),

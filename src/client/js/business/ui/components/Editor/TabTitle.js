@@ -5,15 +5,14 @@ import React from 'react';
 import {css} from 'emotion';
 import {onlyUpdateForKeys} from 'recompose';
 
-const debug = true;
+const debug = false;
 
 const style = {
     li: css`
         position: relative;
         display: inline-block;
-        margin-top: 10px;
     `,
-    tab: (dragged, active, translation, x, y, draggedTab) => css`
+    tab: (dragged, active) => css`
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -76,9 +75,7 @@ const hidden = (draggedTab, id) => css`
 class TabTitle extends React.Component {
     state = {
         dragged: false,
-        animate: true,
     };
-    duration = 300;
 
     componentWillUnmount() {
         this.handleDragEnd();
@@ -105,7 +102,6 @@ class TabTitle extends React.Component {
     handleDragMove = (event) => {
         // Drag move by applying a translation
         // render
-        console.log(event.clientX - this.x);
         this.setState({
             x: event.clientX - this.x,
             y: event.clientY - this.y,
@@ -113,29 +109,15 @@ class TabTitle extends React.Component {
     };
 
     handleDragEnd = () => {
-
-        console.log('set draggedTab to null');
-
-        console.log(this.state.x, this.props.draggedTab.width);
-
-        // temporary x for not screwing animation
+        //reset
         this.setState({
             ...this.state,
-            x: this.state.x - this.props.draggedTab.width, // multiply by number index
-            animate: false,
+            x: undefined,
+            y: undefined,
+            dragged: false,
         });
 
-
-        // load last animation
-        this.props.onDragEnd(this.props.id);
-        // this.setState({
-        //     ...this.state,
-        //     x: undefined,
-        //     y: undefined,
-        //     dragged: false,
-        //     animate: true,
-        // });
-        console.log('dragged to false, render');
+        this.props.onDragEnd();
         // Remove the event created with handleMouseDown
         window.removeEventListener('mousemove', this.handleDragMove);
         window.removeEventListener('mouseup', this.handleDragEnd);
@@ -149,28 +131,25 @@ class TabTitle extends React.Component {
     onMouseDown = (event) => event.stopPropagation();
 
     transform = () => {
-        const {id, translation, draggedTab, droppedTab} = this.props;
-        const {x, y, dragged, animate} = this.state;
+        const {translation} = this.props;
+        const {x, y, dragged} = this.state;
 
         return {
-            ...(dragged || (droppedTab && droppedTab.id !== id) ? {transform: `translate(${x}px, ${y}px)`} : {transform: `translate(${translation}px, 0)`}),
-            ...((!dragged && draggedTab) || (animate && droppedTab && droppedTab.id === id) ? {transition: `transform ${this.duration}ms`} : {}),
+            ...(dragged ? {transform: `translate(${x}px, ${y}px)`} : {transform: `translate(${translation}px, 0)`}),
+            //...((!dragged && draggedTab) || (droppedTab && droppedTab.id === id) ? {transition: `transform ${this.duration}ms`} : {}),
         };
     };
 
     render() {
-        const {active, value, id, translation, draggedTab, droppedTab} = this.props;
-        const {x, y, dragged, animate} = this.state;
-
-        console.log(id, dragged, !!draggedTab, !!droppedTab, translation, animate);
-        console.log(!dragged && !!draggedTab, !!droppedTab && droppedTab.id === id);
+        const {active, value, id, draggedTab} = this.props;
+        const {dragged} = this.state;
 
         return <li className={style.li}>
             <div className={hidden(draggedTab, id)}
                  onMouseOut={this.onDragOut}
                  onMouseUp={this.onDrop}
                  onMouseOver={this.onDragOver}/>
-            <div className={style.tab(dragged, active, translation, x, y, draggedTab)}
+            <div className={style.tab(dragged, active)}
                  style={this.transform()}
                  onMouseDown={this.handleMouseDown}>
                 <span>{value} {id.slice(0, 8)}</span>

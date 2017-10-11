@@ -34,17 +34,16 @@ class Editor extends React.Component {
     // store dragged table which is droppable in state
     state = {
         draggedTab: null,
-        droppedTab: null,
     };
 
     handleTabDragStart = (draggedTab) => {
         // Activate the droppable mode
-        this.setState({draggedTab, droppedTab: null});
+        this.setState({draggedTab});
     };
 
-    handleTabDragEnd = (droppedTab) => {
+    handleTabDragEnd = () => {
         // Deactivate the droppable mode
-        this.setState({draggedTab: null, droppedTab});
+        this.setState({draggedTab: null});
     };
 
     // Next functions are provided just for test the component
@@ -86,8 +85,6 @@ class Editor extends React.Component {
 
     render() {
         const {panes} = this.props;
-
-        //console.log('editor state:', this.state.droppableTab);
 
         return (<Container>
             <Debug>
