@@ -12,7 +12,7 @@ const Debug = styled.div`
     position: absolute;
     z-index: 1;
     bottom: 0;
-    left: 5px;
+    right: 0;
     background-color: rgba(220, 0, 0, 0.4);
 `;
 
