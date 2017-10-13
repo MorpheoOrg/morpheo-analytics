@@ -5,18 +5,19 @@ import storageProblemActions from '../storage_problem/actions';
 
 import actions, {actionTypes} from './actions';
 import {
-    fetchAlgos as fetchAlgosApi,
+    fetchProblems as fetchProblemsApi,
     fetchProblem as fetchProblemApi,
 } from './api';
 
 
-export const loadList = (actions, fetchList, q) =>
+export const loadList = (actions, fetchList, query) =>
     function* loadListSaga() {
         const state = yield select(),
             location = state.location;
 
+        console.log("hello from challenge saga");
         // override query if needed, default to current url query
-        const query = q || (location && location.search ? queryString.parse(location.search) : {});
+        // const query = q || (location && location.search ? queryString.parse(location.search) : {});
         const {error, list} = yield call(fetchList, query);
         console.log('sagas: ', error, list);
 
@@ -30,13 +31,13 @@ export const loadList = (actions, fetchList, q) =>
             yield put(actions.list.failure(error.body));
         }
         else {
-            yield put(actions.list.success({results: list.problems}));
+            yield put(actions.list.success({results: list.items}));
 
             // Let's fetch description problem from storage
-            const l = list.problems.length;
-            for (let i = 0; i < l; i += 1) {
-                yield put(storageProblemActions.item.get.request(list.problems[i].workflow));
-            }
+            // const l = list.problems.length;
+            // for (let i = 0; i < l; i += 1) {
+            //     yield put(storageProblemActions.item.get.request(list.problems[i].workflow));
+            // }
 
             return list;
         }
@@ -69,7 +70,7 @@ export const loadItem = (actions, fetchItem, query) =>
 /* istanbul ignore next */
 const challengeSagas = function* challengeSagas() {
     yield [
-        takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchAlgosApi)),
+        takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchProblemsApi)),
         takeEvery(actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)),
     ];
 };

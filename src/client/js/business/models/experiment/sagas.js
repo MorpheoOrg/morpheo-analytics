@@ -35,10 +35,10 @@ export const loadList = (actions, fetchList) =>
             yield put(actions.list.success({results: list.algos}));
 
             // Let's fetch algos results from storage
-            const l = list.algos.length;
-            for (let i = 0; i < 1; i += 1) {
-                yield put()
-            }
+            // const l = list.algos.length;
+            // for (let i = 0; i < 1; i += 1) {
+            //     yield put()
+            // }
             return list;
         }
     };

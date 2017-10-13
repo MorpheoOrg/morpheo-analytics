@@ -67,7 +67,7 @@ class ChallengeItem extends React.Component {
                 </li>
                 <li>
                     <Trophy />
-                    78.1
+                    24
                 </li>
             </ul>
         </div>);

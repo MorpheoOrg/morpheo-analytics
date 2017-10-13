@@ -1,11 +1,11 @@
-import {all} from 'redux-saga/effects';
+import {fork} from 'redux-saga/effects';
 
 import challengeSagas from './challenge/sagas';
 import experimentSagas from './experiment/sagas';
 
-export default function* rootSaga() {
-    yield all([
-        challengeSagas,
-        experimentSagas,
-    ]);
-}
+const rootSaga = function* rootSaga() {
+    yield fork(challengeSagas);
+    yield fork(experimentSagas);
+};
+
+export default rootSaga;

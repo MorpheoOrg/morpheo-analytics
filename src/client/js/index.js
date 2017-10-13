@@ -48,6 +48,8 @@ import '../css/main.scss';
 
 const {store} = configureStore(history, window.REDUX_STATE);
 
+console.log(store);
+
 FastClick.attach(document.body);
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941

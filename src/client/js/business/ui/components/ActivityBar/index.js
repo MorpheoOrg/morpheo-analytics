@@ -30,7 +30,7 @@ const ButtonGroup = styled.div`
 class ActivityBar extends React.Component {
     toggleSideBarElement = (index) => {
         // TODO MOVE TO ANOTHER PLACE
-        // Get experiments
+        // Get challenge
         this.props.requestChallenges();
 
         const {selectedIndex, status, duration, setIndex, setStatus} = this.props;
@@ -90,7 +90,7 @@ class ActivityBar extends React.Component {
 
 
 ActivityBar.propTypes = {
-    requestExperiments: PropTypes.func.isRequired,
+    requestChallenges: PropTypes.func.isRequired,
     setIndex: PropTypes.func.isRequired,
     setStatus: PropTypes.func.isRequired,
 
@@ -106,7 +106,7 @@ const mapStateToProps = ({settings}) => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    requestExperiments: actionsChallenge.list.request,
+    requestChallenges: actionsChallenge.list.request,
     setIndex: actions.setIndex,
     setStatus: actions.setStatus,
 }, dispatch);

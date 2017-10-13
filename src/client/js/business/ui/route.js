@@ -7,6 +7,8 @@ const Universal = universal(import('./preload'), {
     onLoad: (preload, {isSync, isServer}, props, context) => {
         injectReducer('settings', preload.settingsReducer);
         injectReducer('models', preload.modelsReducer);
+        // injectSaga('models.experiment', preload.modelsExperimentSaga);
+        // injectSaga('models.challenge', preload.modelsChallengeSaga);
         injectSaga('models', preload.modelsSaga);
     },
 });
