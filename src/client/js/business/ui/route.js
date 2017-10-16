@@ -7,9 +7,6 @@ import {injectReducer} from 'redux-reducers-injector';
 const Universal = universal(import('./preload'), {
     loading: <div>Loading</div>,
     onLoad: (preload, {isSync, isServer}, props, context) => {
-
-        console.log('on load');
-
         injectReducer('settings', preload.settingsReducer);
         injectReducer('models', preload.modelsReducer);
         // injectSaga('models.experiment', preload.modelsExperimentSaga);
