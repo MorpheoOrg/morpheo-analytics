@@ -2,15 +2,15 @@ import React from 'react';
 import {Poll, CloudUpload, BookOpen,
     Settings, FlaskOutline} from 'mdi-material-ui';
 
-import ChallengeList from '../../models/challenge/components/ChallengeList';
+import ProblemList from '../../models/problem/components/ProblemList';
 import ExperimentList from '../../models/experiment/components/ExperimentList';
 
 
 export const menuContent = [
     {
-        name: 'Challenges',
+        name: 'Problems',
         icon: <Poll />,
-        content: <ChallengeList />,
+        content: <ProblemList />,
     },
     {
         name: 'Experiments',

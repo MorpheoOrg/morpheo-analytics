@@ -1,8 +1,8 @@
 import {actionTypes} from '../actions/sideBar';
 
 const initialState = {
-    selectedIndex: -1,
-    status: 'closed',
+    selectedIndex: 0,
+    status: 'opened',
     width: 400,
     duration: 150,
 };
