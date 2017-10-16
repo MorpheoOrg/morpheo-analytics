@@ -34,7 +34,7 @@
  */
 /* globals */
 
-import {call, put, takeEvery} from 'redux-saga/effects';
+import {call, put, takeEvery, all} from 'redux-saga/effects';
 
 import actions, {actionTypes} from './actions';
 import {
@@ -51,12 +51,12 @@ function* loadList(request) {
 
 /* istanbul ignore next */
 const learnupletSagas = function* learnupletSagas() {
-    yield [
+    yield all([
         /** ********** */
         /* learnuplet */
         /** ********** */
         takeEvery(actionTypes.list.REQUEST, loadList),
-    ];
+    ]);
 };
 
 

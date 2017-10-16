@@ -4,6 +4,14 @@ import atob from 'atob';
 
 import configureStore from '../common/configureStore/index';
 
+
+const doesRedirect = ({kind, pathname}, res) => {
+    if (kind === 'redirect') {
+        res.redirect(302, pathname);
+        return true;
+    }
+};
+
 export default async (req, res) => {
     const access_token = req.cookies.access_token;
 
@@ -41,11 +49,4 @@ export default async (req, res) => {
     const status = location.type === NOT_FOUND ? 404 : 200;
     res.status(status);
     return store;
-}
-
-const doesRedirect = ({kind, pathname}, res) => {
-    if (kind === 'redirect') {
-        res.redirect(302, pathname);
-        return true;
-    }
 };

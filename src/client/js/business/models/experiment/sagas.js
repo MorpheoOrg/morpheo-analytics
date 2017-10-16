@@ -1,4 +1,4 @@
-import {call, put, select, takeLatest, takeEvery} from 'redux-saga/effects';
+import {call, put, select, takeLatest, takeEvery, all} from 'redux-saga/effects';
 import generalActions from '../../../../../common/actions';
 import storageProblemActions from '../storage_problem/actions';
 
@@ -69,7 +69,7 @@ export const loadItem = (actions, fetchItem, query) =>
 
 /* istanbul ignore next */
 const experimentSagas = function* experimentSagas() {
-    yield [
+    yield all([
         takeLatest(
             actionTypes.list.REQUEST,
             loadList(actions, fetchAlgosApi),
@@ -78,7 +78,7 @@ const experimentSagas = function* experimentSagas() {
             actionTypes.item.get.REQUEST,
             loadItem(actions, fetchProblemApi),
         ),
-    ];
+    ]);
 };
 
 

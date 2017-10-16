@@ -1,4 +1,5 @@
 import webpack from 'webpack';
+import config from 'config';
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
 import WriteFilePlugin from 'write-file-webpack-plugin';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
@@ -10,8 +11,7 @@ import definePlugin from './definePlugin';
 import dll from './dll';
 
 
-const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
-    DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
+const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
     PRODUCTION = (['production'].includes(process.env.NODE_ENV));
 
 export default env => [
@@ -44,27 +44,25 @@ export default env => [
             new webpack.HotModuleReplacementPlugin(),
             new webpack.NoEmitOnErrorsPlugin(),
 
-            // new BrowserSyncPlugin(
-            //     // BrowserSync options
-            //     {
-            //         // browse to http://localhost:3000/ during development
-            //         open: false,
-            //         // proxy the Webpack Dev Server endpoint
-            //         // (which should be serving on http://localhost:3100/)
-            //         // through BrowserSync
-            //         proxy: {
-            //             target: `localhost:${config.apps.frontend.api_port}`,
-            //         },
-            //         ghostMode: false,
-            //     },
-            //     // plugin options
-            //     {
-            //         // prevent BrowserSync require(reloading the page
-            //         // and let Webpack Dev Server take care of this
-            //         reload: false,
-            //         callback: () => console.log('Finished proxifying...'),
-            //     },
-            // ),
+            new BrowserSyncPlugin(
+                // BrowserSync options
+                {
+                    // browse to http://localhost:3001/ during development
+                    open: false,
+                    port: config.apps.frontend.api_port + 1,
+                    proxy: {
+                        target: `localhost:${config.apps.frontend.api_port}`,
+                    },
+                    ghostMode: false,
+                },
+                // plugin options
+                {
+                    // prevent BrowserSync require(reloading the page
+                    // and let Webpack Dev Server take care of this
+                    reload: false,
+                    callback: () => console.log('Finished proxifying...'),
+                },
+            ),
         ]),
     ] : [
         new webpack.optimize.LimitChunkCountPlugin({
@@ -87,9 +85,9 @@ export default env => [
                     'transform-runtime',
                     'lodash',
                     'date-fns',
-                    'transform-class-properties',
-                    'transform-es2015-classes',
                     ...(PRODUCTION && env === 'frontend' ? [
+                        'transform-class-properties',
+                        'transform-es2015-classes',
                         'transform-react-constant-elements',
                         'transform-react-inline-elements',
                         'transform-react-remove-prop-types',

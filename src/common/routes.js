@@ -42,6 +42,7 @@ import MainRoute from '../client/js/business/ui/route';
 const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
 
 export default connect(mapStateToProps)(({location}) => {
+    console.log(location.type);
     switch (location.type) {
     case 'HOME':
         return (<MainRoute />);
