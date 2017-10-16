@@ -17,6 +17,7 @@ const Container = styled.div`
     overflow: hidden;
     margin-left:auto;
     margin-right:auto;
+    padding: 20px;
 `;
 
 const Header = styled.div`
@@ -40,6 +41,7 @@ const FlatButton = styled.button`
     color: #98999F;
     right: 0;
     cursor: pointer;
+    padding: 0;
 
     &:hover {
         color: #45464B;
