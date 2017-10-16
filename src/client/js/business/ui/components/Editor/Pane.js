@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import styled from 'emotion/react';
 
 import TabNavigation from './TabNavigation';
+import ProblemDetail from '../../../models/problem/components/detail/ProblemDetail';
 
 const Container = styled.div`
     flex-grow: 1;
@@ -21,7 +22,9 @@ const Pane = ({selected, tabs, draggedTab, id, tab, onTabDragStart, onTabDragEnd
             tabs={tabs}
         />
         {tab && <div key={`content-${id}`}>
-            tab: {selected}, value: {tab.value}
+            <ProblemDetail
+                id={tab.id}
+            />
         </div>
         }
     </Container>;

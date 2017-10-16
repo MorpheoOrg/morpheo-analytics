@@ -17,7 +17,7 @@ const Container = styled.nav`
 const Ul = styled.ul`
     display: flex;
     margin: 0;
-    padding: 10px 0 0 0;
+    padding: 0 0 0 0;
     list-style-type: none;
     background-color: #f1f1f2;
 `;
@@ -138,7 +138,6 @@ class TabNavigation extends React.Component {
 
     render() {
         const {tabs, selected, draggedTab} = this.props;
-
         return (<Container>
             <Ul>
                 {tabs.map(({id, value}, index) => (

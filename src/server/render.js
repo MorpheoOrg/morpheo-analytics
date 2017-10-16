@@ -70,7 +70,7 @@ export default ({clientStats}) => async (req, res, next) => {
           <script>window.REDUX_STATE = ${stateJson}</script>
           <script>${`window.__EMOTION_IDS__ = new Array("${ids}")`}</script>
           <div id="root">${process.env.NODE_ENV === 'production' ? html : `<div>${html}</div>`}</div>
-          ${cssHash}          
+          ${cssHash}
           <script type='text/javascript' src='/reactVendors.js'></script>
           <script type='text/javascript' src='/reduxVendors.js'></script>
           <script type='text/javascript' src='/vendors.js'></script>

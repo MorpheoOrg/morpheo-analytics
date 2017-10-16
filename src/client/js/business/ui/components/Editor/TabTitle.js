@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {css} from 'emotion';
 import {onlyUpdateForKeys} from 'recompose';
+import {Poll, Close} from 'mdi-material-ui';
 
 const debug = false;
 
@@ -21,38 +22,50 @@ const style = {
         border-radius: 4px 4px 0 0;
         border: 1px solid #ccc;
         border-width: 1px 1px 0 1px;
-        padding: 6px 20px 6px 10px;
+        padding: 6px 30px 6px 10px;
 
         text-align: center;
         text-decoration: none;
-        
+
         white-space: nowrap;
 
         background-color: ${dragged || active ? 'white' : '#f1f1f2'};
 
+        & svg {
+            width: 13px;
+        }
+
+        & span {
+            padding-left: 10px;
+        }
+
         &:hover {
             background-color: white;
         }
-        
+
         &:hover button {
             color: red;
         }
 
-        box-shadow: ${dragged ? '0px 3px 10px rgba(0%, 0%, 0%, 0.30)' : 'inherit'};        
+        box-shadow: ${dragged ? '0px 3px 10px rgba(0%, 0%, 0%, 0.30)' : 'inherit'};
         pointer-events: ${dragged ? 'none' : 'inherit'};
         z-index: ${dragged ? '1' : 'inherit'};
     `,
     close: css`
         cursor: pointer;
         border: none;
-        margin-left: 3px;
         color: transparent;
         background-color: transparent;
         box-shadow: none !important;
 
         position: absolute;
-        top: 2px;
+        top: 0;
+        bottom: 0;
         right: 2px;
+
+        & svg {
+            width: 16px;
+        }
 
         &:focus {
             outline: 0;
@@ -152,12 +165,13 @@ class TabTitle extends React.Component {
             <div className={style.tab(dragged, active)}
                  style={this.transform()}
                  onMouseDown={this.handleMouseDown}>
-                <span>{value} {id.slice(0, 8)}</span>
+                <Poll />
+                <span>{value}</span>
                 <button onMouseDown={this.onMouseDown}
                         onClick={this.onClose}
                         className={style.close}
                 >
-                    x
+                    <Close />
                 </button>
             </div>
         </li>;

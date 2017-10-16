@@ -3,10 +3,12 @@ import uuidv4 from 'uuid/v4';
 
 const initialState = {
     panes: [],
+    currentPane: undefined,
 };
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
+    // To remove
     case actionsTypes.addGroup: {
         const {value, id} = payload;
         const uuid = uuidv4();  // TODO change by the uuid items from sidebar
@@ -16,9 +18,9 @@ export default (state = initialState, {type, payload}) => {
                 ...state.panes,
                 // add default tab to group
                 {
-                    tabs: [{value, id: uuid}],
-                    selected: uuid,
-                    id,
+                    tabs: [{value, id: id}],
+                    selected: id,
+                    id: uuid,
                 },
             ],
         };
@@ -37,6 +39,7 @@ export default (state = initialState, {type, payload}) => {
                     selected: tabId,
                 } : c),
             ], []),
+            currentPane: groupId,
         };
     }
 
