@@ -34,7 +34,7 @@
  */
 /* globals */
 
-import {call, put, takeEvery} from 'redux-saga/effects';
+import {call, put, takeEvery, all} from 'redux-saga/effects';
 import generalActions from '../../../../../common/actions';
 
 import actions, {actionTypes} from './actions';
@@ -66,9 +66,9 @@ export const loadItem = (actions, fetchItem, query) =>
 
 /* istanbul ignore next */
 const sagas = function* sagas() {
-    yield [
+    yield all([
         takeEvery(actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)),
-    ];
+    ]);
 };
 
 

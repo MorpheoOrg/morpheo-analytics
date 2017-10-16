@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/server';
 import {JssProvider, SheetsRegistry} from 'react-jss';
 import {create} from 'jss';
 import preset from 'jss-preset-default';
+import {extractCritical} from 'emotion-server';
 import {Provider} from 'react-redux';
 import {flushChunkNames} from 'react-universal-component/server';
 import flushChunks from 'webpack-flush-chunks';
@@ -34,13 +35,14 @@ const createApp = (App, store) =>
 
 
 export default ({clientStats}) => async (req, res, next) => {
+
     const store = await configureStore(req, res);
     if (!store) return; // no store means redirect was already served
 
     const app = createApp(App, store);
-    const appString = ReactDOM.renderToString(app);
+    const {html, ids, css} = extractCritical(ReactDOM.renderToString(app));
     // Grab the CSS from our sheetsRegistry.
-    const css = sheetsRegistry.toString();
+    const materialUiCss = sheetsRegistry.toString();
     const stateJson = JSON.stringify(store.getState());
     const chunkNames = flushChunkNames();
     const {js, styles, cssHash} = flushChunks(clientStats, {chunkNames});
@@ -52,15 +54,23 @@ export default ({clientStats}) => async (req, res, next) => {
         `<!doctype html>
       <html>
         <head>
-          <meta charset="utf-8">
+           <meta charset="utf-8">
           <title>${APP_NAME}</title>
+          <meta charset="utf-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+          <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
+          <link href="https://fonts.googleapis.com/css?family=Lekton:700|Oxygen+Mono|Inconsolata|Titillium+Web" rel="stylesheet">
           ${styles}
-          <style id="jss-server-side">${css}</style>
+          <style type="text/css">${css}</style>
+          <style id="jss-server-side">${materialUiCss}</style>
+          <link rel="stylesheet prefetch" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         </head>
         <body>
           <script>window.REDUX_STATE = ${stateJson}</script>
-          <div id="root">${process.env.NODE_ENV === 'production' ? appString : `<div>${appString}</div>`}</div>
-          ${cssHash}
+          <script>${`window.__EMOTION_IDS__ = new Array("${ids}")`}</script>
+          <div id="root">${process.env.NODE_ENV === 'production' ? html : `<div>${html}</div>`}</div>
+          ${cssHash}          
           <script type='text/javascript' src='/reactVendors.js'></script>
           <script type='text/javascript' src='/reduxVendors.js'></script>
           <script type='text/javascript' src='/vendors.js'></script>

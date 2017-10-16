@@ -34,10 +34,10 @@
  */
 /* globals */
 
-import {call, put, select, takeLatest} from 'redux-saga/effects';
+import {call, put, select, takeLatest, all} from 'redux-saga/effects';
 import queryString from 'query-string';
 
-import generalActions from '../../common/actions';
+import generalActions from '../../../../../common/actions';
 
 
 import actions, {actionTypes} from './actions';
@@ -130,7 +130,7 @@ export const loadList = (actions, fetchList) =>
 
 /* istanbul ignore next */
 const algoSagas = function* algoSagas() {
-    yield [
+    yield all([
         /** ********** */
         /* algo */
         /** ********** */
@@ -143,7 +143,7 @@ const algoSagas = function* algoSagas() {
 
         takeLatest(actionTypes.item.post.REQUEST, postAlgo),
         takeLatest(actionTypes.item.postToOrchestrator.REQUEST, postToOrchestrator),
-    ];
+    ]);
 };
 
 
