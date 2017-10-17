@@ -1,6 +1,6 @@
 const initialState = {
     init: false,
-    results: {},
+    results: [],
     error: null,
     loading: false,
 };
@@ -17,7 +17,7 @@ export default actionTypes =>
         case actionTypes.list.SUCCESS:
             return {
                 ...state,
-                results: {...state.results, ...payload},
+                ...payload,
                 init: true,
                 error: null,
                 loading: false,
@@ -25,7 +25,7 @@ export default actionTypes =>
         case actionTypes.list.FAILURE:
             return {
                 ...state,
-                results: {},
+                results: [],
                 error: payload,
                 loading: false,
             };
@@ -34,8 +34,12 @@ export default actionTypes =>
                 ...state,
                 ...payload, // update count, next, previous, results if necessary
             };
+        case actionTypes.item.get.SUCCESS:
+            return {
+                ...state,
+                results: [...state.results, payload],
+            };
         default:
             return state;
         }
     };
-

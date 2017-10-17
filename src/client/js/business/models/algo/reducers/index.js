@@ -34,15 +34,10 @@
  */
 import {actionTypes} from '../actions';
 
-import {
-    modal,
-} from '../../../../reducers';
-
 import item from './item';
 import list from './list';
 
 export default {
-    item,
-    modal: modal(actionTypes),
+    // item,
     list: list(actionTypes),
 };

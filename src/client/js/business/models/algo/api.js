@@ -32,88 +32,13 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
+/* globals btoa fetch
+ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
 import {isEmpty} from 'lodash';
 import queryString from 'query-string';
 
-import {
-    // fetchEntitiesFactory,
-    createEntityFactory,
-    deleteEntityFactory, handleResponse,
-} from '../../../entities/fetchEntities';
-
-/* globals btoa fetch STORAGE_API_URL ORCHESTRATOR_API_URL STORAGE_USER STORAGE_PASSWORD ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
-
-// export const fetchAlgos = fetchEntitiesFactory('api/algos');
-
-export const createAlgo = createEntityFactory('api/algos');
-export const deleteAlgo = deleteEntityFactory('api/algos');
-
-export const postAlgo = (payload) => {
-    const url = `${STORAGE_API_URL}/algo`;
-
-    const jwt = btoa(`${STORAGE_USER}:${STORAGE_PASSWORD}`);
-
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            // Accept: 'application/json',
-            // 'Content-Type': 'application/json; charset=utf-8',
-            Authorization: `Basic ${jwt}`,
-        },
-        // Allows API to set http-only cookies with AJAX calls
-        // @see http://www.redotheweb.com/2015/11/09/api-security.html
-        // credentials: 'include',
-        mode: 'cors',
-        body: payload,
-    })
-        .then((response) => {
-            if (response.status !== 201) {
-                return response.text().then(result =>
-                    Promise.reject({
-                        body: new Error(result),
-                        status: response.status, // read status
-                    }),
-                );
-            }
-
-            return response.json();
-        })
-        .then(json => ({item: json}), error => ({error}));
-};
-
-export const postAlgoToOrchestrator = (payload) => {
-    const url = `${ORCHESTRATOR_API_URL}/algo`; // careful with trailing slash
-    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json; charset=utf-8',
-            Authorization: `Basic ${jwt}`,
-        },
-        // headers,
-        // Allows API to set http-only cookies with AJAX calls
-        // @see http://www.redotheweb.com/2015/11/09/api-security.html
-        // credentials: 'include',
-        mode: 'cors',
-        body: JSON.stringify(payload),
-    })
-        .then((response) => {
-            if (response.status !== 201) {
-                return response.text().then(result =>
-                    Promise.reject({
-                        body: new Error(result),
-                        status: response.status, // read status
-                    }),
-                );
-            }
-
-            return response.json();
-        })
-        .then(json => ({item: json}), error => ({error}));
-};
-
+import {handleResponse} from '../../../utils/entities/fetchEntities';
 
 const getHeaders = jwt => ({
     Accept: 'application/json',

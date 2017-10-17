@@ -32,84 +32,19 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals */
 
-import {call, put, select, takeLatest, all} from 'redux-saga/effects';
-import queryString from 'query-string';
+import {call, put, takeLatest, all} from 'redux-saga/effects';
 
 import generalActions from '../../../../../common/actions';
-
-
 import actions, {actionTypes} from './actions';
 import {
     fetchAlgos as fetchAlgosApi,
-    createAlgo as createAlgoApi,
-    deleteAlgo as deleteAlgoApi,
-    postAlgo as postAlgoApi,
-    postAlgoToOrchestrator as postAlgoToOrchestratorApi,
 } from './api';
-import {
-    createItemFactory,
-    deleteItemFactory,
-} from '../sagas';
-
-
-function* createAlgo(request) {
-    const item = yield call(createItemFactory(actions, createAlgoApi), request);
-
-    if (item) {
-        if (actions.modal.create) {
-            yield put(actions.modal.create.set(false));
-        }
-    }
-}
-
-
-function* deleteAlgo(request) {
-    yield call(deleteItemFactory(actions, deleteAlgoApi), request);
-}
-
-function* postAlgo(request) {
-    const {item, error} = yield call(postAlgoApi, request.payload.body);
-
-    if (error) {
-        console.error(error.message);
-        yield put(actions.item.post.failure(error.body));
-    }
-    else {
-        yield put(actions.item.post.success({...item, problem: request.payload.id}));
-        // Post to orchestrator too
-        yield put(actions.item.postToOrchestrator.request({uuid: item.uuid, name: item.name, problem: request.payload.id}));
-    }
-}
-
-function* postToOrchestrator(request) {
-    const {item, error} = yield call(postAlgoToOrchestratorApi, request.payload);
-
-    if (error) {
-        console.error(error.message);
-        yield put(actions.item.postToOrchestrator.failure(error.body));
-    }
-    else {
-        if (actions.modal && actions.modal.postToOrchestrator) {
-            yield put(actions.modal.postToOrchestrator.set(false));
-        }
-
-        yield put(actions.item.postToOrchestrator.success(item));
-    }
-}
 
 
 export const loadList = (actions, fetchList) =>
     function* loadListSaga(request) {
-        const state = yield select(),
-            location = state.location;
-
-        // override query if needed, default to current url query
-        const query = location && location.search ?
-            queryString.parse(location.search) : {};
         const {error, list} = yield call(fetchList, {
-            ...query,
             problem: request.payload,
         });
 
@@ -128,21 +63,9 @@ export const loadList = (actions, fetchList) =>
         }
     };
 
-/* istanbul ignore next */
 const algoSagas = function* algoSagas() {
     yield all([
-        /** ********** */
-        /* algo */
-        /** ********** */
-
         takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchAlgosApi)),
-
-        // takeLatest(actionTypes.item.get.REQUEST, loadAlgos),
-        takeLatest(actionTypes.item.create.REQUEST, createAlgo),
-        takeLatest(actionTypes.item.delete.REQUEST, deleteAlgo),
-
-        takeLatest(actionTypes.item.post.REQUEST, postAlgo),
-        takeLatest(actionTypes.item.postToOrchestrator.REQUEST, postToOrchestrator),
     ]);
 };
 

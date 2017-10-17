@@ -59,7 +59,7 @@ export default ({clientStats}) => async (req, res, next) => {
           <meta charset="utf-8" />
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-          <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
+          <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,500,400italic,300italic,500italic' rel='stylesheet' type='text/css'>
           <link href="https://fonts.googleapis.com/css?family=Lekton:700|Oxygen+Mono|Inconsolata|Titillium+Web" rel="stylesheet">
           ${styles}
           <style type="text/css">${css}</style>

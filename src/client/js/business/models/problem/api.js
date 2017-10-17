@@ -33,14 +33,42 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import {createSelector} from 'reselect';
+/* globals btoa fetch
+   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
 
-const error = state => state.models.algo.item.error;
+import queryString from 'query-string';
+import {isEmpty} from 'lodash';
+import {handleResponse} from '../../../utils/entities/fetchEntities';
 
-export const getError = createSelector([error],
-    error => error ? (JSON.parse(error.message).message ? JSON.parse(error.message).message : JSON.parse(error.message).non_field_errors) : error,
-);
+const getHeaders = jwt => ({
+    Accept: 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
+    Authorization: `Basic ${jwt}`,
+});
 
-export default {
-    getError,
+export const fetchList = (url, jwt) => fetch(url, {
+    headers: getHeaders(jwt),
+    mode: 'cors',
+})
+    .then(response => handleResponse(response))
+    .then(json => ({list: json}), error => ({error}));
+
+export const fetchProblems = (get_parameters) => {
+    const url = `${ORCHESTRATOR_API_URL}/problem${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
+    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
+    return fetchList(url, jwt);
+};
+
+
+export const fetchItem = (url, jwt) => fetch(url, {
+    headers: getHeaders(jwt),
+    mode: 'cors',
+})
+    .then(response => handleResponse(response))
+    .then(json => ({item: json}), error => ({error}));
+
+export const fetchProblem = (id, get_parameters) => {
+    const url = `${ORCHESTRATOR_API_URL}/problem/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
+    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
+    return fetchItem(url, jwt);
 };

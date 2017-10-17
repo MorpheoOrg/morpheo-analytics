@@ -9,6 +9,7 @@ import ProblemDetail from '../../../models/problem/components/detail/ProblemDeta
 const Container = styled.div`
     flex-grow: 1;
     border-right: 1px solid #ccc!important;
+    overflow: hidden;
 `;
 
 const Pane = ({selected, tabs, draggedTab, id, tab, onTabDragStart, onTabDragEnd}) =>
@@ -21,12 +22,10 @@ const Pane = ({selected, tabs, draggedTab, id, tab, onTabDragStart, onTabDragEnd
             onTabDragEnd={onTabDragEnd}
             tabs={tabs}
         />
-        {tab && <div key={`content-${id}`}>
-            <ProblemDetail
-                id={tab.id}
-            />
-        </div>
-        }
+        {tab && <ProblemDetail
+            key={`content-${id}`}
+            id={tab.id}
+        />}
     </Container>;
 
 // Pane

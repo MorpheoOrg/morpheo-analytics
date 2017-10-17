@@ -33,6 +33,10 @@ export default env => [
         test: /\.html$/,
         use: 'html-loader',
     },
+    {
+        test: /\.md$/,
+        use: 'html-loader',
+    },
     ...(env === 'electron' ? (PRODUCTION ? [
         {
             test: /\.s?css$/,
