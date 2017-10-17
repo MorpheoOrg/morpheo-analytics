@@ -4,6 +4,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
 
+import actionsAlgo from '../../../algo/actions';
+import {getLeaderboardData} from '../../../learnuplet/selector';
+
 import ProblemContent from './ProblemContent';
 import ProblemLeaderboard from './ProblemLeaderboard';
 import ProblemHeader from './ProblemHeader';
@@ -60,6 +63,13 @@ const ProblemSectionItem = styled.li`
 
 
 class ProblemDetail extends React.Component {
+    componentWillMount() {
+        this.props.loadAlgoList();
+    }
+
+    onSectionClick = (event) => {
+    }
+
     style = css`
         padding: 50px 0 20px 0;
         line-height: 180%;
@@ -74,11 +84,8 @@ class ProblemDetail extends React.Component {
         }
     `;
 
-    onSectionClick = (event) => {
-    }
-
     render() {
-        const {description, name} = this.props;
+        const {description, leaderboardData, name} = this.props;
         return (<div
             css={this.style}
         >
@@ -106,19 +113,29 @@ class ProblemDetail extends React.Component {
                 </ProblemSectionItem>
             </ProblemSection>
             {/* <ProblemContent /> */}
-            <ProblemLeaderboard />
+            <ProblemLeaderboard data={leaderboardData} />
 
         </div>);
     }
 }
 
 ProblemDetail.propTypes = {
-    name: PropTypes.string.isRequired,
     description: PropTypes.string,
+    leaderboardData: PropTypes.arrayOf(PropTypes.shape({
+        bestPerf: PropTypes.number,
+        name: PropTypes.str,
+        problem: PropTypes.str,
+        timestamp_upload: PropTypes.number,
+        uuid: PropTypes.str,
+    })),
+    name: PropTypes.string.isRequired,
+
+    loadAlgoList: PropTypes.func.isRequired,
 };
 
 ProblemDetail.defaultProps = {
     description: '',
+    leaderboardData: [],
 };
 
 const mapStateToProps = (state, {id}) => ({
@@ -129,10 +146,11 @@ const mapStateToProps = (state, {id}) => ({
         },
         undefined,
     ),
+    leaderboardData: getLeaderboardData(state)[id],
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-
+const mapDispatchToProps = (dispatch, {id}) => bindActionCreators({
+    loadAlgoList: () => actionsAlgo.list.request(id),
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProblemDetail);

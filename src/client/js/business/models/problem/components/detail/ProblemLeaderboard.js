@@ -6,7 +6,6 @@ import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
 import {Trophy, CloudUpload, ChartLine} from 'mdi-material-ui';
 
-import actionsAlgo from '../../../algo/actions';
 
 const Leaderboard = styled.table`
     flex-grow: 1;
@@ -49,16 +48,13 @@ const Performance = styled.div`
 `;
 
 class ProblemLeaderboard extends React.Component {
-    componentWillMount() {
-        this.props.loadAlgoList('3c815073-3344-44c1-b78a-f404d0f1a079');
-    }
-
     style = css`
         display: flex;
         width: 100%;
     `;
 
     render() {
+        const {data} = this.props;
         return (<div
             css={this.style}
         >
@@ -72,21 +68,15 @@ class ProblemLeaderboard extends React.Component {
                 </LeaderboardHeader>
 
                 <LeaderboardBody>
-                    <LeaderboardRow>
-                        <LeaderboardCell>1</LeaderboardCell>
-                        <LeaderboardCell>Mini Batch Kmeans</LeaderboardCell>
-                        <LeaderboardCell>95.83%</LeaderboardCell>
-                    </LeaderboardRow>
-                    <LeaderboardRow>
-                        <LeaderboardCell>2</LeaderboardCell>
-                        <LeaderboardCell>Mini Batch Kmeans</LeaderboardCell>
-                        <LeaderboardCell>95.83%</LeaderboardCell>
-                    </LeaderboardRow>
-                    <LeaderboardRow>
-                        <LeaderboardCell>3</LeaderboardCell>
-                        <LeaderboardCell>Mini Batch Kmeans</LeaderboardCell>
-                        <LeaderboardCell>95.83%</LeaderboardCell>
-                    </LeaderboardRow>
+                    {data.map(({name, uuid, bestPerf}, index) => (
+                        <LeaderboardRow
+                            key={uuid}
+                        >
+                            <LeaderboardCell>{index}</LeaderboardCell>
+                            <LeaderboardCell>{name}</LeaderboardCell>
+                            <LeaderboardCell>{bestPerf}</LeaderboardCell>
+                        </LeaderboardRow>
+                    ))}
                 </LeaderboardBody>
             </Leaderboard>
 
@@ -100,11 +90,19 @@ class ProblemLeaderboard extends React.Component {
 }
 
 ProblemLeaderboard.propTypes = {
-    loadAlgoList: PropTypes.func.isRequired,
+    data: PropTypes.arrayOf(PropTypes.shape({
+        bestPerf: PropTypes.number,
+        name: PropTypes.str,
+        problem: PropTypes.str,
+        timestamp_upload: PropTypes.number,
+        uuid: PropTypes.str,
+    })),
+    isloading: PropTypes.bool,
 };
 
 ProblemLeaderboard.defaultProps = {
-
+    data: [],
+    isLoading: true,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -112,9 +110,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-    loadAlgoList: actionsAlgo.list.request,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
-
+    'data',
 ])(ProblemLeaderboard));

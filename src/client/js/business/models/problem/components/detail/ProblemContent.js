@@ -35,7 +35,6 @@ ProblemContent.defaultProps = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({

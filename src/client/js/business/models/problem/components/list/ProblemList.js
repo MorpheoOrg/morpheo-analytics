@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import actions from '../../actions';
-import {getProblems, getProblemFromId} from '../../selector';
+import {getProblems} from '../../selector';
 import ProblemItem from './ProblemItem';
 
 
