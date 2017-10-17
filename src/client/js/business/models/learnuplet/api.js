@@ -32,11 +32,16 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
+/*
+   globals btoa fetch
+   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD
+*/
+
 import queryString from 'query-string';
 import {isEmpty} from 'lodash';
-import {handleResponse} from '../../../entities/fetchEntities';
+import {handleResponse} from '../../../utils/entities/fetchEntities';
 
-/* globals ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD btoa fetch */
 
 export const getHeaders = jwt => ({
     Accept: 'application/json',

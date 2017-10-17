@@ -33,12 +33,16 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import {actions as listActions, actionTypes as listActionTypes} from '../../../actions/list';
+import {
+    actions as listActions,
+    actionTypes as listActionTypes,
+} from '../../../actions/list';
+
 
 const prefix = 'MODELS::LEARNUPLET';
 
 export const actionTypes = {
-    list: listActionTypes(`${prefix}`),
+    list: listActionTypes(prefix),
 };
 
 const actions = {

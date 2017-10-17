@@ -36,6 +36,7 @@
 import {call, put, takeLatest, all} from 'redux-saga/effects';
 
 import generalActions from '../../../../../common/actions';
+import learnupletActions from '../learnuplet/actions';
 import actions, {actionTypes} from './actions';
 import {
     fetchAlgos as fetchAlgosApi,
@@ -58,7 +59,17 @@ export const loadList = (actions, fetchList) =>
             yield put(actions.list.failure(error.body));
         }
         else {
+            // Let's fetch the learnuplet from orchestrator
+            const l = list.algos.length;
+
+            for (let i = 0; i < l; i += 1) {
+                yield put(learnupletActions.list.request(
+                    list.algos[i].uuid,
+                ));
+            }
+
             yield put(actions.list.success({[request.payload]: list.algos}));
+
             return list;
         }
     };

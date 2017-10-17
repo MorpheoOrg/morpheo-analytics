@@ -29,15 +29,33 @@ const ProblemSection = styled.ul`
 
 `;
 
+const disableStyle = css`
+    color: blue;
+
+    &:hover {
+        font-weight: 300;
+        cursor: inherit;
+    }
+`;
+
+const selectedStyle = css`
+    font-weight: 500;
+    border-bottom: 1px solid;
+`;
+
 const ProblemSectionItem = styled.li`
     user-select: none;
-    font-weight: ${({selected}) => selected ? 500 : 300};
-    border-bottom: ${({selected}) => selected ? '1px' : 0} solid;
+    font-weight: 300;
+    border-bottom: 0 solid;
 
     &:hover {
         font-weight: 500;
         cursor:pointer;
     }
+
+    /*Compose with the other style*/
+    ${({disable}) => disable ? disableStyle : null};
+    ${({selected}) => selected ? selectedStyle : null};
 `;
 
 
@@ -76,11 +94,13 @@ class ProblemDetail extends React.Component {
                 </ProblemSectionItem>
                 <ProblemSectionItem
                     onClick={this.onSectionClick}
+                    disable
                 >
                     Leaderboard
                 </ProblemSectionItem>
                 <ProblemSectionItem
                     onClick={this.onSectionClick}
+                    selected
                 >
                     Participate
                 </ProblemSectionItem>

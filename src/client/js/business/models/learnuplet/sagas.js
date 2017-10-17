@@ -42,19 +42,19 @@ import {
 } from './api';
 
 function* loadList(request) {
-    const {error, list} = yield call(fetchLearnupletByAlgoApi, {algo: request.payload});
+    const {error, list} = yield call(fetchLearnupletByAlgoApi, {
+        algo: request.payload,
+    });
+
     if (error) {
         yield put(actions.list.failure(error.body));
     }
+
     yield put(actions.list.success({[request.payload]: list.learnuplets}));
 }
 
-/* istanbul ignore next */
 const learnupletSagas = function* learnupletSagas() {
     yield all([
-        /** ********** */
-        /* learnuplet */
-        /** ********** */
         takeEvery(actionTypes.list.REQUEST, loadList),
     ]);
 };

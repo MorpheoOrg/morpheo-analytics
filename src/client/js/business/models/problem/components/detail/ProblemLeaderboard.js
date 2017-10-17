@@ -6,7 +6,7 @@ import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
 import {Trophy, CloudUpload, ChartLine} from 'mdi-material-ui';
 
-import {actions as actionsAlgo} from '../../../algo/actions';
+import actionsAlgo from '../../../algo/actions';
 
 const Leaderboard = styled.table`
     flex-grow: 1;
@@ -50,6 +50,7 @@ const Performance = styled.div`
 
 class ProblemLeaderboard extends React.Component {
     componentWillMount() {
+        this.props.loadAlgoList('3c815073-3344-44c1-b78a-f404d0f1a079');
     }
 
     style = css`
@@ -99,7 +100,7 @@ class ProblemLeaderboard extends React.Component {
 }
 
 ProblemLeaderboard.propTypes = {
-    // loadProblemList: PropTypes.func.isRequired,
+    loadAlgoList: PropTypes.func.isRequired,
 };
 
 ProblemLeaderboard.defaultProps = {
@@ -111,7 +112,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-    // loadAlgoList: actionsAlgo,
+    loadAlgoList: actionsAlgo.list.request,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
