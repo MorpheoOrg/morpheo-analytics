@@ -24,7 +24,7 @@ const Pane = ({selected, tabs, draggedTab, id, tab, onTabDragStart, onTabDragEnd
         />
         {tab && <ProblemDetail
             key={`content-${id}`}
-            id={tab.id}
+            problemId={tab.id}
         />}
     </Container>;
 

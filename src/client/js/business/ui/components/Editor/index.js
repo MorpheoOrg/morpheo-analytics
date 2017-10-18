@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import styled from 'emotion/react';
 import uuidv4 from 'uuid/v4';
 
+import {getProblems} from '../../selector';
 import actions from '../../actions/editor';
 import Pane from './Pane';
 
@@ -85,6 +86,7 @@ class Editor extends React.Component {
 
     render() {
         const {panes} = this.props;
+        console.log(this.props.panes1);
 
         return (<Container>
             <Debug>
@@ -124,9 +126,10 @@ Editor.propTypes = {
     moveTab: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({settings}, ownProps) => ({
+const mapStateToProps = (state, ownProps) => ({
     ...ownProps,
-    panes: settings.editor.panes,
+    panes: state.settings.editor.panes,
+    panes1: getProblems(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -85,7 +85,7 @@ class ProblemDetail extends React.Component {
     `;
 
     render() {
-        const {description, leaderboardData, name} = this.props;
+        const {description, problemId, name} = this.props;
         return (<div
             css={this.style}
         >
@@ -113,7 +113,7 @@ class ProblemDetail extends React.Component {
                 </ProblemSectionItem>
             </ProblemSection>
             {/* <ProblemContent /> */}
-            <ProblemLeaderboard data={leaderboardData} />
+            <ProblemLeaderboard problemId={problemId} />
 
         </div>);
     }
@@ -121,32 +121,25 @@ class ProblemDetail extends React.Component {
 
 ProblemDetail.propTypes = {
     description: PropTypes.string,
-    leaderboardData: PropTypes.arrayOf(PropTypes.shape({
-        bestPerf: PropTypes.number,
-        name: PropTypes.str,
-        problem: PropTypes.str,
-        timestamp_upload: PropTypes.number,
-        uuid: PropTypes.str,
-    })),
     name: PropTypes.string.isRequired,
-
+    problemId: PropTypes.string.isRequired,
     loadAlgoList: PropTypes.func.isRequired,
 };
 
 ProblemDetail.defaultProps = {
     description: '',
-    leaderboardData: [],
 };
 
-const mapStateToProps = (state, {id}) => ({
+const mapStateToProps = (state, {problemId}) => ({
     ...state.models.problems.list.results.reduce(
-        (p, c) => (p !== undefined) ? p : (c.uuid !== id) ? undefined : {
-            ...state.models.storage_problems.item.results[c.workflow],
-            ...c,
-        },
+        (p, c) => (p !== undefined) ? p :
+            (c.uuid !== problemId) ? undefined : {
+                ...state.models.storage_problems.item.results[c.workflow],
+                ...c,
+            },
         undefined,
     ),
-    leaderboardData: getLeaderboardData(state)[id],
+    problemId,
 });
 
 const mapDispatchToProps = (dispatch, {id}) => bindActionCreators({

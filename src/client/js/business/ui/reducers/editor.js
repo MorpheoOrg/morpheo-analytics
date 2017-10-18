@@ -3,31 +3,44 @@ import uuidv4 from 'uuid/v4';
 
 const initialState = {
     panes: [],
-    currentPane: undefined,
+    tabs: [],
+    activePane: undefined,
 };
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
     // To remove
     case actionsTypes.addGroup: {
-        const {value, id} = payload;
-        const uuid = uuidv4();  // TODO change by the uuid items from sidebar
+        const {value, id: contentId} = payload;
+        const uuid = uuidv4(); // TODO change by the uuid items from sidebar
+        const tabId = uuidv4(); // TODO change by the uuid items from sidebar
         return {
             ...state,
+            // List all the panes
             panes: [
                 ...state.panes,
                 // add default tab to group
                 {
-                    tabs: [{value, id: id}],
-                    selected: id,
+                    tabs: [{value, id: contentId}],
+                    selected: contentId,
                     id: uuid,
                 },
             ],
+            // List all the open tabs
+            tabs: {
+                ...state.tabs,
+                [tabId]: {
+                    type: 'problem',
+                    title: value,
+                    id: contentId,
+                },
+            },
         };
     }
 
     case actionsTypes.addTab: {
-        const {groupId, tabId, value} = payload;
+        const {groupId, id: contentId, value} = payload;
+        const tabId = uuidv4(); // TODO change by the uuid items from sidebar
 
         return {
             ...state,
@@ -35,10 +48,18 @@ export default (state = initialState, {type, payload}) => {
                 ...p,
                 (c.id === groupId ? {
                     ...c,
-                    tabs: [...c.tabs, {value, id: tabId}], // FIXME for index at pos if necessary, with slice
-                    selected: tabId,
+                    tabs: [...c.tabs, {value, id: contentId}], // FIXME for index at pos if necessary, with slice
+                    selected: contentId,
                 } : c),
             ], []),
+            tabs: {
+                ...state.tabs,
+                [tabId]: {
+                    type: 'problem',
+                    title: value,
+                    id: contentId,
+                },
+            },
             currentPane: groupId,
         };
     }
@@ -61,6 +82,12 @@ export default (state = initialState, {type, payload}) => {
                         [c]),
                 ];
             }, []),
+            tabs: Object.keys(state.tabs)
+                .filter(k => k !== 't')
+                .reduce((p, c) => ({
+                    ...p,
+                    [c]: state.tabs[c],
+                }), {}),
         };
     }
 
