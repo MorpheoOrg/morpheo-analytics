@@ -11,6 +11,7 @@ import {flushChunkNames} from 'react-universal-component/server';
 import flushChunks from 'webpack-flush-chunks';
 import {MuiThemeProvider} from 'material-ui/styles';
 import createGenerateClassName from 'material-ui/styles/createGenerateClassName';
+import {Buffer} from 'buffer';
 
 import configureStore from './configureStore';
 
@@ -36,7 +37,7 @@ const createApp = (App, store) =>
 
 export default ({clientStats}) => async (req, res, next) => {
     // Add btoa and atob on the server
-    global.Buffer = global.Buffer || require('buffer').Buffer;
+    global.Buffer = global.Buffer || Buffer;
 
     if (typeof btoa === 'undefined') {
         global.btoa = str => new Buffer(str).toString('base64');
