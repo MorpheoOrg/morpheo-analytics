@@ -35,6 +35,18 @@ const createApp = (App, store) =>
 
 
 export default ({clientStats}) => async (req, res, next) => {
+    // Add btoa and atob on the server
+    global.Buffer = global.Buffer || require('buffer').Buffer;
+
+    if (typeof btoa === 'undefined') {
+        global.btoa = str => new Buffer(str).toString('base64');
+    }
+
+    if (typeof atob === 'undefined') {
+        global.atob = b64Encoded => new Buffer(
+            b64Encoded, 'base64',
+        ).toString();
+    }
 
     const store = await configureStore(req, res);
     if (!store) return; // no store means redirect was already served
