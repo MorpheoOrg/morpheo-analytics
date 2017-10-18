@@ -18,6 +18,19 @@ import configureStore from './configureStore';
 import theme from '../common/theme/index';
 import App from '../common/routes';
 
+// Add btoa and atob on the server
+global.Buffer = global.Buffer || Buffer;
+
+if (typeof btoa === 'undefined') {
+    global.btoa = str => new Buffer(str).toString('base64');
+}
+
+if (typeof atob === 'undefined') {
+    global.atob = b64Encoded => new Buffer(
+        b64Encoded, 'base64',
+    ).toString();
+}
+
 // Create a sheetsRegistry instance.
 const sheetsRegistry = new SheetsRegistry();
 
@@ -34,20 +47,7 @@ const createApp = (App, store) =>
         </JssProvider>
     </Provider>);
 
-
 export default ({clientStats}) => async (req, res, next) => {
-    // Add btoa and atob on the server
-    global.Buffer = global.Buffer || Buffer;
-
-    if (typeof btoa === 'undefined') {
-        global.btoa = str => new Buffer(str).toString('base64');
-    }
-
-    if (typeof atob === 'undefined') {
-        global.atob = b64Encoded => new Buffer(
-            b64Encoded, 'base64',
-        ).toString();
-    }
 
     const store = await configureStore(req, res);
     if (!store) return; // no store means redirect was already served
