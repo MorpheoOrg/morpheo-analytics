@@ -15,6 +15,7 @@ import description from './description.md';
 
 class ProblemContent extends React.Component {
     style = css`
+        overflow-y: auto;
     `;
 
     render() {

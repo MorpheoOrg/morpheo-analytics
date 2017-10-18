@@ -10,42 +10,26 @@ export const getVisible = createDeepEqualSelector(
     selectedIndex => !!~selectedIndex,
 );
 
-
-// List main information necessary by
-const getPanes = createDeepEqualSelector(
-    [panes],
-    (panes) => panes,
-    // (panes, tabs) => panes.map(({id, tabs: paneTabs, selected}) => ({
-    //     key: id,
-    //     id,
-    //     tabs: paneTabs.map(tabId => ({
-    //         key: tabId,
-    //         ...tabs[tabId],
-    //         selected: tabId === selected,
-    //     })),
-    //     selectedTab: tabs[selected],
-    // })),
-);
-
-
-const results = state => state.models.problems.list.results;
-const storage_results = state => state.models.storage_problems.item.results;
-
-export const getProblems = createDeepEqualSelector(
+export const getPanes = createDeepEqualSelector(
     [panes, tabs],
     (panes, tabs) => panes.map(({id, tabs: paneTabs, selected}) => ({
         key: id,
         id,
         tabs: paneTabs.map(tabId => ({
-            key: tabId,
             ...tabs[tabId],
+            key: tabId,
+            id: tabId,
             selected: tabId === selected,
         })),
-        selectedTab: tabs[selected],
+        selectedTab: {
+            ...tabs[selected],
+            tabId: selected,
+        },
     })),
 );
 
+
 export default {
-    getProblems,
+    getPanes,
     getVisible,
 };

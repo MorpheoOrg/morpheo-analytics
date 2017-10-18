@@ -40,9 +40,10 @@ const LeaderboardCell = styled.td`
 `;
 
 class Leaderboard extends React.Component {
-    handleLeaderboardRowClick = algoId => (event) => {
+    handleLeaderboardRowClick = index => (event) => {
+        // TODO change by algoId
         event.preventDefault();
-        this.props.onSelectAlgorithm(algoId);
+        this.props.onSelectAlgorithm(index);
     }
 
     style = css`
@@ -70,11 +71,11 @@ class Leaderboard extends React.Component {
                 {data.map(({name, uuid, bestPerf}, index) => (
                     <LeaderboardRow
                         key={uuid}
-                        onClick={this.handleLeaderboardRowClick(uuid)}
+                        onClick={this.handleLeaderboardRowClick(index)}
                     >
-                        <LeaderboardCell>{index}</LeaderboardCell>
+                        <LeaderboardCell>{index + 1}</LeaderboardCell>
                         <LeaderboardCell>{name}</LeaderboardCell>
-                        <LeaderboardCell>{bestPerf}</LeaderboardCell>
+                        <LeaderboardCell>{(bestPerf * 100).toFixed(2)}</LeaderboardCell>
                     </LeaderboardRow>
                 ))}
             </LeaderboardBody>

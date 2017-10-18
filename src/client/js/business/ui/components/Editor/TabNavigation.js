@@ -137,15 +137,15 @@ class TabNavigation extends React.Component {
     };
 
     render() {
-        const {tabs, selected, draggedTab} = this.props;
+        const {tabs, draggedTab} = this.props;
         return (<Container>
             <Ul>
-                {tabs.map(({id, value}, index) => (
+                {tabs.map(({key, id, title, selected}, index) => (
                     <TabTitle
-                        key={`title-${this.props.id}-${id}`}
+                        key={key}
                         id={id}
-                        value={value}
-                        active={selected === id}
+                        title={title}
+                        selected={selected}
                         translation={this.getTranslation(id)}
 
                         onClose={this.handleTabClose}
@@ -170,21 +170,23 @@ class TabNavigation extends React.Component {
 }
 
 TabNavigation.propTypes = {
+    id: PropTypes.string.isRequired,
     tabs: PropTypes.arrayOf(
         PropTypes.shape({
-            tabKey: PropTypes.number,
-            value: PropTypes.string,
+            key: PropTypes.string,
+            id: PropTypes.string,
+            title: PropTypes.string,
+            selected: PropTypes.bool,
+            type: PropTypes.string,
         }),
     ).isRequired,
 
-    id: PropTypes.string.isRequired,
-    selected: PropTypes.string.isRequired,
+    draggedTab: PropTypes.shape({}),
 
     closeTab: PropTypes.func.isRequired,
     moveTab: PropTypes.func.isRequired,
     selectTab: PropTypes.func.isRequired,
 
-    draggedTab: PropTypes.shape({}),
 };
 
 TabNavigation.defaultProps = {

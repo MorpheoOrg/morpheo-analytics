@@ -11,6 +11,14 @@ export const getProblems = createDeepEqualSelector([results, storage_results],
     ], []),
 );
 
+export const getProblemsDictionnary = createDeepEqualSelector([results, storage_results],
+    (results, storage_results) => results.reduce((p, c) => ({
+        ...p,
+        [c.uuid]: {...storage_results[c.workflow], ...c},
+    }), {}),
+);
+
 export default {
     getProblems,
+    getProblemsDictionnary,
 };

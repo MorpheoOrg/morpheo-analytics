@@ -9,29 +9,28 @@ import ProblemDetail from '../../../models/problem/components/detail/ProblemDeta
 const Container = styled.div`
     flex-grow: 1;
     border-right: 1px solid #ccc!important;
-    overflow: hidden;
 `;
 
-const Pane = ({selected, tabs, draggedTab, id, tab, onTabDragStart, onTabDragEnd}) =>
-    <Container>
+const Pane = ({
+    id, selectedTab, tabs, draggedTab,
+    onTabDragStart, onTabDragEnd}) => {
+    const {contentId} = selectedTab;
+    return (<Container>
         <TabNavigation
-            draggedTab={draggedTab}
-            selected={selected}
             id={id}
+            tabs={tabs}
+            draggedTab={draggedTab}
             onTabDragStart={onTabDragStart}
             onTabDragEnd={onTabDragEnd}
-            tabs={tabs}
         />
-        {tab && <ProblemDetail
-            key={`content-${id}`}
-            problemId={tab.id}
-        />}
-    </Container>;
-
-// Pane
+        <ProblemDetail
+            problemId={contentId}
+            {...selectedTab}
+        />
+    </Container>);
+}
 
 Pane.propTypes = {
-    draggedTab: PropTypes.shape({}),
     id: PropTypes.string.isRequired,
     tabs: PropTypes.arrayOf(
         PropTypes.shape({
@@ -39,7 +38,13 @@ Pane.propTypes = {
             value: PropTypes.string,
         }),
     ).isRequired,
-    selected: PropTypes.string.isRequired,
+    selectedTab: PropTypes.shape({
+        contentId: PropTypes.string.isRequired,
+        contentType: PropTypes.string.isRequired,
+        tabId: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+    }).isRequired,
+    draggedTab: PropTypes.shape({}),
 };
 
 Pane.defaultProps = {
@@ -49,7 +54,6 @@ Pane.defaultProps = {
 // TODO: put in selector
 const mapStateToProps = (state, ownProps) => ({
     ...ownProps,
-    tab: ownProps.tabs.find(tab => tab.id === ownProps.selected),
 });
 
 

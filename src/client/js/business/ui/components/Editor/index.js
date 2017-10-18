@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import styled from 'emotion/react';
 import uuidv4 from 'uuid/v4';
 
-import {getProblems} from '../../selector';
+import {getPanes} from '../../selector';
 import actions from '../../actions/editor';
 import Pane from './Pane';
 
@@ -86,26 +86,25 @@ class Editor extends React.Component {
 
     render() {
         const {panes} = this.props;
-        console.log(this.props.panes1);
-
+        console.log(panes);
         return (<Container>
             <Debug>
                 <Button onClick={this.addGroup}>add Group</Button>
                 <Button onClick={this.addTab}>add Tab to First Group</Button>
                 <Button onClick={this.moveTab}>move Tab 0 from group 0 to group 1 at index 0</Button>
             </Debug>
-            {panes.map(({id, tabs, selected}) =>
+            {panes.map(({key, id, tabs, selectedTab}) => (
                 <Pane
-                    key={id}
+                    key={key}
                     id={id}
                     tabs={tabs}
-                    selected={selected}
+                    selectedTab={selectedTab}
                     draggedTab={this.state.draggedTab}
                     droppedTab={this.state.droppedTab}
                     onTabDragStart={this.handleTabDragStart}
                     onTabDragEnd={this.handleTabDragEnd}
-                />,
-            )}
+                />
+            ))}
         </Container>);
     }
 }
@@ -128,8 +127,7 @@ Editor.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
     ...ownProps,
-    panes: state.settings.editor.panes,
-    panes1: getProblems(state),
+    panes: getPanes(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

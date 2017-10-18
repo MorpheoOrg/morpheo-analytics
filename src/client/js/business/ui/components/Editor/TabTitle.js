@@ -13,7 +13,7 @@ const style = {
         position: relative;
         display: inline-block;
     `,
-    tab: (dragged, active) => css`
+    tab: (dragged, selected) => css`
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -29,7 +29,7 @@ const style = {
 
         white-space: nowrap;
 
-        background-color: ${dragged || active ? 'white' : '#f1f1f2'};
+        background-color: ${dragged || selected ? 'white' : '#f1f1f2'};
 
         & svg {
             width: 13px;
@@ -154,19 +154,20 @@ class TabTitle extends React.Component {
     };
 
     render() {
-        const {active, value, id, draggedTab} = this.props;
+        const {selected, title, id, draggedTab} = this.props;
         const {dragged} = this.state;
+        console.log(selected);
 
         return <li className={style.li}>
             <div className={hidden(draggedTab, id)}
                  onMouseOut={this.onDragOut}
                  onMouseUp={this.onDrop}
                  onMouseOver={this.onDragOver}/>
-            <div className={style.tab(dragged, active)}
+            <div className={style.tab(dragged, selected)}
                  style={this.transform()}
                  onMouseDown={this.handleMouseDown}>
                 <Poll />
-                <span>{value}</span>
+                <span>{title}</span>
                 <button onMouseDown={this.onMouseDown}
                         onClick={this.onClose}
                         className={style.close}
@@ -179,10 +180,11 @@ class TabTitle extends React.Component {
 }
 
 TabTitle.propTypes = {
-    active: PropTypes.bool,
+    selected: PropTypes.bool,
     id: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     translation: PropTypes.number,
+
     onClose: PropTypes.func,
 };
 
@@ -190,11 +192,11 @@ const noop = () => {
 };
 
 TabTitle.defaultProps = {
-    active: false,
+    selected: false,
     translation: 0,
 
     onClose: noop,
 };
 
 
-export default onlyUpdateForKeys(['draggedTab', 'active', 'translation'])(TabTitle);
+export default onlyUpdateForKeys(['draggedTab', 'selected', 'translation'])(TabTitle);

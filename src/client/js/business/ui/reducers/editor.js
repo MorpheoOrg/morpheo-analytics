@@ -21,8 +21,8 @@ export default (state = initialState, {type, payload}) => {
                 ...state.panes,
                 // add default tab to group
                 {
-                    tabs: [{value, id: contentId}],
-                    selected: contentId,
+                    tabs: [tabId],
+                    selected: tabId,
                     id: uuid,
                 },
             ],
@@ -30,9 +30,9 @@ export default (state = initialState, {type, payload}) => {
             tabs: {
                 ...state.tabs,
                 [tabId]: {
-                    type: 'problem',
+                    contentType: 'problem',
                     title: value,
-                    id: contentId,
+                    contentId,
                 },
             },
         };
@@ -48,19 +48,33 @@ export default (state = initialState, {type, payload}) => {
                 ...p,
                 (c.id === groupId ? {
                     ...c,
-                    tabs: [...c.tabs, {value, id: contentId}], // FIXME for index at pos if necessary, with slice
-                    selected: contentId,
+                    tabs: [...c.tabs, tabId], // FIXME for index at pos if necessary, with slice
+                    selected: tabId,
                 } : c),
             ], []),
             tabs: {
                 ...state.tabs,
                 [tabId]: {
-                    type: 'problem',
+                    contentType: 'problem',
                     title: value,
-                    id: contentId,
+                    contentId,
                 },
             },
             currentPane: groupId,
+        };
+    }
+
+    case actionsTypes.updateTabContent: {
+        const {tabId, ...content} = payload;
+        return {
+            ...state,
+            tabs: {
+                ...state.tabs,
+                [tabId]: {
+                    ...state.tabs[tabId],
+                    ...content,
+                },
+            },
         };
     }
 
@@ -70,7 +84,7 @@ export default (state = initialState, {type, payload}) => {
         return {
             ...state,
             panes: state.panes.reduce((p, c) => {
-                const newTabs = c.tabs.filter(tab => tab.id !== tabId);
+                const newTabs = c.tabs.filter(id => id !== tabId);
                 return [
                     ...p,
                     ...(c.id === groupId ?
@@ -83,7 +97,7 @@ export default (state = initialState, {type, payload}) => {
                 ];
             }, []),
             tabs: Object.keys(state.tabs)
-                .filter(k => k !== 't')
+                .filter(k => k !== tabId)
                 .reduce((p, c) => ({
                     ...p,
                     [c]: state.tabs[c],
@@ -92,13 +106,13 @@ export default (state = initialState, {type, payload}) => {
     }
 
     case actionsTypes.selectTab: {
-        const {id, selected} = payload;
+        const {groupId, selected} = payload;
 
         return {
             ...state,
             panes: state.panes.reduce((p, c) => [
                 ...p,
-                (c.id === id ? {
+                (c.groupId === groupId ? {
                     ...c,
                     selected,
                 } : c),
@@ -107,61 +121,62 @@ export default (state = initialState, {type, payload}) => {
     }
 
     case actionsTypes.moveTab: {
-        const {fromGroupId, fromTabId, toGroupId, toTabId} = payload;
+        // TODO solve that later
+        // const {fromGroupId, fromTabId, toGroupId, toTabId} = payload;
 
-        const fromGroup = state.panes.find(group => group.id === fromGroupId),
-            toGroup = state.panes.find(group => group.id === toGroupId);
+        // const fromGroup = state.panes.find(group => group.id === fromGroupId),
+        //     toGroup = state.panes.find(group => group.id === toGroupId);
 
-        return {
-            ...state,
-            panes: state.panes.reduce((p, group) => {
-                // if same group
-                if (fromGroupId === toGroupId) {
+        // return {
+        //     ...state,
+        //     panes: state.panes.reduce((p, group) => {
+        //         // if same group
+        //         if (fromGroupId === toGroupId) {
+        //             // get index where to place
+        //             const index = toTabId ? toGroup.tabs.findIndex(tab => tab.id === toTabId) : toGroup.tabs.length - 1;
+        //             // exclude
+        //             const newTabs = fromGroup.tabs.filter(tab => tab.id !== fromTabId);
 
-                    // get index where to place
-                    const index = toTabId ? toGroup.tabs.findIndex(tab => tab.id === toTabId) : toGroup.tabs.length - 1;
-                    // exclude
-                    const newTabs = fromGroup.tabs.filter(tab => tab.id !== fromTabId);
-
-                    return [
-                        ...p,
-                        (group.id === fromGroupId ? {
-                            ...group,
-                            tabs: [
-                                ...newTabs.slice(0, index),
-                                fromGroup.tabs.find(tab => tab.id === fromTabId) ,
-                                ...newTabs.slice(index, newTabs.length)
-                            ]
-                        } : group),
-                    ];
-                }
-                // group to another group, add to toGroup at index and remove from fromGroup
-                else {
-                    //memoize
-                    const fromGroupTabs = fromGroup.tabs.filter(tab => tab.id !== fromTabId);
-                    return [
-                        ...p,
-                        // remove fromTab from fromGroup and select first tab from fromGroup, remove fromGroup if last tab
-                        ...(group.id === fromGroupId ? fromGroup.tabs.length > 1 ? [{
-                                ...group,
-                                tabs: fromGroupTabs,
-                                selected: fromGroupTabs[0].id,
-                            }] : [] :
-                            // add at correct index, and select it
-                            group.id === toGroupId ? [{
-                                ...group,
-                                tabs: typeof toTabId === 'undefined' ? // add last
-                                    [...group.tabs, fromGroup.tabs.find(o => o.id === fromTabId)] :
-                                    group.tabs.reduce((pre, tab) => [ // add at index
-                                        ...pre,
-                                        ...(tab.id === toTabId ? [fromGroup.tabs.find(o => o.id === fromTabId), tab] : [tab]),
-                                    ], []),
-                                selected: fromTabId,
-                            }] : [group]),
-                    ];
-                }
-            }, []),
-        };
+        //             return [
+        //                 ...p,
+        //                 (group.id === fromGroupId ? {
+        //                     ...group,
+        //                     tabs: [
+        //                         ...newTabs.slice(0, index),
+        //                         fromGroup.tabs.find(tab => tab.id === fromTabId) ,
+        //                         ...newTabs.slice(index, newTabs.length)
+        //                     ]
+        //                 } : group),
+        //             ];
+        //         }
+        //         // group to another group, add to toGroup at index and remove from fromGroup
+        //         else {
+        //             //memoize
+        //             const fromGroupTabs = fromGroup.tabs.filter(tab => tab.id !== fromTabId);
+        //             return [
+        //                 ...p,
+        //                 // remove fromTab from fromGroup and select first tab from fromGroup, remove fromGroup if last tab
+        //                 ...(group.id === fromGroupId ? fromGroup.tabs.length > 1 ? [{
+        //                         ...group,
+        //                         tabs: fromGroupTabs,
+        //                         selected: fromGroupTabs[0].id,
+        //                     }] : [] :
+        //                     // add at correct index, and select it
+        //                     group.id === toGroupId ? [{
+        //                         ...group,
+        //                         tabs: typeof toTabId === 'undefined' ? // add last
+        //                             [...group.tabs, fromGroup.tabs.find(o => o.id === fromTabId)] :
+        //                             group.tabs.reduce((pre, tab) => [ // add at index
+        //                                 ...pre,
+        //                                 ...(tab.id === toTabId ? [fromGroup.tabs.find(o => o.id === fromTabId), tab] : [tab]),
+        //                             ], []),
+        //                         selected: fromTabId,
+        //                     }] : [group]),
+        //             ];
+        //         }
+        //     }, []),
+        // };
+        return state;
     }
 
     default:

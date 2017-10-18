@@ -4,11 +4,12 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
 
+import actionsEditor from '../../../../ui/actions/editor';
 import actionsAlgo from '../../../algo/actions';
-import {getLeaderboardData} from '../../../learnuplet/selector';
+import {getProblemsDictionnary} from '../../selector';
 
 import ProblemContent from './ProblemContent';
-import ProblemLeaderboard from './ProblemLeaderboard';
+import ProblemLeaderboard from '../ProblemLeaderboard';
 import ProblemHeader from './ProblemHeader';
 
 
@@ -67,13 +68,17 @@ class ProblemDetail extends React.Component {
         this.props.loadAlgoList();
     }
 
-    onSectionClick = (event) => {
+    onSectionClick = index => (event) => {
+        this.props.updateTab({
+            section: index,
+        });
     }
 
     style = css`
         padding: 50px 0 20px 0;
         line-height: 180%;
         height: 100%;
+        overflow: hidden;
 
         display: flex;
         flex-direction: column;
@@ -84,8 +89,11 @@ class ProblemDetail extends React.Component {
         }
     `;
 
+    sections = ['Description', 'Leaderboard', 'Participate'];
     render() {
-        const {description, problemId, name} = this.props;
+        console.log(this.props);
+        const {description, problemId, tabId, name, section} = this.props;
+        console.log(problemId);
         return (<div
             css={this.style}
         >
@@ -94,26 +102,22 @@ class ProblemDetail extends React.Component {
                 description={description}
             />
             <ProblemSection>
-                <ProblemSectionItem
-                    onClick={this.onSectionClick}
-                >
-                    Description
-                </ProblemSectionItem>
-                <ProblemSectionItem
-                    onClick={this.onSectionClick}
-                    disable
-                >
-                    Leaderboard
-                </ProblemSectionItem>
-                <ProblemSectionItem
-                    onClick={this.onSectionClick}
-                    selected
-                >
-                    Participate
-                </ProblemSectionItem>
+                {this.sections.map((title, index) => (
+                    <ProblemSectionItem
+                        key={`${tabId}-${title}`}
+                        onClick={this.onSectionClick(index)}
+                        selected={section === index}
+                    >
+                        {title}
+                    </ProblemSectionItem>
+                ))}
             </ProblemSection>
-            {/* <ProblemContent /> */}
-            <ProblemLeaderboard problemId={problemId} />
+            {section === 0 && <ProblemContent problemId={problemId} />}
+            {section === 1 && <ProblemLeaderboard
+                problemId={problemId}
+                tabId={tabId}
+            />}
+            {section === 2 && <div>Participate section</div>}
 
         </div>);
     }
@@ -123,27 +127,27 @@ ProblemDetail.propTypes = {
     description: PropTypes.string,
     name: PropTypes.string.isRequired,
     problemId: PropTypes.string.isRequired,
+    section: PropTypes.number,
+    tabId: PropTypes.string.isRequired,
+
     loadAlgoList: PropTypes.func.isRequired,
+    updateTab: PropTypes.func.isRequired,
 };
 
 ProblemDetail.defaultProps = {
     description: '',
+    section: 0,
 };
 
-const mapStateToProps = (state, {problemId}) => ({
-    ...state.models.problems.list.results.reduce(
-        (p, c) => (p !== undefined) ? p :
-            (c.uuid !== problemId) ? undefined : {
-                ...state.models.storage_problems.item.results[c.workflow],
-                ...c,
-            },
-        undefined,
-    ),
+const mapStateToProps = (state, {problemId, tabId}) => ({
+    ...getProblemsDictionnary(state)[problemId],
     problemId,
+    tabId,
 });
 
-const mapDispatchToProps = (dispatch, {id}) => bindActionCreators({
-    loadAlgoList: () => actionsAlgo.list.request(id),
+const mapDispatchToProps = (dispatch, {problemId, tabId}) => bindActionCreators({
+    loadAlgoList: () => actionsAlgo.list.request(problemId),
+    updateTab: content => actionsEditor.updateTabContent({tabId, ...content}),
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProblemDetail);

@@ -6,6 +6,7 @@ export const actionsTypes = {
     selectTab: 'EDITOR::SELECT_TAB',
     closeTab: 'EDITOR::CLOSE_TAB',
     moveTab: 'EDITOR::MOVE_TAB',
+    updateTabContent: 'EDITOR::UPDATE_TAB_CONTENT'
 };
 
 export default {
@@ -14,4 +15,5 @@ export default {
     selectTab: createAction(actionsTypes.selectTab),
     closeTab: createAction(actionsTypes.closeTab),
     moveTab: createAction(actionsTypes.moveTab),
+    updateTabContent: createAction(actionsTypes.updateTabContent),
 };
