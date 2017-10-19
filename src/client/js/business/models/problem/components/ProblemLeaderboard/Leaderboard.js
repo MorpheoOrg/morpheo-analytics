@@ -20,6 +20,12 @@ const LeaderboardBody = styled.tbody`
     padding: 8px;
 `;
 
+// TODO add bold
+const boldRow = css`
+    font-weight: 500;
+    color: #5600FF;
+`;
+
 const LeaderboardRow = styled.tr`
     cursor:pointer;
 
@@ -27,6 +33,12 @@ const LeaderboardRow = styled.tr`
         background-color: #FAFAFB;
         border: 1px solid #FAFAFB;
     }
+
+    &:hover{
+        font-weight: 500;
+    }
+
+    ${({selected}) => selected ? boldRow : null};
 `;
 
 const LeaderboardHeaderCell = styled.th`
@@ -40,21 +52,23 @@ const LeaderboardCell = styled.td`
 `;
 
 class Leaderboard extends React.Component {
-    handleLeaderboardRowClick = index => (event) => {
+    handleLeaderboardRowClick = algoId => (event) => {
         // TODO change by algoId
         event.preventDefault();
-        this.props.onSelectAlgorithm(index);
+        this.props.onSelectAlgorithm(algoId);
     }
 
     style = css`
         flex-grow: 1;
         width: 50%;
         border-collapse:collapse;
+        margin-left: 40px;
+        margin-right: 10px;
     `;
 
     render() {
         // TODO add is loading
-        const {data} = this.props;
+        const {data, algorithmId} = this.props;
 
         return (<table
             css={this.style}
@@ -71,7 +85,8 @@ class Leaderboard extends React.Component {
                 {data.map(({name, uuid, bestPerf}, index) => (
                     <LeaderboardRow
                         key={uuid}
-                        onClick={this.handleLeaderboardRowClick(index)}
+                        onClick={this.handleLeaderboardRowClick(uuid)}
+                        selected={(algorithmId || data[0].uuid) === uuid}
                     >
                         <LeaderboardCell>{index + 1}</LeaderboardCell>
                         <LeaderboardCell>{name}</LeaderboardCell>
@@ -92,6 +107,7 @@ Leaderboard.propTypes = {
         uuid: PropTypes.str,
     })),
     isLoading: PropTypes.bool,
+    algorithmId: PropTypes.number,
 
     onSelectAlgorithm: PropTypes.func,
 };
@@ -101,6 +117,7 @@ const noop = () => {};
 Leaderboard.defaultProps = {
     data: [],
     isLoading: true,
+    algorithmId: undefined,
 
     onSelectAlgorithm: noop,
 };
@@ -114,5 +131,5 @@ const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
-    'data', 'isLoading',
+    'data', 'isLoading', 'algorithmId',
 ])(Leaderboard));

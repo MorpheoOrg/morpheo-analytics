@@ -1,13 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {css} from 'emotion';
+import styled, {css} from 'react-emotion';
 import {onlyUpdateForKeys} from 'recompose';
 
-const style = active => css`
+const disabledStyle = css`
+    color: #C0C0C8;
+
+    &:hover {
+        color: #C0C0C8;
+    }
+
+    pointer-events: none;
+`;
+
+const FlatButton = styled.button`
     border: none;
     background-color: inherit;
     cursor: pointer;
-    color: ${active ? '#45464B' : '#98999F'};
+    color: ${({active}) => active ? '#45464B' : '#98999F'};
     margin: 5px;
     height: 42px;
     width: 42px;
@@ -19,20 +29,23 @@ const style = active => css`
     &:focus {
         outline: 0;
     }
+
+    ${({disabled}) => disabled ? disabledStyle : null}
 `;
 
 class MenuButton extends React.Component {
-    onClick = (event) => this.props.onClick(this.props.index);
+    onClick = event => this.props.onClick(this.props.index);
 
     render() {
-        const {active, icon} = this.props;
+        const {disabled, active, icon} = this.props;
 
-        return <button
-            className={style(active)}
+        return (<FlatButton
             onClick={this.onClick}
+            disabled={disabled}
+            active={active}
         >
             {icon}
-        </button>;
+        </FlatButton>);
     }
 }
 

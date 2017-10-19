@@ -119,6 +119,7 @@
         "react-tap-event-plugin": "2.0.1",
         "react-universal-component": "2.5.4",
         "react-useragent": "0.4.4",
+        "recharts": "^1.0.0-alpha.6",
         "recompose": "0.25.0",
         "redux": "3.7.2",
         "redux-actions": "2.2.1",

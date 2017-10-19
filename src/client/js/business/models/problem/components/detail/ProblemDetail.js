@@ -8,9 +8,10 @@ import actionsEditor from '../../../../ui/actions/editor';
 import actionsAlgo from '../../../algo/actions';
 import {getProblemsDictionnary} from '../../selector';
 
+import ProblemHeader from './ProblemHeader';
 import ProblemContent from './ProblemContent';
 import ProblemLeaderboard from '../ProblemLeaderboard';
-import ProblemHeader from './ProblemHeader';
+import ProblemParticipate from '../ProblemParticipate';
 
 
 const ProblemSection = styled.ul`
@@ -23,7 +24,7 @@ const ProblemSection = styled.ul`
 
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-left: 0;
+    padding-left: 40px;
     padding-right: 0;
 
 
@@ -51,7 +52,6 @@ const ProblemSectionItem = styled.li`
     user-select: none;
     font-weight: 300;
     border-bottom: 0 solid;
-
     &:hover {
         font-weight: 500;
         cursor:pointer;
@@ -117,7 +117,7 @@ class ProblemDetail extends React.Component {
                 problemId={problemId}
                 tabId={tabId}
             />}
-            {section === 2 && <div>Participate section</div>}
+            {section === 2 && <ProblemParticipate />}
 
         </div>);
     }

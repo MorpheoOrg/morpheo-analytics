@@ -88,11 +88,11 @@ class Editor extends React.Component {
         const {panes} = this.props;
         console.log(panes);
         return (<Container>
-            <Debug>
+            {/* <Debug>
                 <Button onClick={this.addGroup}>add Group</Button>
                 <Button onClick={this.addTab}>add Tab to First Group</Button>
                 <Button onClick={this.moveTab}>move Tab 0 from group 0 to group 1 at index 0</Button>
-            </Debug>
+            </Debug> */}
             {panes.map(({key, id, tabs, selectedTab}) => (
                 <Pane
                     key={key}

@@ -20,6 +20,7 @@ class ProblemLeaderboard extends React.Component {
     style = css`
         display: flex;
         width: 100%;
+        padding-top: 40px;
     `;
 
     render() {
@@ -31,6 +32,7 @@ class ProblemLeaderboard extends React.Component {
             <Leaderboard
                 problemId={problemId}
                 onSelectAlgorithm={this.handleSelectAlgorithm}
+                algorithmId={selectedAlgorithmId}
             />
 
             <Performance
@@ -43,15 +45,15 @@ class ProblemLeaderboard extends React.Component {
 
 ProblemLeaderboard.propTypes = {
     problemId: PropTypes.string.isRequired,
-    // selectedAlgorithmId: PropTypes.number,
+    selectedAlgorithmId: PropTypes.string,
     isloading: PropTypes.bool,
 
     updateTab: PropTypes.func.isRequired,
 };
 
 ProblemLeaderboard.defaultProps = {
+    selectedAlgorithmId: undefined,
     isLoading: true,
-    selectedAlgorithmId: 0,
 };
 
 const mapStateToProps = (state, {tabId}) => ({

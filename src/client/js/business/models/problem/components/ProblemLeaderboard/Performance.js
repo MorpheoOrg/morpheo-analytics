@@ -6,25 +6,32 @@ import {bindActionCreators} from 'redux';
 import {css} from 'emotion';
 import {Trophy, ChartLine} from 'mdi-material-ui';
 
-import {getLeaderboardData} from '../../../learnuplet/selector';
-
+import {getLChartData, getLeaderboardData} from '../../../learnuplet/selector';
+import LChart from './LChart';
 
 class Performance extends React.Component {
     style = css`
         flex-grow: 1;
         display: flex;
         flex-direction: column;
+        margin-right: 40px;
+        margin-left: 10px;
+
+        & span{
+            padding-bottom: 10px;
+        }
     `;
 
     render() {
-        const {algorithmId, data} = this.props;
+        const {algorithmIndex, data, lChartData} = this.props;
         const {bestPerf, name} = data;
         return (<div
             css={this.style}
         >
             <span>Performances of <b>{name}</b></span>
-            <span><Trophy />{algorithmId + 1}</span>
+            <span><Trophy />{algorithmIndex + 1}</span>
             <span><ChartLine />{(bestPerf * 100).toFixed(2)}%</span>
+            <span><LChart data={lChartData} /></span>
         </div>);
     }
 }
@@ -37,9 +44,17 @@ Performance.defaultProps = {
 
 };
 
-const mapStateToProps = (state, {problemId, algorithmId}) => ({
-    data: getLeaderboardData(state)[problemId][algorithmId],
-});
+const mapStateToProps = (state, {problemId, algorithmId}) => {
+    const algorithmData = getLeaderboardData(state)[problemId];
+    const algorithmUuid = algorithmId || algorithmData[0].uuid;
+    const algorithmIndex = algorithmData.findIndex(
+        ({uuid}) => uuid === algorithmUuid);
+    return ({
+        algorithmIndex,
+        lChartData: getLChartData(state)[algorithmUuid],
+        data: algorithmData[algorithmIndex],
+    });
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
 

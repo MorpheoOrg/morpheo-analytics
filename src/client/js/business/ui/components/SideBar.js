@@ -26,6 +26,10 @@ const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     padding-bottom: 30px;
+
+    & h2 {
+        font-weight: 400;
+    }
 `;
 
 const Content = styled.div`
@@ -107,6 +111,9 @@ class SideBar extends React.Component {
         background-color: #FAFAFB;
         position: relative;
         padding-top: 30px;
+        user-select: none;
+        cursor: default;
+
         flex: 0 0 ${['opening', 'opened'].includes(this.props.status) ? this.state.width : 0}px;
         min-width: ${['closing', 'opening'].includes(this.props.status) ? '0px' : 'auto'};
         transition: ${['closing', 'opening'].includes(this.props.status) ? `flex ${this.props.duration}ms ease-out` : 'auto'};
@@ -126,7 +133,7 @@ class SideBar extends React.Component {
         return (<div className={this.style()}>
             {visible && <Container>
                 <Header>
-                    <h3>{menuContent[selectedIndex].name}</h3>
+                    <h2>{menuContent[selectedIndex].name}</h2>
                     <FlatButton onClick={this.close}>
                         <ChevronLeft/>
                     </FlatButton>

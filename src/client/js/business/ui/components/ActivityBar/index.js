@@ -71,6 +71,7 @@ class ActivityBar extends React.Component {
                         active={selectedIndex === index}
                         icon={icon}
                         onClick={this.toggleSideBarElement}
+                        disabled={index > 0}
                     />,
                 )}
             </ButtonGroup>
@@ -81,6 +82,7 @@ class ActivityBar extends React.Component {
                         index={index}
                         icon={icon}
                         onClick={this.openModalElement}
+                        disabled
                     />,
                 )}
             </ButtonGroup>

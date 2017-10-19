@@ -60,7 +60,7 @@ export const getLChartData = createDeepEqualSelector([results],
                 name: current.train_data.length + (
                     previous.length ? previous[previous.length - 1].name : 0
                 ),
-                perf: current.perf,
+                perf: current.perf * 100,
             }],
         []),
     }),

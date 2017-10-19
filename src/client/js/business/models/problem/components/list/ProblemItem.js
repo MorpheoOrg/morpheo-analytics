@@ -15,6 +15,8 @@ class ProblemItem extends React.Component {
         padding: 20px;
         border-radius: 5px;
         position: relative;
+        cursor: pointer;
+
 
         &:hover {
             background-color: white;

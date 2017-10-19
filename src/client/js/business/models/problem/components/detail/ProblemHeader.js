@@ -9,6 +9,17 @@ import {css} from 'emotion';
 class ProblemHeader extends React.Component {
     style = css`
         flex-shrink: 0;
+        padding-left: 40px;
+        padding-bottom: 40px;
+
+        & h1{
+            font-weight: 400;
+            padding-bottom: 20px;
+        }
+
+        & h2{
+            font-weight: 400;
+        }
     `;
 
     render() {
