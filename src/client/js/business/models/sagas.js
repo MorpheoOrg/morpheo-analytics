@@ -3,7 +3,7 @@ import {fork} from 'redux-saga/effects';
 import algoSagas from './algo/sagas';
 import experimentSagas from './experiment/sagas';
 import learnupletSagas from './learnuplet/sagas';
-import problemSagas from './problem/sagas';
+import problemSagas from './problem/sagas/index';
 import storageProblemSagas from './storage_problem/sagas';
 
 
