@@ -12,11 +12,11 @@ import {
 } from '../api';
 
 let client,
-channel;
+    channel;
 
 const options = {
-    wallet_path: path.join(__dirname, './creds'),
-    user_id: 'PeerAdmin',
+    wallet_path: '/tmp/fabric-client-kvs_peerOrg1',
+    user_id: 'Jim',
     channel_id: 'myc',
     chaincode_id: 'mycc',
     network_url: 'grpc://localhost:7051',
@@ -27,13 +27,21 @@ export const loadList = (actions, fetchList, query) =>
 
         console.log('Create a client and set the wallet location');
         client = new hfc();
+        const cryptoSuite = hfc.newCryptoSuite();
+        cryptoSuite.setCryptoKeyStore(hfc.newCryptoKeyStore({path: options.wallet_path}));
+        client.setCryptoSuite(cryptoSuite);
+        console.log(options.wallet_path);
+
         const wallet = yield call(hfc.newDefaultKeyValueStore, {path: options.wallet_path});
 
         console.log('Set wallet path, and associate user ', options.user_id, ' with application');
         client.setStateStore(wallet);
 
+        client._userContext = null;
         const user = yield call(client.getUserContext.bind(client), options.user_id, true);
         console.log('Check user is enrolled, and set a query URL in the network');
+
+        console.log(user);
         if (!user || (user && user.isEnrolled() === false)) {
             console.error('User not defined, or not enrolled - error');
         }

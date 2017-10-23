@@ -22,7 +22,7 @@ https://electron.atom.io/docs/tutorial/using-native-node-modules/
 Update the variables according to your environment:
 ```shell
 # Electron's version.
-port npm_config_target=1.7.9
+export npm_config_target=1.7.9
 # The architecture of Electron, can be ia32 or x64.
 export npm_config_arch=x64
 export npm_config_target_arch=x64
@@ -52,13 +52,17 @@ If you make any modifications on the rendering code, you'll see your page updati
 Thanks to BrowserSync, you can also test your website on other devices:
 Head to `http://localhost:3002/` for more explanation on how to use BrowserSync.
 
+#### Electron specific
+
+Before running electron app, make sure you've run the docker-compose from the `balance-transfer` project, and created an user (Jim as in the example)
+
 If you want to run the electron version in development mode, run:
 
 ```shell
 npm run dev
 ```
 
-It will create a dll foldre if needed.
+It will create a dll folder if needed.
 The dll allow us to optimize the way we deal with vendors code in order not to rebuild them every time.
 :warning: **<span style="color:red">Be careful: each time you want to add or update a dependency in your package.json, you will have to delete the dll folder for invalidating cache!</span>**
 
