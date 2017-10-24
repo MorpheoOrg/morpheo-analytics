@@ -40,8 +40,41 @@ import learnupletActions from '../learnuplet/actions';
 import actions, {actionTypes} from './actions';
 import {
     fetchAlgos as fetchAlgosApi,
+    postAlgo as postAlgoApi,
+    postAlgoToOrchestrator as postAlgoToOrchestratorApi,
 } from './api';
 
+
+function* postAlgo(request) {
+    const {body, problemId} = request.payload;
+    const {item, error} = yield call(postAlgoApi, body);
+
+    if (error) {
+        console.error(error.message);
+        yield put(actions.item.post.failure(error.body));
+    }
+    else {
+        yield put(actions.item.post.success({...item, problemId}));
+        // Post to orchestrator too
+        yield put(actions.item.postToOrchestrator.request({
+            uuid: item.uuid,
+            name: item.name,
+            problem: problemId,
+        }));
+    }
+}
+
+function* postToOrchestrator(request) {
+    const {item, error} = yield call(postAlgoToOrchestratorApi, request.payload);
+
+    if (error) {
+        console.error(error.message);
+        yield put(actions.item.postToOrchestrator.failure(error.body));
+    }
+    else {
+        yield put(actions.item.postToOrchestrator.success(item));
+    }
+}
 
 export const loadList = (actions, fetchList) =>
     function* loadListSaga(request) {
@@ -77,6 +110,8 @@ export const loadList = (actions, fetchList) =>
 const algoSagas = function* algoSagas() {
     yield all([
         takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchAlgosApi)),
+        takeLatest(actionTypes.item.post.REQUEST, postAlgo),
+        takeLatest(actionTypes.item.postToOrchestrator.REQUEST, postToOrchestrator),
     ]);
 };
 

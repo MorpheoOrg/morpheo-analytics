@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-/* globals document */
+/* globals document, window */
 
 import React from 'react';
 import {render} from 'react-dom';

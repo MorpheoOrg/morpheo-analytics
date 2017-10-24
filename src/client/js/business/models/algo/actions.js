@@ -32,20 +32,37 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+import {createAction} from 'redux-actions';
 
 import {actions as listActions, actionTypes as listActionTypes} from '../../../actions/list';
 import {actions as itemActions, actionTypes as itemActionTypes} from '../../../actions/item';
-
+import createRequestActionTypes from '../../../actions/createRequestActionTypes';
 
 const prefix = 'MODELS::ALGO';
 
 export const actionTypes = {
-    item: itemActionTypes(prefix),
+    item: {
+        ...itemActionTypes(prefix),
+        post: createRequestActionTypes(`${prefix}_ITEM_POST`),
+        postToOrchestrator: createRequestActionTypes(`${prefix}_ITEM_POST_ORCHESTRATOR`),
+    },
     list: listActionTypes(prefix),
 };
 
 const actions = {
-    item: itemActions(actionTypes.item),
+    item: {
+        ...itemActions(actionTypes.item),
+        post: {
+            request: createAction(actionTypes.item.post.REQUEST),
+            success: createAction(actionTypes.item.post.SUCCESS),
+            failure: createAction(actionTypes.item.post.FAILURE),
+        },
+        postToOrchestrator: {
+            request: createAction(actionTypes.item.postToOrchestrator.REQUEST),
+            success: createAction(actionTypes.item.postToOrchestrator.SUCCESS),
+            failure: createAction(actionTypes.item.postToOrchestrator.FAILURE),
+        },
+    },
     list: listActions(actionTypes.list),
 };
 

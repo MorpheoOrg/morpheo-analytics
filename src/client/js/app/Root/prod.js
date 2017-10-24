@@ -33,6 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
+/* globals document */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
@@ -77,11 +79,13 @@ class Root extends React.Component {
     }
 
     render() {
-        return <Provider store={this.props.store}>
-            <MuiThemeProvider theme={theme}>
-                <Routes/>
-            </MuiThemeProvider>
-        </Provider>;
+        return (
+            <Provider store={this.props.store}>
+                <MuiThemeProvider theme={theme}>
+                    <Routes />
+                </MuiThemeProvider>
+            </Provider>
+        );
     }
 }
 

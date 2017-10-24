@@ -117,7 +117,7 @@ class ProblemDetail extends React.Component {
                 problemId={problemId}
                 tabId={tabId}
             />}
-            {section === 2 && <ProblemParticipate />}
+            {section === 2 && <ProblemParticipate problemId={problemId} />}
 
         </div>);
     }

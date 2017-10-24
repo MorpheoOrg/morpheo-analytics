@@ -101,13 +101,13 @@ class Leaderboard extends React.Component {
 Leaderboard.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
         bestPerf: PropTypes.number,
-        name: PropTypes.str,
-        problem: PropTypes.str,
+        name: PropTypes.string,
+        problem: PropTypes.string,
         timestamp_upload: PropTypes.number,
-        uuid: PropTypes.str,
+        uuid: PropTypes.string,
     })),
     isLoading: PropTypes.bool,
-    algorithmId: PropTypes.number,
+    algorithmId: PropTypes.string,
 
     onSelectAlgorithm: PropTypes.func,
 };

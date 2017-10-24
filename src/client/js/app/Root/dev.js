@@ -33,6 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
+/* globals document */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
@@ -40,8 +42,8 @@ import {MuiThemeProvider} from 'material-ui/styles';
 
 import DevTools from '../../../../common/DevTools';
 import theme from '../../../../common/theme';
-
 import Routes from '../../../../common/routes';
+
 
 class Root extends React.Component {
     // Remove the server-side injected CSS.
@@ -53,14 +55,16 @@ class Root extends React.Component {
     }
 
     render() {
-        return <Provider store={this.props.store}>
-            <MuiThemeProvider theme={theme}>
-                <div>
-                    <Routes/>
-                    <DevTools/>
-                </div>
-            </MuiThemeProvider>
-        </Provider>;
+        return (
+            <Provider store={this.props.store}>
+                <MuiThemeProvider theme={theme}>
+                    <div>
+                        <Routes />
+                        <DevTools />
+                    </div>
+                </MuiThemeProvider>
+            </Provider>
+        );
     }
 }
 

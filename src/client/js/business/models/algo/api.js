@@ -34,17 +34,87 @@
  */
 
 /* globals btoa fetch
-ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
+ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD
+STORAGE_API_URL STORAGE_USER STORAGE_PASSWORD */
+
 import {isEmpty} from 'lodash';
 import queryString from 'query-string';
 
 import {handleResponse} from '../../../utils/entities/fetchEntities';
+
 
 const getHeaders = jwt => ({
     Accept: 'application/json',
     'Content-Type': 'application/json; charset=utf-8',
     Authorization: `Basic ${jwt}`,
 });
+
+export const postAlgo = (payload) => {
+    console.log('body', payload);
+    const url = `${STORAGE_API_URL}/algo`;
+
+    const jwt = btoa(`${STORAGE_USER}:${STORAGE_PASSWORD}`);
+
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            // Accept: 'application/json',
+            // 'Content-Type': 'application/json; charset=utf-8',
+            Authorization: `Basic ${jwt}`,
+        },
+        // Allows API to set http-only cookies with AJAX calls
+        // @see http://www.redotheweb.com/2015/11/09/api-security.html
+        // credentials: 'include',
+        mode: 'cors',
+        body: payload,
+    })
+        .then((response) => {
+            if (response.status !== 201) {
+                return response.text().then(result =>
+                    Promise.reject({
+                        body: new Error(result),
+                        status: response.status, // read status
+                    }),
+                );
+            }
+
+            return response.json();
+        })
+        .then(json => ({item: json}), error => ({error}));
+};
+
+export const postAlgoToOrchestrator = (payload) => {
+    const url = `${ORCHESTRATOR_API_URL}/algo`; // careful with trailing slash
+    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
+
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
+            Authorization: `Basic ${jwt}`,
+        },
+        // headers,
+        // Allows API to set http-only cookies with AJAX calls
+        // @see http://www.redotheweb.com/2015/11/09/api-security.html
+        // credentials: 'include',
+        mode: 'cors',
+        body: JSON.stringify(payload),
+    })
+        .then((response) => {
+            if (response.status !== 201) {
+                return response.text().then(result =>
+                    Promise.reject({
+                        body: new Error(result),
+                        status: response.status, // read status
+                    }),
+                );
+            }
+
+            return response.json();
+        })
+        .then(json => ({item: json}), error => ({error}));
+};
 
 export const fetchList = (url, jwt) => fetch(url, {
     headers: getHeaders(jwt),
