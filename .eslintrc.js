@@ -32,7 +32,7 @@ module.exports = {
         // helper for fixing common lint errors
         "func-names": [2],
         "import/first": [2],
-        "import/newline-after-import": [2],
+        "import/newline-after-import": ["error", { "count": 2 }],
         "import/no-mutable-exports": [2],
         "import/prefer-default-export": [2],
         "react/forbid-prop-types": [2],

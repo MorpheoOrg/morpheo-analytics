@@ -13,6 +13,7 @@ import actions from '../actions/sideBar';
 import {menuContent} from './iconDefinition';
 import {getVisible} from '../selector';
 
+
 const Container = styled.div`
     overflow: hidden;
     margin-left:auto;

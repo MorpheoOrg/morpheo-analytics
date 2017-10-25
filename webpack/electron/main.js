@@ -11,6 +11,7 @@ import baseConfig from './base';
 import definePlugin from '../utils/definePlugin';
 import rules from '../utils/rules';
 
+
 export default merge.smart(baseConfig, {
     devtool: 'source-map',
     target: 'electron-main',
@@ -29,6 +30,7 @@ export default merge.smart(baseConfig, {
             loaders: [{
                 path: 'babel-loader', // Options to configure babel with
                 query: {
+                    babelrc: false,
                     plugins: [
                         'universal-import',
                         'emotion',

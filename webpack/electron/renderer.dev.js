@@ -7,19 +7,15 @@ import {spawn, execSync} from 'child_process';
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
 import HappyPack from 'happypack';
 
-
 import baseConfig from './base';
 import rules from '../utils/rules';
 import definePlugin from '../utils/definePlugin';
+
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/dist`;
 const dll = path.resolve(process.cwd(), 'dll');
 const manifest = path.resolve(dll, 'renderer.json');
-
-const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
-    PRODUCTION = (['production'].includes(process.env.NODE_ENV));
-
 /**
  * Warn if the DLL is not built
  */
@@ -58,6 +54,7 @@ export default merge.smart(baseConfig, {
             loaders: [{
                 path: 'babel-loader', // Options to configure babel with
                 query: {
+                    babelrc: false,
                     plugins: [
                         'universal-import',
                         'emotion',
