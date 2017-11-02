@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import styled from 'emotion/react';
+import styled from 'react-emotion';
 import uuidv4 from 'uuid/v4';
 
 import {getPanes} from '../../selector';
 import actions from '../../actions/editor';
 import Pane from './Pane';
+
 
 const Debug = styled.div`
     position: absolute;

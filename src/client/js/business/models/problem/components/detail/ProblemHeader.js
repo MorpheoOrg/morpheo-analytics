@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {css} from 'emotion';
+import {css} from 'react-emotion';
 
 
 class ProblemHeader extends React.Component {

@@ -2,8 +2,7 @@
 
 import React from 'react';
 import {PropTypes} from 'prop-types';
-import {css} from 'emotion';
-import styled from 'emotion/react';
+import styled, {css} from 'react-emotion';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {css} from 'emotion';
+import {css} from 'react-emotion';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';

@@ -1,7 +1,7 @@
 /* eslint react/no-array-index-key: 0 */
 
-import styled from 'emotion/react';
 import React from 'react';
+import styled from 'react-emotion';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';

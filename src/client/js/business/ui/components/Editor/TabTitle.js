@@ -2,9 +2,10 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {css} from 'emotion';
+import {css} from 'react-emotion';
 import {onlyUpdateForKeys} from 'recompose';
 import {Poll, Close} from 'mdi-material-ui';
+
 
 const debug = false;
 

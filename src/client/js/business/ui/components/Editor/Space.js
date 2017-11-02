@@ -1,5 +1,6 @@
 import React from 'react';
-import {css} from 'emotion';
+import {css} from 'react-emotion';
+
 
 const debug = false;
 

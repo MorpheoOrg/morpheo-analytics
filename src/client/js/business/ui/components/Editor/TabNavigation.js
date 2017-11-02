@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import styled from 'emotion/react';
+import styled from 'react-emotion';
+import {onlyUpdateForKeys} from 'recompose';
 
 import actions from '../../actions/editor';
 import TabTitle from './TabTitle';
 import Space from './Space';
-import {onlyUpdateForKeys} from 'recompose';
+
 
 const Container = styled.nav`
     flex-grow: 1;

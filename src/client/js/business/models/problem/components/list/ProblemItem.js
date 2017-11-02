@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {css} from 'emotion';
+import {css} from 'react-emotion';
 import {ChevronRight} from 'mdi-material-ui';
 
 import actionsEditor from '../../../../ui/actions/editor';

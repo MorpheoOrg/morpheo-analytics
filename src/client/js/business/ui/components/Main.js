@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'emotion/react';
+import styled from 'react-emotion';
 
 import ActivityBar from './ActivityBar/index';
 import SideBar from './SideBar';
