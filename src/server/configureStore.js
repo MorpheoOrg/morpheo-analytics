@@ -1,9 +1,7 @@
 import createHistory from 'history/createMemoryHistory';
 import {NOT_FOUND} from 'redux-first-router';
-import atob from 'atob';
 
 import configureStore from '../common/configureStore/index';
-
 
 const doesRedirect = ({kind, pathname}, res) => {
     if (kind === 'redirect') {
@@ -13,24 +11,8 @@ const doesRedirect = ({kind, pathname}, res) => {
 };
 
 export default async (req, res) => {
-    const access_token = req.cookies.access_token;
-
-    // TODO: add preloaded settings
-
-    let preLoadedState;
-    if (access_token && typeof access_token === 'string') {
-        let payload;
-        try {
-            payload = JSON.parse(atob(access_token.split('.')[1]));
-        }
-        catch (e) {
-            payload = {};
-        }
-        preLoadedState = {user: {access_token, authenticated: !!access_token, uuid: payload.uuid}}; // onBeforeChange will authenticate using this
-    }
-
     const history = createHistory({initialEntries: [req.path]});
-    const {store, thunk} = configureStore(history, preLoadedState);
+    const {store, thunk} = configureStore(history, {});
 
     // if not using onBeforeChange + jwTokens, you can also async authenticate
     // here against your db (i.e. using req.cookies.sessionId)

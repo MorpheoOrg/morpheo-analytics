@@ -3,8 +3,8 @@
  */
 
 import path from 'path';
-import merge from 'webpack-merge';
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
+import merge from 'webpack-merge';
 import BabiliPlugin from 'babili-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HappyPack from 'happypack';

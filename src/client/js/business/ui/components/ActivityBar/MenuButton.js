@@ -41,7 +41,7 @@ class MenuButton extends React.Component {
 
         return (<FlatButton
             onClick={this.onClick}
-            disabled={disabled}
+            /* disabled={disabled} */
             active={active}
         >
             {icon}

@@ -14,13 +14,12 @@ import WriteFilePlugin from 'write-file-webpack-plugin';
 import definePlugin from './definePlugin';
 import dll from './dll';
 
+import routesMap from '../../src/common/routesMap';
 
-const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV));
-const PRODUCTION = (['production'].includes(process.env.NODE_ENV));
-const DEBUG = !(
-    ['production', 'development', 'staging'].includes(process.env.NODE_ENV)
-);
-const PRODUCTION_BASE_NAME = config.apps.frontend.baseName.production;
+const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
+    PRODUCTION = (['production'].includes(process.env.NODE_ENV)),
+    DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
+    PRODUCTION_BASE_NAME = config.apps.frontend.baseName.production;
 
 export default env => [
     ...(env === 'frontend' ? [
@@ -76,13 +75,14 @@ export default env => [
         loaders: [{
             path: 'babel-loader', // Options to configure babel with
             query: {
+                // ignore babelrc
                 babelrc: false,
                 plugins: [
                     'universal-import',
-                    'emotion',
                     'transform-runtime',
+                    'emotion',
                     'lodash',
-                    ...(PRODUCTION ? [
+                    ...(PRODUCTION && env === 'frontend' ? [
                         'transform-class-properties',
                         'transform-es2015-classes',
                         'transform-react-constant-elements',
@@ -95,17 +95,6 @@ export default env => [
                     'es2015',
                     'react',
                     'stage-0',
-                    ['env', {
-                        modules: false,
-                        useBuiltIns: true,
-                        targets: {
-                            browsers: [
-                                '> 1%',
-                                'last 2 versions',
-                                'Firefox ESR',
-                            ],
-                        },
-                    }],
                 ],
             },
         }],
@@ -122,14 +111,16 @@ export default env => [
     ...(PRODUCTION ? [new SWPrecacheWebpackPlugin(
         {
             cacheId: config.appName,
-            dontCacheBustUrlsMatching: /\.\w{8}\./,
             filename: 'service-worker.js',
-            minify: true,
-            dynamicUrlToDependencies: {
-                '/': [
-                    path.resolve(__dirname, '../../src/client/js/index.js'),
-                ],
-            },
+            minify: false,
+            dynamicUrlToDependencies: Object.keys(routesMap).reduce((p, c) => [...p, routesMap[c].path], []).reduce((p, c) =>
+                ({
+                    ...p,
+                    [c]: [
+                        path.resolve(__dirname, '../../src/client/js/index.js'),
+                        path.resolve(__dirname, `../../src/client/js/business${c === '/' ? '/home/' : c}components/index.js`),
+                    ],
+                }), {}),
             navigateFallback: PRODUCTION_BASE_NAME,
             staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
         },

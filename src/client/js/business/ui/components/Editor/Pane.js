@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import styled from 'emotion/react';
+import styled from 'react-emotion';
 
 import TabNavigation from './TabNavigation';
 import ProblemDetail from '../../../models/problem/components/detail/ProblemDetail';

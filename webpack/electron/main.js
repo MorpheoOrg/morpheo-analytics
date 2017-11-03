@@ -11,7 +11,6 @@ import baseConfig from './base';
 import definePlugin from '../utils/definePlugin';
 import rules from '../utils/rules';
 
-
 export default merge.smart(baseConfig, {
     devtool: 'source-map',
     target: 'electron-main',

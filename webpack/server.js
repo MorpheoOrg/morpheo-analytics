@@ -7,7 +7,6 @@ import plugins from './utils/plugins';
 
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
-    PRODUCTION = (['production'].includes(process.env.NODE_ENV)),
     PRODUCTION_BASE_NAME = config.apps.frontend.baseName.production,
     DEBUG_BASE_NAME = config.apps.frontend.baseName.debug;
 
@@ -25,10 +24,10 @@ const externals = fs
                 x,
             ),
     )
-    .reduce((externals, mod) => {
-        externals[mod] = `commonjs ${mod}`;
-        return externals;
-    }, {});
+    .reduce((ext, mod) => ({
+        ...ext,
+        [mod]: `commonjs ${mod}`,
+    }));
 
 module.exports = {
     name: 'server',
@@ -37,7 +36,7 @@ module.exports = {
     entry: [
         'babel-polyfill',
         'fetch-everywhere',
-        res('../src/server/render.js')
+        res('../src/server/render.js'),
     ],
     externals,
     output: {
@@ -49,8 +48,6 @@ module.exports = {
     module: {
         rules: rules(),
     },
-    resolve: {
-        extensions: ['.js', '.css'],
-    },
+    resolve: resolve(),
     plugins: plugins('backend'),
 };
