@@ -22,7 +22,7 @@ const style = {
 
         border-radius: 4px 4px 0 0;
         border: 1px solid #ccc;
-        border-width: 1px 1px 0 1px;
+        border-width: 1px 1px 0 0;
         padding: 6px 30px 6px 10px;
 
         text-align: center;

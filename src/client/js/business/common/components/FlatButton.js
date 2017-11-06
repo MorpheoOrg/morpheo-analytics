@@ -16,11 +16,14 @@ pointer-events: none;
 const FlatButton = styled.button`
     border: none;
     background-color: inherit;
-    cursor: pointer;
     color: ${({active}) => active ? '#45464B' : '#98999F'};
+    cursor: pointer;
+
     margin: 5px;
     height: 42px;
     width: 42px;
+
+    padding: 0;
 
     &:hover {
         color: #45464B;
@@ -36,17 +39,11 @@ const FlatButton = styled.button`
 FlatButton.propTypes = {
     active: PropTypes.bool,
     disabled: PropTypes.bool,
-
-    onClick: PropTypes.func,
 };
-
-const noop = () => {};
 
 FlatButton.defaultProps = {
     active: false,
     disabled: false,
-
-    onClick: noop,
 };
 
 export default onlyUpdateForKeys([

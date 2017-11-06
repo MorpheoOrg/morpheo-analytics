@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'react-emotion';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
@@ -7,58 +6,24 @@ import {bindActionCreators} from 'redux';
 
 import actions from '../actions/sideBar';
 import actionsProblem from '../../models/problem/actions';
-import FlatButton from '../../common/components/FlatButton';
 import {menuContent, modalContent} from './iconDefinition';
+import FlatButton from '../../common/components/FlatButton';
+import ActivityBar1 from '../../common/components/ActivityBar';
 
-
-const Container = styled.div`
-    height: 100%;
-    background-color: #d2d2d6;
-
-    display: grid;
-    grid-template-areas: 'top' 'middle' 'bottom';
-    align-content: space-between;
-`;
-
-const TopButtonGroup = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin: 20px 0 20px 0;
-    grid-area: top;
-`;
-
-const BottomButtonGroup = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin: 20px 0 20px 0;
-    grid-area: bottom;
-`;
 
 class ActivityBar extends React.Component {
     toggleSideBarElement = index => (event) => {
         // TODO MOVE TO ANOTHER PLACE
-        // Get challenge
         this.props.loadProblemList();
 
-        const {selectedIndex, status, duration, setIndex, setStatus} = this.props;
+        const {selectedIndex, setIndex, setStatus} = this.props;
 
-        // animation management
-        // closing
         if (selectedIndex === index) {
-            setStatus('closing');
-            setTimeout(() => {
-                setStatus('closed');
-            }, duration);
+            setStatus('closed');
         }
-        // opening
-        // only launch animation if not already opened
         else {
-            // set index
             setIndex(index);
-            if (status !== 'opened') {
-                setStatus('opening');
-                setTimeout(() => setStatus('opened'), duration);
-            }
+            setStatus('opened');
         }
     };
     openModalElement = index => (event) => {
@@ -68,36 +33,32 @@ class ActivityBar extends React.Component {
 
     render() {
         const {selectedIndex} = this.props;
-
         return (
-            <Container>
-                <TopButtonGroup>
-                    {menuContent.map(({icon, name}, index) => (
-                        <FlatButton
-                            key={name}
-                            active={selectedIndex === index}
-                            icon={icon}
-                            onClick={this.toggleSideBarElement(index)}
-                            disabled={index > 0}
-                        >
-                            {icon}
-                        </FlatButton>
-                    ))}
-                </TopButtonGroup>
-                <BottomButtonGroup>
-                    {modalContent.map(({icon, name}, index) => (
-                        <FlatButton
-                            key={name}
-                            icon={icon}
-                            onClick={this.openModalElement}
-                            disabled
-                        >
-                            {icon}
-                        </FlatButton>
-                    ))}
-                </BottomButtonGroup>
-            </Container>
-        );
+            <ActivityBar1
+                topChildren={menuContent.map(({icon, name}, index) => (
+                    <FlatButton
+                        key={name}
+                        active={selectedIndex === index}
+                        icon={icon}
+                        onClick={this.toggleSideBarElement(index)}
+                        disabled={index > 0}
+                    >
+                        {icon}
+                    </FlatButton>
+                ))}
+
+                bottomChildren={modalContent.map(({icon, name}, index) => (
+                    <FlatButton
+                        key={name}
+                        icon={icon}
+                        onClick={this.openModalElement}
+                        disabled
+                    >
+                        {icon}
+                    </FlatButton>
+                ))}
+            />);
+
     }
 }
 

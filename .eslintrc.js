@@ -43,7 +43,7 @@ module.exports = {
         "react/prefer-es6-class": [2],
         "react/prefer-stateless-function": [2],
         "react/prop-types": [2],
-        "jsx-a11y/no-static-element-interactions": [2],
+        "jsx-a11y/no-static-element-interactions": [0],
         "no-param-reassign": [2],
         "no-undef": [2],
 

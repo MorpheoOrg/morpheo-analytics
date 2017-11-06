@@ -11,6 +11,8 @@ import {ChevronLeft} from 'mdi-material-ui';
 import actions from '../actions/sideBar';
 import {menuContent} from './iconDefinition';
 import {getVisible} from '../selector';
+import Dragger from '../../common/components/Dragger';
+import ResizableContainer from '../../common/components/ResizableContainer';
 
 
 const Container = styled.div`
@@ -60,78 +62,18 @@ const FlatButton = styled.button`
     }
 `;
 
-const Dragger = styled.div`
-    position: absolute;
-    z-index: 1;
-    opacity: 100;
-    height: 100%;
-    width: 10px;
-    right: -5px;
-    top: 0px;
-    cursor: col-resize;
-`;
-
 class SideBar extends React.Component {
-    // width is in state for UI responsiveness
-    state = {
-        width: this.props.width,
-    };
-    onMouseDown = (event) => {
-        event.preventDefault();
-
-        this.clientX = event.clientX;
-        // TODO need to debounce mousemove
-        window.addEventListener('mousemove', this.onMouseMove);
-        window.addEventListener('mouseup', this.onMouseUp);
-    };
-
-    onMouseMove = (event) => {
-        event.preventDefault();
-        this.updateWidth(event);
-    };
-
-    onMouseUp = (event) => {
-        event.preventDefault();
-        window.removeEventListener('mousemove', this.onMouseMove);
-        window.removeEventListener('mouseup', this.onMouseUp);
-
-        // We call resize only on MouseUp for the fluidity of the UI
-        const width = this.updateWidth(event);
-        this.props.resize(width);
-    };
-
-    updateWidth = (event) => {
-        const width = this.state.width - (this.clientX - event.clientX);
-        this.clientX = event.clientX;
-        this.setState({width});
-        return width;
-    };
-
-    style = () => css`
-        background-color: #FAFAFB;
-        position: relative;
-        padding-top: 30px;
-        user-select: none;
-        cursor: default;
-
-        flex: 0 0 ${['opening', 'opened'].includes(this.props.status) ? this.state.width : 0}px;
-        min-width: ${['closing', 'opening'].includes(this.props.status) ? '0px' : 'auto'};
-        transition: ${['closing', 'opening'].includes(this.props.status) ? `flex ${this.props.duration}ms ease-out` : 'auto'};
-    `;
-
     close = () => {
-        const {setStatus} = this.props;
-        setStatus('closing');
-        setTimeout(() => {
-            setStatus('closed');
-        }, this.props.duration);
+        this.props.setStatus('closed');
     };
 
     render() {
         const {selectedIndex, visible} = this.props;
 
-        return (<div className={this.style()}>
-            {visible && <Container>
+        return (visible ?
+            <ResizableContainer
+
+            >
                 <Header>
                     <h2>{menuContent[selectedIndex].name}</h2>
                     <FlatButton onClick={this.close}>
@@ -141,10 +83,25 @@ class SideBar extends React.Component {
                 <Content>
                     {menuContent[selectedIndex].content}
                 </Content>
-            </Container>
-            }
-            <Dragger onMouseDown={this.onMouseDown}/>
-        </div>);
+            </ResizableContainer>
+            : null
+        );
+
+        // return (visible ? <div className={this.style()}>
+        //     {<Container>
+        //         <Header>
+        //             <h2>{menuContent[selectedIndex].name}</h2>
+        //             <FlatButton onClick={this.close}>
+        //                 <ChevronLeft/>
+        //             </FlatButton>
+        //         </Header>
+        //         <Content>
+        //             {menuContent[selectedIndex].content}
+        //         </Content>
+        //     </Container>
+        //     }
+        //     <Dragger onMouseDown={this.onMouseDown}/>
+        // </div> : null);
     }
 }
 
@@ -179,4 +136,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     resize: actions.resize,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['selectedIndex', 'visible', 'status'])(SideBar));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
+    'selectedIndex', 'visible', 'status'
+])(SideBar));

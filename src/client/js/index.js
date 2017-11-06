@@ -30,7 +30,7 @@ const root = document.getElementById('root');
 
 const renderApp = (RootElement) => {
     const app = (
-        <ReactHotLoader>
+        <ReactHotLoader warning={false} >
             <RootElement {...{store}} />
         </ReactHotLoader>
     );
