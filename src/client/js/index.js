@@ -1,5 +1,4 @@
 /* globals document window */
-
 import React from 'react';
 import {hydrate, render} from 'react-dom';
 import FastClick from 'fastclick';
@@ -30,12 +29,15 @@ injectTapEventPlugin();
 const root = document.getElementById('root');
 
 const renderApp = (RootElement) => {
-    const app = (<ReactHotLoader>
-        <RootElement {...{store}} />
-    </ReactHotLoader>);
+    const app = (
+        <ReactHotLoader>
+            <RootElement {...{store}} />
+        </ReactHotLoader>
+    );
 
     // render for electron, hydrate for SSR
-    return process.env.IS_ELECTRON !== 'false' ? render(app, root) : hydrate(app, root);
+    return process.env.IS_ELECTRON !== 'false' ?
+        render(app, root) : hydrate(app, root);
 };
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {

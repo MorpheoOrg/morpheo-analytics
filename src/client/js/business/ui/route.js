@@ -4,6 +4,7 @@ import universal from 'react-universal-component';
 import {injectSaga} from 'redux-sagas-injector';
 import {injectReducer} from 'redux-reducers-injector';
 
+
 const Universal = universal(import('./preload'), {
     loading: <div>Loading</div>,
     onLoad: (preload, {isSync, isServer}, props, context) => {

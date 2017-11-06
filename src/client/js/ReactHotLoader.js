@@ -32,15 +32,13 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* eslint-disable global-require */
-/* eslint-disable import/no-extraneous-dependencies */
 
 import React from 'react';
-
 // We create this wrapper so that we only import react-hot-loader for a
 // development build.  Small savings. :)
 const ReactHotLoader = process.env.NODE_ENV !== 'production'
     ? require('react-hot-loader').AppContainer
     : ({children}) => React.Children.only(children);
+
 
 export default ReactHotLoader;

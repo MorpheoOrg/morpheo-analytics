@@ -9,11 +9,11 @@ import {
 } from './api';
 
 
-export const loadList = (actions, fetchList, query) =>
+export const loadList = (actions, fetchList) =>
     function* loadListSaga() {
         const state = yield select();
 
-        const {error, list} = yield call(fetchList, query);
+        const {error, list} = yield call(fetchList);
         console.log('sagas: ', error, list);
 
         if (error) {
@@ -41,7 +41,7 @@ export const loadList = (actions, fetchList, query) =>
     };
 
 
-export const loadItem = (actions, fetchItem, query) =>
+export const loadItem = (actions, fetchItem) =>
     function* loadItemSaga(request) {
         const {error, item} = yield call(fetchItem, request.payload);
 

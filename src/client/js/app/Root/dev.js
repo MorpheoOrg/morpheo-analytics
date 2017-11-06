@@ -5,13 +5,15 @@ import {Provider} from 'react-redux';
 import DevTools from '../../../../common/DevTools';
 import Routes from '../../../../common/routes';
 
-const Root = ({store}) =>
-    (<Provider store={store}>
+
+const Root = ({store}) => (
+    <Provider store={store}>
         <div>
-            <Routes/>
-            {/* {<DevTools/>} */}
+            <Routes />
+            <DevTools />
         </div>
-    </Provider>);
+    </Provider>
+);
 
 Root.propTypes = {
     store: PropTypes.shape({}).isRequired,

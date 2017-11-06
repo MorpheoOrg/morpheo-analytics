@@ -1,5 +1,3 @@
-/* eslint react/no-array-index-key: 0 */
-
 import React from 'react';
 import styled from 'react-emotion';
 import PropTypes from 'prop-types';
@@ -7,28 +5,37 @@ import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
 import {bindActionCreators} from 'redux';
 
-import actions from '../../actions/sideBar';
-import actionsProblem from '../../../models/problem/actions';
+import actions from '../actions/sideBar';
+import actionsProblem from '../../models/problem/actions';
+import FlatButton from '../../common/components/FlatButton';
+import {menuContent, modalContent} from './iconDefinition';
 
-import MenuButton from './MenuButton';
-import {menuContent, modalContent} from '../iconDefinition';
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
     height: 100%;
     background-color: #d2d2d6;
-    justify-content: space-between;
+
+    display: grid;
+    grid-template-areas: 'top' 'middle' 'bottom';
+    align-content: space-between;
 `;
 
-const ButtonGroup = styled.div`
+const TopButtonGroup = styled.div`
     display: flex;
     flex-direction: column;
     margin: 20px 0 20px 0;
+    grid-area: top;
+`;
+
+const BottomButtonGroup = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0 20px 0;
+    grid-area: bottom;
 `;
 
 class ActivityBar extends React.Component {
-    toggleSideBarElement = (index) => {
+    toggleSideBarElement = index => (event) => {
         // TODO MOVE TO ANOTHER PLACE
         // Get challenge
         this.props.loadProblemList();
@@ -54,7 +61,7 @@ class ActivityBar extends React.Component {
             }
         }
     };
-    openModalElement = (index) => {
+    openModalElement = index => (event) => {
         // Add function to open element
         console.log(index);
     };
@@ -62,31 +69,35 @@ class ActivityBar extends React.Component {
     render() {
         const {selectedIndex} = this.props;
 
-        return (<Container>
-            <ButtonGroup>
-                {menuContent.map(({icon, name}, index) =>
-                    <MenuButton
-                        key={name}
-                        index={index}
-                        active={selectedIndex === index}
-                        icon={icon}
-                        onClick={this.toggleSideBarElement}
-                        disabled={index > 0}
-                    />,
-                )}
-            </ButtonGroup>
-            <ButtonGroup>
-                {modalContent.map(({icon, name}, index) =>
-                    <MenuButton
-                        key={name}
-                        index={index}
-                        icon={icon}
-                        onClick={this.openModalElement}
-                        disabled
-                    />,
-                )}
-            </ButtonGroup>
-        </Container>);
+        return (
+            <Container>
+                <TopButtonGroup>
+                    {menuContent.map(({icon, name}, index) => (
+                        <FlatButton
+                            key={name}
+                            active={selectedIndex === index}
+                            icon={icon}
+                            onClick={this.toggleSideBarElement(index)}
+                            disabled={index > 0}
+                        >
+                            {icon}
+                        </FlatButton>
+                    ))}
+                </TopButtonGroup>
+                <BottomButtonGroup>
+                    {modalContent.map(({icon, name}, index) => (
+                        <FlatButton
+                            key={name}
+                            icon={icon}
+                            onClick={this.openModalElement}
+                            disabled
+                        >
+                            {icon}
+                        </FlatButton>
+                    ))}
+                </BottomButtonGroup>
+            </Container>
+        );
     }
 }
 
@@ -113,4 +124,6 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     setStatus: actions.setStatus,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['selectedIndex', 'status'])(ActivityBar));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
+    'selectedIndex', 'status',
+])(ActivityBar));
