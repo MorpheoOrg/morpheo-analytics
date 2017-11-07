@@ -60,7 +60,7 @@ function* queryByChaincode(payload) {
     }
 }
 
-export const loadList = (actions, fetchList, query) =>
+export const loadList = (actions, fetchList) =>
     function* loadListSaga() {
 
         const {res, error} = yield call(queryByChaincode, {fcn: 'queryProblems', args: ['']});

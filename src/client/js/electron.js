@@ -47,8 +47,8 @@ import history from './app/history';
 import configureStore from '../../common/configureStore';
 import '../css/index.scss';
 
-import {setup} from './grpc/init';
 // setup grpc config
+import {setup} from './grpc/init';
 setup();
 
 /** ******************
@@ -64,6 +64,8 @@ FastClick.attach(document.body);
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
+
+const root = document.getElementById('root');
 
 const renderApp = (RootElement) => {
     const app = (

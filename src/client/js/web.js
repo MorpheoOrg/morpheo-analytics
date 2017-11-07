@@ -47,7 +47,6 @@ import history from './app/history';
 import configureStore from '../../common/configureStore';
 import '../css/index.scss';
 
-
 /** ******************
  *  Server hydration
  ******************* */
@@ -61,6 +60,8 @@ FastClick.attach(document.body);
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
+
+const root = document.getElementById('root');
 
 const renderApp = (RootElement) => {
     const app = (
