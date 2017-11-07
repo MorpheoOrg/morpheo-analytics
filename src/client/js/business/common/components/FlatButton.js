@@ -4,24 +4,21 @@ import styled, {css} from 'react-emotion';
 
 
 const disabledStyle = css`
-color: #C0C0C8;
-
-&:hover {
     color: #C0C0C8;
-}
 
-pointer-events: none;
+    &:hover {
+        color: #C0C0C8;
+    }
+
+    pointer-events: none;
 `;
+
 
 const FlatButton = styled.button`
     border: none;
     background-color: inherit;
     color: ${({active}) => active ? '#45464B' : '#98999F'};
     cursor: pointer;
-
-    margin: 5px;
-    height: 42px;
-    width: 42px;
 
     padding: 0;
 

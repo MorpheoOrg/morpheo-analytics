@@ -5,6 +5,7 @@ import rules from './utils/rules';
 import resolve from './utils/resolve';
 import plugins from './utils/plugins';
 
+
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
     PRODUCTION_BASE_NAME = config.apps.frontend.baseName.production,

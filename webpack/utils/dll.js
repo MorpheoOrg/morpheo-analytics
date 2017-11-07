@@ -1,6 +1,8 @@
 import path from 'path';
 import webpack from 'webpack';
+import BabiliPlugin from 'babili-webpack-plugin';
 import AutoDllPlugin from 'autodll-webpack-plugin';
+
 
 const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV));
 
@@ -8,10 +10,14 @@ export default new AutoDllPlugin({
     context: path.join(__dirname, '../..'),
     filename: '[name]-dll.js',
     plugins: !DEVELOPMENT ? [
-        new webpack.optimize.UglifyJsPlugin(),
+        // new webpack.optimize.UglifyJsPlugin(),
+        new BabiliPlugin({}, {
+            comments: false,
+            sourceMap: true,
+        }),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
-        })
+        }),
     ] : [],
     debug: true,
     entry: {

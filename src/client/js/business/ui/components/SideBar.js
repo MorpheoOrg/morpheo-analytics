@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {PropTypes} from 'prop-types';
-import styled, {css} from 'react-emotion';
+import styled from 'react-emotion';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';
@@ -11,16 +11,9 @@ import {ChevronLeft} from 'mdi-material-ui';
 import actions from '../actions/sideBar';
 import {menuContent} from './iconDefinition';
 import {getVisible} from '../selector';
-import Dragger from '../../common/components/Dragger';
+import FlatButton from '../../common/components/FlatButton';
 import ResizableContainer from '../../common/components/ResizableContainer';
 
-
-const Container = styled.div`
-    overflow: hidden;
-    margin-left:auto;
-    margin-right:auto;
-    padding: 20px;
-`;
 
 const Header = styled.div`
     display: flex;
@@ -34,33 +27,20 @@ const Header = styled.div`
     }
 `;
 
-const Content = styled.div`
+const FlexContainer = styled.div`
 display: flex;
 position: relative;
 justify-content: space-between;
 align-items: center;
 `;
 
-const FlatButton = styled.button`
-    border: none;
-    background-color: inherit;
-    color: #98999F;
-    right: 0;
-    cursor: pointer;
-    padding: 0;
 
-    &:hover {
-        color: #45464B;
-    }
+const HideButton = props => (
+    <FlatButton {...props} >
+        <ChevronLeft />
+    </FlatButton>
+);
 
-    .active {
-        color: #45464B;
-    }
-
-    &:focus {
-        outline: 0;
-    }
-`;
 
 class SideBar extends React.Component {
     close = () => {
@@ -71,37 +51,17 @@ class SideBar extends React.Component {
         const {selectedIndex, visible} = this.props;
 
         return (visible ?
-            <ResizableContainer
-
-            >
+            <ResizableContainer>
                 <Header>
                     <h2>{menuContent[selectedIndex].name}</h2>
-                    <FlatButton onClick={this.close}>
-                        <ChevronLeft/>
-                    </FlatButton>
+                    <HideButton onClick={this.close} />
                 </Header>
-                <Content>
+                <FlexContainer>
                     {menuContent[selectedIndex].content}
-                </Content>
+                </FlexContainer>
             </ResizableContainer>
             : null
         );
-
-        // return (visible ? <div className={this.style()}>
-        //     {<Container>
-        //         <Header>
-        //             <h2>{menuContent[selectedIndex].name}</h2>
-        //             <FlatButton onClick={this.close}>
-        //                 <ChevronLeft/>
-        //             </FlatButton>
-        //         </Header>
-        //         <Content>
-        //             {menuContent[selectedIndex].content}
-        //         </Content>
-        //     </Container>
-        //     }
-        //     <Dragger onMouseDown={this.onMouseDown}/>
-        // </div> : null);
     }
 }
 

@@ -1,0 +1,13 @@
+sudo: false
+
+language: node_js
+node_js:
+  - "node"
+
+cache:
+  directories:
+    - "node_modules"
+
+dist: trusty
+
+after_success: npm run package-linux

@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const config = require('config');
 
+
 const PRODUCTION = (['production'].includes(process.env.NODE_ENV));
 
 export default () => new webpack.DefinePlugin({

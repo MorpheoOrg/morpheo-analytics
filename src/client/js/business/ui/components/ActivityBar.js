@@ -3,12 +3,20 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
 import {bindActionCreators} from 'redux';
+import styled from 'react-emotion';
 
 import actions from '../actions/sideBar';
 import actionsProblem from '../../models/problem/actions';
 import {menuContent, modalContent} from './iconDefinition';
 import FlatButton from '../../common/components/FlatButton';
 import ActivityBar1 from '../../common/components/ActivityBar';
+
+
+const MenuButton = styled(FlatButton)`
+    margin: 5px;
+    height: 42px;
+    width: 42px;
+`;
 
 
 class ActivityBar extends React.Component {
@@ -36,7 +44,7 @@ class ActivityBar extends React.Component {
         return (
             <ActivityBar1
                 topChildren={menuContent.map(({icon, name}, index) => (
-                    <FlatButton
+                    <MenuButton
                         key={name}
                         active={selectedIndex === index}
                         icon={icon}
@@ -44,18 +52,18 @@ class ActivityBar extends React.Component {
                         disabled={index > 0}
                     >
                         {icon}
-                    </FlatButton>
+                    </MenuButton>
                 ))}
 
                 bottomChildren={modalContent.map(({icon, name}, index) => (
-                    <FlatButton
+                    <MenuButton
                         key={name}
                         icon={icon}
                         onClick={this.openModalElement}
                         disabled
                     >
                         {icon}
-                    </FlatButton>
+                    </MenuButton>
                 ))}
             />);
 
