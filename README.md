@@ -1,4 +1,4 @@
-# Analytics
+# Analytics &middot; [![GitHub license](https://img.shields.io/badge/License-CECILL%202.1-blue.svg)](https://github.com/MorpheoOrg/morpheo-analytics/blob/master/LICENSE) [![Travis Status](https://www.travis-ci.org/tguillemot/morpheo-analytics.svg?branch=master)](https://www.travis-ci.org/tguillemot/morpheo-analytics)
 
 ## Installation
 

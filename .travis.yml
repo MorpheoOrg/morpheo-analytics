@@ -10,4 +10,4 @@ cache:
 
 dist: trusty
 
-after_success: npm run package-linux
+after_success: travis_wait 30 npm run package-linux
