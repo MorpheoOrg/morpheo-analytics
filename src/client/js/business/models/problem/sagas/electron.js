@@ -1,5 +1,4 @@
 import {call, put, takeLatest, takeEvery, all} from 'redux-saga/effects';
-import path from 'path';
 import hfc from 'fabric-client';
 
 import generalActions from '../../../../../../common/actions';
@@ -11,89 +10,92 @@ import {
     fetchProblem as fetchProblemApi,
 } from '../api';
 
-let client,
-    channel;
+import {getChannelForOrg, getClientForOrg, buildTarget, getKeyStoreForOrg, getOrgName} from '../../../../grpc/helper';
 
-const options = {
-    wallet_path: '/tmp/fabric-client-kvs_peerOrg1',
-    user_id: 'Jim',
-    channel_id: 'myc',
-    chaincode_id: 'mycc',
-    network_url: 'grpc://localhost:7051',
-};
+function* queryByChaincode(payload) {
+    const org = hfc.getConfigSetting('org'),
+        peer = hfc.getConfigSetting('peer'),
+        chaincodeId = hfc.getConfigSetting('chainCodeId'),
+        user_id = hfc.getConfigSetting('user_id');
+
+    const channel = getChannelForOrg(org);
+    const client = getClientForOrg(org);
+    const target = buildTarget(peer, org);
+
+    const store = yield call(hfc.newDefaultKeyValueStore, {path: getKeyStoreForOrg(getOrgName(org))});
+    client.setStateStore(store);
+    // clearing the user context before switching
+    client._userContext = null;
+    const user = yield call(client.getUserContext.bind(client), user_id, true);
+
+    if (user) {
+        // TODO enroll user if not enrolled
+        if (!user.isEnrolled()) {
+
+        }
+
+        const txId = client.newTransactionID();
+        // send query
+        const request = {
+            chaincodeId,
+            txId,
+            fcn: payload.fcn,
+            args: payload.args,
+        };
+
+        const res = yield call(channel.queryByChaincode.bind(channel), request, target);
+
+        if (!res.length) {
+            console.log('No payloads were returned from query');
+        }
+
+        if (res[0] instanceof Error) {
+            return {error: res[0]};
+        }
+
+        return {res};
+    }
+    else {
+        return {error: 'No user'};
+    }
+}
 
 export const loadList = (actions, fetchList, query) =>
     function* loadListSaga() {
 
-        console.log('Create a client and set the wallet location');
-        client = new hfc();
-        const cryptoSuite = hfc.newCryptoSuite();
-        cryptoSuite.setCryptoKeyStore(hfc.newCryptoKeyStore({path: options.wallet_path}));
-        client.setCryptoSuite(cryptoSuite);
-        console.log(options.wallet_path);
+        const {res, error} = yield call(queryByChaincode, {fcn: 'queryProblems', args: ['']});
 
-        const wallet = yield call(hfc.newDefaultKeyValueStore, {path: options.wallet_path});
-
-        console.log('Set wallet path, and associate user ', options.user_id, ' with application');
-        client.setStateStore(wallet);
-
-        client._userContext = null;
-        const user = yield call(client.getUserContext.bind(client), options.user_id, true);
-        console.log('Check user is enrolled, and set a query URL in the network');
-
-        console.log(user);
-        if (!user || (user && user.isEnrolled() === false)) {
-            console.error('User not defined, or not enrolled - error');
+        if (error) {
+            console.error('error from query = ', error);
+            if (error.body && error.body.message) {
+                console.error(error.body.message);
+            }
+            if (error && error.message) {
+                yield put(generalActions.error.set(error.message));
+            }
+            yield put(actions.list.failure(error.body));
         }
         else {
-            channel = client.newChannel(options.channel_id);
-            channel.addPeer(client.newPeer(options.network_url));
+            // adapt to web code
+            const list = JSON.parse(res[0].toString()).map(o => JSON.parse(o.toString())).map(o => {
+                const arr = o.storage_address.split('/');
+                return {
+                    ...o,
+                    workflow: arr[arr.length - 1]
+                };
+            });
 
-            console.log('Make query');
-            const transaction_id = client.newTransactionID();
-            console.log('Assigning transaction_id: ', transaction_id._transaction_id);
-
-            const request = {
-                chaincodeId: options.chaincode_id,
-                txId: transaction_id,
-                fcn: 'queryProblems',
-                args: [''],
-            };
-            const query_responses = yield call(channel.queryByChaincode, request);
-
-            console.log('returned from query');
-            if (!query_responses.length) {
-                console.log('No payloads were returned from query');
-            } else {
-                console.log('Query result count = ', query_responses.length);
+            // Let's fetch description problem from storage
+            const l = list.length;
+            for (let i = 0; i < l; i += 1) {
+                yield put(storageProblemActions.item.get.request(
+                    list[i].workflow,
+                ));
             }
-            if (query_responses[0] instanceof Error) {
-                const error = query_responses[0];
-                console.error('error from query = ', error);
-                if (error.body && error.body.message) {
-                    console.error(error.body.message);
-                }
-                if (error && error.message) {
-                    yield put(generalActions.error.set(error.message));
-                }
-                yield put(actions.list.failure(error.body));
-            }
-            else {
-                console.log('Response is ', query_responses[0].toString());
 
-                const results = query_responses[0];
-                yield put(actions.list.success({results}));
-                const l = results.length;
-                // load item from storage
-                for (let i = 0; i < l; i += 1) {
-                    yield put(storageProblemActions.item.get.request(
-                        results[i].workflow,
-                    ));
-                }
-            }
+            yield put(actions.list.success({results: list}));
         }
     };
-
 
 export const loadItem = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {

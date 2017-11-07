@@ -7,7 +7,7 @@ import webpack from 'webpack';
 import {dependencies as externals} from '../../src/electron/package.json';
 
 export default {
-    externals: Object.keys(externals || {}),
+    externals: Object.keys(externals || {}).concat(['fabric-client/lib/User.js']),
     module: {
         rules: [{
             test: /\.jsx?$/,

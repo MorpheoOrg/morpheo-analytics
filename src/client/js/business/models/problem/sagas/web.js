@@ -10,7 +10,6 @@ import {
 
 export const loadList = (actions, fetchList) =>
     function* loadListSaga() {
-
         const {error, list} = yield call(fetchList);
 
         if (error) {
