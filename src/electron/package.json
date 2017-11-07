@@ -2,7 +2,12 @@
     "name": "analytics",
     "description": "Analytics app",
     "version": "0.0.1",
-    "authors": [
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/MorpheoOrg/morpheo-analytics"
+    },
+    "author": "Morpheo Team <thierry.guillemot.work@gmail.com>",
+    "contributors": [
         "Guillaume Cisco <guillaume@rythm.co>",
         "Thierry Guillemot <thierry.guillemot.work@gmail.com>"
     ],

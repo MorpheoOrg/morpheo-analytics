@@ -4,7 +4,7 @@ import path from 'path';
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import StatsPlugin from 'stats-webpack-plugin';
-import BabiliPlugin from 'babili-webpack-plugin';
+import MinifyPlugin from 'babel-minify-webpack-plugin';
 import HappyPack from 'happypack';
 import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
@@ -30,7 +30,7 @@ export default env => [
         }),
         dll,
         ...(PRODUCTION ? [
-            new BabiliPlugin({}, {
+            new MinifyPlugin({}, {
                 comments: false,
                 sourceMap: true,
             }),

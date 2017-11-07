@@ -5,7 +5,7 @@
 import path from 'path';
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
-import BabiliPlugin from 'babili-webpack-plugin';
+import MinifyPlugin from 'babel-minify-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HappyPack from 'happypack';
 
@@ -52,7 +52,7 @@ export default merge.smart(baseConfig, {
             }],
             threads: 4,
         }),
-        new BabiliPlugin(),
+        new MinifyPlugin(),
         new ExtractTextPlugin('style.css'),
         new BundleAnalyzerPlugin({
             analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',

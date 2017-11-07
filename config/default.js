@@ -2,7 +2,8 @@ const {
     NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD,
     ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
     STORAGE_USER, STORAGE_PASSWORD,
-} = require('./credentials');
+} = require('./devsecret');
+
 
 const apiPort = process.env.NODE_PORT || 3000;
 const apiUrl = 'https://notebook-proxy.morpheo.io';

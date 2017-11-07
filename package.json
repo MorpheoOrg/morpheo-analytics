@@ -1,7 +1,7 @@
 {
     "name": "analytics",
     "productName": "Analytics",
-    "authors": [
+    "contributors": [
         "Guillaume Cisco <guillaume@rythm.co>",
         "Thierry Guillemot <thierry.guillemot.work@gmail.com>"
     ],
@@ -42,7 +42,8 @@
         "package-all": "npm run build:electron && build -mwl",
         "package-linux": "npm run build:electron && build --linux",
         "package-win": "npm run build:electron && build --win --x64",
-        "postinstall": "electron-builder install-app-deps"
+        "postinstall": "electron-builder install-app-deps",
+        "build-electron": "build --linux"
     },
     "pre-commit": [
         "precommit-msg",
@@ -119,7 +120,6 @@
         "react-redux": "5.0.6",
         "react-tap-event-plugin": "^3.0.2",
         "react-universal-component": "2.5.5",
-        "react-useragent": "0.4.4",
         "recharts": "^1.0.0-alpha.6",
         "recompose": "0.26.0",
         "redux": "3.7.2",
@@ -143,6 +143,7 @@
         "babel-core": "6.26.0",
         "babel-eslint": "8.0.1",
         "babel-loader": "7.1.2",
+        "babel-minify-webpack-plugin": "^0.2.0",
         "babel-plugin-add-module-exports": "0.2.1",
         "babel-plugin-date-fns": "0.1.0",
         "babel-plugin-lodash": "3.2.11",
@@ -161,7 +162,6 @@
         "babel-preset-stage-0": "6.24.1",
         "babel-register": "6.26.0",
         "babel-watch": "2.0.7",
-        "babili-webpack-plugin": "^0.1.2",
         "browser-sync": "2.18.13",
         "browser-sync-webpack-plugin": "1.2.0",
         "chai": "^4.1.2",
@@ -226,7 +226,6 @@
         "stats-webpack-plugin": "0.6.1",
         "sw-precache-webpack-plugin": "^0.11.4",
         "webpack": "3.8.1",
-        "webpack-sources": "1.0.1",
         "webpack-bundle-analyzer": "^2.9.0",
         "webpack-dev-middleware": "1.12.0",
         "webpack-dev-server": "^2.9.3",
@@ -234,6 +233,7 @@
         "webpack-hot-middleware": "2.20.0",
         "webpack-hot-server-middleware": "0.2.0",
         "webpack-merge": "^4.1.0",
+        "webpack-sources": "1.0.1",
         "why-did-you-update": "0.0.8",
         "write-file-webpack-plugin": "4.2.0"
     }
