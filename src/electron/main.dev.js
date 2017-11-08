@@ -1,6 +1,7 @@
 import {app, BrowserWindow} from 'electron';
-
 import MenuBuilder from './menu';
+
+console.log("HELLLO");
 
 let mainWindow = null;
 
@@ -33,7 +34,6 @@ const installExtensions = async () => {
 /**
  * Add event listeners...
  */
-
 app.on('window-all-closed', () => {
     // Respect the OSX convention of having the application in memory even
     // after all windows have been closed
@@ -44,6 +44,7 @@ app.on('window-all-closed', () => {
 
 
 app.on('ready', async () => {
+    console.log('debug prod:', process.env.IS_ELECTRON);
     if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
         await installExtensions();
     }

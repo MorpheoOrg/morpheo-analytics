@@ -3,5 +3,5 @@ module.exports = {
         require('autoprefixer')({browsers: ['last 2 versions']}),
         require('precss'),
         require('cssnano'),
-    ]
+    ],
 };
