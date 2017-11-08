@@ -2,7 +2,7 @@
     "channelName": "mychannel",
     "chainCodeId": "mycc",
     "peer": "peer1",
-    "org": "hopitaldieu",
+    "org": "aphp",
     "user_id": "Jim",
     "keyValueStore": "/tmp/fabric-client-kvs",
     "config": {
@@ -12,15 +12,15 @@
             "tls_cacerts": "/home/guillaume/Projects/morpheo/morpheo-orchestrator-bootstrap/artifacts/crypto-config/ordererOrganizations/morpheo.co/orderers/orderer.morpheo.co/tls/ca.crt"
         },
         "hopitaldieu": {
-            "name": "peerHopitalDieu",
-            "mspid": "HopitalDieuMSP",
+            "name": "peerAphp",
+            "mspid": "AphpMSP",
             "ca": "https://localhost:7054",
             "peers": {
                 "peer1": {
                     "requests": "grpcs://localhost:7051",
                     "events": "grpcs://localhost:7053",
-                    "server-hostname": "peer0.aphp.fr",
-                    "tls_cacerts": "/home/guillaume/Projects/morpheo/morpheo-orchestrator-bootstrap/artifacts/crypto-config/peerOrganizations/aphp.fr/peers/peer0.aphp.fr/tls/ca.crt"
+                    "server-hostname": "peer0.aphp.morpheo.co",
+                    "tls_cacerts": "/home/guillaume/Projects/morpheo/morpheo-orchestrator-bootstrap/artifacts/crypto-config/peerOrganizations/aphp.morpheo.co/peers/peer0.aphp.morpheo.co/tls/ca.crt"
                 }
             }
         }
