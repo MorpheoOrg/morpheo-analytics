@@ -76,11 +76,11 @@ export default merge.smart(baseConfig, {
             filename: '[name].css',
             allChunks: false,
         }),
-        // new webpack.DllReferencePlugin({
-        //     context: process.cwd(),
-        //     manifest: require(manifest),
-        //     sourceType: 'var',
-        // }),
+        new webpack.DllReferencePlugin({
+            context: process.cwd(),
+            manifest: require(manifest),
+            sourceType: 'var',
+        }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
 
