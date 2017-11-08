@@ -63,7 +63,7 @@ function* queryByChaincode(payload) {
 export const loadList = (actions, fetchList) =>
     function* loadListSaga() {
 
-        const {res, error} = yield call(queryByChaincode, {fcn: 'queryProblems', args: ['']});
+        const {res, error} = yield call(queryByChaincode, {fcn: 'queryItems', args: ['problem']});
 
         if (error) {
             console.error('error from query = ', error);
@@ -77,19 +77,23 @@ export const loadList = (actions, fetchList) =>
         }
         else {
             // adapt to web code
-            const list = JSON.parse(res[0].toString()).map(o => JSON.parse(o.toString())).map(o => {
-                const arr = o.storage_address.split('/');
-                return {
-                    ...o,
-                    workflow: arr[arr.length - 1]
-                };
+
+            console.log(JSON.parse(res[0].toString()));
+
+            const list = JSON.parse(res[0].toString()).map(o => {
+                console.log(o);
+                console.log(o.split('value:')[1]);
+                const a = JSON.parse(JSON.parse(o.split('value:')[1]));
+                console.log(a);
+                return a;
             });
 
+            console.log(list);
             // Let's fetch description problem from storage
             const l = list.length;
             for (let i = 0; i < l; i += 1) {
                 yield put(storageProblemActions.item.get.request(
-                    list[i].workflow,
+                    list[i].storage_address,
                 ));
             }
 
