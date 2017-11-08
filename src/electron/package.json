@@ -12,5 +12,9 @@
         "Thierry Guillemot <thierry.guillemot.work@gmail.com>"
     ],
     "license": "CECILL-2.1",
-    "main": "./main.prod.js"
+    "main": "./main.prod.js",
+    "dependencies": {
+        "fabric-ca-client": "^1.0.1",
+        "fabric-client": "^1.0.1"
+    }
 }

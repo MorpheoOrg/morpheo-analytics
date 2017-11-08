@@ -1,0 +1,28 @@
+{
+    "channelName": "mychannel",
+    "chainCodeId": "mycc",
+    "peer": "peer1",
+    "org": "org1",
+    "user_id": "Jim",
+    "keyValueStore": "/tmp/fabric-client-kvs",
+    "config": {
+        "orderer": {
+            "url": "grpcs://localhost:7050",
+            "server-hostname": "orderer.example.com",
+            "tls_cacerts": "/home/guillaume/Projects/morpheo/morpheo-orchestrator-bootstrap/artifacts/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt"
+        },
+        "org1": {
+            "name": "peerOrg1",
+            "mspid": "Org1MSP",
+            "ca": "https://localhost:7054",
+            "peers": {
+                "peer1": {
+                    "requests": "grpcs://localhost:7051",
+                    "events": "grpcs://localhost:7053",
+                    "server-hostname": "peer0.org1.example.com",
+                    "tls_cacerts": "/home/guillaume/Projects/morpheo/morpheo-orchestrator-bootstrap/artifacts/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+                }
+            }
+        }
+    }
+}
