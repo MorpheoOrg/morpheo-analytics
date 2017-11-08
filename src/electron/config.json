@@ -11,7 +11,7 @@
             "server-hostname": "orderer.morpheo.co",
             "tls_cacerts": "/home/guillaume/Projects/morpheo/morpheo-orchestrator-bootstrap/artifacts/crypto-config/ordererOrganizations/morpheo.co/orderers/orderer.morpheo.co/tls/ca.crt"
         },
-        "hopitaldieu": {
+        "aphp": {
             "name": "peerAphp",
             "mspid": "AphpMSP",
             "ca": "https://localhost:7054",
