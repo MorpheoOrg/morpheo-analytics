@@ -77,16 +77,10 @@ export const loadList = (actions, fetchList) =>
         }
         else {
             // adapt to web code
-
-            console.log(JSON.parse(res[0].toString()));
-
-            const list = JSON.parse(res[0].toString()).map(o => {
-                console.log(o);
-                console.log(o.split('value:')[1]);
-                const a = JSON.parse(JSON.parse(o.split('value:')[1]));
-                console.log(a);
-                return a;
-            });
+            const list = JSON.parse(res[0].toString()).map(o =>  JSON.parse(JSON.parse(o.split('value:')[1]))).map(o => ({
+                ...o,
+                workflow: o.storage_address,
+            }));
 
             console.log(list);
             // Let's fetch description problem from storage
@@ -101,7 +95,7 @@ export const loadList = (actions, fetchList) =>
         }
     };
 
-export const loadItem = (actions, fetchItem, query) =>
+export const loadItem = (actions, fetchItem) =>
     function* loadItemSaga(request) {
         const {error, item} = yield call(fetchItem, request.payload);
 
