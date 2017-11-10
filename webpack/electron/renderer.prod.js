@@ -20,7 +20,7 @@ export default merge.smart(baseConfig, {
     entry: './src/client/js/index',
     output: {
         path: path.join(__dirname, '../../src/electron/dist'),
-        publicPath: path.join(__dirname, '../../src/electron/dist/'),
+        publicPath: './dist/',
         filename: 'renderer.prod.js',
     },
     module: {
