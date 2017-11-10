@@ -41,22 +41,7 @@ export default env => [
         test: /\.md$/,
         use: 'html-loader',
     },
-    ...(env === 'electron' ? (PRODUCTION ? [
-        {
-            test: /\.s?css$/,
-            use: ExtractTextPlugin.extract({
-                use: [
-                    {
-                        loader: 'css-loader',
-                    },
-                    {
-                        loader: 'sass-loader',
-                    },
-                ],
-                fallback: 'style-loader',
-            }),
-        },
-    ] : [
+    ...(env === 'electron' ? [
         {
             test: /\.s?css$/,
             use: [
@@ -71,17 +56,11 @@ export default env => [
                     },
                 },
                 {
-                    loader: 'postcss-loader',
-                    options: {
-                        sourceMap: true,
-                    },
-                },
-                {
                     loader: 'sass-loader',
                 },
             ],
         },
-    ]) : [{
+    ] : [{
         test: /\.s?css$/,
         exclude: /node_modules/,
         use: ExtractCssChunks.extract({
