@@ -5,8 +5,8 @@ const initialState = {
     selectedIndex: 0,
     status: 'opened',
     width: 400,
-    duration: 150,
 };
+
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
