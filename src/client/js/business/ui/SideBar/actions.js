@@ -1,5 +1,6 @@
 import {createAction} from 'redux-actions';
 
+
 const prefix = 'SIDE_BAR::';
 
 export const actionTypes = {

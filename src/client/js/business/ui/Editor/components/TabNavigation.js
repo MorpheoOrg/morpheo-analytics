@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import styled from 'react-emotion';
 import {onlyUpdateForKeys} from 'recompose';
 
-import actions from '../../actions/editor';
+import actions from '../actions';
 import TabTitle from './TabTitle';
 import Space from './Space';
 

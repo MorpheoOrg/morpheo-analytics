@@ -8,7 +8,7 @@ import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';
 import {ChevronLeft} from 'mdi-material-ui';
 
-import actions from '../actions/sideBar';
+import actions from './actions';
 import {menuContent} from './iconDefinition';
 import {getVisible} from '../selector';
 import FlatButton from '../../common/components/FlatButton';

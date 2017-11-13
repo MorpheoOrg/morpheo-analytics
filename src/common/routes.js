@@ -46,9 +46,11 @@ export default connect(mapStateToProps)(({location}) => {
     case 'HOME':
         return (<MainRoute />);
     case 'HELP':
-        return (<div>
-            <h1>help</h1>
-        </div>);
+        return (
+            <div>
+                <h1>help</h1>
+            </div>
+        );
     default:
         return <h1>Not Found</h1>;
     }

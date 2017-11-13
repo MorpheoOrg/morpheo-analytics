@@ -6,6 +6,7 @@ import styled from 'react-emotion';
 import TabNavigation from './TabNavigation';
 import ProblemDetail from '../../../models/problem/components/detail/ProblemDetail';
 
+
 const Container = styled.div`
     flex-grow: 1;
     border-right: 1px solid #ccc!important;

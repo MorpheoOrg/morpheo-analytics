@@ -5,7 +5,7 @@ import {onlyUpdateForKeys} from 'recompose';
 import {bindActionCreators} from 'redux';
 import styled from 'react-emotion';
 
-import actions from '../actions/sideBar';
+import actions from '../SideBar/actions';
 import actionsProblem from '../../models/problem/actions';
 import {menuContent, modalContent} from './iconDefinition';
 import FlatButton from '../../common/components/FlatButton';

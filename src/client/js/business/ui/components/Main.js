@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'react-emotion';
+import {onlyUpdateForKeys} from 'recompose';
 
-import ActivityBar from './ActivityBar';
-import SideBar from './SideBar';
-import Editor from './Editor/index';
+import ActivityBar from '../ActivityBar';
+import SideBar from '../SideBar';
+import Editor from '../Editor';
 
 
 const Container = styled.div`
@@ -16,14 +17,13 @@ const Container = styled.div`
     overflow: hidden;
 `;
 
-class Main extends React.Component {
-    render() {
-        return (<Container>
-            <ActivityBar />
-            <SideBar />
-            <Editor />
-        </Container>);
-    }
-}
+const Main = () => (
+    <Container>
+        <ActivityBar />
+        <SideBar />
+        <Editor />
+    </Container>
+);
 
-export default Main;
+
+export default onlyUpdateForKeys([])(Main);

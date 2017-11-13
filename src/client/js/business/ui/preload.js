@@ -5,15 +5,15 @@ import Main from './components/Main';
 
 
 export modelsSaga from '../models/sagas';
-export settingsReducer from './reducers/index';
+export settingsReducer from './reducers';
 export modelsReducer from '../models/reducer';
 
 
 // Configure hot module replacement for the reducer
 if (process.env.NODE_ENV !== 'production') {
     if (module.hot) {
-        module.hot.accept('./reducers/index', () => {
-            const settingsReducer = require('./reducers/index').default;
+        module.hot.accept('./reducers', () => {
+            const settingsReducer = require('./reducers').default;
             replaceReducer('settings', settingsReducer);
         });
 
