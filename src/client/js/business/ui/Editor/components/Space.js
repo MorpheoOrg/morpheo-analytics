@@ -19,11 +19,13 @@ class Space extends React.Component {
     onMouseUp = () => this.props.onMouseUp();
 
     render() {
-        return <li className={style}
+        return (
+            <li className={style}
                    onMouseOver={this.onMouseOver}
                    onMouseOut={this.onMouseOut}
                    onMouseUp={this.onMouseUp}
-        />;
+            />
+        );
     }
 }
 

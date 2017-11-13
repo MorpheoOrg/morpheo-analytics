@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {css} from 'react-emotion';
 
-import actionsEditor from '../../../../ui/actions/editor';
+import actionsEditor from '../../../../ui/Editor/actions';
 import Leaderboard from './Leaderboard';
 import Performance from './Performance';
 

@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
 
-import actionsEditor from '../../../../ui/actions/editor';
+import actionsEditor from '../../../../ui/Editor/actions';
 import actionsAlgo from '../../../algo/actions';
 import {getProblemsDictionnary} from '../../selector';
 

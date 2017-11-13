@@ -1,4 +1,5 @@
-import {actionTypes} from '../actions/sideBar';
+import {actionTypes} from './actions';
+
 
 const initialState = {
     selectedIndex: 0,

@@ -5,7 +5,7 @@ import {bindActionCreators} from 'redux';
 import {css} from 'react-emotion';
 import {ChevronRight} from 'mdi-material-ui';
 
-import actionsEditor from '../../../../ui/actions/editor';
+import actionsEditor from '../../../../ui/Editor/actions';
 
 
 class ProblemItem extends React.Component {

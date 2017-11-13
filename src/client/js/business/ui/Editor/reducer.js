@@ -1,5 +1,6 @@
-import {actionsTypes} from '../actions/editor';
+import {actionsTypes} from './actions';
 import uuidv4 from 'uuid/v4';
+
 
 const initialState = {
     panes: [],
