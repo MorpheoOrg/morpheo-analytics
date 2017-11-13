@@ -1,5 +1,3 @@
-/* globals window */
-
 import React from 'react';
 import {PropTypes} from 'prop-types';
 import styled from 'react-emotion';
@@ -10,7 +8,7 @@ import {ChevronLeft} from 'mdi-material-ui';
 
 import actions from './actions';
 import {menuContent} from './iconDefinition';
-import {getVisible} from '../selector';
+import {getVisible} from './selector';
 import FlatButton from '../../common/components/FlatButton';
 import ResizableContainer from '../../common/components/ResizableContainer';
 
@@ -26,6 +24,7 @@ const Header = styled.div`
         font-weight: 400;
     }
 `;
+
 
 const FlexContainer = styled.div`
 display: flex;
@@ -48,10 +47,15 @@ class SideBar extends React.Component {
     };
 
     render() {
-        const {selectedIndex, visible} = this.props;
+        const {
+            resize, selectedIndex, visible, width,
+        } = this.props;
 
         return (visible ?
-            <ResizableContainer>
+            <ResizableContainer
+                with={width}
+                onResize={resize}
+            >
                 <Header>
                     <h2>{menuContent[selectedIndex].name}</h2>
                     <HideButton onClick={this.close} />
@@ -68,7 +72,6 @@ class SideBar extends React.Component {
 SideBar.propTypes = {
     selectedIndex: PropTypes.number.isRequired,
     visible: PropTypes.bool,
-    status: PropTypes.string,
     width: PropTypes.number,
 
     setStatus: PropTypes.func.isRequired,
@@ -82,8 +85,8 @@ SideBar.defaultProps = {
     width: 400,
 };
 
+
 const mapStateToProps = (state, ownProps) => ({
-    ...ownProps,
     selectedIndex: state.settings.sideBar.selectedIndex,
     width: state.settings.sideBar.width,
     status: state.settings.sideBar.status,
@@ -97,5 +100,5 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
-    'selectedIndex', 'visible', 'status'
+    'selectedIndex', 'visible', 'status',
 ])(SideBar));

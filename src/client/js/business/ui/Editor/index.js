@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {onlyUpdateForKeys} from 'recompose';
 import styled from 'react-emotion';
 import uuidv4 from 'uuid/v4';
 
@@ -18,6 +19,7 @@ const Debug = styled.div`
     background-color: rgba(220, 0, 0, 0.4);
 `;
 
+
 const Button = styled.button`
     cursor: pointer;
     margin: 10px;
@@ -27,10 +29,12 @@ const Button = styled.button`
     border-radius: 3px;
 `;
 
+
 const Container = styled.div`
     width: 100%;
     display: flex;
 `;
+
 
 class Editor extends React.Component {
     // store dragged table which is droppable in state
@@ -57,20 +61,15 @@ class Editor extends React.Component {
     // DEBUG
     addGroup = (event) => {
         event.preventDefault();
-        // TODO change with uuid from sideBar
-        const tabId = uuidv4();
         if (this.props.panes.length < 3) {
-            this.props.addGroup({id: tabId, value: 'Tab'});
+            this.props.addGroup({value: 'Tab'});
         }
     };
 
     addTab = (event) => {
         event.preventDefault();
-        // TODO change with uuid from sideBar
-        const tabId = uuidv4();
         this.props.addTab({
             groupId: this.props.panes[0].id,
-            tabId: tabId,
             value: 'Tab'
         });
     };
@@ -88,38 +87,37 @@ class Editor extends React.Component {
     render() {
         const {panes} = this.props;
         console.log(panes);
-        return (<Container>
-            {/* <Debug>
-                <Button onClick={this.addGroup}>add Group</Button>
-                <Button onClick={this.addTab}>add Tab to First Group</Button>
-                <Button onClick={this.moveTab}>move Tab 0 from group 0 to group 1 at index 0</Button>
-            </Debug> */}
-            {panes.map(({key, id, tabs, selectedTab}) => (
-                <Pane
-                    key={key}
-                    id={id}
-                    tabs={tabs}
-                    selectedTab={selectedTab}
-                    draggedTab={this.state.draggedTab}
-                    droppedTab={this.state.droppedTab}
-                    onTabDragStart={this.handleTabDragStart}
-                    onTabDragEnd={this.handleTabDragEnd}
-                />
-            ))}
-        </Container>);
+        return (
+            <Container>
+                {/* <Debug>
+                    <Button onClick={this.addGroup}>add Group</Button>
+                    <Button onClick={this.addTab}>add Tab to First Group</Button>
+                    <Button onClick={this.moveTab}>move Tab 0 from group 0 to group 1 at index 0</Button>
+                </Debug> */}
+                {panes.map(({key, id, tabs, selectedTab}) => (
+                    <Pane
+                        key={key}
+                        id={id}
+                        tabs={tabs}
+                        selectedTab={selectedTab}
+                        draggedTab={this.state.draggedTab}
+                        droppedTab={this.state.droppedTab}
+                        onTabDragStart={this.handleTabDragStart}
+                        onTabDragEnd={this.handleTabDragEnd}
+                    />
+                ))}
+            </Container>
+        );
     }
 }
 
 Editor.propTypes = {
-    panes: PropTypes.arrayOf(
-        PropTypes.shape({
-            tabs: PropTypes.arrayOf(
-                PropTypes.shape({
-                    value: PropTypes.string,
-                }),
-            ),
-            selected: PropTypes.string,
-        })).isRequired,
+    panes: PropTypes.arrayOf(PropTypes.shape({
+        tabs: PropTypes.arrayOf(PropTypes.shape({
+            value: PropTypes.string,
+        })),
+        selected: PropTypes.string,
+    })).isRequired,
 
     addGroup: PropTypes.func.isRequired,
     addTab: PropTypes.func.isRequired,
@@ -127,14 +125,22 @@ Editor.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    ...ownProps,
     panes: getPanes(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    addGroup: actions.addGroup,
-    addTab: actions.addTab,
+    addGroup: ({value}) => actions.addGroup({
+        id: uuidv4(),
+        value,
+    }),
+    addTab: ({groupId, value}) => actions.addTab({
+        tabId: uuidv4(),
+        groupId,
+        value,
+    }),
     moveTab: actions.moveTab,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Editor);
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
+    'panes',
+])(Editor));
