@@ -124,8 +124,6 @@ Editor.propTypes = {
     moveTab: PropTypes.func.isRequired,
 };
 
-console.log(actions.addTab());
-
 const mapStateToProps = (state, ownProps) => ({
     panes: getPanes(state),
 });
