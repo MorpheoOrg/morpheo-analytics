@@ -9,7 +9,7 @@ import actions from '../SideBar/actions';
 import actionsProblem from '../../models/problem/actions';
 import {menuContent, modalContent} from './iconDefinition';
 import FlatButton from '../../common/components/FlatButton';
-import ActivityBar1 from '../../common/components/ActivityBar';
+import ComponentBar from '../../common/components/ComponentBar';
 
 
 const MenuButton = styled(FlatButton)`
@@ -20,10 +20,11 @@ const MenuButton = styled(FlatButton)`
 
 
 class ActivityBar extends React.Component {
-    toggleSideBarElement = index => (event) => {
-        // TODO MOVE TO ANOTHER PLACE
+    componentWillMount() {
         this.props.loadProblemList();
+    }
 
+    toggleSideBarElement = index => (event) => {
         const {selectedIndex, setIndex, setStatus} = this.props;
 
         if (selectedIndex === index) {
@@ -34,58 +35,59 @@ class ActivityBar extends React.Component {
             setStatus('opened');
         }
     };
+
     openModalElement = index => (event) => {
         // Add function to open element
-        console.log(index);
+        console.log(`Open Modal element for tab ${index}.`);
     };
 
+    renderTopChildren = () => menuContent.map(({icon, name}, index) => (
+        <MenuButton
+            key={name}
+            active={this.props.selectedIndex === index}
+            icon={icon}
+            onClick={this.toggleSideBarElement(index)}
+            disabled={index > 0}
+        >
+            {icon}
+        </MenuButton>
+    ));
+
+    renderBottomChildren = () => modalContent.map(({icon, name}, index) => (
+        <MenuButton
+            key={name}
+            icon={icon}
+            onClick={this.openModalElement}
+            disabled
+        >
+            {icon}
+        </MenuButton>
+    ));
+
     render() {
-        const {selectedIndex} = this.props;
         return (
-            <ActivityBar1
-                topChildren={menuContent.map(({icon, name}, index) => (
-                    <MenuButton
-                        key={name}
-                        active={selectedIndex === index}
-                        icon={icon}
-                        onClick={this.toggleSideBarElement(index)}
-                        disabled={index > 0}
-                    >
-                        {icon}
-                    </MenuButton>
-                ))}
-
-                bottomChildren={modalContent.map(({icon, name}, index) => (
-                    <MenuButton
-                        key={name}
-                        icon={icon}
-                        onClick={this.openModalElement}
-                        disabled
-                    >
-                        {icon}
-                    </MenuButton>
-                ))}
-            />);
-
+            <ComponentBar
+                topChildren={this.renderTopChildren()}
+                bottomChildren={this.renderBottomChildren()}
+            />
+        );
     }
 }
 
 
 ActivityBar.propTypes = {
+    selectedIndex: PropTypes.number.isRequired,
+
     loadProblemList: PropTypes.func.isRequired,
     setIndex: PropTypes.func.isRequired,
     setStatus: PropTypes.func.isRequired,
-
-    selectedIndex: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired,
-    duration: PropTypes.number.isRequired,
 };
+
 
 const mapStateToProps = ({settings}) => ({
     selectedIndex: settings.sideBar.selectedIndex,
-    status: settings.sideBar.status,
-    duration: settings.sideBar.duration,
 });
+
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     loadProblemList: actionsProblem.list.request,
@@ -93,6 +95,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     setStatus: actions.setStatus,
 }, dispatch);
 
+
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
-    'selectedIndex', 'status',
+    'selectedIndex',
 ])(ActivityBar));
