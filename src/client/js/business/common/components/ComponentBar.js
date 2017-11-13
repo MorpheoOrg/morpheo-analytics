@@ -11,7 +11,7 @@ const ComponentGroup = styled.div`
     grid-area: ${({gridArea}) => ({gridArea})};
 
     display: flex;
-    flex-direction: column;// ({gridArea}) => ({ gridArea });
+    flex-direction: column;
 `;
 
 ComponentGroup.propTypes = {
@@ -19,7 +19,7 @@ ComponentGroup.propTypes = {
 };
 
 
-class ActivityBar extends React.Component {
+class ComponentBar extends React.Component {
     style = css`
         height: 100%;
         background-color: #d2d2d6;
@@ -55,13 +55,13 @@ class ActivityBar extends React.Component {
     }
 }
 
-ActivityBar.propTypes = {
+ComponentBar.propTypes = {
     topChildren: PropTypes.arrayOf(PropTypes.any),
     middleChildren: PropTypes.arrayOf(PropTypes.any),
     bottomChildren: PropTypes.arrayOf(PropTypes.any),
 };
 
-ActivityBar.defaultProps = {
+ComponentBar.defaultProps = {
     topChildren: [],
     middleChildren: [],
     bottomChildren: [],
@@ -76,5 +76,5 @@ const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
-    'topChildren', 'middleChildren', 'bottomChildren'
-])(ActivityBar));
+    'topChildren', 'middleChildren', 'bottomChildren',
+])(ComponentBar));
