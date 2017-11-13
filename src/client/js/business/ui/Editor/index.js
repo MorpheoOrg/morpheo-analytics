@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, {checkPropTypes} from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';
@@ -80,7 +80,7 @@ class Editor extends React.Component {
             fromGroupId: this.props.panes[0].id,
             fromTabId: this.props.panes[0].tabs[0].id,
             toGroupId: this.props.panes[1].id,
-            toTabId: this.props.panes[1].tabs[0].id
+            toTabId: this.props.panes[1].tabs[0].id,
         });
     };
 
@@ -123,6 +123,8 @@ Editor.propTypes = {
     addTab: PropTypes.func.isRequired,
     moveTab: PropTypes.func.isRequired,
 };
+
+console.log(actions.addTab());
 
 const mapStateToProps = (state, ownProps) => ({
     panes: getPanes(state),
