@@ -1,6 +1,26 @@
 import uuidv4 from 'uuid/v4';
 import {actionsTypes} from './actions';
 
+import reducer from './reducer/index';
+
+
+const initState = {
+    panes: [],
+    tabs: {},
+    activePaneOrder: ['toto'],
+};
+
+console.log('YEAP', reducer(initState, {
+    type: actionsTypes.addGroup,
+    payload: {
+        contentId: 'cId',
+        tabId: 'tId',
+        contentType: 'type',
+        paneId: 'gId',
+        title: 'test Title',
+    }
+}));
+
 
 const initialState = {
     panes: [],
