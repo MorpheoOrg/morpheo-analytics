@@ -57,7 +57,9 @@ export default merge.smart(baseConfig, {
                     babelrc: false,
                     cacheDirectory: true,
                     plugins: [
-                        'universal-import',
+                        ['universal-import', {
+                            'disableWarnings': true,
+                        }],
                         'emotion',
                         'transform-runtime',
                         'lodash',

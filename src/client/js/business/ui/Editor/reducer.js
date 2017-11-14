@@ -1,5 +1,5 @@
-import {actionsTypes} from './actions';
 import uuidv4 from 'uuid/v4';
+import {actionsTypes} from './actions';
 
 
 const initialState = {
@@ -7,6 +7,7 @@ const initialState = {
     tabs: [],
     activePane: undefined,
 };
+
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
