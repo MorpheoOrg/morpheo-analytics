@@ -78,7 +78,9 @@ export default env => [
                 // ignore babelrc
                 babelrc: false,
                 plugins: [
-                    'universal-import',
+                    ['universal-import', {
+                        disableWarnings: true,
+                    }],
                     'transform-runtime',
                     'emotion',
                     'lodash',

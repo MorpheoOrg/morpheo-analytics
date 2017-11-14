@@ -4,12 +4,14 @@ import {hydrate, render} from 'react-dom';
 import FastClick from 'fastclick';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {hydrate as emotionHydrate} from 'emotion';
+import {Provider} from 'react-redux';
 
 import ReactHotLoader from './ReactHotLoader';
 import Root from './app/Root';
 import history from './app/history';
 import configureStore from '../../common/configureStore';
 import '../css/index.scss';
+import DevTools from '../../common/DevTools';
 
 
 /** ******************
@@ -27,6 +29,7 @@ FastClick.attach(document.body);
 injectTapEventPlugin();
 
 const root = document.getElementById('root');
+const devTools = document.getElementById('devTools');
 
 const renderApp = (RootElement) => {
     const app = (
@@ -41,8 +44,14 @@ const renderApp = (RootElement) => {
 };
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
-    module.hot.accept('./app/Root/index', () => {
-        const app = require('./app/Root/index').default;
+    // load devTools
+    render(
+        <Provider store={store}>
+            <DevTools />
+        </Provider>, devTools);
+
+    module.hot.accept('./app/Root', () => {
+        const app = require('./app/Root').default;
         renderApp(app);
     });
 }
