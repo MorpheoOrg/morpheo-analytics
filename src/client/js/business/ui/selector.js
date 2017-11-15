@@ -12,9 +12,9 @@ export const getVisible = createDeepEqualSelector(
 
 export const getPanes = createDeepEqualSelector(
     [panes, tabs],
-    (panes, tabs) => panes.map(({id, tabs: paneTabs, selected}) => ({
-        key: id,
-        id,
+    (panes, tabs) => panes.map(({paneId, tabs: paneTabs, selected}) => ({
+        key: paneId,
+        id: paneId,
         tabs: paneTabs.map(tabId => ({
             ...tabs[tabId],
             key: tabId,

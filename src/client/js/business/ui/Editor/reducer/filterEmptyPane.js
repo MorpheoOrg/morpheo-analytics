@@ -9,7 +9,9 @@ const initialState = {
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
-    case actionsTypes.closeTab: {
+    case actionsTypes.tab.move:
+    case actionsTypes.tab.moveIntoNewPane:
+    case actionsTypes.tab.remove: {
         const {activePaneOrder, panes, tabs} = state;
         const emptyPaneId = state.panes
             .filter(({tabs}) => tabs.length === 0)
