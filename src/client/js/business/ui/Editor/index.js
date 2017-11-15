@@ -1,13 +1,12 @@
 import React from 'react';
-import PropTypes, {checkPropTypes} from 'prop-types';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';
 import styled from 'react-emotion';
-import uuidv4 from 'uuid/v4';
 
 import {getPanes} from '../selector';
-import actions from './actions';
+// import actions from './actions';
 import Pane from './components/Pane';
 
 
@@ -59,30 +58,30 @@ class Editor extends React.Component {
 
 
     // DEBUG
-    addGroup = (event) => {
-        event.preventDefault();
-        if (this.props.panes.length < 3) {
-            this.props.addGroup({value: 'Tab'});
-        }
-    };
+    // addGroup = (event) => {
+    //     event.preventDefault();
+    //     if (this.props.panes.length < 3) {
+    //         this.props.addGroup({value: 'Tab'});
+    //     }
+    // };
 
-    addTab = (event) => {
-        event.preventDefault();
-        this.props.addTab({
-            groupId: this.props.panes[0].id,
-            value: 'Tab'
-        });
-    };
+    // addTab = (event) => {
+    //     event.preventDefault();
+    //     this.props.addTab({
+    //         groupId: this.props.panes[0].id,
+    //         value: 'Tab'
+    //     });
+    // };
 
-    moveTab = (event) => {
-        event.preventDefault();
-        this.props.moveTab({
-            fromGroupId: this.props.panes[0].id,
-            fromTabId: this.props.panes[0].tabs[0].id,
-            toGroupId: this.props.panes[1].id,
-            toTabId: this.props.panes[1].tabs[0].id,
-        });
-    };
+    // moveTab = (event) => {
+    //     event.preventDefault();
+    //     this.props.moveTab({
+    //         fromGroupId: this.props.panes[0].id,
+    //         fromTabId: this.props.panes[0].tabs[0].id,
+    //         toGroupId: this.props.panes[1].id,
+    //         toTabId: this.props.panes[1].tabs[0].id,
+    //     });
+    // };
 
     render() {
         const {panes} = this.props;
@@ -119,9 +118,9 @@ Editor.propTypes = {
         selected: PropTypes.string,
     })).isRequired,
 
-    addGroup: PropTypes.func.isRequired,
-    addTab: PropTypes.func.isRequired,
-    moveTab: PropTypes.func.isRequired,
+    // addGroup: PropTypes.func.isRequired,
+    // addTab: PropTypes.func.isRequired,
+    // moveTab: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -129,16 +128,15 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    addGroup: ({value}) => actions.addGroup({
-        id: uuidv4(),
-        value,
-    }),
-    addTab: ({groupId, value}) => actions.addTab({
-        tabId: uuidv4(),
-        groupId,
-        value,
-    }),
-    moveTab: actions.moveTab,
+    // addGroup: ({value}) => actions.tab.add({
+    //     value,
+    // }),
+    // addTab: ({groupId, value}) => actions.tab.add({
+    //     tabId: uuidv4(),
+    //     groupId,
+    //     value,
+    // }),
+    // moveTab: actions.tab.move,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([

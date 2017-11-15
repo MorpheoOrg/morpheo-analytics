@@ -5,8 +5,7 @@ const initialState = {};
 
 export default (state = initialState, {type, payload}) => {
     switch (type) {
-    case actionsTypes.addGroup:
-    case actionsTypes.addTab: {
+    case actionsTypes.tab.add: {
         const {
             tabId, contentId, contentType, title,
         } = payload;
@@ -20,7 +19,7 @@ export default (state = initialState, {type, payload}) => {
         };
     }
 
-    case actionsTypes.closeTab: {
+    case actionsTypes.tab.remove: {
         const {tabId} = payload;
         return Object.keys(state)
             .filter(id => id !== tabId)
@@ -28,6 +27,17 @@ export default (state = initialState, {type, payload}) => {
                 ...tabs,
                 [id]: state[id],
             }), {});
+    }
+
+    case actionsTypes.tab.updateContent: {
+        const {tabId, ...content} = payload;
+        return {
+            ...state,
+            [tabId]: {
+                ...state[tabId],
+                ...content,
+            },
+        };
     }
 
     default:

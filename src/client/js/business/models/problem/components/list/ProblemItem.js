@@ -36,23 +36,25 @@ class ProblemItem extends React.Component {
 
         const {uuid, name} = this.props;
 
-        this.props.addGroup({
-            groupId: 0,
-            id: uuid,
-            value: name,
+        this.props.openTab({
+            contentId: uuid,
+            contentType: 'problem',
+            title: name,
         });
     }
 
     render() {
-        return (<dl
-            css={this.style}
-            onClick={this.handleClick}
-        >
-            <dt>{this.props.name}</dt>
-            {this.props.description ?
-                <dd>{this.props.description}</dd> : null}
-            <ChevronRight />
-        </dl>);
+        return (
+            <dl
+                css={this.style}
+                onClick={this.handleClick}
+            >
+                <dt>{this.props.name}</dt>
+                {this.props.description ?
+                    <dd>{this.props.description}</dd> : null}
+                <ChevronRight />
+            </dl>
+        );
     }
 }
 
@@ -61,14 +63,14 @@ ProblemItem.propTypes = {
     name: PropTypes.string.isRequired,
     uuid: PropTypes.string.isRequired,
 
-    addGroup: PropTypes.func,
+    openTab: PropTypes.func,
 };
 
 const noop = () => {};
 
 ProblemItem.defaultProps = {
     description: '',
-    addGroup: noop,
+    openTab: noop,
 };
 
 const mapStateToProps = (state, ownProps) => ({
@@ -76,7 +78,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-    addGroup: actionsEditor.addGroup,
+    openTab: actionsEditor.tab.add,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProblemItem);

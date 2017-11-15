@@ -77,19 +77,19 @@ class TabNavigation extends React.Component {
         return 0;
     };
 
-    handleMouseDown = id => {
+    handleMouseDown = (id) => {
         if (this.props.selected !== id) {
             this.props.selectTab({
-                selected: id,
-                id: this.props.id,
+                tabId: id,
+                paneId: this.props.id,
             });
         }
     };
 
-    handleTabClose = id => {
+    handleTabClose = (id) => {
         this.props.closeTab({
             tabId: id,
-            groupId: this.props.id,
+            paneId: this.props.id,
         });
     };
 
@@ -103,10 +103,8 @@ class TabNavigation extends React.Component {
                     this.setState({overredTab: id});
                 }
             }
-            else {
-                if (this.state.overredTab !== null) {
-                    this.setState({overredTab: null});
-                }
+            else if (this.state.overredTab !== null) {
+                this.setState({overredTab: null});
             }
         }
     };
@@ -119,7 +117,7 @@ class TabNavigation extends React.Component {
         }
     };
 
-    handleTabDrop = toTabId => {
+    handleTabDrop = (toTabId) => {
         const {id, moveTab, draggedTab} = this.props;
 
         // render
@@ -129,44 +127,46 @@ class TabNavigation extends React.Component {
         // only trigger moveTab if toTabId is different
         if (draggedTab && draggedTab.id !== toTabId) {
             moveTab({
-                fromGroupId: draggedTab.groupId,
-                fromTabId: draggedTab.id,
-                toGroupId: id,
-                toTabId: toTabId,
+                paneIdFrom: draggedTab.groupId,
+                tabId: draggedTab.id,
+                paneIdTo: id,
+                tabIndex: toTabId,
             });
         }
     };
 
     render() {
         const {tabs, draggedTab} = this.props;
-        return (<Container>
-            <Ul>
-                {tabs.map(({key, id, title, selected}, index) => (
-                    <TabTitle
-                        key={key}
-                        id={id}
-                        title={title}
-                        selected={selected}
-                        translation={this.getTranslation(id)}
+        return (
+            <Container>
+                <Ul>
+                    {tabs.map(({key, id, title, selected}, index) => (
+                        <TabTitle
+                            key={key}
+                            id={id}
+                            title={title}
+                            selected={selected}
+                            translation={this.getTranslation(id)}
 
-                        onClose={this.handleTabClose}
-                        onDragStart={this.handleTabDragStart}
-                        onDragOver={this.handleTabDragOver}
-                        onDragOut={this.handleTabDragOut}
-                        onDragEnd={this.handleTabDragEnd}
-                        onDrop={this.handleTabDrop}
-                        onMouseDown={this.handleMouseDown}
+                            onClose={this.handleTabClose}
+                            onDragStart={this.handleTabDragStart}
+                            onDragOver={this.handleTabDragOver}
+                            onDragOut={this.handleTabDragOut}
+                            onDragEnd={this.handleTabDragEnd}
+                            onDrop={this.handleTabDrop}
+                            onMouseDown={this.handleMouseDown}
 
-                        draggedTab={draggedTab}
+                            draggedTab={draggedTab}
+                        />
+                    ))}
+                    <Space
+                        onMouseOver={this.handleTabDragOver}
+                        onMouseOut={this.handleTabDragOut}
+                        onMouseUp={this.handleTabDrop}
                     />
-                ))}
-                <Space
-                    onMouseOver={this.handleTabDragOver}
-                    onMouseOut={this.handleTabDragOut}
-                    onMouseUp={this.handleTabDrop}
-                />
-            </Ul>
-        </Container>);
+                </Ul>
+            </Container>
+        );
     }
 }
 
@@ -197,9 +197,11 @@ TabNavigation.defaultProps = {
 const mapStateToProps = (state, ownProps) => ({...ownProps});
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-    closeTab: actions.closeTab,
-    selectTab: actions.selectTab,
-    moveTab: actions.moveTab,
+    closeTab: actions.tab.remove,
+    selectTab: actions.tab.setActive,
+    moveTab: actions.tab.move,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys(['draggedTab', 'tabs', 'selected'])(TabNavigation));
+export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
+    'draggedTab', 'tabs', 'selected'
+])(TabNavigation));

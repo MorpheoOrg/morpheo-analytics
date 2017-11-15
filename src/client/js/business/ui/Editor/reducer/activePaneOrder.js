@@ -3,18 +3,12 @@ import {actionsTypes} from '../actions';
 
 const initialState = [];
 
-export default (state = initialState, {type, payload}, isPaneEmpty = false) => {
+export default (state = initialState, {type, payload}) => {
     switch (type) {
-    case actionsTypes.addGroup: {
-        const {paneId} = payload;
-        return [
-            paneId,
-            ...state,
-        ];
-    }
-
-    case actionsTypes.addTab:
-    case actionsTypes.selectTab: {
+    case actionsTypes.tab.add:
+    case actionsTypes.tab.setActive:
+    case actionsTypes.tab.moveIntoNewPane:
+    case actionsTypes.tab.remove: {
         const {paneId} = payload;
         return [
             paneId,
@@ -22,11 +16,11 @@ export default (state = initialState, {type, payload}, isPaneEmpty = false) => {
         ];
     }
 
-    case actionsTypes.closeTab: {
-        const {paneId} = payload;
-        return isPaneEmpty ? state.filter(id => id !== paneId) : [
-            paneId,
-            ...state.filter(id => id !== paneId),
+    case actionsTypes.tab.move: {
+        const {paneIdTo} = payload;
+        return [
+            paneIdTo,
+            ...state.filter(id => id !== paneIdTo),
         ];
     }
 
