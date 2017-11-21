@@ -14,15 +14,13 @@ export const actionsTypes = {
         setActive: 'EDITOR::TAB::SET_ACTIVE',
         move: 'EDITOR::TAB::MOVE',
         moveIntoNewPane: 'EDITOR::TAB::MOVE_INTO_NEW_PANE',
+        dragStart: 'EDITOR::TAB::DRAG_START',
+        dragOver: 'EDITOR::TAB::DRAG_OVER',
+        dragOut: 'EDITOR::TAB::DRAG_OUT',
+        dragEnd: 'EDITOR::TAB::DRAG_END',
+        // TODO
         updateContent: 'EDITOR::TAB::UPDATE_CONTENT',
     },
-    // addGroup: 'EDITOR::ADD_GROUP',
-    // addTab: 'EDITOR::ADD_TAB',
-    // selectTab: 'EDITOR::SELECT_TAB',
-    // closeTab: 'EDITOR::CLOSE_TAB',
-    // moveTab: 'EDITOR::MOVE_TAB',
-    // moveIntoNewPane: 'EDITOR::MOVE_INTO_NEW_PANE',
-    // updateTabContent: 'EDITOR::UPDATE_TAB_CONTENT',
 };
 
 
@@ -97,10 +95,10 @@ export default {
         moveIntoNewPane: createActionWithCheck(
             actionsTypes.tab.moveIntoNewPane,
             {
-                paneId: PropTypes.string.isRequired,
+                paneIdFrom: PropTypes.string.isRequired,
                 tabId: PropTypes.string.isRequired,
                 paneIndex: PropTypes.number,
-                paneIdFrom: PropTypes.string.isRequired,
+                paneId: PropTypes.string.isRequired,
             },
             props => ({...props, paneId: uuidv4()}),
         ),
@@ -115,46 +113,21 @@ export default {
          *       Id of the tab.
          * @param {string} payload.paneIdTo -
          *       Id of the pane where the tab is moved.
-         * @param {number} payload.paneIndex -
-         *       Position of paneIdTo where the tab is moved.
+         * @param {number} [payload.paneIndex] -
+         *       Position of paneIdTo where the tab is moved. If not specified,
+         *       the tab will be add to the end.
          */
         move: createActionWithCheck(actionsTypes.tab.move, {
             paneIdFrom: PropTypes.string.isRequired,
             tabId: PropTypes.string.isRequired,
             paneIdTo: PropTypes.string.isRequired,
-            tabIndex: PropTypes.number.isRequired,
+            tabIndex: PropTypes.number,
         }),
+        dragStart: createActionWithCheck(actionsTypes.tab.dragStart),
+        dragOver: createActionWithCheck(actionsTypes.tab.dragOver),
+        dragOut: createActionWithCheck(actionsTypes.tab.dragOut),
+        dragEnd: createActionWithCheck(actionsTypes.tab.dragEnd),
+        // TODO
         updateTabContent: createActionWithCheck(actionsTypes.tab.updateContent),
     },
-    // addGroup: createActionWithCheck(actionsTypes.addGroup, {
-    //     contentId: PropTypes.string.isRequired,
-    //     contentType: PropTypes.string,
-    //     title: PropTypes.string.isRequired,
-    //     paneId: PropTypes.string,
-    //     tabId: PropTypes.string,
-    //     paneIndex: PropTypes.number,
-    // }, props => ({...props, groupId: uuidv4(), tabId: uuidv4()})),
-
-    // addTab: createActionWithCheck(actionsTypes.addTab, {
-    //     contentId: PropTypes.string.isRequired,
-    //     contentType: PropTypes.string,
-    //     title: PropTypes.string.isRequired,
-    //     paneId: PropTypes.string.isRequired,
-    //     tabId: PropTypes.string.isRequired,
-    //     tabIndex: PropTypes.number,
-    // }, props => ({...props, tabId: uuidv4()})),
-    // selectTab: createActionWithCheck(actionsTypes.selectTab, {
-    //     paneId: PropTypes.string.isRequired,
-    //     tabId: PropTypes.string.isRequired,
-    // }),
-    // closeTab: createActionWithCheck(actionsTypes.closeTab, {
-    //     paneId: PropTypes.string.isRequired,
-    //     tabId: PropTypes.string.isRequired,
-    // }),
-    // moveTab: createActionWithCheck(actionsTypes.moveTab, {
-    //     paneId: PropTypes.string.isRequired,
-    //     tabId: PropTypes.string.isRequired,
-    // }),
-    // // Add other moveTab: internal, external or to a new pane
-    // updateTabContent: createActionWithCheck(actionsTypes.updateTabContent),
 };

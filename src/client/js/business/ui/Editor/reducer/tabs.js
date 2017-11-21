@@ -34,8 +34,9 @@ export default (state = initialState, {type, payload}) => {
         return {
             ...state,
             [tabId]: {
-                ...state[tabId],
+                // It's not possible to remove contentId, contentType, title
                 ...content,
+                ...state[tabId],
             },
         };
     }

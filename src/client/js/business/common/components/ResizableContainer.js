@@ -21,24 +21,25 @@ class ResizableContainer extends React.Component {
         width: Math.max(this.props.width, this.props.minWidth),
     };
 
-    onMouseDown = (event) => {
+    handleMouseDown = (event) => {
         event.preventDefault();
 
         // Todo correct the problem with the mouse under min size => space with dragger
         this.clientX = event.clientX;
-        window.addEventListener('mousemove', this.onMouseMove);
-        window.addEventListener('mouseup', this.onMouseUp);
+        window.addEventListener('mousemove', this.handleMouseMove);
+        window.addEventListener('mouseup', this.handleMouseUp);
     };
 
-    onMouseMove = throttle((event) => {
+    // throttle the move event to limit rendering
+    handleMouseMove = throttle((event) => {
         event.preventDefault();
         this.updateWidth(event);
     }, 30);
 
-    onMouseUp = (event) => {
+    handleMouseUp = (event) => {
         event.preventDefault();
-        window.removeEventListener('mousemove', this.onMouseMove);
-        window.removeEventListener('mouseup', this.onMouseUp);
+        window.removeEventListener('mousemove', this.handleMouseMove);
+        window.removeEventListener('mouseup', this.handleMouseUp);
 
         // We call resize only on MouseUp for the fluidity of the UI
         const width = this.updateWidth(event);
@@ -80,7 +81,7 @@ class ResizableContainer extends React.Component {
                 <Container>
                     {children}
                 </Container>
-                <Dragger onMouseDown={this.onMouseDown} />
+                <Dragger onMouseDown={this.handleMouseDown} />
             </div>
         );
     }
