@@ -27,10 +27,10 @@ const Header = styled.div`
 
 
 const FlexContainer = styled.div`
-display: flex;
-position: relative;
-justify-content: space-between;
-align-items: center;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 

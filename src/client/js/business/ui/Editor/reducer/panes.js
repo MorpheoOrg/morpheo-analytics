@@ -1,5 +1,18 @@
 import {actionsTypes} from '../actions';
 
+/**
+ * The complete Triforce, or one or more components of the Triforce.
+ * @global
+ * @typedef {Object} PaneState -
+ *     Pane state.
+ * @property {string} paneID -
+ *     Pane Identifier.
+ * @property {Array<string>} activeTabOrder -
+ *     Order of the last tab activated.
+ * @property {Array<sting>} tabs -
+ *     List of the tabs indentifiers contained in the pane. The order is the
+ *     displayed order.
+ */
 
 // Define basic pane operation
 const pane = {

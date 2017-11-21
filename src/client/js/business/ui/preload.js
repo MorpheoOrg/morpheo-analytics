@@ -4,9 +4,9 @@ import {replaceReducer} from 'redux-reducers-injector';
 import Main from './components/Main';
 
 
-export modelsSaga from '../models/sagas';
-export settingsReducer from './reducers';
-export modelsReducer from '../models/reducer';
+export {default as modelsSaga} from '../models/sagas';
+export {default as settingsReducer} from './reducers';
+export {default as modelsReducer} from '../models/reducer';
 
 
 // Configure hot module replacement for the reducer

@@ -9,6 +9,7 @@ describe('editor.reducer', () => {
     // Define a previous complex state used by tests
     const complexState = {
         activePaneOrder: ['p0', 'p1'],
+        dragInfos: {active: true},
         panes: [
             {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
             {
@@ -30,8 +31,9 @@ describe('editor.reducer', () => {
     // Tests without actions
     it('should return initial state for empty state without actions', () => {
         expect(reducer(undefined, {})).to.deep.equal({
-            panes: [],
             activePaneOrder: [],
+            dragInfos: {active: false},
+            panes: [],
             tabs: {},
         });
     });
@@ -51,6 +53,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, addTabAction)).to.deep.equal({
             activePaneOrder: ['p2', 'p0', 'p1'],
+            dragInfos: {active: true},
             panes: [
                 {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
                 {
@@ -85,6 +88,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, addTabAction)).to.deep.equal({
             activePaneOrder: ['p0', 'p1'],
+            dragInfos: {active: true},
             panes: [
                 {paneId: 'p0', activeTabOrder: ['t5', 't0'], tabs: ['t0', 't5']},
                 {
@@ -119,6 +123,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, addTabAction)).to.deep.equal({
             activePaneOrder: ['p1', 'p0'],
+            dragInfos: {active: true},
             panes: [
                 {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
                 {
@@ -150,6 +155,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, selectTabAction)).to.deep.equal({
             activePaneOrder: ['p1', 'p0'],
+            dragInfos: {active: true},
             panes: [
                 {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
                 {
@@ -180,6 +186,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, closeTabAction)).to.deep.equal({
             activePaneOrder: ['p1', 'p0'],
+            dragInfos: {active: true},
             panes: [
                 {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
                 {
@@ -208,6 +215,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, closeTabAction)).to.deep.equal({
             activePaneOrder: ['p1'],
+            dragInfos: {active: true},
             panes: [
                 {
                     paneId: 'p1',
@@ -237,6 +245,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, moveTabIntoNewPaneAction)).to.deep.equal({
             activePaneOrder: ['p2', 'p1'],
+            dragInfos: {active: true},
             panes: [
                 {
                     paneId: 'p1',
@@ -257,7 +266,6 @@ describe('editor.reducer', () => {
 
 
     it('should move an existing tab to a new pane at a given position', () => {
-        it('hello', () => true);
         const moveTabIntoNewPaneAction = {
             type: actionsTypes.tab.moveIntoNewPane,
             payload: {
@@ -269,6 +277,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, moveTabIntoNewPaneAction)).to.deep.equal({
             activePaneOrder: ['p2', 'p0', 'p1'],
+            dragInfos: {active: true},
             panes: [
                 {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
                 {paneId: 'p2', activeTabOrder: ['t3'], tabs: ['t3']},
@@ -291,7 +300,6 @@ describe('editor.reducer', () => {
 
     // Test for move into a new pane action
     it('should change the position of a tab', () => {
-        it('hello', () => true);
         const moveTabAction = {
             type: actionsTypes.tab.move,
             payload: {
@@ -303,6 +311,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, moveTabAction)).to.deep.equal({
             activePaneOrder: ['p1', 'p0'],
+            dragInfos: {active: true},
             panes: [
                 {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
                 {
@@ -323,7 +332,6 @@ describe('editor.reducer', () => {
 
 
     it('should change move a tab from a pane to another', () => {
-        it('hello', () => true);
         const moveTabAction = {
             type: actionsTypes.tab.move,
             payload: {
@@ -335,6 +343,7 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, moveTabAction)).to.deep.equal({
             activePaneOrder: ['p0', 'p1'],
+            dragInfos: {active: true},
             panes: [
                 {
                     paneId: 'p0',
@@ -359,7 +368,6 @@ describe('editor.reducer', () => {
 
 
     it('should move a tab from a pane to another + delete empty pane', () => {
-        it('hello', () => true);
         const moveTabAction = {
             type: actionsTypes.tab.move,
             payload: {
@@ -371,11 +379,218 @@ describe('editor.reducer', () => {
         };
         expect(reducer(complexState, moveTabAction)).to.deep.equal({
             activePaneOrder: ['p1'],
+            dragInfos: {active: true},
             panes: [
                 {
                     paneId: 'p1',
                     activeTabOrder: ['t0', 't1', 't3', 't2', 't4'],
                     tabs: ['t1', 't2', 't0', 't3', 't4'],
+                },
+            ],
+            tabs: {
+                t0: {contentId: 'c0', contentType: 'type0', title: 'title0'},
+                t1: {contentId: 'c1', contentType: 'type1', title: 'title1'},
+                t2: {contentId: 'c2', contentType: 'type2', title: 'title2'},
+                t3: {contentId: 'c3', contentType: 'type3', title: 'title3'},
+                t4: {contentId: 'c4', contentType: 'type4', title: 'title4'},
+            },
+        });
+    });
+
+    // Test for drag a tab
+    it('should add the drag start information', () => {
+        it('hello', () => true);
+        const dragStartTabAction = {
+            type: actionsTypes.tab.dragStart,
+            payload: {
+                paneId: 'p0',
+                tabId: 't0',
+                width: '128',
+            },
+        };
+        expect(reducer(complexState, dragStartTabAction)).to.deep.equal({
+            activePaneOrder: ['p0', 'p1'],
+            dragInfos: {
+                active: true,
+                data: {
+                    start: {
+                        paneId: 'p0',
+                        tabId: 't0',
+                        width: '128',
+                    },
+                },
+            },
+            panes: [
+                {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
+                {
+                    paneId: 'p1',
+                    activeTabOrder: ['t1', 't3', 't2', 't4'],
+                    tabs: ['t1', 't2', 't3', 't4'],
+                },
+            ],
+            tabs: {
+                t0: {contentId: 'c0', contentType: 'type0', title: 'title0'},
+                t1: {contentId: 'c1', contentType: 'type1', title: 'title1'},
+                t2: {contentId: 'c2', contentType: 'type2', title: 'title2'},
+                t3: {contentId: 'c3', contentType: 'type3', title: 'title3'},
+                t4: {contentId: 'c4', contentType: 'type4', title: 'title4'},
+            },
+        });
+    });
+
+
+    it('should add the drag over information', () => {
+        it('hello', () => true);
+        const stateWithDragInfo = {
+            activePaneOrder: ['p0', 'p1'],
+            dragInfos: {
+                active: true,
+                data: {
+                    start: {info: 42},
+                },
+            },
+            panes: [
+                {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
+                {
+                    paneId: 'p1',
+                    activeTabOrder: ['t1', 't3', 't2', 't4'],
+                    tabs: ['t1', 't2', 't3', 't4'],
+                },
+            ],
+            tabs: {
+                t0: {contentId: 'c0', contentType: 'type0', title: 'title0'},
+                t1: {contentId: 'c1', contentType: 'type1', title: 'title1'},
+                t2: {contentId: 'c2', contentType: 'type2', title: 'title2'},
+                t3: {contentId: 'c3', contentType: 'type3', title: 'title3'},
+                t4: {contentId: 'c4', contentType: 'type4', title: 'title4'},
+            },
+        };
+        const dragOverTabAction = {
+            type: actionsTypes.tab.dragOver,
+            payload: {selected: 38},
+        };
+        expect(reducer(stateWithDragInfo, dragOverTabAction)).to.deep.equal({
+            activePaneOrder: ['p0', 'p1'],
+            dragInfos: {
+                active: true,
+                data: {
+                    start: {info: 42},
+                    over: {selected: 38},
+                },
+            },
+            panes: [
+                {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
+                {
+                    paneId: 'p1',
+                    activeTabOrder: ['t1', 't3', 't2', 't4'],
+                    tabs: ['t1', 't2', 't3', 't4'],
+                },
+            ],
+            tabs: {
+                t0: {contentId: 'c0', contentType: 'type0', title: 'title0'},
+                t1: {contentId: 'c1', contentType: 'type1', title: 'title1'},
+                t2: {contentId: 'c2', contentType: 'type2', title: 'title2'},
+                t3: {contentId: 'c3', contentType: 'type3', title: 'title3'},
+                t4: {contentId: 'c4', contentType: 'type4', title: 'title4'},
+            },
+        });
+    });
+
+
+    it('should remove the drag over information when call dragOut', () => {
+        it('hello', () => true);
+        const stateWithDragInfo = {
+            activePaneOrder: ['p0', 'p1'],
+            dragInfos: {
+                active: true,
+                data: {
+                    start: {info: 42},
+                    over: {selected: 38},
+                },
+            },
+            panes: [
+                {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
+                {
+                    paneId: 'p1',
+                    activeTabOrder: ['t1', 't3', 't2', 't4'],
+                    tabs: ['t1', 't2', 't3', 't4'],
+                },
+            ],
+            tabs: {
+                t0: {contentId: 'c0', contentType: 'type0', title: 'title0'},
+                t1: {contentId: 'c1', contentType: 'type1', title: 'title1'},
+                t2: {contentId: 'c2', contentType: 'type2', title: 'title2'},
+                t3: {contentId: 'c3', contentType: 'type3', title: 'title3'},
+                t4: {contentId: 'c4', contentType: 'type4', title: 'title4'},
+            },
+        };
+        const dragOutTabAction = {
+            type: actionsTypes.tab.dragOut,
+        };
+        expect(reducer(stateWithDragInfo, dragOutTabAction)).to.deep.equal({
+            activePaneOrder: ['p0', 'p1'],
+            dragInfos: {
+                active: true,
+                data: {
+                    start: {info: 42},
+                },
+            },
+            panes: [
+                {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
+                {
+                    paneId: 'p1',
+                    activeTabOrder: ['t1', 't3', 't2', 't4'],
+                    tabs: ['t1', 't2', 't3', 't4'],
+                },
+            ],
+            tabs: {
+                t0: {contentId: 'c0', contentType: 'type0', title: 'title0'},
+                t1: {contentId: 'c1', contentType: 'type1', title: 'title1'},
+                t2: {contentId: 'c2', contentType: 'type2', title: 'title2'},
+                t3: {contentId: 'c3', contentType: 'type3', title: 'title3'},
+                t4: {contentId: 'c4', contentType: 'type4', title: 'title4'},
+            },
+        });
+    });
+
+    it('should clean the drag information', () => {
+        it('hello', () => true);
+        const stateWithDragInfo = {
+            activePaneOrder: ['p0', 'p1'],
+            dragInfos: {
+                active: true,
+                data: {
+                    start: {info: 42},
+                },
+            },
+            panes: [
+                {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
+                {
+                    paneId: 'p1',
+                    activeTabOrder: ['t1', 't3', 't2', 't4'],
+                    tabs: ['t1', 't2', 't3', 't4'],
+                },
+            ],
+            tabs: {
+                t0: {contentId: 'c0', contentType: 'type0', title: 'title0'},
+                t1: {contentId: 'c1', contentType: 'type1', title: 'title1'},
+                t2: {contentId: 'c2', contentType: 'type2', title: 'title2'},
+                t3: {contentId: 'c3', contentType: 'type3', title: 'title3'},
+                t4: {contentId: 'c4', contentType: 'type4', title: 'title4'},
+            },
+        };
+        const dragEndTabAction = {
+            type: actionsTypes.tab.dragEnd,
+        };
+        expect(reducer(stateWithDragInfo, dragEndTabAction)).to.deep.equal({
+            activePaneOrder: ['p0', 'p1'],
+            dragInfos: {active: false},
+            panes: [
+                {paneId: 'p0', activeTabOrder: ['t0'], tabs: ['t0']},
+                {
+                    paneId: 'p1',
+                    activeTabOrder: ['t1', 't3', 't2', 't4'],
+                    tabs: ['t1', 't2', 't3', 't4'],
                 },
             ],
             tabs: {

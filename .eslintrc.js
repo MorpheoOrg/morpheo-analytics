@@ -28,6 +28,14 @@ module.exports = {
         "jsx-a11y/label-has-for": [0],
         "jsx-a11y/href-no-hash": "off",
         "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
+        "function-paren-newline": ["error", "consistent"],
+        "comma-dangle": ["error", {
+            "arrays": "only-multiline",
+            "objects": "only-multiline",
+            "imports": "only-multiline",
+            "exports": "only-multiline",
+            "functions": "ignore"
+        }],
 
         // helper for fixing common lint errors
         "func-names": [2],
@@ -49,6 +57,7 @@ module.exports = {
 
         // babel
         "object-curly-spacing": [0],
+        "object-curly-newline": [0],
         "babel/object-curly-spacing": [2, 'never'],
     },
     "plugins": [
