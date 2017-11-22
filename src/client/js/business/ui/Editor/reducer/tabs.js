@@ -15,6 +15,7 @@ export default (state = initialState, {type, payload}) => {
                 contentId,
                 contentType,
                 title,
+                props: {},
             },
         };
     }
@@ -29,14 +30,17 @@ export default (state = initialState, {type, payload}) => {
             }), {});
     }
 
-    case actionsTypes.tab.updateContent: {
-        const {tabId, ...content} = payload;
+    case actionsTypes.tab.updateProps: {
+        const {tabId, props} = payload;
         return {
             ...state,
             [tabId]: {
                 // It's not possible to remove contentId, contentType, title
-                ...content,
                 ...state[tabId],
+                props: {
+                    ...state[tabId].props,
+                    ...props,
+                }
             },
         };
     }

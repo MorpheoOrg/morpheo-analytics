@@ -1,7 +1,7 @@
 import {reloadSaga} from 'redux-sagas-injector';
 import {replaceReducer} from 'redux-reducers-injector';
 
-import Main from './components/Main';
+import Main from './Main';
 
 
 export {default as modelsSaga} from '../models/sagas';

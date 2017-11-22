@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import styled from 'react-emotion';
 
 import {
-    dragActive, getPaneIdList, getPaneIndex,
+    dragActive, getPanesLength, getPaneIndex,
     getMoveIntoNewPaneData, getMoveData, getOverredPanel
 } from '../selector';
 import actions from '../actions';
@@ -23,6 +23,8 @@ const Container = styled.div`
     height: 100%;
     width: 100%;
 `;
+
+const Wrapper = ({children}) => children;
 
 
 /**
@@ -157,11 +159,11 @@ class DropArea extends React.Component {
     }
 
     render() {
-        const {length} = this.props;
+        const {allowDrop, length} = this.props;
         const {overredPanel} = this.state;
 
-        return length < 3 ? (
-            <Container>
+        return allowDrop && (length < 3 ? (
+            <Wrapper>
                 {overredPanel === 'left' && (
                     <HoverArea left="0" width="200px" />
                 )}
@@ -192,9 +194,9 @@ class DropArea extends React.Component {
                     onMouseOut={this.handleDragOut}
                     onMouseUp={this.handleDropIntoNewPane}
                 />
-            </Container>
+            </Wrapper>
         ) : (
-            <Container>
+            <Wrapper>
                 {overredPanel === 'central' && (
                     <HoverArea left="0" width="100%" />
                 )}
@@ -205,8 +207,8 @@ class DropArea extends React.Component {
                     onMouseOut={this.handleDragOut}
                     onMouseUp={this.handleDrop}
                 />
-            </Container>
-        );
+            </Wrapper>
+        ));
     }
 }
 
@@ -226,7 +228,7 @@ DropArea.propTypes = {
 
 const mapStateToProps = (state, {paneId}) => ({
     allowDrop: dragActive(state),
-    length: getPaneIdList(state).length,
+    length: getPanesLength(state),
     overredPanel: getOverredPanel(state),
     _moveData: getMoveData(state),
     _moveIntoNewPaneData: getMoveIntoNewPaneData(state),

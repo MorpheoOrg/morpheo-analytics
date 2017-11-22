@@ -13,54 +13,15 @@ const Container = styled.div`
     display: flex;
 `;
 
-
-// class Editor extends React.Component {
-//     // store dragged table which is droppable in state
-//     // state = {
-//     //     draggedTab: null,
-//     // };
-
-//     // handleTabDragStart = (draggedTab) => {
-//     //     // Activate the droppable mode
-//     //     this.setState({draggedTab});
-//     // };
-
-//     // handleTabDragEnd = () => {
-//     //     // Deactivate the droppable mode
-//     //     this.setState({draggedTab: null});
-//     // };
-
-//     // // Next functions are provided just for test the component
-//     // removeEditor = key => (event) => {
-//     //     event.preventDefault();
-//     // };
-
-//     render() {
-//         const {paneIdList} = this.props;
-//         console.log(paneIdList);
-//         return (
-//             <Container>
-//                 {paneIdList.map(paneId => (
-//                     <li
-//                         key={paneId}
-//                         paneId={paneId}
-//                     >
-//                         {paneId}
-//                     </li>
-//                 ))}
-//             </Container>
-//         );
-//     }
-// }
-
-const Editor = ({paneIdList}) => {
-    console.log('Render pane');
+const Editor = ({paneIdList, renderers}) => {
+    console.log('Render editor');
     return (
         <Container>
             {paneIdList.map(paneId => (
                 <Pane
                     key={paneId}
                     paneId={paneId}
+                    renderers={renderers}
                 />
             ))}
         </Container>
@@ -69,6 +30,10 @@ const Editor = ({paneIdList}) => {
 
 Editor.propTypes = {
     paneIdList: PropTypes.arrayOf(PropTypes.string).isRequired,
+    // renderers: PropTypes.shape({
+    //     Content: PropTypes.func.isRequired,
+    //     Title: PropTypes.func.isRequired,
+    // }).isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({
