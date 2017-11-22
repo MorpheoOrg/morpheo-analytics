@@ -21,11 +21,9 @@ const Container = styled.div`
 `;
 
 const renderers = {
-    content: {
-        problem: ProblemDetail,
-    },
-    title: {
-        problem: ProblemTabTitle,
+    problem: {
+        content: ProblemDetail,
+        title: ProblemTabTitle,
     },
 };
 
