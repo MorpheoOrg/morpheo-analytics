@@ -30,10 +30,10 @@ const Editor = ({paneIdList, renderers}) => {
 
 Editor.propTypes = {
     paneIdList: PropTypes.arrayOf(PropTypes.string).isRequired,
-    // renderers: PropTypes.shape({
-    //     Content: PropTypes.func.isRequired,
-    //     Title: PropTypes.func.isRequired,
-    // }).isRequired,
+    renderers: PropTypes.objectOf(PropTypes.shape({
+        content: PropTypes.func.isRequired,
+        title: PropTypes.func.isRequired,
+    })).isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => ({

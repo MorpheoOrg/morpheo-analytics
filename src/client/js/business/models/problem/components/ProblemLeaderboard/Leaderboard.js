@@ -70,31 +70,41 @@ class Leaderboard extends React.Component {
         // TODO add is loading
         const {data, algorithmId} = this.props;
 
-        return (<table
-            css={this.style}
-        >
-            <LeaderboardHeader>
-                <LeaderboardRow>
-                    <LeaderboardHeaderCell><Trophy /></LeaderboardHeaderCell>
-                    <LeaderboardHeaderCell><CloudUpload /></LeaderboardHeaderCell>
-                    <LeaderboardHeaderCell><ChartLine /></LeaderboardHeaderCell>
-                </LeaderboardRow>
-            </LeaderboardHeader>
-
-            <LeaderboardBody>
-                {data.map(({name, uuid, bestPerf}, index) => (
-                    <LeaderboardRow
-                        key={uuid}
-                        onClick={this.handleLeaderboardRowClick(uuid)}
-                        selected={(algorithmId || data[0].uuid) === uuid}
-                    >
-                        <LeaderboardCell>{index + 1}</LeaderboardCell>
-                        <LeaderboardCell>{name}</LeaderboardCell>
-                        <LeaderboardCell>{(bestPerf * 100).toFixed(2)}</LeaderboardCell>
+        return (
+            <table
+                css={this.style}
+            >
+                <LeaderboardHeader>
+                    <LeaderboardRow>
+                        <LeaderboardHeaderCell>
+                            <Trophy />
+                        </LeaderboardHeaderCell>
+                        <LeaderboardHeaderCell>
+                            <CloudUpload />
+                        </LeaderboardHeaderCell>
+                        <LeaderboardHeaderCell>
+                            <ChartLine />
+                        </LeaderboardHeaderCell>
                     </LeaderboardRow>
-                ))}
-            </LeaderboardBody>
-        </table>);
+                </LeaderboardHeader>
+
+                <LeaderboardBody>
+                    {data.map(({name, uuid, bestPerf}, index) => (
+                        <LeaderboardRow
+                            key={uuid}
+                            onClick={this.handleLeaderboardRowClick(uuid)}
+                            selected={(algorithmId || data[0].uuid) === uuid}
+                        >
+                            <LeaderboardCell>{index + 1}</LeaderboardCell>
+                            <LeaderboardCell>{name}</LeaderboardCell>
+                            <LeaderboardCell>
+                                {(bestPerf * 100).toFixed(2)}
+                            </LeaderboardCell>
+                        </LeaderboardRow>
+                    ))}
+                </LeaderboardBody>
+            </table>
+        );
     }
 }
 

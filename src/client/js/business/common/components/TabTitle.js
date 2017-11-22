@@ -6,21 +6,28 @@ import {onlyUpdateForKeys} from 'recompose';
  * Display an element depending on the type `contentType` to display.
  */
 const TabTitle = ({renderers, contentType, title, props}) => {
-    const {[contentType]: Content} = renderers;
+    const {title: Title} = renderers[contentType];
     return (
-        <Content {...props}>
+        <Title {...props}>
             {title}
-        </Content>
+        </Title>
     );
 };
 
 TabTitle.propTypes = {
-    /** Title to render. */
-    title: PropTypes.string.isRequired,
     /** Content type. */
     contentType: PropTypes.string.isRequired,
     /** Dictionnary associating a content type to a React component. */
-    renderers: PropTypes.objectOf(PropTypes.func).isRequired,
+    props: PropTypes.shape({}).isRequired,
+    /** Function to let the content save their state. */
+    renderers: PropTypes.objectOf(PropTypes.shape({
+        content: PropTypes.func.isRequired,
+        title: PropTypes.func.isRequired,
+    })).isRequired,
+    /** Title to render. */
+    title: PropTypes.string.isRequired,
 };
 
-export default onlyUpdateForKeys([])(TabTitle);
+export default onlyUpdateForKeys([
+    'contentId', 'contentType', 'title',
+])(TabTitle);

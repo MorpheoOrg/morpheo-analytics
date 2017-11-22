@@ -130,7 +130,7 @@ class Pane extends React.Component {
                             {/** Render the title by using the renderer
                                  corresponding to the `contentType`. */}
                             <TabTitle
-                                renderers={renderers.title}
+                                renderers={renderers}
                                 contentType={contentType}
                                 title={title}
                                 {...tabProps}
@@ -155,7 +155,7 @@ class Pane extends React.Component {
         return (
             <ContentContainer>
                 <TabContent
-                    renderers={renderers.content}
+                    renderers={renderers}
                     contentId={contentId}
                     contentType={contentType}
                     updateProps={updateProps}

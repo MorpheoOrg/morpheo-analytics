@@ -9,7 +9,7 @@ import {onlyUpdateForKeys} from 'recompose';
 const TabContentRenderer = (
     {contentType, contentId, props, renderers, updateProps}
 ) => {
-    const {[contentType]: Content} = renderers;
+    const {content: Content} = renderers[contentType];
     return <Content id={contentId} updateProps={updateProps} {...props} />;
 };
 
@@ -19,7 +19,10 @@ TabContentRenderer.propTypes = {
     /** Content type. */
     contentType: PropTypes.string.isRequired,
     /** Dictionnary associating a content type to a React component. */
-    renderers: PropTypes.objectOf(PropTypes.func).isRequired,
+    renderers: PropTypes.objectOf(PropTypes.shape({
+        content: PropTypes.func.isRequired,
+        title: PropTypes.func.isRequired,
+    })).isRequired,
     /** Props associated to the tab. */
     props: PropTypes.shape({}).isRequired,
     /** Function to let the content save their state. */
