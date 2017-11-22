@@ -8,9 +8,11 @@ import {connect} from 'react-redux';
 import styled from 'react-emotion';
 
 import actions from '../actions';
-import {dragActive, getMoveData, getPane} from '../selector';
-import TabTitle from '../../../common/components/TabHeader';
 import DropArea from './DropArea';
+import TabContent from '../../../common/components/TabContent';
+import TabHeader from '../../../common/components/TabHeader';
+import TabTitle from '../../../common/components/TabTitle';
+import {dragActive, getMoveData, getPane} from '../selector';
 
 
 /**
@@ -20,10 +22,12 @@ const MainContainer = styled.div`
     flex-grow: 1;
     border-right: 1px solid #ccc!important;
     position: relative;
+
+    display: flex;
+    flex-direction: column
 `;
 
 const TabNav = styled.nav`
-    flex-grow: 1;
     width: 100%;
 `;
 
@@ -37,25 +41,34 @@ const TabUl = styled.ul`
 
 const TabHiddenArea = styled.li`
     width: 100%;
-    background-color: rgba(255, 0, 0, 0.2);
     border: 0px solid yellow';
 `;
 
 const ContentContainer = styled.div`
+    flex-grow: 1;
     position: relative;
-    height: 100%;
-    width: 100%;
 `;
 
 class Pane extends React.Component {
+    handleClose = (tabId, tabIndex) => (event) => {
+        event.preventDefault();
+        this.props.close({
+            tabId,
+        });
+    }
+
     handleDragStart = (tabId, tabIndex) => (event) => {
         event.preventDefault();
-        console.log('hello');
         // We set some information about the tab we drag
         this.props.dragStart({
             tabIndex,
             tabId,
             width: event.currentTarget.offsetWidth,
+        });
+        // We also do an over because event is throw only when mouse move
+        this.props.dragOver({
+            tabIndex,
+            tabId,
         });
     }
 
@@ -92,18 +105,20 @@ class Pane extends React.Component {
      * @return {ReactElement}
      */
     renderTabNavigation = () => {
-        const {allowDrop, tabs, dragEnd} = this.props;
+        const {allowDrop, dragEnd, tabs, renderers} = this.props;
         return (
             <TabNav>
                 <TabUl>
-                    {/* Render each tabTitle */}
+                    {/* Render each tab title */}
                     {tabs.map((
-                        {active, tabId, title, xTranslation}, tabIndex
+                        {active, tabId, xTranslation,
+                            contentType, title, ...tabProps}, tabIndex
                     ) => (
-                        <TabTitle
+                        <TabHeader
                             key={tabId}
                             tabId={tabId}
                             active={active}
+                            onClose={this.handleClose(tabId, tabIndex)}
                             onDragStart={this.handleDragStart(tabId, tabIndex)}
                             onDragOver={this.handleDragOver(tabId, tabIndex)}
                             onDragOut={this.handleDragOut(tabId, tabIndex)}
@@ -112,8 +127,15 @@ class Pane extends React.Component {
                             allowDrop={allowDrop}
                             xTranslation={xTranslation}
                         >
-                            {allowDrop ? 'Y' : 'N'} {tabId} {title}
-                        </TabTitle>
+                            {/** Render the title by using the renderer
+                                 corresponding to the `contentType`. */}
+                            <TabTitle
+                                renderers={renderers.title}
+                                contentType={contentType}
+                                title={title}
+                                {...tabProps}
+                            />
+                        </TabHeader>
                     ))}
 
                     {/* Render an empty zone to drop element to the end */}
@@ -127,31 +149,56 @@ class Pane extends React.Component {
         );
     }
 
+    renderTabContent = () => {
+        const {paneId, renderers, activeTab, updateProps} = this.props;
+        const {contentId, contentType, ...contentProps} = activeTab;
+        return (
+            <ContentContainer>
+                <TabContent
+                    renderers={renderers.content}
+                    contentId={contentId}
+                    contentType={contentType}
+                    updateProps={updateProps}
+                    {...contentProps}
+                />
+                <DropArea
+                    paneId={paneId}
+                />
+            </ContentContainer>
+        );
+    }
+
     render() {
         console.log('Render Pane');
         return (
             <MainContainer>
                 {this.renderTabNavigation()}
-                <ContentContainer>
-                    <DropArea paneId={this.props.paneId} lenght={1} />
-                    Hello
-                </ContentContainer>
+                {this.renderTabContent()}
             </MainContainer>
         );
     }
 }
 
 Pane.propTypes = {
-    allowDrop: PropTypes.bool,
+    activeTab: PropTypes.shape({
+        contentType: PropTypes.string.isRequired,
+        contentId: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+    }).isRequired,
+    allowDrop: PropTypes.bool.isRequired,
+    paneId: PropTypes.string.isRequired,
+
     tabs: PropTypes.arrayOf(PropTypes.shape({
         active: PropTypes.bool.isRequired,
         contentType: PropTypes.string.isRequired,
         contentId: PropTypes.string.isRequired,
         tabId: PropTypes.string.isRequired,
+        xTranslation: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
     })).isRequired,
-    activeTabId: PropTypes.string.isRequired,
 
+    updateProps: PropTypes.func.isRequired,
+    close: PropTypes.func.isRequired,
     dragStart: PropTypes.func.isRequired,
     dragOut: PropTypes.func.isRequired,
     dragOver: PropTypes.func.isRequired,
@@ -159,9 +206,6 @@ Pane.propTypes = {
     drop: PropTypes.func.isRequired,
 };
 
-Pane.defaultProps = {
-    allowDrop: false,
-};
 
 const mapStateToProps = (state, {paneId, children}) => ({
     ...getPane(state, {paneId}),
@@ -171,6 +215,10 @@ const mapStateToProps = (state, {paneId, children}) => ({
 });
 
 const mapDispatchToProps = (dispatch, {paneId}) => bindActionCreators({
+    close: ({tabId}) => actions.tab.remove({
+        paneId,
+        tabId,
+    }),
     dragStart: ({tabId, tabIndex, width}) => actions.tab.dragStart({
         paneId,
         tabId,
@@ -185,20 +233,29 @@ const mapDispatchToProps = (dispatch, {paneId}) => bindActionCreators({
     dragOut: () => actions.tab.dragOut(),
     dragEnd: () => actions.tab.dragEnd(),
     _move: actions.tab.move,
+    _updateTabProps: actions.tab.updateProps,
 }, dispatch);
 
 
 const mergeProps = (
-    {_moveData, ...stateProps}, {_move, ...dispatchProps}, ownProps,
+    {_moveData, activeTab, ...stateProps},
+    {_move, _updateTabProps, ...dispatchProps},
+    ownProps,
 ) => ({
+    activeTab,
     ...ownProps,
     ...stateProps,
     ...dispatchProps,
+
+    updateProps: data => _updateTabProps({
+        tabId: activeTab.tabId,
+        props: data
+    }),
     drop: () => _move(_moveData),
 });
 
 export default connect(
     mapStateToProps, mapDispatchToProps, mergeProps
 )(onlyUpdateForKeys([
-    'activeTabId', 'tabs', 'allowDrop',
+    'activeTab', 'tabs', 'allowDrop',
 ])(Pane));

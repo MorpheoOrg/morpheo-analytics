@@ -18,8 +18,7 @@ export const actionsTypes = {
         dragOver: 'EDITOR::TAB::DRAG_OVER',
         dragOut: 'EDITOR::TAB::DRAG_OUT',
         dragEnd: 'EDITOR::TAB::DRAG_END',
-        // TODO
-        updateContent: 'EDITOR::TAB::UPDATE_CONTENT',
+        updateProps: 'EDITOR::TAB::UPDATE_CONTEXT_DATA',
     },
 };
 
@@ -123,11 +122,20 @@ export default {
             paneIdTo: PropTypes.string.isRequired,
             tabIndex: PropTypes.number,
         }),
+        // TODO
         dragStart: createActionWithCheck(actionsTypes.tab.dragStart),
         dragOver: createActionWithCheck(actionsTypes.tab.dragOver),
         dragOut: createActionWithCheck(actionsTypes.tab.dragOut),
         dragEnd: createActionWithCheck(actionsTypes.tab.dragEnd),
-        // TODO
-        updateTabContent: createActionWithCheck(actionsTypes.tab.updateContent),
+        /**
+         * Update the props of a tab. You can use it to add a different context
+         * for each tab.
+         */
+        updateProps: createActionWithCheck(
+            actionsTypes.tab.updateProps, {
+                tabId: PropTypes.string.isRequired,
+                props: PropTypes.shape({}),
+            }
+        ),
     },
 };

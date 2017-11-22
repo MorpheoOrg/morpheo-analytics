@@ -6,6 +6,9 @@ import ActivityBar from '../ActivityBar';
 import SideBar from '../SideBar';
 import Editor from '../Editor';
 
+import ProblemDetail from '../../models/problem/components/detail/ProblemDetail';
+import ProblemTabTitle from '../../models/problem/components/ProblemTabTitle';
+
 
 const Container = styled.div`
     margin: 0 0 0 0;
@@ -17,11 +20,20 @@ const Container = styled.div`
     overflow: hidden;
 `;
 
+const renderers = {
+    content: {
+        problem: ProblemDetail,
+    },
+    title: {
+        problem: ProblemTabTitle,
+    },
+};
+
 const Main = () => (
     <Container>
         <ActivityBar />
         <SideBar />
-        <Editor />
+        <Editor renderers={renderers} />
     </Container>
 );
 

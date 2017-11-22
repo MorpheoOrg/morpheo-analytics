@@ -79,7 +79,6 @@ const HiddenDropable = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 255, 0, 0.2);
 
     &:hover {
         background-color: blue;
@@ -159,7 +158,6 @@ class TabTitle extends React.Component {
     // Todo reprendre avec css grid
     render() {
         const {dragged} = this.state;
-        if (!dragged) console.log('rendu', this.props.tabId);
         const {
             active, allowDrop, children,
             onClose, onDragOut, onDragOver, onDrop,

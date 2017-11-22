@@ -2,39 +2,43 @@ import createDeepEqualSelector from '../../../utils/selector';
 
 /**
  * Get the pane array from the redux state.
- *
- * @param {ReduxState} state -
- *     Redux state.
- * @return {Array<PaneState>} -
- *     Array of panes states.
+ * @param {ReduxState} state - Redux state..
+ * @return {Array<PaneState>} - Array of panes states.
  */
 export const getPanes = state => state.settings.editor.panes;
 
+/**
+ * Get the panes length.
+ * @param {ReduxState} state - Redux state.
+ * @return {number} - Panes length
+ */
+export const getPanesLength = state => state.settings.editor.panes.length;
 
 /**
  * Get the tab dictionnary from the redux state.
- *
- * @param {ReduxState} state -
- *     Redux state.
- * @return {<string {array<TabState>}} -
- *     Dictionnary of tabs.
+ * @param {ReduxState} state - Redux state.
+ * @return {<string {array<TabState>}} - Dictionnary of tabs.
  */
 export const getTabs = state => state.settings.editor.tabs;
 
-
 /**
- *
- * @param {ReduxState} state -
- *     Redux state.
+ * Get the drag informations during drag'n drop.
+ * @param {ReduxState} state - Redux state.
  */
 export const getDragInfos = state => state.settings.editor.dragInfos;
 
+// TODO: cleant the following functions
+export const dragActive = state => getDragInfos(state).active;
+export const getDragData = state => getDragInfos(state).data;
+export const getDragStartData = state => getDragData(state) ?
+    getDragData(state).start : undefined;
+export const getDragOverData = state => getDragData(state) ?
+    getDragData(state).over : undefined;
 
 export const getPaneIdList = createDeepEqualSelector(
     [getPanes],
     panes => panes.map(({paneId}) => paneId),
 );
-
 
 /**
  * Compute the x-translation of a tab during a drag phase.
@@ -78,21 +82,14 @@ const getXTranslation = (start, over, paneId, tabIndex) => {
     // tabIndex < start.tabIndex < over.tabIndex : 0
     // start.tabIndex < tabIndex < over.tabIndex : -width
     // start.tabIndex < over.tabIndex < tabIndex : 0
+    // special case: over.tabIndex === undefined <=> over.tabIndex = infinity
     return over.tabIndex < start.tabIndex ?
         ((over.tabIndex <= tabIndex &&
           tabIndex < start.tabIndex) ? start.width : 0) :
         ((start.tabIndex < tabIndex &&
-          tabIndex <= over.tabIndex) ? -start.width : 0);
+          (tabIndex <= over.tabIndex ||
+           over.tabIndex === undefined)) ? -start.width : 0);
 };
-
-
-export const dragActive = state => getDragInfos(state).active;
-export const getDragData = state => getDragInfos(state).data;
-export const getDragStartData = state => getDragData(state) ?
-    getDragData(state).start : undefined;
-export const getDragOverData = state => getDragData(state) ?
-    getDragData(state).over : undefined;
-
 
 const getPanesDict = createDeepEqualSelector(
     [getPanes, getTabs, getDragStartData, getDragOverData],
@@ -108,7 +105,10 @@ const getPanesDict = createDeepEqualSelector(
                     active: tabId === activeTabOrder[0],
                     xTranslation: getXTranslation(start, over, paneId, tabIndex),
                 })),
-                activeTabId: activeTabOrder[0],
+                activeTab: {
+                    ...tabsDict[activeTabOrder[0]],
+                    tabId: activeTabOrder[0],
+                },
             },
         }), {}),
 );

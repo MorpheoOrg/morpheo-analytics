@@ -91,35 +91,33 @@ class ProblemDetail extends React.Component {
 
     sections = ['Description', 'Leaderboard', 'Participate'];
     render() {
-        console.log(this.props);
-        const {description, problemId, tabId, name, section} = this.props;
+        const {description, problemId, name, section} = this.props;
         console.log(problemId);
-        return (<div
-            css={this.style}
-        >
-            <ProblemHeader
-                name={name}
-                description={description}
-            />
-            <ProblemSection>
-                {this.sections.map((title, index) => (
-                    <ProblemSectionItem
-                        key={`${tabId}-${title}`}
-                        onClick={this.onSectionClick(index)}
-                        selected={section === index}
-                    >
-                        {title}
-                    </ProblemSectionItem>
-                ))}
-            </ProblemSection>
-            {section === 0 && <ProblemContent problemId={problemId} />}
-            {section === 1 && <ProblemLeaderboard
-                problemId={problemId}
-                tabId={tabId}
-            />}
-            {section === 2 && <ProblemParticipate problemId={problemId} />}
-
-        </div>);
+        return (
+            <div
+                css={this.style}
+            >
+                <ProblemHeader
+                    name={name}
+                    description={description}
+                />
+                <ProblemSection>
+                    {this.sections.map((title, index) => (
+                        <ProblemSectionItem
+                            key={title}
+                            onClick={this.onSectionClick(index)}
+                            selected={section === index}
+                        >
+                            {title}
+                        </ProblemSectionItem>
+                    ))}
+                </ProblemSection>
+                {section === 0 && <ProblemContent problemId={problemId} />}
+                {/*section === 1 && <ProblemLeaderboard
+                    problemId={problemId}
+                />*/}
+                {/*section === 2 && <ProblemParticipate problemId={problemId} />*/}
+            </div>);
     }
 }
 
@@ -128,7 +126,7 @@ ProblemDetail.propTypes = {
     name: PropTypes.string.isRequired,
     problemId: PropTypes.string.isRequired,
     section: PropTypes.number,
-    tabId: PropTypes.string.isRequired,
+    // tabId: PropTypes.string.isRequired,
 
     loadAlgoList: PropTypes.func.isRequired,
     updateTab: PropTypes.func.isRequired,
@@ -139,15 +137,14 @@ ProblemDetail.defaultProps = {
     section: 0,
 };
 
-const mapStateToProps = (state, {problemId, tabId}) => ({
-    ...getProblemsDictionnary(state)[problemId],
-    problemId,
-    tabId,
+const mapStateToProps = (state, {id}) => ({
+    ...getProblemsDictionnary(state)[id],
+    problemId: id,
 });
 
-const mapDispatchToProps = (dispatch, {problemId, tabId}) => bindActionCreators({
-    loadAlgoList: () => actionsAlgo.list.request(problemId),
-    updateTab: content => actionsEditor.tab.update({tabId, ...content}),
+const mapDispatchToProps = (dispatch, {id, updateProps}) => bindActionCreators({
+    loadAlgoList: () => actionsAlgo.list.request(id),
+    updateTab: updateProps,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProblemDetail);
