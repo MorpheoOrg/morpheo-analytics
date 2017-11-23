@@ -47,7 +47,11 @@ export default {
             paneId: PropTypes.string.isRequired,
             tabId: PropTypes.string.isRequired,
             tabIndex: PropTypes.number,
-        }, props => ({paneId: uuidv4(), ...props, tabId: uuidv4()})),
+        }, props => ({
+            ...props,
+            paneId: props.paneId ? props.paneId : uuidv4(),
+            tabId: uuidv4()})
+        ),
 
         /**
          * Close the corresponding tab. The active tab will be the previous
