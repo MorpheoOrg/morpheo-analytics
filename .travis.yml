@@ -1,26 +1,13 @@
 sudo: false
-
 language: node_js
 node_js:
-  - "node"
-
+- node
 cache:
   directories:
-    - "node_modules"
-
+  - node_modules
 matrix:
   include:
-    - os: osx
-    - os: linux
-
+  - os: osx
+  - os: linux
 dist: trusty
-
 after_success: travis_wait 30 npm run package-linux
-
-# notifications:
-#   webhooks:
-#     urls:
-#       - https://mattermost.morpheo.io/
-#     on_success: always#[always|never|change] # default: always
-#     on_failure: always#[always|never|change] # default: always
-#     on_start: always#[always|never|change] # default: never

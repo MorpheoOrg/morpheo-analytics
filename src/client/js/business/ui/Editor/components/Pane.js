@@ -25,9 +25,6 @@ const MainContainer = styled.div`
 
     display: flex;
     flex-direction: column;
-    /* Height is not used cause of flex but must be set to do height: 100% for
-       child nodes. */
-    height: 0;
 `;
 
 const TabNav = styled.nav`
