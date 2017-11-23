@@ -47,7 +47,7 @@ const Tab = styled.div`
 
     border-radius: 4px 4px 0 0;
     border: 1px solid #ccc;
-    border-width: 0 1px 0 1px;
+    border-width: 0 1px 0 0;
     padding: 6px 30px 6px 10px;
 
     text-align: center;

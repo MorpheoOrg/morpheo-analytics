@@ -22,7 +22,6 @@ class ProblemLeaderboard extends React.Component {
 
     render() {
         const {problemId, selectedAlgorithmId} = this.props;
-        console.log(selectedAlgorithmId);
         return (
             <Container>
                 <Leaderboard

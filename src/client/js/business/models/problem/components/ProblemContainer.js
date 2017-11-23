@@ -5,9 +5,8 @@ import styled, {css} from 'react-emotion';
 
 
 const Container = styled.div`
-    padding: 50px 0 20px 0;
     line-height: 180%;
-    height: 100%;
+
     overflow: hidden;
 
     display: flex;
@@ -19,19 +18,25 @@ const Container = styled.div`
     }
 `;
 
+const commonPadding = css`
+    padding-left: 40px;
+    padding-right: 40px;
+`;
+
 const Header = styled.div`
     flex-shrink: 0;
-    padding-left: 40px;
+    padding-top: 50px;
     padding-bottom: 40px;
+    ${commonPadding}
+`;
 
-    & h1{
-        font-weight: 400;
-        padding-bottom: 20px;
-    }
+const Title = styled.h1`
+    font-weight: 400;
+    padding-bottom: 20px;
+`;
 
-    & h2{
-        font-weight: 400;
-    }
+const SubTitle = styled.h2`
+    font-weight: 400;
 `;
 
 
@@ -45,8 +50,7 @@ const SectionUl = styled.ul`
 
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-left: 40px;
-    padding-right: 0;
+    ${commonPadding}
 
 
     & li{
@@ -98,14 +102,15 @@ class ProblemContainer extends React.Component {
         return (
             <Container>
                 <Header>
-                    <h1>
+                    <Title>
                         {name}
-                    </h1>
-                    <h2>
+                    </Title>
+                    <SubTitle>
                         {description}
-                    </h2>
+                    </SubTitle>
                 </Header>
-                {/* Render the section tab */}
+                {/* Must be render outside the header for avoid influence of
+                    the padding-left on the rendering. */}
                 <SectionUl>
                     {sections.map(
                         ({name}, index) => (

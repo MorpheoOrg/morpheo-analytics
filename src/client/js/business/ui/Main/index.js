@@ -11,7 +11,7 @@ import ProblemTabTitle from '../../models/problem/components/ProblemTabTitle';
 
 
 const Container = styled.div`
-    margin: 0 0 0 0;
+    margin: 0 0 0 1;
     background-color: #fff;
     position: relative;
     overflow: visible;
