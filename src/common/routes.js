@@ -33,15 +33,16 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
+
 import React from 'react';
+import PropTypes from 'prop-types';
+import {onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 
 import MainRoute from '../client/js/business/ui/route';
 
 
-const mapStateToProps = ({location}, ownProps) => ({location, ...ownProps});
-
-export default connect(mapStateToProps)(({location}) => {
+const Routes = ({location}) => {
     switch (location.type) {
     case 'HOME':
         return (<MainRoute />);
@@ -54,4 +55,17 @@ export default connect(mapStateToProps)(({location}) => {
     default:
         return <h1>Not Found</h1>;
     }
-});
+};
+
+Routes.propTypes = {
+    location: PropTypes.shape({
+        type: PropTypes.string.isRequired,
+    }).isRequired,
+};
+
+const mapStateToProps = ({location}) => ({location});
+
+
+export default connect(mapStateToProps)(onlyUpdateForKeys([
+    'location',
+])(Routes));

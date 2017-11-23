@@ -31,6 +31,7 @@ injectTapEventPlugin();
 const root = document.getElementById('root');
 const devTools = document.getElementById('devTools');
 
+
 const renderApp = (RootElement) => {
     const app = (
         <ReactHotLoader warning={false} >

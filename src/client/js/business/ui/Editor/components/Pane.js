@@ -24,7 +24,10 @@ const MainContainer = styled.div`
     position: relative;
 
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    /* Height is not used cause of flex but must be set to do height: 100% for
+       child nodes. */
+    height: 0;
 `;
 
 const TabNav = styled.nav`
@@ -47,6 +50,10 @@ const TabHiddenArea = styled.li`
 const ContentContainer = styled.div`
     flex-grow: 1;
     position: relative;
+
+    /* Need to do that to be sure height is computed correctly. */
+    display: flex;
+    flex-direction: column;
 `;
 
 class Pane extends React.Component {
@@ -173,7 +180,6 @@ class Pane extends React.Component {
     }
 
     render() {
-        console.log('Render Pane');
         return (
             <MainContainer>
                 {this.renderTabNavigation()}
