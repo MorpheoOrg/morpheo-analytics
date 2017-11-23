@@ -12,7 +12,7 @@ import DropArea from './DropArea';
 import TabContent from '../../../common/components/TabContent';
 import TabHeader from '../../../common/components/TabHeader';
 import TabTitle from '../../../common/components/TabTitle';
-import {dragActive, getMoveData, getPane} from '../selector';
+import {dragActive, getMoveData, getPane} from '../selectors';
 
 
 /**
@@ -187,7 +187,10 @@ Pane.propTypes = {
     }).isRequired,
     allowDrop: PropTypes.bool.isRequired,
     paneId: PropTypes.string.isRequired,
-
+    renderers: PropTypes.objectOf(PropTypes.shape({
+        content: PropTypes.func.isRequired,
+        title: PropTypes.func.isRequired,
+    })).isRequired,
     tabs: PropTypes.arrayOf(PropTypes.shape({
         active: PropTypes.bool.isRequired,
         contentType: PropTypes.string.isRequired,

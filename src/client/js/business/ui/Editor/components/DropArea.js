@@ -9,21 +9,13 @@ import styled from 'react-emotion';
 import {
     dragActive, getPanesLength, getPaneIndex,
     getMoveIntoNewPaneData, getMoveData, getOverredPanel
-} from '../selector';
+} from '../selectors';
 import actions from '../actions';
 
 
 /**
- * The container used by DropArea
- *
- * @return {ReactElement}
+ * A Wrapper used to avoid using keys and arrayes or extra div
  */
-const Container = styled.div`
-    position: relative;
-    height: 100%;
-    width: 100%;
-`;
-
 const Wrapper = ({children}) => children;
 
 

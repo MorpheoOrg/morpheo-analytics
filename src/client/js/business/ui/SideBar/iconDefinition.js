@@ -11,7 +11,6 @@ export const menuContent = [
         name: 'Problems',
         icon: <Poll />,
         content: <ProblemList />,
-        // detail: <div>HELLO</div>,
     },
     {
         name: 'Experiments',

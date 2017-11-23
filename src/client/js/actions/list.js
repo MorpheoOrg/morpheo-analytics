@@ -1,6 +1,7 @@
 import {createAction} from 'redux-actions';
 import createRequestActionTypes from './createRequestActionTypes';
 
+
 export const actionTypes = prefix => ({
     ...createRequestActionTypes(
         `${prefix}_LIST`,

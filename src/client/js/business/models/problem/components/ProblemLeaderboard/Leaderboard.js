@@ -68,7 +68,7 @@ class Leaderboard extends React.Component {
 
     render() {
         // TODO add is loading
-        const {data, algorithmId} = this.props;
+        const {leaderboardData, selectedAlgorithmId} = this.props;
 
         return (
             <table
@@ -89,11 +89,13 @@ class Leaderboard extends React.Component {
                 </LeaderboardHeader>
 
                 <LeaderboardBody>
-                    {data.map(({name, uuid, bestPerf}, index) => (
+                    {leaderboardData.map(({name, uuid, bestPerf}, index) => (
                         <LeaderboardRow
                             key={uuid}
                             onClick={this.handleLeaderboardRowClick(uuid)}
-                            selected={(algorithmId || data[0].uuid) === uuid}
+                            selected={
+                                (selectedAlgorithmId || leaderboardData[0].uuid) === uuid
+                            }
                         >
                             <LeaderboardCell>{index + 1}</LeaderboardCell>
                             <LeaderboardCell>{name}</LeaderboardCell>
@@ -109,7 +111,7 @@ class Leaderboard extends React.Component {
 }
 
 Leaderboard.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
+    leaderboardData: PropTypes.arrayOf(PropTypes.shape({
         bestPerf: PropTypes.number,
         name: PropTypes.string,
         problem: PropTypes.string,
@@ -117,7 +119,7 @@ Leaderboard.propTypes = {
         uuid: PropTypes.string,
     })),
     isLoading: PropTypes.bool,
-    algorithmId: PropTypes.string,
+    selectedAlgorithmId: PropTypes.string,
 
     onSelectAlgorithm: PropTypes.func,
 };
@@ -125,15 +127,15 @@ Leaderboard.propTypes = {
 const noop = () => {};
 
 Leaderboard.defaultProps = {
-    data: [],
+    leaderboardData: [],
     isLoading: true,
-    algorithmId: undefined,
+    selectedAlgorithmId: undefined,
 
     onSelectAlgorithm: noop,
 };
 
 const mapStateToProps = (state, {problemId}) => ({
-    data: getLeaderboardData(state)[problemId],
+    leaderboardData: getLeaderboardData(state)[problemId],
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
@@ -141,5 +143,5 @@ const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
-    'data', 'isLoading', 'algorithmId',
+    'leaderboardData', 'isLoading', 'selectedAlgorithmId',
 ])(Leaderboard));

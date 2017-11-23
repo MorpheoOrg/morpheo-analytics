@@ -28,7 +28,7 @@ class ProblemLeaderboard extends React.Component {
                 <Leaderboard
                     problemId={problemId}
                     onSelectAlgorithm={this.handleSelectAlgorithm}
-                    algorithmId={selectedAlgorithmId}
+                    selectedAlgorithmId={selectedAlgorithmId}
                 />
                 <Performance
                     problemId={problemId}

@@ -6,6 +6,7 @@ import {css} from 'react-emotion';
 import {ChevronRight} from 'mdi-material-ui';
 
 import actionsEditor from '../../../../ui/Editor/actions';
+import {getActivePane} from '../../../../ui/Editor/selectors';
 
 
 class ProblemItem extends React.Component {
@@ -36,7 +37,7 @@ class ProblemItem extends React.Component {
 
         const {uuid, name} = this.props;
 
-        this.props.openTab({
+        this.props.openContent({
             contentId: uuid,
             contentType: 'problem',
             title: name,
@@ -63,22 +64,33 @@ ProblemItem.propTypes = {
     name: PropTypes.string.isRequired,
     uuid: PropTypes.string.isRequired,
 
-    openTab: PropTypes.func,
+    openContent: PropTypes.func,
 };
 
 const noop = () => {};
 
 ProblemItem.defaultProps = {
     description: '',
-    openTab: noop,
+    openContent: noop,
 };
 
 const mapStateToProps = (state, ownProps) => ({
-
+    /** Get information about to add new tab into the last activated pane */
+    _activePane: getActivePane(state),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-    openTab: actionsEditor.tab.add,
+    _addTab: actionsEditor.tab.add,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemItem);
+const mergeProps = ({_activePane}, {_addTab}, ownProps) => ({
+    ...ownProps,
+    openContent: ({contentId, title}) => _addTab({
+        contentId,
+        contentType: 'problem',
+        paneId: _activePane,
+        title,
+    }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(ProblemItem);
