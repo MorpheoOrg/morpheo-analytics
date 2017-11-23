@@ -67,7 +67,9 @@ export const loadItem = (actions, fetchItem, query) =>
 /* istanbul ignore next */
 const sagas = function* sagas() {
     yield all([
-        takeEvery(actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)),
+        takeEvery(
+            actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)
+        ),
     ]);
 };
 

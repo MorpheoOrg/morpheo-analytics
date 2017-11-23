@@ -39,6 +39,7 @@ import queryString from 'query-string';
 import {isEmpty} from 'lodash';
 import {handleResponse} from '../../../utils/entities/fetchEntities';
 
+
 const getHeaders = jwt => ({
     Accept: 'application/json',
     'Content-Type': 'application/json; charset=utf-8',
@@ -53,7 +54,10 @@ export const fetchItem = (url, jwt) => fetch(url, {
     .then(json => ({item: json}), error => ({error}));
 
 export const fetchProblem = (id, get_parameters) => {
-    const url = `${STORAGE_API_URL}/problem/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
+    const url = `${STORAGE_API_URL}/problem/${id}${
+        !isEmpty(get_parameters) ?
+            `?${queryString.stringify(get_parameters)}` : ''
+    }`;
     const jwt = btoa(`${STORAGE_USER}:${STORAGE_PASSWORD}`);
     return fetchItem(url, jwt);
 };

@@ -34,6 +34,7 @@
  */
 import {actionTypes} from '../actions';
 
+
 const initialState = {
     error: null,
     id: null,
