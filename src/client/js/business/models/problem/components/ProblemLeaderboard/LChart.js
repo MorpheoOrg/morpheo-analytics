@@ -49,12 +49,6 @@ import {shouldUpdate} from 'recompose';
 import {isEqual} from 'lodash';
 
 
-const card = {
-    width: '100%',
-    margin: '20px 0px',
-    overflow: 'visible',
-};
-
 const chart = {top: 5, right: 40, left: 0, bottom: 5};
 
 const activeDot = {
@@ -64,26 +58,21 @@ const activeDot = {
         fill: '#8884d8',
     };
 
-class LearnupletChart extends React.Component {
-    render() {
-        const {data} = this.props;
-        console.log(data);
-
-        return (<LineChart
-            width={600}
-            height={400}
-            data={data}
-            margin={chart}
-        >
-            <XAxis dataKey="name" label="Number of trained data" />
-            <YAxis label="Perf" />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend />
-            <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot} />
-        </LineChart>);
-    }
-}
+const LearnupletChart = ({data}) => (
+    <LineChart
+        width={600}
+        height={400}
+        data={data}
+        margin={chart}
+    >
+        <XAxis dataKey="name" label="Number of trained data" />
+        <YAxis label="Perf" />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Legend />
+        <Line dataKey="perf" stroke="#8884d8" dot={dot} activeDot={activeDot} />
+    </LineChart>
+);
 
 LearnupletChart.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
@@ -93,7 +82,7 @@ LearnupletChart.propTypes = {
 };
 
 LearnupletChart.defaultProps = {
-    data: undefined,
+    data: [],
 };
 
 const mapStateToProps = (state, ownProps) => ownProps;

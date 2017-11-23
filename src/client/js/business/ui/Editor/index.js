@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {onlyUpdateForKeys} from 'recompose';
 import styled from 'react-emotion';
 
-import {getPaneIdList} from './selector';
+import {getPaneIdList} from './selectors';
 import Pane from './components/Pane';
 
 
@@ -13,20 +13,18 @@ const Container = styled.div`
     display: flex;
 `;
 
-const Editor = ({paneIdList, renderers}) => {
-    console.log('Render editor');
-    return (
-        <Container>
-            {paneIdList.map(paneId => (
-                <Pane
-                    key={paneId}
-                    paneId={paneId}
-                    renderers={renderers}
-                />
-            ))}
-        </Container>
-    );
-};
+
+const Editor = ({paneIdList, renderers}) => (
+    <Container>
+        {paneIdList.map(paneId => (
+            <Pane
+                key={paneId}
+                paneId={paneId}
+                renderers={renderers}
+            />
+        ))}
+    </Container>
+);
 
 Editor.propTypes = {
     paneIdList: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -35,6 +33,7 @@ Editor.propTypes = {
         title: PropTypes.func.isRequired,
     })).isRequired,
 };
+
 
 const mapStateToProps = (state, ownProps) => ({
     paneIdList: getPaneIdList(state),

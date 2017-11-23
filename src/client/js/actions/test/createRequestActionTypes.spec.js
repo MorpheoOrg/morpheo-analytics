@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {describe, it} from 'mocha';
 import createRequestActionTypes from '../createRequestActionTypes';
 
+
 describe('createRequestActionTypes', () => {
     it(
         'should return an object with REQUEST, SUCCESS and FAILURE properties',

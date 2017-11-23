@@ -11,6 +11,7 @@ import ProblemLeaderboard from '../ProblemLeaderboard';
 import ProblemParticipate from '../ProblemParticipate';
 
 
+// This are the list of sections displayed when a problem tab is active
 const problemSections = [
     {
         name: 'Description',

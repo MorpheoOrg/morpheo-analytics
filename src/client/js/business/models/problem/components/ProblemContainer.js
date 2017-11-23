@@ -139,5 +139,5 @@ ProblemContainer.propTypes = {
 };
 
 export default onlyUpdateForKeys([
-    'activeSectionIndex', 'children', 'description', 'name', 'sectionsName',
+    'activeSectionIndex', 'contentProps', 'description', 'name', 'sections',
 ])(ProblemContainer);
