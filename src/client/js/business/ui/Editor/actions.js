@@ -5,9 +5,6 @@ import {createActionWithCheck} from '../../../utils/redux-actions';
 
 
 export const actionsTypes = {
-    pane: {
-        add: 'EDITOR::PANE::ADD',
-    },
     tab: {
         add: 'EDITOR::TAB::ADD',
         remove: 'EDITOR::TAB::REMOVE',

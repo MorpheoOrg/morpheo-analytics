@@ -150,10 +150,14 @@ class Pane extends React.Component {
     }
 
     renderTabContent = () => {
-        const {paneId, renderers, activeTab, updateProps} = this.props;
+        const {
+            activeTab, paneId, renderers, setPaneActive, updateProps
+        } = this.props;
         const {contentId, contentType, ...contentProps} = activeTab;
         return (
-            <ContentContainer>
+            <ContentContainer
+                onClick={setPaneActive}
+            >
                 <TabContent
                     renderers={renderers}
                     contentId={contentId}
@@ -200,13 +204,15 @@ Pane.propTypes = {
         title: PropTypes.string.isRequired,
     })).isRequired,
 
-    updateProps: PropTypes.func.isRequired,
+    /** Set the tab to active (for editor interactions) */
+    setPaneActive: PropTypes.func.isRequired,
     close: PropTypes.func.isRequired,
     dragStart: PropTypes.func.isRequired,
     dragOut: PropTypes.func.isRequired,
     dragOver: PropTypes.func.isRequired,
     dragEnd: PropTypes.func.isRequired,
     drop: PropTypes.func.isRequired,
+    updateProps: PropTypes.func.isRequired,
 };
 
 
@@ -235,6 +241,7 @@ const mapDispatchToProps = (dispatch, {paneId}) => bindActionCreators({
     }),
     dragOut: () => actions.tab.dragOut(),
     dragEnd: () => actions.tab.dragEnd(),
+    _setTabActive: actions.tab.setActive,
     _move: actions.tab.move,
     _updateTabProps: actions.tab.updateProps,
 }, dispatch);
@@ -242,7 +249,7 @@ const mapDispatchToProps = (dispatch, {paneId}) => bindActionCreators({
 
 const mergeProps = (
     {_moveData, activeTab, ...stateProps},
-    {_move, _updateTabProps, ...dispatchProps},
+    {_move, _setTabActive, _updateTabProps, ...dispatchProps},
     ownProps,
 ) => ({
     activeTab,
@@ -250,11 +257,16 @@ const mergeProps = (
     ...stateProps,
     ...dispatchProps,
 
+    drop: () => _move(_moveData),
     updateProps: data => _updateTabProps({
         tabId: activeTab.tabId,
         props: data
     }),
-    drop: () => _move(_moveData),
+    // set active a tab also set pane to active
+    setPaneActive: () => _setTabActive({
+        paneId: ownProps.paneId,
+        tabId: activeTab.tabId,
+    }),
 });
 
 export default connect(
