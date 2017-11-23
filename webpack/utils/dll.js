@@ -1,6 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-import BabiliPlugin from 'babili-webpack-plugin';
+import MinifyPlugin from 'babel-minify-webpack-plugin';
 import AutoDllPlugin from 'autodll-webpack-plugin';
 
 
@@ -10,8 +10,7 @@ export default new AutoDllPlugin({
     context: path.join(__dirname, '../..'),
     filename: '[name]-dll.js',
     plugins: !DEVELOPMENT ? [
-        // new webpack.optimize.UglifyJsPlugin(),
-        new BabiliPlugin({}, {
+        new MinifyPlugin({}, {
             comments: false,
             sourceMap: true,
         }),
