@@ -1,13 +1,35 @@
 sudo: false
 language: node_js
+
 node_js:
 - node
+
 cache:
   directories:
   - node_modules
+
 matrix:
   include:
   - os: osx
   - os: linux
+
 dist: trusty
-after_success: travis_wait 30 npm run package-linux
+
+# Package the app for the corresponding os
+before_deploy: travis_wait 30 ./build_tools/travis/before_deploy.sh
+
+deploy:
+  provider: gcs
+  access_key_id:
+    secure: ZZbFlBxCZumBuoWqPX+nm2FqwgYRYxoE9FZaoSHqg/XEraXjGT+KSWAqAdst7hUA7zmLNUqNW1Q0tgnXhPeCC/n4tBscbGl7+pogovlrDH/RYcWmIF2+JLEbDpFIVv5fgJ96/Qu+/uo6YGk80V30GrPyrf9H1LIGFYjJHnw1mcl+dGS6UD2nCNTEj+3GfPi9rHt6ZQugIJyiDGAr6IUoW78etTiF2zzDUXcNDVmKjSLOQd2UtwEiF4oL74/gEq98/giwozpCSLVj8r/Mhq6Hv4+KNLYJrzHpxujFCvCJlA9yxG05LXQ3Hsty0+psmgJjZrku12Ah+3vU8lYO/1ZaTs0U0jfgrxIdTDocFhYkep/saXcWYNbvhoQ4w6BrRefnt5VPEyQpkWhE2j0Gd+xW9XsvK15WiEUbQRD+aQguhrvJtaY03NZfK57jGKIfwsF4dzZfaRoDRAv3N1z5kTac8iKzJZvDm0ATBKCnjBqgSe75acq7q08yI12hu57DbEFNcK+NOYxgBGiNPUdUwdw3dkS8GM2E4Eyi6AKZ5CxCm/RL/KvO+Fbjsqt2IZGM9PdpaxVpjACUpcGFJwAzfaH+v0J13h0k3JJL79yy62RjZnjbkHLjyvMIdMh0MGdwdyLIkwEXadrzYHJGAUfHeW2Y7vOxlCshqdLDSA6gzqwvtE0=
+  secret_access_key:
+    secure: BWzP6ZcSeP8kNhXpCdPQ3/hGIfYWh8jlmQ/V5nv1buUlGoAy0m+WlgcidK0GDkig4KvspfdVHs82x8pW1kNEdcp77vI/5QNS69vXlGInLkKxgZSdbqgyMbhqrcue4413l+ZwG9IiDEJtefs8Tdvv1mDIoKFiUzpv00/Lxdizx+UXQLTnSZCixUOvvsp0aXslF8nvS6Mtv3hO+bmoJtmEJgfNa0FDGzAY/93yNa/g/JRgb2eE6kSAqE3FEFMuc8+gBaYrxmjlA2xDoTm34AAoegSiT2AmLzMTrhylZJu90kE+LfwcA57weQSP+RuY4KvjpGjH5kRnZZtwwv20lEKZ/TNtcVUinj4aJv0tUbNaxIZYvsqiaSAW1b1KiQ8LyJvC/5cuCK+L6qJxxuixZ7YeIVdrtt6eXXk0FTf8cLoddloYnZ2SA3JZKOdOcRaoIi2+XWWM3NjNQ4KTCNu9dyMQBvkACG0RNcP3vcrZoKbw8OzbKfY9kSzKeZ8EBxr9a2Cc8mWj3q9spe2AlSMHb7B+N9BY5CKazQW0ZRyKUX17sxeZoW4tdyw9BPJdry+mW0HJIOTMiwy2lz02ktCvc7gucldZsGkznpZ0zEG1WYa8gaEK5YsW5A6mGAO5HwQvKzYG0xHu+ztHUdfCQxBMOgdriW5iOsTAUIj0m198ONgNUmI=
+  bucket: morpheo-analytics
+  local-dir: release
+  acl: public-read
+  skip_cleanup: true
+  on:
+    all_branches: true
+    repo: MorpheoOrg/morpheo-analytics
+    # Example of a better condition
+    #condition: "$TRAVIS_TAG =~ ^release.*$"
