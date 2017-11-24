@@ -41,9 +41,10 @@
         "package": "npm run build:electron && build --publish never",
         "package-all": "npm run build:electron && build -mwl",
         "package-linux": "npm run build:electron && build --linux",
+        "package-mac": "npm run build:electron && build --mac",
         "package-win": "npm run build:electron && build --win --x64",
         "postinstall": "electron-builder install-app-deps",
-        "build-electron": "build --linux"
+        "build-electron": "build --mac"
     },
     "pre-commit": [
         "precommit-msg",
@@ -52,8 +53,13 @@
     ],
     "browserslist": "electron 1.6",
     "build": {
-        "productName": "Analytics",
         "appId": "org.morpheo.analytics",
+        "productName": "analytics",
+        "directories": {
+            "buildResources": "resources",
+            "output": "release",
+            "app": "./src/electron/"
+        },
         "files": [
             "dist/",
             "node_modules/",
@@ -62,9 +68,6 @@
             "main.prod.js.map",
             "package.json"
         ],
-        "mac": {
-            "target": "tar.gz"
-        },
         "dmg": {
             "contents": [
                 {
@@ -79,27 +82,20 @@
                 }
             ]
         },
-        "win": {
-            "target": [
-                "nsis"
-            ]
-        },
         "linux": {
-            "target": [
-                "deb",
-                "AppImage"
-            ]
+            "target": "deb"
         },
-        "directories": {
-            "buildResources": "resources",
-            "output": "release",
-            "app": "./src/electron/"
+        "mac": {
+            "target": "dmg"
+        },
+        "win": {
+            "target": "nsis"
         }
     },
     "dependencies": {
         "babel-runtime": "6.26.0",
         "date-fns": "1.29.0",
-        "emotion": "^8.0.10",
+        "emotion": "^8.0.11",
         "ends-with": "1.0.1",
         "error-stack-parser": "^2.0.1",
         "fastclick": "1.0.6",
@@ -112,10 +108,10 @@
         "query-string": "5.0.1",
         "react": "16.1.1",
         "react-dom": "16.1.1",
-        "react-emotion": "^8.0.10",
+        "react-emotion": "^8.0.11",
         "react-helmet": "5.2.0",
         "react-konami": "0.5.0",
-        "react-markdown": "3.0.1",
+        "react-markdown": "3.0.2",
         "react-redux": "5.0.6",
         "react-tap-event-plugin": "^3.0.2",
         "react-universal-component": "2.7.0",
@@ -128,7 +124,7 @@
         "redux-form": "7.1.2",
         "redux-reducers-injector": "0.1.1",
         "redux-saga": "0.16.0",
-        "redux-sagas-injector": "0.2.2",
+        "redux-sagas-injector": "0.2.3",
         "reselect": "3.0.1",
         "sw-precache-webpack-plugin": "^0.11.4",
         "url": "0.11.0",
@@ -177,7 +173,7 @@
         "electron-builder": "^19.46.4",
         "electron-debug": "^1.4.0",
         "electron-devtools-installer": "^2.2.1",
-        "emotion-server": "8.0.10",
+        "emotion-server": "8.0.11",
         "enzyme": "3.2.0",
         "eslint": "4.11.0",
         "eslint-config-airbnb": "16.1.0",
