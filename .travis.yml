@@ -16,7 +16,7 @@ matrix:
 dist: trusty
 
 # Package the app for the corresponding os
-before_deploy: travis_wait 30 ./build_tools/travis/before_deploy.sh
+before_deploy: travis_wait 60 ./build_tools/travis/before_deploy.sh
 
 deploy:
   provider: gcs
