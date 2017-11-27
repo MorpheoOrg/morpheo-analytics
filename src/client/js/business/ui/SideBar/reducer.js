@@ -2,7 +2,7 @@ import {actionTypes} from './actions';
 
 
 const initialState = {
-    selectedIndex: 0,
+    selectedIndex: -1,
     status: 'closed',
     width: 400,
 };

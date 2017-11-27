@@ -6,7 +6,6 @@ import {bindActionCreators} from 'redux';
 import styled from 'react-emotion';
 
 import actions from '../SideBar/actions';
-import actionsProblem from '../../models/problem/actions';
 import {menuContent, modalContent} from './iconDefinition';
 import FlatButton from '../../common/components/FlatButton';
 import ComponentBar from '../../common/components/ComponentBar';
@@ -21,7 +20,6 @@ const MenuButton = styled(FlatButton)`
 
 class ActivityBar extends React.Component {
     componentWillMount() {
-        this.props.loadProblemList();
     }
 
     toggleSideBarElement = index => (event) => {
@@ -78,7 +76,6 @@ class ActivityBar extends React.Component {
 ActivityBar.propTypes = {
     selectedIndex: PropTypes.number.isRequired,
 
-    loadProblemList: PropTypes.func.isRequired,
     setIndex: PropTypes.func.isRequired,
     setStatus: PropTypes.func.isRequired,
 };
@@ -90,7 +87,6 @@ const mapStateToProps = ({settings}) => ({
 
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    loadProblemList: actionsProblem.list.request,
     setIndex: actions.setIndex,
     setStatus: actions.setStatus,
 }, dispatch);
