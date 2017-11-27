@@ -12,6 +12,7 @@ const Universal = universal(import('./preload'), {
         injectReducer('models', preload.modelsReducer);
         // injectSaga('models.experiment', preload.modelsExperimentSaga);
         // injectSaga('models.challenge', preload.modelsChallengeSaga);
+        injectSaga('setttings', preload.settingsSaga);
         injectSaga('models', preload.modelsSaga);
     },
 });

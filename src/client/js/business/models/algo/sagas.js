@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import {call, put, takeLatest, all} from 'redux-saga/effects';
+import {call, put, select, takeLatest, all} from 'redux-saga/effects';
 
 import generalActions from '../../../../../common/actions';
 import learnupletActions from '../learnuplet/actions';
@@ -43,11 +43,15 @@ import {
     postAlgo as postAlgoApi,
     postAlgoToOrchestrator as postAlgoToOrchestratorApi,
 } from './api';
+import {getLoginVariables} from '../../ui/Login/selectors';
 
 
 function* postAlgo(request) {
     const {body, problemId} = request.payload;
-    const {item, error} = yield call(postAlgoApi, body);
+    const {STORAGE_USER, STORAGE_PASSWORD} = yield select(getLoginVariables);
+    const {item, error} = yield call(
+        postAlgoApi, body, STORAGE_USER, STORAGE_PASSWORD
+    );
 
     if (error) {
         console.error(error.message);
@@ -65,7 +69,13 @@ function* postAlgo(request) {
 }
 
 function* postToOrchestrator(request) {
-    const {item, error} = yield call(postAlgoToOrchestratorApi, request.payload);
+    const {
+        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+    } = yield select(getLoginVariables);
+    const {item, error} = yield call(
+        postAlgoToOrchestratorApi, request.payload,
+        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+    );
 
     if (error) {
         console.error(error.message);
@@ -78,9 +88,13 @@ function* postToOrchestrator(request) {
 
 export const loadList = (actions, fetchList) =>
     function* loadListSaga(request) {
-        const {error, list} = yield call(fetchList, {
-            problem: request.payload,
-        });
+        const {
+            ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+        } = yield select(getLoginVariables);
+        const {error, list} = yield call(
+            fetchList, {problem: request.payload},
+            ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+        );
 
         if (error) {
             if (error.body && error.body.message) {

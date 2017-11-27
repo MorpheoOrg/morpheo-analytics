@@ -46,9 +46,12 @@ import rootReducer from '../reducer';
 import DevTools from '../DevTools';
 import routesMap from '../routesMap';
 
+
 const configureStore = (history, initialState) => {
 
-    const {reducer, middleware, enhancer, thunk, initialDispatch} = connectRoutes(history, routesMap, {
+    const {
+        reducer, middleware, enhancer, thunk, initialDispatch
+    } = connectRoutes(history, routesMap, {
         initialDispatch: false,
         ...options,
     }); // yes, 5 redux aspects
@@ -62,14 +65,20 @@ const configureStore = (history, initialState) => {
     const reducers = {...rootReducer, location: reducer};
     // create an hmr initialState, when refreshing page, we do not want the injected reducers
     const hmrInitialState = pick(initialState, Object.keys(reducers));
-    const store = createInjectSagasStore({rootSaga}, reducers, hmrInitialState, compose(enhancer, ...enhancers));
+    const store = createInjectSagasStore(
+        {rootSaga}, reducers, hmrInitialState, compose(enhancer, ...enhancers)
+    );
     initialDispatch();
 
     // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
     if (module.hot) {
         module.hot.accept('../reducer', () => {
             const rootReducer = require('../reducer').default;
-            const replacedReducers = {...store.injectedReducers, ...rootReducer, location: reducer};
+            const replacedReducers = {
+                ...store.injectedReducers,
+                ...rootReducer,
+                location: reducer
+            };
             store.replaceReducer(combineReducersRecurse(replacedReducers));
         });
 

@@ -2,5 +2,4 @@
 
 export default {
     HOME: {path: '/'},
-    HELP: {path: '/help'},
 };

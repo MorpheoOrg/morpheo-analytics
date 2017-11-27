@@ -34,17 +34,25 @@
  */
 /* globals */
 
-import {call, put, takeEvery, all} from 'redux-saga/effects';
+import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 import generalActions from '../../../../../common/actions';
 
 import actions, {actionTypes} from './actions';
 import {
     fetchProblem as fetchProblemApi,
 } from './api';
+import {getLoginVariables} from '../../ui/Login/selectors';
+
 
 export const loadItem = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {
-        const {error, item} = yield call(fetchItem, request.payload);
+        const {
+            STORAGE_USER, STORAGE_PASSWORD
+        } = yield select(getLoginVariables);
+
+        const {error, item} = yield call(
+            fetchItem, request.payload, STORAGE_USER, STORAGE_PASSWORD
+        );
 
         if (error) {
             if (error.body && error.body.message) {

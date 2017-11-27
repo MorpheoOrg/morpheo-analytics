@@ -35,7 +35,7 @@
 
 /*
    globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD
+   ORCHESTRATOR_API_URL
 */
 
 import queryString from 'query-string';
@@ -49,9 +49,9 @@ export const getHeaders = jwt => ({
     Authorization: `Basic ${jwt}`,
 });
 
-export const fetchList = (url) => {
+export const fetchList = (url, jwt) => {
     // will be overrided by server on the fly (no authentication needed for dev servers)
-    const headers = getHeaders(btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`));
+    const headers = getHeaders(jwt);
     return fetch(url, {
         headers,
         // Allows API to set http-only cookies with AJAX calls
@@ -64,7 +64,11 @@ export const fetchList = (url) => {
 };
 
 
-export const fetchLearnupletByAlgo = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/learnuplet${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
-    return fetchList(url);
+export const fetchLearnupletByAlgo = (
+    get_parameters, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+) => {
+    const url = `${ORCHESTRATOR_API_URL}/learnuplet${!isEmpty(get_parameters) ?
+        `?${queryString.stringify(get_parameters)}` : ''}`;
+    const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
+    return fetchList(url, jwt);
 };

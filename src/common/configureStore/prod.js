@@ -44,7 +44,9 @@ import routesMap from '../routesMap';
 
 
 const configureStore = (history, initialState) => {
-    const {reducer, middleware, enhancer, thunk, initialDispatch} = connectRoutes(history, routesMap, {
+    const {
+        reducer, middleware, enhancer, thunk, initialDispatch
+    } = connectRoutes(history, routesMap, {
         initialDispatch: false,
         ...options,
     }); // yes, 5 redux aspects
@@ -55,7 +57,9 @@ const configureStore = (history, initialState) => {
     ];
 
     const reducers = {...rootReducer, location: reducer};
-    const store = createInjectSagasStore({rootSaga}, reducers, initialState, compose(enhancer, ...enhancers));
+    const store = createInjectSagasStore(
+        {rootSaga}, reducers, initialState, compose(enhancer, ...enhancers)
+    );
     initialDispatch();
 
     return {store, thunk};

@@ -1,14 +1,24 @@
 import React from 'react';
-import styled from 'react-emotion';
+import PropTypes from 'prop-types';
 import {onlyUpdateForKeys} from 'recompose';
+import {connect} from 'react-redux';
+import styled, {css} from 'react-emotion';
 
 import ActivityBar from '../ActivityBar';
-import SideBar from '../SideBar';
 import Editor from '../Editor';
+import Login from '../Login';
+import SideBar from '../SideBar';
 
 import ProblemDetail from '../../models/problem/components/detail/ProblemDetail';
 import ProblemTabTitle from '../../models/problem/components/ProblemTabTitle';
+import {isLoginVariableSet} from '../Login/selectors';
 
+
+const Wrapper = ({children}) => children;
+
+const blurredStyle = css`
+    filter: blur(1.5px);
+`;
 
 const Container = styled.div`
     margin: 0 0 0 1;
@@ -18,6 +28,8 @@ const Container = styled.div`
     display: flex;
     height: 100vh;
     overflow: hidden;
+
+    ${({blurred}) => blurred ? blurredStyle : null}
 `;
 
 const renderers = {
@@ -27,13 +39,25 @@ const renderers = {
     },
 };
 
-const Main = () => (
-    <Container>
-        <ActivityBar />
-        <SideBar />
-        <Editor renderers={renderers} />
-    </Container>
+const Main = ({isFirstConnection}) => (
+    <Wrapper>
+        <Container blurred={isFirstConnection}>
+            <ActivityBar />
+            <SideBar />
+            <Editor renderers={renderers} />
+        </Container>
+        {isFirstConnection && <Login />}
+    </Wrapper>
 );
 
+Main.propTypes = {
+    isFirstConnection: PropTypes.bool.isRequired,
+};
 
-export default onlyUpdateForKeys([])(Main);
+const mapStateToProps = (state, ownProps) => ({
+    isFirstConnection: isLoginVariableSet(state),
+});
+
+export default connect(mapStateToProps)(onlyUpdateForKeys([
+    'isFirstConnection',
+])(Main));

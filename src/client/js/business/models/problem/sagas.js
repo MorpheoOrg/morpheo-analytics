@@ -1,5 +1,5 @@
 import {
-    all, call, put, takeLatest, takeEvery
+    all, call, put, select, takeEvery, takeLatest,
 } from 'redux-saga/effects';
 import generalActions from '../../../../../common/actions';
 import storageProblemActions from '../storage_problem/actions';
@@ -9,11 +9,18 @@ import {
     fetchProblems as fetchProblemsApi,
     fetchProblem as fetchProblemApi,
 } from './api';
+import {getLoginVariables} from '../../ui/Login/selectors';
 
 
 export const loadList = (actions, fetchList) =>
     function* loadListSaga() {
-        const {error, list} = yield call(fetchList);
+        const {
+            ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+        } = yield select(getLoginVariables);
+
+        const {error, list} = yield call(
+            fetchList, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
+        );
 
         if (error) {
             if (error.body && error.body.message) {

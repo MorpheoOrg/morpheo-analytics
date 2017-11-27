@@ -1,5 +1,5 @@
 /* globals btoa fetch
-   ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD */
+   ORCHESTRATOR_API_URL */
 
 import queryString from 'query-string';
 import {isEmpty} from 'lodash';
@@ -23,7 +23,9 @@ const fetchList = (url, jwt) => fetch(url, {
     .then(response => handleResponse(response))
     .then(json => ({list: json}), error => ({error}));
 
-export const fetchAlgos = (get_parameters) => {
+export const fetchAlgos = (
+    get_parameters, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
+) => {
     const url = `${ORCHESTRATOR_API_URL}/algo${
         !isEmpty(get_parameters) ?
             `?${queryString.stringify(get_parameters)}` : ''
@@ -40,7 +42,9 @@ const fetchItem = (url, jwt) => fetch(url, {
     .then(response => handleResponse(response))
     .then(json => ({item: json}), error => ({error}));
 
-export const fetchProblem = (id, get_parameters) => {
+export const fetchProblem = (
+    id, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD, get_parameters
+) => {
     const url = `${ORCHESTRATOR_API_URL}/problem/${id}${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
     const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
     return fetchItem(url, jwt);

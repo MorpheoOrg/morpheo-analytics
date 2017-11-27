@@ -7,20 +7,20 @@ import {
     fetchAlgos as fetchAlgosApi,
     fetchProblem as fetchProblemApi,
 } from './api';
+import {getLoginVariables} from '../../ui/Login/selectors';
 
 
 export const loadList = (actions, fetchList) =>
     function* loadListSaga(request) {
-        const state = yield select(),
-            location = state.location;
-
-        // TODO Update payload to send query REST
-        console.log('request', request);
+        const {
+            ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+        } = yield select(getLoginVariables);
 
         // override query if needed, default to current url query
         const query = undefined;
-        const {error, list} = yield call(fetchList, query);
-        console.log('sagas: ', error, list);
+        const {error, list} = yield call(
+            fetchList, query, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+        );
 
         if (error) {
             if (error.body && error.body.message) {
@@ -34,11 +34,6 @@ export const loadList = (actions, fetchList) =>
         else {
             yield put(actions.list.success({results: list.algos}));
 
-            // Let's fetch algos results from storage
-            // const l = list.algos.length;
-            // for (let i = 0; i < 1; i += 1) {
-            //     yield put()
-            // }
             return list;
         }
     };
@@ -46,7 +41,12 @@ export const loadList = (actions, fetchList) =>
 
 export const loadItem = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {
-        const {error, item} = yield call(fetchItem, request.payload);
+        const {
+            ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+        } = yield select(getLoginVariables);
+        const {error, item} = yield call(
+            fetchItem, request.payload, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+        );
 
         if (error) {
             if (error.body && error.body.message) {

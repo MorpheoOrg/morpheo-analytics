@@ -34,17 +34,23 @@
  */
 /* globals */
 
-import {call, put, takeEvery, all} from 'redux-saga/effects';
+import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 
 import actions, {actionTypes} from './actions';
 import {
     fetchLearnupletByAlgo as fetchLearnupletByAlgoApi,
 } from './api';
+import {getLoginVariables} from '../../ui/Login/selectors';
+
 
 function* loadList(request) {
-    const {error, list} = yield call(fetchLearnupletByAlgoApi, {
-        algo: request.payload,
-    });
+    const {
+        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+    } = yield select(getLoginVariables);
+    const {error, list} = yield call(
+        fetchLearnupletByAlgoApi, {algo: request.payload},
+        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+    );
 
     if (error) {
         yield put(actions.list.failure(error.body));

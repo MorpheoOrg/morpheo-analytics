@@ -95,6 +95,7 @@
     "dependencies": {
         "babel-runtime": "6.26.0",
         "date-fns": "1.29.0",
+        "electron-settings": "^3.1.4",
         "emotion": "^8.0.11",
         "ends-with": "1.0.1",
         "error-stack-parser": "^2.0.1",
