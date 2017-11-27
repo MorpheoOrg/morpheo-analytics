@@ -1,10 +1,3 @@
-const {
-    NOTEBOOK_SERVICES_USER, NOTEBOOK_SERVICES_PASSWORD,
-    ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
-    STORAGE_USER, STORAGE_PASSWORD,
-} = require('./devsecret');
-
-
 const apiPort = process.env.NODE_PORT || 3000;
 const apiUrl = 'https://notebook-proxy.morpheo.co';
 const apiSocketUrl = 'wss://notebook-proxy.morpheo.co';
@@ -27,14 +20,6 @@ module.exports = {
                 debug: '/morpheo-analytics/build/frontend/',
             },
         },
-    },
-    credentials: {
-        NOTEBOOK_SERVICES_USER,
-        NOTEBOOK_SERVICES_PASSWORD,
-        ORCHESTRATOR_USER,
-        ORCHESTRATOR_PASSWORD,
-        STORAGE_USER,
-        STORAGE_PASSWORD,
     },
     babel_ignore: /node_modules\/(?!admin-config)/,
 };
