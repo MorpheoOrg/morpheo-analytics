@@ -93,6 +93,7 @@ class Login extends React.Component {
     }
 
     handleSubmit = (event) => {
+        event.preventDefault();
         this.props.login(this.state);
     }
 
