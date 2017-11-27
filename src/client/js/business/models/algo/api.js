@@ -33,9 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-/* globals btoa fetch
-ORCHESTRATOR_API_URL ORCHESTRATOR_USER ORCHESTRATOR_PASSWORD
-STORAGE_API_URL STORAGE_USER STORAGE_PASSWORD */
+/* globals btoa fetch ORCHESTRATOR_API_URL STORAGE_API_URL */
 
 import {isEmpty} from 'lodash';
 import queryString from 'query-string';
@@ -49,7 +47,7 @@ const getHeaders = jwt => ({
     Authorization: `Basic ${jwt}`,
 });
 
-export const postAlgo = (payload) => {
+export const postAlgo = (payload, STORAGE_USER, STORAGE_PASSWORD) => {
     console.log('body', payload);
     const url = `${STORAGE_API_URL}/algo`;
 
@@ -83,7 +81,9 @@ export const postAlgo = (payload) => {
         .then(json => ({item: json}), error => ({error}));
 };
 
-export const postAlgoToOrchestrator = (payload) => {
+export const postAlgoToOrchestrator = (
+    payload, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
+) => {
     const url = `${ORCHESTRATOR_API_URL}/algo`; // careful with trailing slash
     const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
 
@@ -126,8 +126,11 @@ export const fetchList = (url, jwt) => fetch(url, {
     .then(response => handleResponse(response))
     .then(json => ({list: json}), error => ({error}));
 
-export const fetchAlgos = (get_parameters) => {
-    const url = `${ORCHESTRATOR_API_URL}/algo${!isEmpty(get_parameters) ? `?${queryString.stringify(get_parameters)}` : ''}`;
+export const fetchAlgos = (
+    get_parameters, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
+) => {
+    const url = `${ORCHESTRATOR_API_URL}/algo${!isEmpty(get_parameters) ?
+        `?${queryString.stringify(get_parameters)}` : ''}`;
     const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
     return fetchList(url, jwt);
 };

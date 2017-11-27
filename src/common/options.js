@@ -2,6 +2,7 @@ import path from 'path';
 import {redirect} from 'redux-first-router';
 import {endsWith} from 'lodash';
 
+
 export default {
     onBeforeChange: (dispatch, getState, action) => {
         const {user, location} = getState();
@@ -13,7 +14,7 @@ export default {
         ) {
             dispatch(redirect({type: 'HOME'}));
         }
-        else if (action.type !== 'HOME' && user && !user.authenticated) {
+        else if (action.type === 'HOME' && user && !user.authenticated) {
             dispatch(redirect({type: 'HOME'}));
         }
     },

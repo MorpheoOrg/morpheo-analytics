@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-/* globals STORAGE_API_URL STORAGE_USER STORAGE_PASSWORD btoa fetch */
+/* globals btoa fetch STORAGE_API_URL */
 
 import queryString from 'query-string';
 import {isEmpty} from 'lodash';
@@ -53,7 +53,9 @@ export const fetchItem = (url, jwt) => fetch(url, {
     .then(response => handleResponse(response))
     .then(json => ({item: json}), error => ({error}));
 
-export const fetchProblem = (id, get_parameters) => {
+export const fetchProblem = (
+    id, STORAGE_USER, STORAGE_PASSWORD, get_parameters,
+) => {
     const url = `${STORAGE_API_URL}/problem/${id}${
         !isEmpty(get_parameters) ?
             `?${queryString.stringify(get_parameters)}` : ''
