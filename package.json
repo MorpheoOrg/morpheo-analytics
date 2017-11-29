@@ -40,11 +40,8 @@
         "build-renderer": "cross-env IS_ELECTRON=1 NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress --config webpack/electron/renderer.prod.js --colors",
         "package": "npm run build:electron && build --publish never",
         "package-all": "npm run build:electron && build -mwl",
-        "package-linux": "npm run build:electron && build --linux",
-        "package-mac": "npm run build:electron && build --mac",
-        "package-win": "npm run build:electron && build --win --x64",
         "postinstall": "electron-builder install-app-deps",
-        "build-electron": "build --mac"
+        "build-electron": "build --publish never"
     },
     "pre-commit": [
         "precommit-msg",
@@ -104,7 +101,6 @@
         "html-loader": "0.5.1",
         "lodash": "4.17.4",
         "material-ui": "1.0.0-beta.17",
-        "mdi-material-ui": "^2.0.1",
         "query-string": "5.0.1",
         "react": "16.1.1",
         "react-dom": "16.1.1",

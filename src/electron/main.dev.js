@@ -1,8 +1,6 @@
 import {app, BrowserWindow} from 'electron';
 import MenuBuilder from './menu';
 
-import getHTML from './app';
-
 
 let mainWindow = null;
 
