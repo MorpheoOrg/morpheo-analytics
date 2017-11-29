@@ -23,8 +23,12 @@ export default new AutoDllPlugin({
         reactVendors: [
             'react',
             'react-dom',
+            'emotion',
             'react-emotion',
+            'react-helmet',
+            'react-konami',
             'react-redux',
+            'react-markdown',
             'react-tap-event-plugin',
         ],
         reduxVendors: [
@@ -32,18 +36,29 @@ export default new AutoDllPlugin({
             'redux-actions',
             'redux-first-router',
             'redux-first-router-link',
+            'redux-form',
             'redux-reducers-injector',
             'redux-saga',
-            'redux-sagas-injector'
+            'redux-sagas-injector',
         ],
         commonVendors: [
-            'emotion',
             'fastclick',
-            'google-map-react',
             'history',
-            'react-helmet',
+            'lodash',
+            'material-ui',
+
+            'recharts',
             'recompose',
-            'transition-group',
+            'reselect',
+            'url',
+            'uuid',
+
+            'date-fns',
+            'ends-with',
+            'error-stack-parser',
+            'query-string',
+            'react-universal-component',
+            'sw-precache-webpack-plugin',
         ],
     },
 });

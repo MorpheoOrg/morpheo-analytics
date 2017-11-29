@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import {onlyUpdateForKeys} from 'recompose';
 import styled, {css} from 'react-emotion';
 import {throttle} from 'lodash';
-import {Close} from 'mdi-material-ui';
 
 import FlatButton from './FlatButton';
 
@@ -178,7 +177,7 @@ class TabTitle extends React.Component {
                         // Prevent to launch bad events during drag move
                         onMouseDown={evt => evt.stopPropagation()}
                     >
-                        <Close />
+                        X
                     </Button>
                 </Tab>
                 {/* Add fix dropable area when allowDrop */

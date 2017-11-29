@@ -6,6 +6,7 @@ import path from 'path';
 import webpack from 'webpack';
 import {dependencies as externals} from '../../src/electron/package.json';
 
+
 export default {
     externals: Object.keys(externals || {}),
     module: {
@@ -36,7 +37,9 @@ export default {
 
     plugins: [
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+            'process.env.NODE_ENV': JSON.stringify(
+                process.env.NODE_ENV || 'production'
+            ),
         }),
 
         new webpack.NamedModulesPlugin(),

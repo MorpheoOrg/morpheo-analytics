@@ -4,7 +4,6 @@ import {onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
-import {CloudUpload, FolderUpload} from 'mdi-material-ui';
 import FormData from 'form-data';
 import algoActions from '../../../algo/actions';
 
@@ -109,10 +108,10 @@ class ProblemParticipate extends React.Component {
             css={this.style}
         >
             <h3>Starting kit</h3>
-            <UploadButton><FolderUpload />mesa_starting_kit.tar.gz</UploadButton>
+            <UploadButton>Fmesa_starting_kit.tar.gz</UploadButton>
             <h3>Submit your model</h3>
             <UploadPanel onChange={this.handleOnChange}>
-                <CloudUpload />
+                C
                 Click or drag file to this area to upload your algo
             </UploadPanel>
         </div>);
