@@ -9,6 +9,7 @@ import webpackHotServerMiddleware from 'webpack-hot-server-middleware';
 import clientConfig from '../../webpack/client';
 import serverConfig from '../../webpack/server';
 
+
 const publicPath = clientConfig.output.publicPath;
 const outputPath = clientConfig.output.path;
 const app = express();

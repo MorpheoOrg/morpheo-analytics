@@ -1,6 +1,4 @@
 import React from 'react';
-import {Poll, CloudUpload, BookOpen,
-    Settings, FlaskOutline} from 'mdi-material-ui';
 
 import ProblemList from '../../models/problem/components/list/ProblemList';
 import ExperimentList from '../../models/experiment/components/ExperimentList';
@@ -9,29 +7,29 @@ import ExperimentList from '../../models/experiment/components/ExperimentList';
 export const menuContent = [
     {
         name: 'Problems',
-        icon: <Poll />,
+        icon: "P",
         content: <ProblemList />,
         // detail: <div>HELLO</div>,
     },
     {
         name: 'Experiments',
-        icon: <FlaskOutline />,
+        icon: "F",
         content: <ExperimentList />,
     },
     {
         name: 'Notebook',
-        icon: <BookOpen />,
+        icon: "B",
     },
 ];
 
 export const modalContent = [
     {
         name: 'Submission',
-        icon: <CloudUpload />,
+        icon: "C",
     },
     {
         name: 'Settings',
-        icon: <Settings />,
+        icon: "S",
     },
 ];
 

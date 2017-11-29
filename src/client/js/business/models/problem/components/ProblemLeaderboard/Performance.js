@@ -4,10 +4,10 @@ import {onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {css} from 'react-emotion';
-import {Trophy, ChartLine} from 'mdi-material-ui';
 
 import {getLChartData, getLeaderboardData} from '../../../learnuplet/selector';
 import LChart from './LChart';
+
 
 class Performance extends React.Component {
     style = css`
@@ -29,8 +29,8 @@ class Performance extends React.Component {
             css={this.style}
         >
             <span>Performances of <b>{name}</b></span>
-            <span><Trophy />{algorithmIndex + 1}</span>
-            <span><ChartLine />{(bestPerf * 100).toFixed(2)}%</span>
+            <span>T{algorithmIndex + 1}</span>
+            <span>L{(bestPerf * 100).toFixed(2)}%</span>
             <span><LChart data={lChartData} /></span>
         </div>);
     }

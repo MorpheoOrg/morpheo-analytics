@@ -23,7 +23,7 @@ const createApp = (App, store) => (
 
 
 // TODO: handle [hash]
-const flushDll = (clientStats) => Object.keys(Dll._originalSettings.entry).map(o =>
+const flushDll = clientStats => Object.keys(Dll._originalSettings.entry).map(o =>
     `<script type="text/javascript" src="${clientStats.publicPath}${Dll._originalSettings.filename.replace(/\[name\]/, o)}" defer></script>`,
 ).join('\n');
 

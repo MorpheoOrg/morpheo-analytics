@@ -10,6 +10,7 @@ import {dependencies} from '../../package.json';
 import rules from '../utils/rules';
 import plugins from '../utils/plugins';
 
+
 const dist = path.resolve(process.cwd(), 'dll');
 
 
@@ -21,13 +22,9 @@ export default merge.smart(baseConfig, {
     module: {
         rules: rules(),
     },
-    resolve: {
-        modules: [
-            '../../src',
-        ],
-    },
     entry: {
-        renderer: Object.keys(dependencies || {}).filter(o => !['babel-runtime'].includes(o)),
+        renderer: Object.keys(dependencies || {})
+            .filter(o => !['babel-runtime'].includes(o)),
     },
     output: {
         library: 'renderer',

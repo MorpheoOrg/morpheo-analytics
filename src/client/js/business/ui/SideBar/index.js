@@ -4,7 +4,6 @@ import styled from 'react-emotion';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {onlyUpdateForKeys} from 'recompose';
-import {ChevronLeft} from 'mdi-material-ui';
 
 import actions from './actions';
 import {menuContent} from './iconDefinition';
@@ -36,7 +35,7 @@ const FlexContainer = styled.div`
 
 const HideButton = props => (
     <FlatButton {...props} >
-        <ChevronLeft />
+        {'<'}
     </FlatButton>
 );
 

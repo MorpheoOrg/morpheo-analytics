@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {onlyUpdateForKeys} from 'recompose';
 import styled, {css} from 'react-emotion';
-import {Poll} from 'mdi-material-ui';
 
 
 const Wrapper = ({children}) => children;
@@ -19,7 +18,7 @@ const Span = styled.span`
 
 const ProblemTabTitle = ({children}) => (
     <Wrapper>
-        <Poll className={iconStyles} />
+        {/* <Poll className={iconStyles} /> */}
         <Span>{children}</Span>
     </Wrapper>
 );

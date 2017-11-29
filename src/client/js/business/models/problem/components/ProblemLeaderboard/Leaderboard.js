@@ -4,7 +4,6 @@ import {onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
-import {Trophy, CloudUpload, ChartLine} from 'mdi-material-ui';
 
 import {getLeaderboardData} from '../../../learnuplet/selector';
 
@@ -77,13 +76,13 @@ class Leaderboard extends React.Component {
                 <LeaderboardHeader>
                     <LeaderboardRow>
                         <LeaderboardHeaderCell>
-                            <Trophy />
+                            T
                         </LeaderboardHeaderCell>
                         <LeaderboardHeaderCell>
-                            <CloudUpload />
+                            C
                         </LeaderboardHeaderCell>
                         <LeaderboardHeaderCell>
-                            <ChartLine />
+                            L
                         </LeaderboardHeaderCell>
                     </LeaderboardRow>
                 </LeaderboardHeader>

@@ -13,6 +13,8 @@ import baseConfig from './base';
 import rules from '../utils/rules';
 import definePlugin from '../utils/definePlugin';
 
+import dll from '../utils/dll';
+
 
 export default merge.smart(baseConfig, {
     devtool: 'source-map',
@@ -54,7 +56,11 @@ export default merge.smart(baseConfig, {
             }],
             threads: 4,
         }),
-        new MinifyPlugin(),
+        dll,
+        new MinifyPlugin({}, {
+            comments: false,
+            sourceMap: true,
+        }),
         new ExtractTextPlugin('style.css'),
         new BundleAnalyzerPlugin({
             analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',

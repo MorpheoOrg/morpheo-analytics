@@ -3,7 +3,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {css} from 'react-emotion';
-import {Calendar, ChartLine, Timer} from 'mdi-material-ui';
 
 
 class ExperimentItem extends React.Component {
@@ -71,15 +70,12 @@ class ExperimentItem extends React.Component {
             </p>
             <ul>
                 <li>
-                    <Calendar />
                     94 days left
                 </li>
                 <li>
-                    <Timer />
                     35
                 </li>
                 <li>
-                    <ChartLine />
                     78.1
                 </li>
             </ul>
