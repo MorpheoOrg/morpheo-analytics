@@ -3,6 +3,12 @@ os: unstable
 environment:
   matrix:
     - nodejs_version: 8.4
+  ACCESS_KEY_ID:
+    secure: UvVPpZf061h7MQW3AzgE9ZaOacQWkJkqwVNfQRshr8Y=
+  SECRET_ACCESS_KEY:
+    secure: doTmODgyuZ2yxCxF4eYjQtZjh78+Ro/UOn/ApTaKaJl+BaMf6dgGFT38u0+2qiMZ  
+  PROJECT_ID:
+    secure: YzwnhCHR/H1gHE5HmHKTkg==
 
 platform:
   - x64
@@ -41,5 +47,5 @@ before_deploy:
   - pip install gsutil
 
 deploy_script:
-  # - ps: gsutil cp release/*.nsis gs://morpheo_analytics
+  - ps: ./build_tools/appveyor/deploy_script.ps1
   - ps: ls release
