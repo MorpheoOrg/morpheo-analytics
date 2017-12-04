@@ -3,12 +3,8 @@ os: unstable
 environment:
   matrix:
     - nodejs_version: 8.4
-  ACCESS_KEY_ID:
-    secure: UvVPpZf061h7MQW3AzgE9ZaOacQWkJkqwVNfQRshr8Y=
-  SECRET_ACCESS_KEY:
-    secure: doTmODgyuZ2yxCxF4eYjQtZjh78+Ro/UOn/ApTaKaJl+BaMf6dgGFT38u0+2qiMZ  
-  PROJECT_ID:
-    secure: YzwnhCHR/H1gHE5HmHKTkg==
+  boto:
+    secure: VWVBTLReDnbgL5sGvnDOgTCy/lJvcmO/6/HHfqHj5/1cjBZtVCr7Kb3ooC+a0QmGUnF1Nltgvu2WIoehvFCfsRO5AKCasxG4uVc94e/luaaGI8EiqznmxGP1PRbcYFrDNg0ZJMZiJO4xPUj+xFnutpBxQ1HXSXoT2mYmX6mGhnatDAB9NX8SMqntlD1bhYiUe+rvjwOqCEX64myUFqRXEbiGRo81sWEfUcP4VFSOYk7ipszM4jIucJG/+4lQrwbWOqgJJP1bFUIDkGhkrxHCIsbAp6+KoDM+/DclKiVAhB4=
 
 platform:
   - x64
@@ -42,6 +38,12 @@ artifacts:
     name: release
 
 before_deploy:
+  # Add the gsutil configuration file
+  - ps: >-
+      $bytes = [System.Convert]::FromBase64String($env:boto)
+
+      [System.IO.File]::WriteAllBytes("$env:USERPROFILE\.boto", $bytes)
+
   - python --version
   - pip --version
   - pip install gsutil
