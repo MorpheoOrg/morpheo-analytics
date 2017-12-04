@@ -65,7 +65,20 @@
             "main.prod.js.map",
             "package.json"
         ],
+        "linux": {
+            "target": "deb"
+        },
+        "mac": {
+            "target": "dmg"
+        },
+        "win": {
+            "target": "nsis"
+        },
+        "nsis": {
+            "artifactName": "${productName}_${version}_win.${ext}"
+        },
         "dmg": {
+            "artifactName": "${productName}_${version}_mac.${ext}",
             "contents": [
                 {
                     "x": 130,
@@ -78,15 +91,6 @@
                     "path": "/Applications"
                 }
             ]
-        },
-        "linux": {
-            "target": "deb"
-        },
-        "mac": {
-            "target": "dmg"
-        },
-        "win": {
-            "target": "nsis"
         }
     },
     "dependencies": {
