@@ -29,7 +29,17 @@ test_script:
   - node --version
   - npm --version
   - npm test
+  - npm run package
+
+artifacts:
+  - path: release
+    name: release
 
 before_deploy:
-  - npm run package
-  - ls release
+  - python --version
+  - pip --version
+  - pip install gsutil
+
+deploy_script:
+  # - ps: gsutil cp release/*.nsis gs://morpheo_analytics
+  - ps: ls release
