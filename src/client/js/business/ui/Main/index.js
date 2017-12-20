@@ -7,6 +7,7 @@ import styled, {css} from 'react-emotion';
 import ActivityBar from '../ActivityBar';
 import Editor from '../Editor';
 import Login from '../Login';
+import Notifications from '../Notifications';
 import SideBar from '../SideBar';
 
 import ProblemDetail from '../../models/problem/components/detail/ProblemDetail';
@@ -47,6 +48,7 @@ const Main = ({isFirstConnection}) => (
             <Editor renderers={renderers} />
         </Container>
         {isFirstConnection && <Login />}
+        <Notifications />
     </Wrapper>
 );
 

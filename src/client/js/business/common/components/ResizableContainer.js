@@ -98,8 +98,8 @@ const noop = () => {};
 
 ResizableContainer.defaultProps = {
     children: null,
-    minWidth: 400,
-    width: 400,
+    minWidth: 300,
+    width: 300,
     onResize: noop,
 };
 

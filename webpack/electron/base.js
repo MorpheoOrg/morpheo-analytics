@@ -4,11 +4,11 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import {dependencies as externals} from '../../src/electron/package.json';
+// import {dependencies as externals} from '../../src/electron/package.json';
 
 
 export default {
-    externals: Object.keys(externals || {}),
+    // externals: Object.keys(externals || {}),
     module: {
         rules: [{
             test: /\.jsx?$/,
@@ -34,7 +34,6 @@ export default {
             'node_modules',
         ],
     },
-
     plugins: [
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(

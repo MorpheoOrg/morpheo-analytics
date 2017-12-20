@@ -4,17 +4,17 @@ import merge from 'webpack-merge';
 import {spawn} from 'child_process';
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
 import HappyPack from 'happypack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import config from 'config';
 
 import baseConfig from './base';
 import rules from '../utils/rules';
 import definePlugin from '../utils/definePlugin';
-
 import dll from '../utils/dll';
 
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/dist`;
-
 
 export default merge.smart(baseConfig, {
     devtool: 'inline-source-map',
@@ -38,7 +38,13 @@ export default merge.smart(baseConfig, {
     },
 
     plugins: [
-        definePlugin('frontend'),
+        definePlugin(),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'src/electron/app.ejs',
+            title: `${config.appName} dev`,
+            inject: true,
+        }),
         new HappyPack({
             id: 'babel',
             loaders: [{
@@ -47,9 +53,7 @@ export default merge.smart(baseConfig, {
                     babelrc: false,
                     cacheDirectory: true,
                     plugins: [
-                        ['universal-import', {
-                            'disableWarnings': true,
-                        }],
+                        ['universal-import', {disableWarnings: true}],
                         'emotion',
                         'transform-runtime',
                         'lodash',
@@ -73,7 +77,6 @@ export default merge.smart(baseConfig, {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-
         new webpack.LoaderOptionsPlugin({
             debug: true,
         }),

@@ -1,16 +1,17 @@
 import path from 'path';
 import webpack from 'webpack';
-import MinifyPlugin from 'babel-minify-webpack-plugin';
+import BabelMinifyPlugin from 'babel-minify-webpack-plugin';
 import AutoDllPlugin from 'autodll-webpack-plugin';
 
 
 const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV));
 
 export default new AutoDllPlugin({
+    inject: true,
     context: path.join(__dirname, '../..'),
     filename: '[name]-dll.js',
     plugins: !DEVELOPMENT ? [
-        new MinifyPlugin({}, {
+        new BabelMinifyPlugin({}, {
             comments: false,
             sourceMap: true,
         }),

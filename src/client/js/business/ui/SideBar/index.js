@@ -8,8 +8,9 @@ import {onlyUpdateForKeys} from 'recompose';
 import actions from './actions';
 import {menuContent} from './iconDefinition';
 import {getVisible} from './selector';
-import FlatButton from '../../common/components/FlatButton';
 import ResizableContainer from '../../common/components/ResizableContainer';
+import FlatButton from '../../common/components/FlatButton';
+import ChevronLeft from '../../common/components/icons/ChevronLeft';
 
 
 const Header = styled.div`
@@ -35,7 +36,7 @@ const FlexContainer = styled.div`
 
 const HideButton = props => (
     <FlatButton {...props} >
-        {'<'}
+        <ChevronLeft />
     </FlatButton>
 );
 

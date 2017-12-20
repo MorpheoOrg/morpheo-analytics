@@ -36,7 +36,6 @@
 /* globals fetch */
 
 import chai, {expect} from 'chai';
-import {describe, it} from 'mocha';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import {
@@ -565,76 +564,76 @@ describe('createFormEntityFactory', () => {
 });
 
 
-describe('updateFormEntityFactory', () => {
-    it('should call fetch with correct parameters when called without jwt', () => {
-        updateFormEntityFactory('foo')('entityId');
-        expect(fetch).to.have.been.calledWith('http://api/foo/entityId/', {
-            method: 'PATCH',
-            headers: {},
-            mode: 'cors',
-            body: JSON.stringify(undefined),
-        });
-    });
+// describe('updateFormEntityFactory', () => {
+//     it('should call fetch with correct parameters when called without jwt', () => {
+//         updateFormEntityFactory('foo')('entityId');
+//         expect(fetch).to.have.been.calledWith('http://api/foo/entityId/', {
+//             method: 'PATCH',
+//             headers: {},
+//             mode: 'cors',
+//             body: JSON.stringify(undefined),
+//         });
+//     });
 
-    it('should call fetch with correct parameters when called with jwt', () => {
-        updateFormEntityFactory('foo')('entityId', 'token');
-        expect(fetch).to.have.been.calledWith('http://api/foo/entityId/', {
-            method: 'PATCH',
-            headers: {
-                Authorization: 'JWT token',
-            },
-            mode: 'cors',
-            body: JSON.stringify(undefined),
-        });
-    });
+//     it('should call fetch with correct parameters when called with jwt', () => {
+//         updateFormEntityFactory('foo')('entityId', 'token');
+//         expect(fetch).to.have.been.calledWith('http://api/foo/entityId/', {
+//             method: 'PATCH',
+//             headers: {
+//                 Authorization: 'JWT token',
+//             },
+//             mode: 'cors',
+//             body: JSON.stringify(undefined),
+//         });
+//     });
 
 
-    // TODO: Find a way to test form with different boundary, can we mock in executed function?
-    // it('should call fetch with correct parameters when called with jwt and payload', () => {
-    //     const file = fs.createReadStream('foo.log');
-    //     updateFormEntityFactory('foo')('token', {name: 'foo', file: [file]});
-    //     const body = new FormData();
-    //     body.append('name', 'foo');
-    //     body.append('file', file);
-    //     console.log(body);
-    //     expect(fetch).to.have.been.calledWith('http://api/foo/', {
-    //         method: 'POST',
-    //         headers: {
-    //             Authorization: 'JWT token',
-    //         },
-    //         mode: 'cors',
-    //         body
-    //     });
-    // });
+//     // TODO: Find a way to test form with different boundary, can we mock in executed function?
+//     // it('should call fetch with correct parameters when called with jwt and payload', () => {
+//     //     const file = fs.createReadStream('foo.log');
+//     //     updateFormEntityFactory('foo')('token', {name: 'foo', file: [file]});
+//     //     const body = new FormData();
+//     //     body.append('name', 'foo');
+//     //     body.append('file', file);
+//     //     console.log(body);
+//     //     expect(fetch).to.have.been.calledWith('http://api/foo/', {
+//     //         method: 'POST',
+//     //         headers: {
+//     //             Authorization: 'JWT token',
+//     //         },
+//     //         mode: 'cors',
+//     //         body
+//     //     });
+//     // });
 
-    it('should handle failed response', (done) => {
-        global.fetch.returns(Promise.resolve({
-            ok: false,
-            text: () => Promise.resolve('Run you fools !'),
-        }));
+//     it('should handle failed response', (done) => {
+//         global.fetch.returns(Promise.resolve({
+//             ok: false,
+//             text: () => Promise.resolve('Run you fools !'),
+//         }));
 
-        updateFormEntityFactory('foo')().then((result) => {
-            expect(result.error.body.message).to.deep.equal('Run you fools !');
-            done();
-        }).catch(done);
-    });
+//         updateFormEntityFactory('foo')().then((result) => {
+//             expect(result.error.body.message).to.deep.equal('Run you fools !');
+//             done();
+//         }).catch(done);
+//     });
 
-    it('should handle successfull response', (done) => {
-        global.fetch.returns(Promise.resolve({
-            ok: true,
-            json: () => 'data',
-        }));
+//     it('should handle successfull response', (done) => {
+//         global.fetch.returns(Promise.resolve({
+//             ok: true,
+//             json: () => 'data',
+//         }));
 
-        const file = fs.createReadStream('foo.log');
-        updateFormEntityFactory('foo')('entityId', 'token', {
-            name: 'foo',
-            file: [file],
-            tutu: undefined,
-        }).then((result) => {
-            expect(result).to.deep.equal({
-                item: 'data',
-            });
-            done();
-        }).catch(done);
-    });
-});
+//         const file = fs.createReadStream('foo.log');
+//         updateFormEntityFactory('foo')('entityId', 'token', {
+//             name: 'foo',
+//             file: [file],
+//             tutu: undefined,
+//         }).then((result) => {
+//             expect(result).to.deep.equal({
+//                 item: 'data',
+//             });
+//             done();
+//         }).catch(done);
+//     });
+// });

@@ -7,6 +7,8 @@ import {css} from 'react-emotion';
 import actionsEditor from '../../../../ui/Editor/actions';
 import {getActivePane} from '../../../../ui/Editor/selectors';
 
+import ChevronRight from '../../../../common/components/icons/ChevronRight';
+
 
 class ProblemItem extends React.Component {
     style = css`
@@ -52,7 +54,7 @@ class ProblemItem extends React.Component {
                 <dt>{this.props.name}</dt>
                 {this.props.description ?
                     <dd>{this.props.description}</dd> : null}
-                {">"}
+                <ChevronRight />
             </dl>
         );
     }

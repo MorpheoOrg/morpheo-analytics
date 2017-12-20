@@ -35,6 +35,7 @@
 
 import {call, put, select, takeLatest, all} from 'redux-saga/effects';
 
+import notificationActions from '../../ui/Notifications/actions';
 import generalActions from '../../../../../common/actions';
 import learnupletActions from '../learnuplet/actions';
 import actions, {actionTypes} from './actions';
@@ -78,11 +79,18 @@ function* postToOrchestrator(request) {
     );
 
     if (error) {
-        console.error(error.message);
         yield put(actions.item.postToOrchestrator.failure(error.body));
+        yield put(notificationActions.send({
+            content: 'A problem occured during sending algorithm',
+            type: 'ERROR',
+        }));
     }
     else {
         yield put(actions.item.postToOrchestrator.success(item));
+        yield put(notificationActions.send({
+            content: 'Algorithm sucessfully sent',
+            type: 'SUCCESS',
+        }));
     }
 }
 

@@ -5,14 +5,15 @@
 import path from 'path';
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 import merge from 'webpack-merge';
-import MinifyPlugin from 'babel-minify-webpack-plugin';
+import BabelMinifyPlugin from 'babel-minify-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HappyPack from 'happypack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import config from 'config';
 
 import baseConfig from './base';
 import rules from '../utils/rules';
 import definePlugin from '../utils/definePlugin';
-
 import dll from '../utils/dll';
 
 
@@ -21,8 +22,8 @@ export default merge.smart(baseConfig, {
     target: 'electron-renderer',
     entry: './src/client/js/index',
     output: {
-        path: path.join(__dirname, '../../src/electron/dist'),
-        publicPath: './dist/',
+        path: path.join(__dirname, '../../build/electron/dist'),
+        publicPath: './',
         filename: 'renderer.prod.js',
     },
     module: {
@@ -30,6 +31,12 @@ export default merge.smart(baseConfig, {
     },
     plugins: [
         definePlugin(),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'src/electron/app.ejs',
+            title: `${config.appName}`,
+            inject: true,
+        }),
         new HappyPack({
             id: 'babel',
             loaders: [{
@@ -37,9 +44,7 @@ export default merge.smart(baseConfig, {
                 query: {
                     babelrc: false,
                     plugins: [
-                        ['universal-import', {
-                            disableWarnings: true,
-                        }],
+                        ['universal-import', {disableWarnings: true}],
                         'emotion',
                         'transform-runtime',
                         'lodash',
@@ -57,13 +62,14 @@ export default merge.smart(baseConfig, {
             threads: 4,
         }),
         dll,
-        new MinifyPlugin({}, {
+        new BabelMinifyPlugin({}, {
             comments: false,
             sourceMap: true,
         }),
         new ExtractTextPlugin('style.css'),
         new BundleAnalyzerPlugin({
-            analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
+            analyzerMode: process.env.OPEN_ANALYZER === 'true' ?
+                'server' : 'disabled',
             openAnalyzer: process.env.OPEN_ANALYZER === 'true',
         }),
     ],
