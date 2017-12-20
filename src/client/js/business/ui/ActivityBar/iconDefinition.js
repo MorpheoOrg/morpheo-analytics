@@ -3,33 +3,38 @@ import React from 'react';
 import ProblemList from '../../models/problem/components/list/ProblemList';
 import ExperimentList from '../../models/experiment/components/ExperimentList';
 
+import Poll from '../../common/components/icons/Poll';
+import FlaskOutline from '../../common/components/icons/FlaskOutline';
+import BookOpen from '../../common/components/icons/BookOpen';
+import CloudUpload from '../../common/components/icons/CloudUpload';
+import Settings from '../../common/components/icons/Settings';
+
 
 export const menuContent = [
     {
         name: 'Problems',
-        icon: "P",
+        icon: <Poll />,
         content: <ProblemList />,
-        // detail: <div>HELLO</div>,
     },
     {
         name: 'Experiments',
-        icon: "F",
+        icon: <FlaskOutline />,
         content: <ExperimentList />,
     },
     {
         name: 'Notebook',
-        icon: "B",
+        icon: <BookOpen />,
     },
 ];
 
 export const modalContent = [
     {
         name: 'Submission',
-        icon: "C",
+        icon: <CloudUpload />,
     },
     {
         name: 'Settings',
-        icon: "S",
+        icon: <Settings />,
     },
 ];
 

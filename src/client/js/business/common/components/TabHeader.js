@@ -8,6 +8,7 @@ import styled, {css} from 'react-emotion';
 import {throttle} from 'lodash';
 
 import FlatButton from './FlatButton';
+import Close from './icons/Close';
 
 
 const Button = styled(FlatButton)`
@@ -177,7 +178,7 @@ class TabTitle extends React.Component {
                         // Prevent to launch bad events during drag move
                         onMouseDown={evt => evt.stopPropagation()}
                     >
-                        X
+                        <Close />
                     </Button>
                 </Tab>
                 {/* Add fix dropable area when allowDrop */

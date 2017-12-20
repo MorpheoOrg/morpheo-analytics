@@ -65,5 +65,15 @@ module.exports = {
         "react",
         "jsx-a11y",
         "import",
+    ],
+    overrides: [
+        {
+            files: "**/*spec.js",
+            env: { "jest": true }
+        },
+        {
+            files: "test/**/*.js",
+            env: { "jest": true }
+        }
     ]
 };

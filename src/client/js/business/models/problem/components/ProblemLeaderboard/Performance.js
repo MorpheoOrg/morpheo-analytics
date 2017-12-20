@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {css} from 'react-emotion';
 
+import Trophy from '../../../../common/components/icons/Trophy';
+import ChartLine from '../../../../common/components/icons/ChartLine';
 import {getLChartData, getLeaderboardData} from '../../../learnuplet/selector';
 import LChart from './LChart';
 
@@ -29,8 +31,8 @@ class Performance extends React.Component {
             css={this.style}
         >
             <span>Performances of <b>{name}</b></span>
-            <span>T{algorithmIndex + 1}</span>
-            <span>L{(bestPerf * 100).toFixed(2)}%</span>
+            <span><Trophy />{algorithmIndex + 1}</span>
+            <span><ChartLine />{(bestPerf * 100).toFixed(2)}%</span>
             <span><LChart data={lChartData} /></span>
         </div>);
     }

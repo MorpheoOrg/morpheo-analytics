@@ -1,11 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
-import FormData from 'form-data';
+
 import algoActions from '../../../algo/actions';
+import FolderDownload from '../../../../common/components/icons/FolderDownload';
+import CloudUpload from '../../../../common/components/icons/CloudUpload';
 
 
 const UploadButton = styled.span`
@@ -108,10 +109,10 @@ class ProblemParticipate extends React.Component {
             css={this.style}
         >
             <h3>Starting kit</h3>
-            <UploadButton>Fmesa_starting_kit.tar.gz</UploadButton>
+            <UploadButton><FolderDownload />mesa_starting_kit.tar.gz</UploadButton>
             <h3>Submit your model</h3>
             <UploadPanel onChange={this.handleOnChange}>
-                C
+                <CloudUpload />
                 Click or drag file to this area to upload your algo
             </UploadPanel>
         </div>);

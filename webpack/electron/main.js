@@ -4,7 +4,7 @@
 
 import HappyPack from 'happypack';
 import merge from 'webpack-merge';
-import MinifyPlugin from 'babel-minify-webpack-plugin';
+import BabelMinifyPlugin from 'babel-minify-webpack-plugin';
 import {BundleAnalyzerPlugin} from 'webpack-bundle-analyzer';
 import baseConfig from './base';
 
@@ -15,11 +15,11 @@ import rules from '../utils/rules';
 export default merge.smart(baseConfig, {
     devtool: 'source-map',
     target: 'electron-main',
-    entry: './src/electron/main.dev',
+    entry: './src/electron/main',
     // 'main.js' in root
     output: {
         path: __dirname,
-        filename: '../../src/electron/main.prod.js',
+        filename: '../../build/electron/index.js',
     },
     module: {
         rules: rules('electron'),
@@ -52,7 +52,7 @@ export default merge.smart(baseConfig, {
             }],
             threads: 4,
         }),
-        new MinifyPlugin(),
+        new BabelMinifyPlugin(),
         new BundleAnalyzerPlugin({
             analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
             openAnalyzer: process.env.OPEN_ANALYZER === 'true',

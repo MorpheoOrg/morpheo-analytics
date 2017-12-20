@@ -7,6 +7,10 @@ import styled, {css} from 'react-emotion';
 
 import {getLeaderboardData} from '../../../learnuplet/selector';
 
+import Trophy from '../../../../common/components/icons/Trophy';
+import FlaskOutline from '../../../../common/components/icons/FlaskOutline';
+import ChartLine from '../../../../common/components/icons/ChartLine';
+
 
 const LeaderboardHeader = styled.thead`
     background-color: #FAFAFB;
@@ -58,6 +62,8 @@ class Leaderboard extends React.Component {
     }
 
     style = css`
+        display: block;
+        overflow: auto;
         flex-grow: 1;
         width: 50%;
         border-collapse:collapse;
@@ -76,13 +82,13 @@ class Leaderboard extends React.Component {
                 <LeaderboardHeader>
                     <LeaderboardRow>
                         <LeaderboardHeaderCell>
-                            T
+                            <Trophy />
                         </LeaderboardHeaderCell>
                         <LeaderboardHeaderCell>
-                            C
+                            <FlaskOutline />
                         </LeaderboardHeaderCell>
                         <LeaderboardHeaderCell>
-                            L
+                            <ChartLine />
                         </LeaderboardHeaderCell>
                     </LeaderboardRow>
                 </LeaderboardHeader>

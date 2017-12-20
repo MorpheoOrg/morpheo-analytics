@@ -27,6 +27,7 @@ chrome-user-data
 .idea
 *.iml
 .vscode
+build/
 dist/
 coverage
 yarn.lock

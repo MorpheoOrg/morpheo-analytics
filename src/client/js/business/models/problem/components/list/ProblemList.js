@@ -35,12 +35,14 @@ class ProblemList extends React.Component {
     }
     render() {
         const {init, loading} = this.props;
-        return (<div
-            css={this.style}
-        >
-            {(!init || loading) && 'Loading...'}
-            {!loading && init && this.renderProblems()}
-        </div>);
+        return (
+            <div
+                css={this.style}
+            >
+                {(!init || loading) && 'Loading...'}
+                {!loading && init && this.renderProblems()}
+            </div>
+        );
     }
 }
 
