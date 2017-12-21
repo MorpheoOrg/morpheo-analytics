@@ -13,15 +13,13 @@ import LChart from './LChart';
 
 class Performance extends React.Component {
     style = css`
-        flex-grow: 1;
         display: flex;
         flex-direction: column;
-        margin-right: 40px;
-        margin-left: 10px;
 
         & span{
             padding-bottom: 10px;
         }
+        min-width: 50%;
     `;
 
     render() {

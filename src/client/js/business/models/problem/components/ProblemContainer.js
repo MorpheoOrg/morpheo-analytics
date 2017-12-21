@@ -5,6 +5,7 @@ import styled, {css} from 'react-emotion';
 
 
 const Container = styled.div`
+    height: 100%;
     line-height: 180%;
 
     overflow: hidden;
@@ -86,6 +87,16 @@ const SectionLi = styled.li`
     ${({active}) => active ? activeStyle : null};
 `;
 
+const ContentContainer = styled.div`
+    height: 100%;
+    overflow-y: auto;
+
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+`;
+
 class ProblemContainer extends React.Component {
     handleOnClick = index => (event) => {
         event.preventDefault();
@@ -124,7 +135,9 @@ class ProblemContainer extends React.Component {
                         )
                     )}
                 </SectionUl>
-                <Content {...contentProps} />
+                <ContentContainer>
+                    <Content {...contentProps} />
+                </ContentContainer>
             </Container>
         );
     }

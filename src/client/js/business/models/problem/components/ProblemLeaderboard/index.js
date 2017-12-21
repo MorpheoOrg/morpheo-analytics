@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import {onlyUpdateForKeys} from 'recompose';
 import styled from 'react-emotion';
@@ -10,7 +11,8 @@ import Performance from './Performance';
 const Container = styled.div`
     display: flex;
     width: 100%;
-    padding-top: 40px;
+    height: 100%;
+    flex-wrap: wrap-reverse;
 `;
 
 class ProblemLeaderboard extends React.Component {
@@ -22,6 +24,7 @@ class ProblemLeaderboard extends React.Component {
 
     render() {
         const {problemId, selectedAlgorithmId} = this.props;
+
         return (
             <Container>
                 <Leaderboard
@@ -33,7 +36,8 @@ class ProblemLeaderboard extends React.Component {
                     problemId={problemId}
                     algorithmId={selectedAlgorithmId}
                 />
-            </Container>);
+            </Container>
+        );
     }
 }
 

@@ -19,7 +19,10 @@ import {dragActive, getMoveData, getPane} from '../selectors';
  * Main Container of the component
  */
 const MainContainer = styled.div`
-    flex-grow: 1;
+    /* width is necessary to adapt the size of flex */
+    width: 0;
+    flex: 1 1 auto;
+    /*overflow-y: auto;*/
     border-right: 1px solid #ccc!important;
     position: relative;
 
@@ -45,12 +48,14 @@ const TabHiddenArea = styled.li`
 `;
 
 const ContentContainer = styled.div`
-    flex-grow: 1;
     position: relative;
 
-    /* Need to do that to be sure height is computed correctly. */
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
+
+    /* Need to do that to be sure height is computed correctly. */
+    height: 0;
 `;
 
 class Pane extends React.Component {

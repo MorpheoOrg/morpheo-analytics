@@ -1,9 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {onlyUpdateForKeys} from 'recompose';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import styled, {css} from 'react-emotion';
+import {css} from 'react-emotion';
 import ReactMarkdown from 'react-markdown';
 import {shell} from 'electron';
 
@@ -26,52 +23,26 @@ class RouterLink extends React.Component {
     `
 
     render() {
-        console.log(this.props);
-        return (<a
-            css={this.style}
-            onClick={this.handleOnClick}
-        >
-            {this.props.children}
-        </a>);
-    }
-};
-
-
-class ProblemContent extends React.Component {
-    style = css`
-        overflow-y: auto;
-        padding-left: 40px;
-        padding-right: 40px;
-        padding-top: 10px;
-    `;
-
-    render() {
-        return (<div
-            css={this.style}
-        >
-            <ReactMarkdown
-                source={description}
-                renderers={{Link: RouterLink}}
-            />
-        </div>);
+        return (
+            <a
+                css={this.style}
+                onClick={this.handleOnClick}
+            >
+                {this.props.children}
+            </a>
+        );
     }
 }
 
-ProblemContent.propTypes = {
 
-};
+const ProblemContent = () => (
+    <ReactMarkdown
+        source={description}
+        renderers={{Link: RouterLink}}
+    />
+);
 
-ProblemContent.defaultProps = {
 
-};
+export default onlyUpdateForKeys([
 
-const mapStateToProps = (state, ownProps) => ({
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
-
-])(ProblemContent));
+])(ProblemContent);
