@@ -3,18 +3,25 @@ import {onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import styled, {css} from 'react-emotion';
+import {shell} from 'electron';
 
 import algoActions from '../../../algo/actions';
 import FolderDownload from '../../../../common/components/icons/FolderDownload';
 import CloudUpload from '../../../../common/components/icons/CloudUpload';
 
 
-const UploadButton = styled.span`
+const UploadButton = styled.button`
     color:  #5600FF;
-    margin: auto;
     display: flex;
     padding-bottom: 20px;
     position: relative;
+    cursor: pointer;
+    border: none;
+    background-color: inherit;
+    align-items: center;
+    &:focus {
+        outline: 0;
+    }
 
     & svg {
         padding-right: 5px;
@@ -26,7 +33,6 @@ const UploadButton = styled.span`
         width: 225px;
         opacity: 0;
         padding: 14px 0;
-        cursor: pointer;
     }
 
     &:hover{
@@ -65,20 +71,39 @@ class UploadPanel extends React.Component {
 
     render() {
         const {children, onChange} = this.props;
-        return (<div
-            css={this.style}
-            aria-disabled
-        >
-            <input
-                type="file"
-                onChange={onChange}
-            />
-            {children}
-        </div>);
+        return (
+            <div
+                css={this.style}
+                aria-disabled
+            >
+                <input
+                    type="file"
+                    onChange={onChange}
+                />
+                {children}
+            </div>
+        );
     }
 }
 
 class ProblemParticipate extends React.Component {
+    downloadStartingKit = (event) => {
+        event.preventDefault();
+
+        // Download the file
+        // setTimeout(() => {
+        //     const response = {
+        //         file: 'https://storage.cloud.google.com/mesa_starting_kit/mesa_starting_kit.tar.gz?_ga=1.218895327.773593531.1497863845',
+        //     };
+        //     window.location.href = response.file;
+
+        // }, 100);
+
+        // As the user need to be connected to google to download the starting
+        // kit, we open an external browser
+        shell.openExternal('https://storage.cloud.google.com/mesa_starting_kit/mesa_starting_kit.tar.gz?_ga=1.218895327.773593531.1497863845');
+    }
+
     handleOnChange = (event) => {
         const {postAlgo, problemId} = this.props;
         const file = event.target.files[0];
@@ -109,7 +134,9 @@ class ProblemParticipate extends React.Component {
             css={this.style}
         >
             <h3>Starting kit</h3>
-            <UploadButton><FolderDownload />mesa_starting_kit.tar.gz</UploadButton>
+            <UploadButton onClick={this.downloadStartingKit}>
+                <FolderDownload />mesa_starting_kit.tar.gz
+            </UploadButton>
             <h3>Submit your model</h3>
             <UploadPanel onChange={this.handleOnChange}>
                 <CloudUpload />
