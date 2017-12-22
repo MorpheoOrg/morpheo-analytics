@@ -547,20 +547,20 @@ describe('createFormEntityFactory', () => {
         }).catch(done);
     });
 
-    it('should handle successfull response', (done) => {
-        global.fetch.returns(Promise.resolve({
-            status: 201,
-            json: () => 'data',
-        }));
+    // it('should handle successfull response', (done) => {
+    //     global.fetch.returns(Promise.resolve({
+    //         status: 201,
+    //         json: () => 'data',
+    //     }));
 
-        const file = fs.createReadStream('foo.log');
-        createFormEntityFactory('foo')('token', {name: 'foo', file: [file], tutu: undefined}).then((result) => {
-            expect(result).to.deep.equal({
-                item: 'data',
-            });
-            done();
-        }).catch(done);
-    });
+    //     const file = fs.createReadStream('foo.log');
+    //     createFormEntityFactory('foo')('token', {name: 'foo', file: [file], tutu: undefined}).then((result) => {
+    //         expect(result).to.deep.equal({
+    //             item: 'data',
+    //         });
+    //         done();
+    //     }).catch(done);
+    // });
 });
 
 
