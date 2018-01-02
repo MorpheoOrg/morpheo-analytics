@@ -1,5 +1,6 @@
 import {actionTypes} from '../actions';
 
+
 const initialState = {
     results: {},
     loading: true,
