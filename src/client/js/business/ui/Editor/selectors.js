@@ -17,7 +17,7 @@ export const getPanesLength = state => state.settings.editor.panes.length;
 /**
  * Get the tab dictionnary from the redux state.
  * @param {ReduxState} state - Redux state.
- * @return {<string {array<TabState>}} - Dictionnary of tabs.
+ * @return {Array<TabState>} - Dictionnary of tabs.
  */
 export const getTabs = state => state.settings.editor.tabs;
 

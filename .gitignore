@@ -29,6 +29,7 @@ chrome-user-data
 .vscode
 build/
 dist/
+doc/
 coverage
 yarn.lock
 .happypack
@@ -36,3 +37,4 @@ yarn.lock
 dll
 release
 src/electron/main.prod.js*
+config/devsecret.js

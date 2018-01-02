@@ -34,8 +34,9 @@
  */
 import {actionTypes} from '../actions';
 
-import item from './item';
+// import item from './item';
 import list from './list';
+
 
 export default {
     // item,
