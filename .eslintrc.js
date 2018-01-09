@@ -68,11 +68,11 @@ module.exports = {
     ],
     overrides: [
         {
-            files: "**/*spec.js",
-            env: { "jest": true }
-        },
-        {
-            files: "test/**/*.js",
+            files: [
+                "**/*spec.js",
+                "test/**/*.js",
+                "src/client/js/utils/testing/**/*.js",
+            ],
             env: { "jest": true }
         }
     ]

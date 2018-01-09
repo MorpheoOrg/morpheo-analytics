@@ -67,14 +67,7 @@ ComponentBar.defaultProps = {
     bottomChildren: [],
 };
 
-const mapStateToProps = (state, ownProps) => ({
 
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
-
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([
+export default onlyUpdateForKeys([
     'topChildren', 'middleChildren', 'bottomChildren',
-])(ComponentBar));
+])(ComponentBar);

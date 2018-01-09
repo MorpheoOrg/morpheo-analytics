@@ -2,6 +2,7 @@ module.exports = {
     plugins: [],
     recurseDepth: 10,
     source: {
+        include: 'src/app/utils/testing',
         includePattern: '.+\\.js(doc|x)?$',
         excludePattern: '(^|\\/|\\\\)_',
     },
@@ -18,5 +19,6 @@ module.exports = {
         encoding: 'utf8',
         destination: './doc',
         recurse: true,
+        template: 'node_modules/minami',
     },
 };

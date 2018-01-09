@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Morpheo Org. 2017
  *
  * contact@morpheo.co
@@ -34,11 +34,9 @@
  */
 import {actionTypes} from '../actions';
 
-// import item from './item';
 import list from './list';
 
 
 export default {
-    // item,
     list: list(actionTypes),
 };

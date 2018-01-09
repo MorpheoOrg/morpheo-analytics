@@ -1,7 +1,6 @@
 import React from 'react';
 
 import ProblemList from '../../models/problem/components/list/ProblemList';
-import ExperimentList from '../../models/experiment/components/ExperimentList';
 
 import Poll from '../../common/components/icons/Poll';
 import FlaskOutline from '../../common/components/icons/FlaskOutline';
@@ -19,7 +18,6 @@ export const menuContent = [
     {
         name: 'Experiments',
         icon: <FlaskOutline />,
-        content: <ExperimentList />,
     },
     {
         name: 'Notebook',

@@ -34,14 +34,8 @@
  */
 import {createAction} from 'redux-actions';
 
-import {
-    actions as listActions,
-    actionTypes as listActionTypes,
-} from '../../../actions/list';
-import {
-    actions as itemActions,
-    actionTypes as itemActionTypes,
-} from '../../../actions/item';
+import {actions as listActions, actionTypes as listActionTypes} from '../../../actions/list';
+import {actions as itemActions, actionTypes as itemActionTypes} from '../../../actions/item';
 import createRequestActionTypes from '../../../actions/createRequestActionTypes';
 
 
@@ -51,13 +45,12 @@ export const actionTypes = {
     item: {
         ...itemActionTypes(prefix),
         post: createRequestActionTypes(`${prefix}_ITEM_POST`),
-        postToOrchestrator: createRequestActionTypes(
-            `${prefix}_ITEM_POST_ORCHESTRATOR`
-        ),
+        postToOrchestrator: createRequestActionTypes(`${prefix}_ITEM_POST_ORCHESTRATOR`),
     },
     list: listActionTypes(prefix),
 };
 
+// TODO: Add assert in actionss
 const actions = {
     item: {
         ...itemActions(actionTypes.item),

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Morpheo Org. 2017
  *
  * contact@morpheo.co
@@ -45,97 +45,102 @@ import {
     postAlgoToOrchestrator as postAlgoToOrchestratorApi,
 } from './api';
 import {getLoginVariables} from '../../ui/Login/selectors';
+import {FetchError} from '../../../utils/errors';
 
 
-function* postAlgo(request) {
-    const {body, problemId} = request.payload;
-    const {STORAGE_USER, STORAGE_PASSWORD} = yield select(getLoginVariables);
-    const {item, error} = yield call(
-        postAlgoApi, body, STORAGE_USER, STORAGE_PASSWORD
-    );
-
-    if (error) {
-        console.error(error.message);
-        yield put(actions.item.post.failure(error.body));
-    }
-    else {
-        yield put(actions.item.post.success({...item, problemId}));
-        // Post to orchestrator too
-        yield put(actions.item.postToOrchestrator.request({
-            uuid: item.uuid,
-            name: item.name,
-            problem: problemId,
-        }));
-    }
-}
-
-function* postToOrchestrator(request) {
+// TODO: add problemId into payload instead of sending string directly or take
+// it directly from the state
+export function* loadAlgosListSaga({payload}) {
     const {
         ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
     } = yield select(getLoginVariables);
-    const {item, error} = yield call(
-        postAlgoToOrchestratorApi, request.payload,
-        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-    );
+    try {
+        const {algos} = yield call(fetchAlgosApi, {
+            user: ORCHESTRATOR_USER,
+            password: ORCHESTRATOR_PASSWORD,
+            parameters: {
+                problem: payload
+            },
+        });
 
-    if (error) {
-        yield put(actions.item.postToOrchestrator.failure(error.body));
-        yield put(notificationActions.send({
-            content: 'A problem occured during sending algorithm',
-            type: 'ERROR',
+        // Let's fetch the learnuplet from orchestrator
+        for (let i = 0; i < algos.length; i += 1) {
+            yield put(learnupletActions.list.request(
+                algos[i].uuid,
+            ));
+        }
+
+        yield put(actions.list.success({
+            list: {
+                [payload]: algos,
+            }
         }));
     }
-    else {
-        yield put(actions.item.postToOrchestrator.success(item));
+    catch (error) {
+        if (error instanceof FetchError) {
+            yield put(generalActions.error.set(error.message));
+
+            yield put(actions.list.failure({
+                message: error.message,
+                status: error.status,
+            }));
+        }
+        throw (error);
+    }
+}
+
+
+export function* postAlgoSaga({payload}) {
+    const {body, problemId} = payload;
+    const {
+        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
+        STORAGE_USER, STORAGE_PASSWORD,
+    } = yield select(getLoginVariables);
+
+    try {
+        // First we post the algo on storage
+        const algo = yield call(postAlgoApi, {
+            body,
+            user: STORAGE_USER,
+            password: STORAGE_PASSWORD
+        });
+
+        // Then we post the algo to orchestrator to launch the computation
+        yield call(postAlgoToOrchestratorApi, {
+            body: {
+                uuid: algo.uuid,
+                name: algo.name,
+                problem: problemId,
+            },
+            user: ORCHESTRATOR_USER,
+            password: ORCHESTRATOR_PASSWORD,
+        });
+
+        yield put(actions.item.post.success({...algo, problemId}));
         yield put(notificationActions.send({
             content: 'Algorithm sucessfully sent',
             type: 'SUCCESS',
         }));
     }
+    catch (error) {
+        if (error instanceof FetchError) {
+            yield put(generalActions.error.set(error.message));
+            yield put(actions.item.post.failure({
+                message: error.message,
+                status: error.status,
+            }));
+            yield put(notificationActions.send({
+                content: 'A problem occured during sending algorithm',
+                type: 'ERROR',
+            }));
+        }
+        throw (error);
+    }
 }
 
-export const loadList = (actions, fetchList) =>
-    function* loadListSaga(request) {
-        const {
-            ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-        } = yield select(getLoginVariables);
-        const {error, list} = yield call(
-            fetchList, {problem: request.payload},
-            ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-        );
-
-        if (error) {
-            if (error.body && error.body.message) {
-                console.error(error.body.message);
-            }
-            if (error && error.message) {
-                yield put(generalActions.error.set(error.message));
-            }
-            yield put(actions.list.failure(error.body));
-        }
-        else {
-            // Let's fetch the learnuplet from orchestrator
-            const l = list.algos.length;
-
-            for (let i = 0; i < l; i += 1) {
-                yield put(learnupletActions.list.request(
-                    list.algos[i].uuid,
-                ));
-            }
-
-            yield put(actions.list.success({[request.payload]: list.algos}));
-
-            return list;
-        }
-    };
-
-const algoSagas = function* algoSagas() {
+export default function* algoSagas() {
     yield all([
-        takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchAlgosApi)),
-        takeLatest(actionTypes.item.post.REQUEST, postAlgo),
-        takeLatest(actionTypes.item.postToOrchestrator.REQUEST, postToOrchestrator),
+        takeLatest(actionTypes.list.REQUEST, loadAlgosListSaga),
+        takeLatest(actionTypes.item.post.REQUEST, postAlgoSaga),
     ]);
-};
-
-
-export default algoSagas;
+}
