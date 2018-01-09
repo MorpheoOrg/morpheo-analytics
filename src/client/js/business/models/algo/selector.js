@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Morpheo Org. 2017
  *
  * contact@morpheo.co
@@ -33,18 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import {createSelector} from 'reselect';
+export const getError = state => state.models.algo.item.error;
 
-
-const error = state => state.models.algo.item.error;
-
-export const getError = createSelector([error],
-    error => error ? (
-        JSON.parse(error.message).message ?
-            JSON.parse(error.message).message :
-            JSON.parse(error.message).non_field_errors
-    ) : error,
-);
 
 export default {
     getError,

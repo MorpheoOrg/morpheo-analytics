@@ -1,8 +1,8 @@
 const initialState = {
     init: false,
-    results: {},
-    error: null,
     loading: false,
+    error: null,
+    results: {},
 };
 
 export default actionTypes =>
@@ -14,26 +14,28 @@ export default actionTypes =>
                 ...state,
                 loading: true,
             };
-        case actionTypes.list.SUCCESS:
+        case actionTypes.list.SUCCESS: {
+            const {list} = payload;
             return {
                 ...state,
-                results: {...state.results, ...payload},
+                results: {
+                    ...state.results,
+                    ...list
+                },
                 init: true,
                 error: null,
                 loading: false,
             };
-        case actionTypes.list.FAILURE:
+        }
+        case actionTypes.list.FAILURE: {
             return {
                 ...state,
-                results: {},
-                error: payload,
                 loading: false,
+                error: {
+                    ...payload
+                },
             };
-        case actionTypes.list.UPDATE:
-            return {
-                ...state,
-                ...payload, // update count, next, previous, results if necessary
-            };
+        }
         default:
             return state;
         }

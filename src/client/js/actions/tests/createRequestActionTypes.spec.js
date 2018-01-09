@@ -13,5 +13,6 @@ describe('createRequestActionTypes', () => {
                 SUCCESS: 'foo_SUCCESS',
                 FAILURE: 'foo_FAILURE',
             });
-        });
+        }
+    );
 });
