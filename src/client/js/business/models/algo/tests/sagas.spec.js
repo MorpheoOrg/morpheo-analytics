@@ -12,7 +12,7 @@ import algoSagas, {loadAlgosListSaga, postAlgoSaga} from '../sagas';
 
 
 describe('loadAlgosListSaga', () => {
-    const payload = {id: 'problemid'};
+    const payload = 'problemid';
     const loadSaga = itSagaHelper(loadAlgosListSaga)({payload});
 
     it('should get algos and put success actions', () => {
@@ -49,6 +49,8 @@ describe('loadAlgosListSaga', () => {
             })));
             return ({algos});
         });
+
+        expect(loadSagaSuccessBranch.isEnded()).toBe(true);
     });
 
     it('should manage FetchError and put failed actions', () => {
@@ -68,6 +70,9 @@ describe('loadAlgosListSaga', () => {
                 status: statusError,
             })));
         });
+
+        expect(() => loadSagaFetchFailureBranch.test()).not.toThrow();
+        expect(loadSagaFetchFailureBranch.isEnded()).toBe(true);
     });
 
     it('should throw Error different from FetchError', () => {
@@ -77,6 +82,7 @@ describe('loadAlgosListSaga', () => {
         // TODO: Change the code to have 100% coverage
         expect(() => loadSagaFetchFailureBranch.test())
             .toThrow('this is an error');
+        expect(loadSagaFetchFailureBranch.isEnded()).toBe(true);
     });
 });
 
@@ -132,6 +138,8 @@ describe('postAlgoSaga', () => {
                 type: 'SUCCESS',
             })));
         });
+
+        expect(postSagaSuccessBranch.isEnded()).toBe(true);
     });
 
     it('should manage FetchError and put failed actions', () => {
@@ -158,6 +166,9 @@ describe('postAlgoSaga', () => {
                 type: 'ERROR',
             })));
         });
+
+        expect(() => postSagaFailureBranch.test()).not.toThrow();
+        expect(postSagaFailureBranch.isEnded()).toBe(true);
     });
 
     it('should throw Error different from FetchError', () => {
@@ -166,6 +177,8 @@ describe('postAlgoSaga', () => {
 
         expect(() => postSagaFailureBranch.test())
             .toThrow('this is an error');
+
+        expect(postSagaFailureBranch.isEnded()).toBe(true);
     });
 });
 

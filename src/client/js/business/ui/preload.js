@@ -30,7 +30,6 @@ if (process.env.NODE_ENV !== 'production') {
         module.hot.accept('../models/sagas', () => {
             reloadSaga('models', require('../models/sagas').default);
         });
-
     }
 }
 

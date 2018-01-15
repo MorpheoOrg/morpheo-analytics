@@ -45,7 +45,7 @@ export const actionTypes = {
     item: {
         ...itemActionTypes(prefix),
         post: createRequestActionTypes(`${prefix}_ITEM_POST`),
-        postToOrchestrator: createRequestActionTypes(`${prefix}_ITEM_POST_ORCHESTRATOR`),
+        // postToOrchestrator: createRequestActionTypes(`${prefix}_ITEM_POST_ORCHESTRATOR`),
     },
     list: listActionTypes(prefix),
 };
@@ -59,11 +59,11 @@ const actions = {
             success: createAction(actionTypes.item.post.SUCCESS),
             failure: createAction(actionTypes.item.post.FAILURE),
         },
-        postToOrchestrator: {
-            request: createAction(actionTypes.item.postToOrchestrator.REQUEST),
-            success: createAction(actionTypes.item.postToOrchestrator.SUCCESS),
-            failure: createAction(actionTypes.item.postToOrchestrator.FAILURE),
-        },
+        // postToOrchestrator: {
+        //     request: createAction(actionTypes.item.postToOrchestrator.REQUEST),
+        //     success: createAction(actionTypes.item.postToOrchestrator.SUCCESS),
+        //     failure: createAction(actionTypes.item.postToOrchestrator.FAILURE),
+        // },
     },
     list: listActions(actionTypes.list),
 };

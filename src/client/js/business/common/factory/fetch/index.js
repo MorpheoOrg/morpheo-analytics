@@ -2,7 +2,7 @@
 import {isEmpty} from 'lodash';
 import queryString from 'query-string';
 
-import {FetchError} from '../errors';
+import {FetchError} from '../../../../utils/errors';
 
 
 export const getEntityFactory = apiURL => async ({

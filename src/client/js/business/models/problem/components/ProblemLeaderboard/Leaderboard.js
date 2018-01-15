@@ -139,44 +139,7 @@ class Leaderboard extends React.Component {
                     </Table>
                 </FixedDiv>
             </Container>
-        )
-        // return (
-        //     <Container>
-        //         <Table>
-        //             <LeaderboardHeader>
-        //                 <LeaderboardRow>
-        //                     <LeaderboardHeaderCell>
-        //                         <Trophy />
-        //                     </LeaderboardHeaderCell>
-        //                     <LeaderboardHeaderCell>
-        //                         <FlaskOutline />
-        //                     </LeaderboardHeaderCell>
-        //                     <LeaderboardHeaderCell>
-        //                         <ChartLine />
-        //                     </LeaderboardHeaderCell>
-        //                 </LeaderboardRow>
-        //             </LeaderboardHeader>
-
-        //             <LeaderboardBody>
-        //                 {leaderboardData.map(({name, uuid, bestPerf}, index) => (
-        //                     <LeaderboardRow
-        //                         key={uuid}
-        //                         onClick={this.handleLeaderboardRowClick(uuid)}
-        //                         selected={
-        //                             (selectedAlgorithmId || leaderboardData[0].uuid) === uuid
-        //                         }
-        //                     >
-        //                         <LeaderboardCell>{index + 1}</LeaderboardCell>
-        //                         <LeaderboardCell>{name}</LeaderboardCell>
-        //                         <LeaderboardCell>
-        //                             {(bestPerf * 100).toFixed(2)}
-        //                         </LeaderboardCell>
-        //                     </LeaderboardRow>
-        //                 ))}
-        //             </LeaderboardBody>
-        //         </Table>
-        //     </Container>
-        // );
+        );
     }
 }
 

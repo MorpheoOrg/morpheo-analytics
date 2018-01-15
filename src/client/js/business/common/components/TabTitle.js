@@ -8,9 +8,12 @@ import {onlyUpdateForKeys} from 'recompose';
 const TabTitle = ({renderers, contentType, title, props}) => {
     const {title: Title} = renderers[contentType];
     return (
-        <Title {...props}>
-            {title}
-        </Title>
+        // <Title {...props}>
+        //     {title}
+        // </Title>
+        <div>
+            hello max-pol
+        </div>
     );
 };
 

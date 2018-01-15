@@ -79,13 +79,12 @@ export function* loadAlgosListSaga({payload}) {
     catch (error) {
         if (error instanceof FetchError) {
             yield put(generalActions.error.set(error.message));
-
             yield put(actions.list.failure({
                 message: error.message,
                 status: error.status,
             }));
         }
-        throw (error);
+        else throw error;
     }
 }
 
@@ -124,6 +123,7 @@ export function* postAlgoSaga({payload}) {
     }
     catch (error) {
         if (error instanceof FetchError) {
+            // throw new FetchError('toto', 354);
             yield put(generalActions.error.set(error.message));
             yield put(actions.item.post.failure({
                 message: error.message,
@@ -134,7 +134,7 @@ export function* postAlgoSaga({payload}) {
                 type: 'ERROR',
             }));
         }
-        throw (error);
+        else throw error;
     }
 }
 

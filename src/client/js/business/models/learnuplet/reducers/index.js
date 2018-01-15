@@ -33,8 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
- import list from './list';
 import {actionTypes} from '../actions';
+import list from './list';
 
 
 export default {
