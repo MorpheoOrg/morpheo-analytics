@@ -26,7 +26,7 @@ class ExtendableError extends ES6Error {
         // Maintains proper stack trace for where our error was thrown
         // (only available on V8)
         if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, ExtendableError);
+            Error.captureStackTrace(this, this.constructor);
         }
     }
 }
@@ -36,6 +36,10 @@ export class FetchError extends ExtendableError {
     constructor(message, status) {
         super(message);
         this.status = status || 500;
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        }
     }
 }
 
