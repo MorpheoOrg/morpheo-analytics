@@ -41,6 +41,8 @@ class GeneratorHelper {
         }
     }
 
+    isEnded = () => this.generator.next(this.input).done;
+
     /**
      * Copy the generator at the current execution. Can be used to test the
      * different branches of a generator.

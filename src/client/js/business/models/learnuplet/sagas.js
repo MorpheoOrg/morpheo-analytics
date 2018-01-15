@@ -41,29 +41,43 @@ import {
     fetchLearnupletByAlgo as fetchLearnupletByAlgoApi,
 } from './api';
 import {getLoginVariables} from '../../ui/Login/selectors';
+import {FetchError} from '../../../utils/errors';
 
 
-function* loadList(request) {
+export function* loadLearnupletList({payload}) {
     const {
         ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
     } = yield select(getLoginVariables);
-    const {error, list} = yield call(
-        fetchLearnupletByAlgoApi, {algo: request.payload},
-        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-    );
+    try {
+        const {learnuplets} = yield call(fetchLearnupletByAlgoApi, {
+            user: ORCHESTRATOR_USER,
+            password: ORCHESTRATOR_PASSWORD,
+            parameters: {
+                algo: payload,
+            },
+        });
 
-    if (error) {
-        yield put(actions.list.failure(error.body));
+        yield put(actions.list.success({
+            list: {
+                [payload]: learnuplets,
+            },
+        }));
     }
-
-    yield put(actions.list.success({[request.payload]: list.learnuplets}));
+    catch (error) {
+        if (error instanceof FetchError) {
+            yield put(actions.list.failure({
+                error: {
+                    message: error.message,
+                    status: error.status,
+                }
+            }));
+        }
+        else throw error;
+    }
 }
 
-const learnupletSagas = function* learnupletSagas() {
+export default function* () {
     yield all([
-        takeEvery(actionTypes.list.REQUEST, loadList),
+        takeEvery(actionTypes.list.request, loadLearnupletList),
     ]);
-};
-
-
-export default learnupletSagas;
+}

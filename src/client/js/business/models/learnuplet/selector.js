@@ -37,13 +37,15 @@ import {createSelector} from 'reselect';
 import {sortBy, isEmpty} from 'lodash';
 import createDeepEqualSelector from '../../../utils/selector';
 
+
 const error = state => state.models.learnuplet.item.error;
 const results = state => state.models.learnuplet.list.results;
 const algo = state => state.models.algos.list.results;
 const problem = state => state.models.problems.list.results;
 
 // Return an explicit message if error occured when learnuplet is fetched
-export const getError = createSelector([error],
+export const getError = createSelector(
+    [error],
     error => error ? (
         JSON.parse(error.message).message ?
             JSON.parse(error.message).message :
@@ -52,24 +54,29 @@ export const getError = createSelector([error],
 );
 
 // Compute all the data necessary to plus the learning performances
-export const getLChartData = createDeepEqualSelector([results],
-    results => !isEmpty(results) ? Object.keys(results).reduce((p, c) => ({
-        ...p,
-        [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
-            [...previous, {
-                name: current.train_data.length + (
-                    previous.length ? previous[previous.length - 1].name : 0
-                ),
-                perf: current.perf * 100,
-            }],
-        []),
-    }),
-    {}) : {},
+export const getLChartData = createDeepEqualSelector(
+    [results],
+    results => !isEmpty(results) ?
+        Object.keys(results).reduce((p, c) => ({
+            ...p,
+            [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
+                [...previous, {
+                    name: current.train_data.length + (
+                        previous.length ? previous[previous.length - 1].name : 0
+                    ),
+                    perf: current.perf * 100,
+                }],
+            []),
+        }), {}) :
+        {},
 );
 
 // Return an array of algos from the dictionnary of algos
-const flattenAlgos = createDeepEqualSelector([algo],
-    algo => Object.keys(algo).reduce((p, c) => [...p, ...algo[c]], []),
+const flattenAlgos = createDeepEqualSelector(
+    [algo],
+    algo => Object.keys(algo).reduce(
+        (p, c) => [...p, ...algo[c]], []
+    )
 );
 
 // Return the leaderboard information for each problem
@@ -81,7 +88,8 @@ export const getLeaderboardData = createDeepEqualSelector(
             const learnuplets = Object.keys(results).filter(
                 x => algo.filter(o => o.problem === cur.uuid)
                     .map(o => o.uuid)
-                    .includes(x));
+                    .includes(x)
+            );
 
             return {
                 ...prev,

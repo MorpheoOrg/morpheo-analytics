@@ -33,20 +33,18 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
+
 import {
-    actions as listActions,
-    actionTypes as listActionTypes,
-} from '../../../actions/list';
+    actionsFactory, actionsTypesFactory,
+} from '../../common/factory/list/actions';
 
-
-const prefix = 'MODELS::LEARNUPLET';
 
 export const actionTypes = {
-    list: listActionTypes(prefix),
+    list: actionsTypesFactory('MODELS::LEARNUPLET'),
 };
 
 const actions = {
-    list: listActions(actionTypes.list),
+    list: actionsFactory(actionTypes.list),
 };
 
 export default actions;
