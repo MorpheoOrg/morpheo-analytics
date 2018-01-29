@@ -20,7 +20,7 @@ import dll from '../utils/dll';
 export default merge.smart(baseConfig, {
     devtool: 'source-map',
     target: 'electron-renderer',
-    entry: './src/client/js/index',
+    entry: './src/client/index',
     output: {
         path: path.join(__dirname, '../../build/electron/dist'),
         publicPath: './',
@@ -31,12 +31,6 @@ export default merge.smart(baseConfig, {
     },
     plugins: [
         definePlugin(),
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: 'src/electron/app.ejs',
-            title: `${config.appName}`,
-            inject: true,
-        }),
         new HappyPack({
             id: 'babel',
             loaders: [{
@@ -44,7 +38,9 @@ export default merge.smart(baseConfig, {
                 query: {
                     babelrc: false,
                     plugins: [
-                        ['universal-import', {disableWarnings: true}],
+                        ['universal-import', {
+                            'disableWarnings': true
+                        }],
                         'emotion',
                         'transform-runtime',
                         'lodash',
@@ -62,14 +58,19 @@ export default merge.smart(baseConfig, {
             threads: 4,
         }),
         dll,
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'src/electron/app.ejs',
+            title: `${config.appName}`,
+            inject: true,
+        }),
         new BabelMinifyPlugin({}, {
             comments: false,
             sourceMap: true,
         }),
         new ExtractTextPlugin('style.css'),
         new BundleAnalyzerPlugin({
-            analyzerMode: process.env.OPEN_ANALYZER === 'true' ?
-                'server' : 'disabled',
+            analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
             openAnalyzer: process.env.OPEN_ANALYZER === 'true',
         }),
     ],

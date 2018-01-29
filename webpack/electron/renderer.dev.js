@@ -1,7 +1,9 @@
 import path from 'path';
+import fs from 'fs';
 import webpack from 'webpack';
+import chalk from 'chalk';
 import merge from 'webpack-merge';
-import {spawn} from 'child_process';
+import {spawn, execSync} from 'child_process';
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
 import HappyPack from 'happypack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -26,7 +28,7 @@ export default merge.smart(baseConfig, {
         'react-hot-loader/patch',
         `webpack-dev-server/client?http://localhost:${port}/`,
         'webpack/hot/only-dev-server',
-        path.join(__dirname, '../../src/client/js/index.js'),
+        path.join(__dirname, '../../src/client/index.js'),
     ],
 
     output: {
@@ -39,12 +41,6 @@ export default merge.smart(baseConfig, {
 
     plugins: [
         definePlugin(),
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: 'src/electron/app.ejs',
-            title: `${config.appName} dev`,
-            inject: true,
-        }),
         new HappyPack({
             id: 'babel',
             loaders: [{
@@ -53,7 +49,9 @@ export default merge.smart(baseConfig, {
                     babelrc: false,
                     cacheDirectory: true,
                     plugins: [
-                        ['universal-import', {disableWarnings: true}],
+                        ['universal-import', {
+                            disableWarnings: true,
+                        }],
                         'emotion',
                         'transform-runtime',
                         'lodash',
@@ -70,6 +68,12 @@ export default merge.smart(baseConfig, {
             }],
             threads: 4,
         }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'src/electron/app.ejs',
+            title: `${config.appName} dev`,
+            inject: true,
+        }),
         dll,
         new ExtractCssChunks({
             filename: '[name].css',
@@ -77,6 +81,7 @@ export default merge.smart(baseConfig, {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
+
         new webpack.LoaderOptionsPlugin({
             debug: true,
         }),

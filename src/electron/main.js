@@ -1,4 +1,5 @@
 import {app, BrowserWindow} from 'electron';
+
 import MenuBuilder from './menu';
 
 
@@ -33,6 +34,7 @@ const installExtensions = async () => {
 /**
  * Add event listeners...
  */
+
 app.on('window-all-closed', () => {
     // Respect the OSX convention of having the application in memory even
     // after all windows have been closed
@@ -53,8 +55,10 @@ app.on('ready', async () => {
         height: 728,
     });
 
+    const port = process.env.PORT || 1212;
+
     mainWindow.loadURL(process.env.NODE_ENV === 'development' ?
-        'http://localhost:1212/dist/index.html' :
+        `http://localhost:${port}/dist/index.html` :
         `file://${__dirname}/dist/index.html`);
 
     // @TODO: Use 'ready-to-show' event

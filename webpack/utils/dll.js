@@ -3,7 +3,6 @@ import webpack from 'webpack';
 import BabelMinifyPlugin from 'babel-minify-webpack-plugin';
 import AutoDllPlugin from 'autodll-webpack-plugin';
 
-
 const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV));
 
 export default new AutoDllPlugin({
@@ -24,12 +23,9 @@ export default new AutoDllPlugin({
         reactVendors: [
             'react',
             'react-dom',
-            'emotion',
             'react-emotion',
-            'react-helmet',
-            'react-konami',
+            'emotion',
             'react-redux',
-            'react-markdown',
             'react-tap-event-plugin',
         ],
         reduxVendors: [
@@ -37,29 +33,17 @@ export default new AutoDllPlugin({
             'redux-actions',
             'redux-first-router',
             'redux-first-router-link',
-            'redux-form',
             'redux-reducers-injector',
             'redux-saga',
-            'redux-sagas-injector',
+            'redux-sagas-injector'
         ],
         commonVendors: [
             'fastclick',
+            'google-map-react',
             'history',
-            'lodash',
-            'material-ui',
-
-            'recharts',
+            'react-helmet',
             'recompose',
-            'reselect',
-            'url',
-            'uuid',
-
-            'date-fns',
-            'ends-with',
-            'error-stack-parser',
-            'query-string',
-            'react-universal-component',
-            'sw-precache-webpack-plugin',
+            'transition-group',
         ],
     },
 });

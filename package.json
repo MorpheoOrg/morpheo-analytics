@@ -2,48 +2,36 @@
     "name": "analytics",
     "productName": "Analytics",
     "author": "Morpheo Team <thierry.guillemot.work@gmail.com>",
-    "contributors": [
-        "Guillaume Cisco <guillaume@rythm.co>",
-        "Thierry Guillemot <thierry.guillemot.work@gmail.com>"
-    ],
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "CECILL-2.1",
     "description": "Analytics app",
     "repository": {
         "type": "git",
         "url": "https://github.com/MorpheoOrg/morpheo-analytics"
     },
+    "browserslist": "electron 1.6",
+    "contributors": [
+        "Guillaume Cisco <guillaume@rythm.co>",
+        "Thierry Guillemot <thierry.guillemot.work@gmail.com>"
+    ],
     "engines": {
         "node": ">=8.4.0",
         "npm": ">=5.3.0"
     },
     "scripts": {
-        "start": "npm run clean && cross-env NODE_ENV=development babel-watch src/server/index.js",
-        "start:prod": "npm run build:main && npm run serve",
-        "serve": "cross-env NODE_ENV=production babel-node build/server/index.js",
-        "build:main": "npm run build:client && npm run build:server && npm run build:node",
-        "build:client": "rimraf build/client && cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress --config webpack/client.js",
-        "build:server": "rimraf build/server && cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress --config webpack/server.js",
-        "build:node": "cross-env NODE_ENV=production babel src/server/index.js -o build/server/index.js",
-        "deploy": "tools/deploy.js",
-        "clean": "rimraf build",
-        "doc": "jsdoc -c jsdoc.conf.js src",
-        "test": "jest --no-cache --runInBand",
-        "coverage": "BABEL_ENV=test jest --no-cache --coverage --runInBand",
-        "test:watch": "jest --no-cache --watch",
-        "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
-        "eslint": "./node_modules/.bin/eslint --fix src webpack",
         "dev": "cross-env IS_ELECTRON=1 START_HOT=1 npm run start-renderer-dev",
         "start-main-dev": "cross-env IS_ELECTRON=1 HOT=1 NODE_ENV=development electron -r babel-register --require babel-polyfill ./src/electron/main",
         "start-renderer-dev": "cross-env IS_ELECTRON=1 NODE_ENV=development babel-node ./node_modules/webpack-dev-server/bin/webpack-dev-server --config ./webpack/electron/renderer.dev.js",
         "start:electron": "cross-env IS_ELECTRON=1 NODE_ENV=production electron ./build/electron/index.js",
-        "build:electron": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
-        "build-dll": "cross-env IS_ELECTRON=1 NODE_ENV=development node -r babel-register ./node_modules/webpack/bin/webpack --progress --config webpack/electron/renderer.dev.dll.js --colors",
-        "build-main": "cross-env IS_ELECTRON=1 NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress --config webpack/electron/main.js --colors",
-        "build-renderer": "cross-env IS_ELECTRON=1 NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress --config webpack/electron/renderer.prod.js --colors",
+        "build:electron": "concurrently \"npm run build-electron-main\" \"npm run build-electron-renderer\"",
+        "build-electron-main": "cross-env IS_ELECTRON=1 NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress --config webpack/electron/main.js --colors",
+        "build-electron-renderer": "cross-env IS_ELECTRON=1 NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --progress --config webpack/electron/renderer.prod.js --colors",
         "package": "npm run build:electron && build --publish never",
-        "package-all": "npm run build:electron && build -mwl",
-        "build-electron": "build --publish never"
+        "clean": "rimraf build",
+        "test": "jest",
+        "coverage": "jest --coverage --no-cache --ci --runInBand",
+        "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
+        "eslint": "./node_modules/.bin/eslint --fix src webpack"
     },
     "pre-commit": [
         "precommit-msg",
@@ -51,7 +39,6 @@
         "eslint"
     ],
     "main": "./build/electron/index.js",
-    "browserslist": "electron 1.6",
     "build": {
         "appId": "org.morpheo.analytics",
         "productName": "analytics",
