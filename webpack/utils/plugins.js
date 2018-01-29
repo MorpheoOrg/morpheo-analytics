@@ -14,7 +14,7 @@ import WriteFilePlugin from 'write-file-webpack-plugin';
 import definePlugin from './definePlugin';
 import dll from './dll';
 
-import routesMap from '../../src/common/routesMap';
+import routes from '../../src/app/routesMap';
 
 
 const DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV)),
@@ -79,9 +79,7 @@ export default env => [
                 // ignore babelrc
                 babelrc: false,
                 plugins: [
-                    ['universal-import', {
-                        disableWarnings: true,
-                    }],
+                    ['universal-import', {disableWarnings: true}],
                     'transform-runtime',
                     'emotion',
                     'lodash',
@@ -116,13 +114,12 @@ export default env => [
             cacheId: config.appName,
             filename: 'service-worker.js',
             minify: false,
-            dynamicUrlToDependencies: Object.keys(routesMap).reduce(
-                (p, c) => [...p, routesMap[c].path], []
-            ).reduce((p, c) =>
+            dynamicUrlToDependencies: Object.keys(routes).reduce((p, c) => [...p, routes[c].path], []).reduce((p, c) =>
                 ({
                     ...p,
                     [c]: [
-                        path.resolve(__dirname, '../../src/client/js/index.js'),
+                        path.resolve(__dirname, '../../src/client/index.js'),
+                        path.resolve(__dirname, `../../src/app/routes${c === '/' ? '/home/' : c}components/index.js`),
                     ],
                 }), {}),
             navigateFallback: PRODUCTION_BASE_NAME,

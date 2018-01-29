@@ -1,6 +1,7 @@
 import ExtractCssChunks from 'extract-css-chunks-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
+
 const PRODUCTION = (['production'].includes(process.env.NODE_ENV));
 
 export default env => [
@@ -64,13 +65,18 @@ export default env => [
         test: /\.s?css$/,
         exclude: /node_modules/,
         use: ExtractCssChunks.extract({
-            use: {
-                loader: 'css-loader',
-                options: {
-                    importLoaders: true,
-                    sourceMap: true,
+            use: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        importLoaders: true,
+                        sourceMap: true,
+                    },
                 },
-            },
+                {
+                    loader: 'sass-loader',
+                },
+            ],
         }),
     }]),
 ];
