@@ -1,6 +1,6 @@
 import {fork} from 'redux-saga/effects';
 
-import loginSagas from './Login/sagas';
+import loginSagas from './components/Login/sagas';
 
 
 export default function* () {

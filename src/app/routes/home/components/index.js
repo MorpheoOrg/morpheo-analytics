@@ -4,18 +4,16 @@ import {onlyUpdateForKeys} from 'recompose';
 import {connect} from 'react-redux';
 import styled, {css} from 'react-emotion';
 
-import ActivityBar from '../ActivityBar';
+import ActivityBar from './ActivityBar';
 import Editor from '../Editor';
-import Login from '../Login';
-import Notifications from '../Notifications';
-import SideBar from '../SideBar';
+import Login from './Login';
+import Notifications from './Notifications';
+import SideBar from './SideBar';
 
 import ProblemDetail from '../../../models/problem/components/detail/ProblemDetail';
 import ProblemTabTitle from '../../../models/problem/components/ProblemTabTitle';
-import {isLoginVariableSet} from '../Login/selectors';
+import {isLoginVariableSet} from './Login/selectors';
 
-
-const Wrapper = ({children}) => children;
 
 const blurredStyle = css`
     filter: blur(1.5px);
@@ -39,6 +37,8 @@ const renderers = {
         title: ProblemTabTitle,
     },
 };
+
+const Wrapper = ({children}) => children;
 
 const Main = ({isFirstConnection}) => (
     <Wrapper>

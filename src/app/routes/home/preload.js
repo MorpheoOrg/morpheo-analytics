@@ -1,7 +1,7 @@
 import {reloadSaga} from 'redux-sagas-injector';
 import {replaceReducer} from 'redux-reducers-injector';
 
-import Main from './Main';
+import Home from './components';
 
 
 export {default as settingsReducer} from './reducers';
@@ -33,4 +33,4 @@ if (process.env.NODE_ENV !== 'production') {
     }
 }
 
-export default Main;
+export default Home;

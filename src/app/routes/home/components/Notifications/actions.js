@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import {createActionWithCheck} from '../../../utils/redux-actions';
+import {createActionWithCheck} from '../../../../utils/redux-actions';
 
 
 export const actionsTypes = {

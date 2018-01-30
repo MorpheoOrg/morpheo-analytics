@@ -103,7 +103,9 @@ export const getLeaderboardData = createDeepEqualSelector(
                         bestPerf: Math.max(...results[o].map(x => x.perf)),
                     })),
             };
-        }, {}),
+        },
+        {}
+    ),
 );
 
 

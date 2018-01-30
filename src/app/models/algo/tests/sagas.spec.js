@@ -1,11 +1,11 @@
 import {all, call, put, select, takeLatest} from 'redux-saga/effects';
 
 import learnupletActions from '../../learnuplet/actions';
-import {getLoginVariables} from '../../../ui/Login/selectors';
-import itSagaHelper from '../../../../utils/testing/itSagaHelper';
-import {FetchError} from '../../../../utils/errors';
-import generalActions from '../../../../../../common/actions';
-import notificationActions from '../../../ui/Notifications/actions';
+import {getLoginVariables} from '../../../routes/home/components/Login/selectors';
+import itSagaHelper from '../../../utils/testing/itSagaHelper';
+import {FetchError} from '../../../utils/errors';
+import generalActions from '../../../actions';
+import notificationActions from '../../../routes/home/components/Notifications/actions';
 import actions, {actionTypes} from '../actions';
 import {fetchAlgos, postAlgo, postAlgoToOrchestrator} from '../api';
 import algoSagas, {loadAlgosListSaga, postAlgoSaga} from '../sagas';

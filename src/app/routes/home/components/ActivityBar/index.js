@@ -7,8 +7,8 @@ import styled from 'react-emotion';
 
 import actions from '../SideBar/actions';
 import {menuContent, modalContent} from './iconDefinition';
-import FlatButton from '../../../components/FlatButton';
-import ComponentBar from '../../../components/ComponentBar';
+import FlatButton from '../../../../components/FlatButton';
+import ComponentBar from '../../../../components/ComponentBar';
 
 
 const MenuButton = styled(FlatButton)`
@@ -19,9 +19,6 @@ const MenuButton = styled(FlatButton)`
 
 
 class ActivityBar extends React.Component {
-    componentWillMount() {
-    }
-
     toggleSideBarElement = index => (event) => {
         const {selectedIndex, setIndex, setStatus} = this.props;
 
