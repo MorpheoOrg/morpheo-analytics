@@ -49,7 +49,7 @@ export default merge.smart(baseConfig, {
                         'transform-es2015-classes',
                     ],
                     presets: [
-                        'es2015',
+                        'env',
                         'react',
                         'stage-0',
                     ],

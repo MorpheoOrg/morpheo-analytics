@@ -33,7 +33,7 @@ export default merge.smart(baseConfig, {
                     babelrc: false,
                     plugins: [
                         ['universal-import', {
-                            'disableWarnings': true
+                            disableWarnings: true,
                         }],
                         'emotion',
                         'transform-runtime',
@@ -44,7 +44,7 @@ export default merge.smart(baseConfig, {
                         'react-hot-loader/babel',
                     ],
                     presets: [
-                        'es2015',
+                        'env',
                         'react',
                         'stage-0',
                     ],
