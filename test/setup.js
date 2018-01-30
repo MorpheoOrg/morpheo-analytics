@@ -12,8 +12,7 @@ configure({adapter: new Adapter()});
 // Add css class to snapshots
 /** Change the class name to emotion-xxx instead of glamor-xxx */
 function replaceClassNames(className, index) {
-    return `emotion-${index}`
+    return `emotion-${index}`;
 }
 
 expect.addSnapshotSerializer(serializer(sheet, replaceClassNames));
-
