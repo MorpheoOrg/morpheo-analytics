@@ -31,10 +31,10 @@ class ActivityBar extends React.Component {
         }
     };
 
-    openModalElement = index => (event) => {
-        // Add function to open element
-        console.log(`Open Modal element for tab ${index}.`);
-    };
+    // openModalElement = index => (event) => {
+    //     // Add function to open element
+    //     console.log(`Open Modal element for tab ${index}.`);
+    // };
 
     renderTopChildren = () => menuContent.map(({icon, name}, index) => (
         <MenuButton
@@ -52,7 +52,7 @@ class ActivityBar extends React.Component {
         <MenuButton
             key={name}
             icon={icon}
-            onClick={this.openModalElement}
+            // onClick={this.openModalElement}
             disabled
         >
             {icon}
