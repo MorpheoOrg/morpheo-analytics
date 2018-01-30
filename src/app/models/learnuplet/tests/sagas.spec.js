@@ -1,8 +1,8 @@
 import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 
-import itSagaHelper from '../../../../utils/testing/itSagaHelper';
-import {getLoginVariables} from '../../../ui/Login/selectors';
-import {FetchError} from '../../../../utils/errors';
+import itSagaHelper from '../../../utils/testing/itSagaHelper';
+import {getLoginVariables} from '../../../routes/home/components/Login/selectors';
+import {FetchError} from '../../../utils/errors';
 
 import actions, {actionTypes} from '../actions';
 import {fetchLearnupletByAlgo} from '../api';

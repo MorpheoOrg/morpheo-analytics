@@ -40,7 +40,7 @@ import actions, {actionTypes} from './actions';
 import {
     fetchLearnupletByAlgo as fetchLearnupletByAlgoApi,
 } from './api';
-import {getLoginVariables} from '../../routes/home/Login/selectors';
+import {getLoginVariables} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
 
 

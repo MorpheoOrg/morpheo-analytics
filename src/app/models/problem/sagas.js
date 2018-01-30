@@ -9,7 +9,7 @@ import {
     fetchProblems as fetchProblemsApi,
     fetchProblem as fetchProblemApi,
 } from './api';
-import {getLoginVariables} from '../../routes/home/Login/selectors';
+import {getLoginVariables} from '../../routes/home/components/Login/selectors';
 
 
 export const loadList = (actions, fetchList) =>

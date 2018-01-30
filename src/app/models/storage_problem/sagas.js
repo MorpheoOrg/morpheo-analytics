@@ -32,8 +32,6 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals */
-
 import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 import generalActions from '../../actions';
 
@@ -41,7 +39,7 @@ import actions, {actionTypes} from './actions';
 import {
     fetchProblem as fetchProblemApi,
 } from './api';
-import {getLoginVariables} from '../../routes/home/Login/selectors';
+import {getLoginVariables} from '../../routes/home/components/Login/selectors';
 
 
 export const loadItem = (actions, fetchItem, query) =>

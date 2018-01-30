@@ -8,9 +8,9 @@ import {onlyUpdateForKeys} from 'recompose';
 import actions from './actions';
 import {menuContent} from './iconDefinition';
 import {getVisible} from './selector';
-import ResizableContainer from '../../../components/ResizableContainer';
-import FlatButton from '../../../components/FlatButton';
-import ChevronLeft from '../../../components/icons/ChevronLeft';
+import ResizableContainer from '../../../../components/ResizableContainer';
+import FlatButton from '../../../../components/FlatButton';
+import ChevronLeft from '../../../../components/icons/ChevronLeft';
 
 
 const Header = styled.div`

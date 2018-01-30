@@ -35,7 +35,7 @@
 
 import {call, put, select, takeLatest, all} from 'redux-saga/effects';
 
-import notificationActions from '../../routes/home/Notifications/actions';
+import notificationActions from '../../routes/home/components/Notifications/actions';
 import generalActions from '../../actions';
 import learnupletActions from '../learnuplet/actions';
 import actions, {actionTypes} from './actions';
@@ -44,7 +44,7 @@ import {
     postAlgo as postAlgoApi,
     postAlgoToOrchestrator as postAlgoToOrchestratorApi,
 } from './api';
-import {getLoginVariables} from '../../routes/home/Login/selectors';
+import {getLoginVariables} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
 
 

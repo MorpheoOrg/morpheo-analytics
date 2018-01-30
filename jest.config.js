@@ -7,7 +7,7 @@ module.exports = {
         'enzyme-to-json/serializer'
     ],
     collectCoverageFrom: [
-        'src/**/*.js'
+        'src/app/**/*.js'
     ],
     transform: {
         '^.+\\.js?$': 'babel-jest'
