@@ -60,7 +60,7 @@ export default merge.smart(baseConfig, {
                         'react-hot-loader/babel',
                     ],
                     presets: [
-                        'es2015',
+                        'env',
                         'react',
                         'stage-0',
                     ],
@@ -116,8 +116,8 @@ export default merge.smart(baseConfig, {
             if (process.env.START_HOT) {
                 console.log('Staring Main Process...');
                 spawn(
-                    'npm',
-                    ['run', 'start-main-dev'],
+                    'yarn',
+                    ['start-main-dev'],
                     {shell: true, env: process.env, stdio: 'inherit'},
                 )
                     .on('close', code => process.exit(code))

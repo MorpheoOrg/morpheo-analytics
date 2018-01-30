@@ -25,13 +25,13 @@ clone_depth: 1
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
-  - npm install
+  - yarn install
 
 test_script:
   - node --version
-  - npm --version
-  - npm test
-  - npm run package
+  - yarn --version
+  - yarn test
+  - yarn run package
 
 artifacts:
   - path: release

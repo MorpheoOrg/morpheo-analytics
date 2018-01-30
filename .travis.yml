@@ -17,7 +17,7 @@ dist: trusty
 
 # Package the app for the corresponding os
 before_deploy:
-  - npm run package
+  - yarn package
   - ls release
   - ./build_tools/travis/before_deploy.sh
 

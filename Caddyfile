@@ -1,9 +1,0 @@
-:8000 {
-  root /var/www/html
-  basicauth / {$AUTH_USER} {$AUTH_PASS}
-
-  rewrite {
-  	ext /
-    to /#{path}
-  }
-}
