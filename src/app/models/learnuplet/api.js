@@ -33,47 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-/*
-   globals btoa fetch
-   ORCHESTRATOR_API_URL
-*/
-
-// import queryString from 'query-string';
-// import {isEmpty} from 'lodash';
-// import {handleResponse} from '../../../utils/entities/fetchEntities';
-
-
-// export const getHeaders = jwt => ({
-//     Accept: 'application/json',
-//     'Content-Type': 'application/json; charset=utf-8',
-//     Authorization: `Basic ${jwt}`,
-// });
-
-// export const fetchList = (url, jwt) => {
-//     // will be overrided by server on the fly (no authentication needed for dev servers)
-//     const headers = getHeaders(jwt);
-//     return fetch(url, {
-//         headers,
-//         // Allows API to set http-only cookies with AJAX calls
-//         // @see http://www.redotheweb.com/2015/11/09/api-security.html
-//         // credentials: 'include',
-//         mode: 'cors',
-//     })
-//         .then(response => handleResponse(response))
-//         .then(json => ({list: json}), error => ({error}));
-// };
-
-
-// export const fetchLearnupletByAlgo = (
-//     get_parameters, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-// ) => {
-//     const url = `${ORCHESTRATOR_API_URL}/learnuplet${!isEmpty(get_parameters) ?
-//         `?${queryString.stringify(get_parameters)}` : ''}`;
-//     const jwt = btoa(`${ORCHESTRATOR_USER}:${ORCHESTRATOR_PASSWORD}`);
-//     return fetchList(url, jwt);
-// };
-
-
+/* globals ORCHESTRATOR_API_URL */
 import {getEntityFactory} from '../../utils/new_entities/fetchEntities';
 
 

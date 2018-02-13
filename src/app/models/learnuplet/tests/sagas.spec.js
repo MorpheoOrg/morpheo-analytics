@@ -1,7 +1,7 @@
 import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 
 import itSagaHelper from '../../../utils/testing/itSagaHelper';
-import {getLoginVariables} from '../../../routes/home/components/Login/selectors';
+import {getCredentials} from '../../../routes/home/components/Login/selectors';
 import {FetchError} from '../../../utils/errors';
 
 import actions, {actionTypes} from '../actions';
@@ -15,7 +15,7 @@ describe('loadLearnupletList', () => {
 
     it('should get learnuplet and put success actions', () => {
         loadSaga.test((result) => {
-            expect(result).toEqual(select(getLoginVariables));
+            expect(result).toEqual(select(getCredentials));
             return ({
                 ORCHESTRATOR_USER: 'orchestrator_user',
                 ORCHESTRATOR_PASSWORD: 'orchestrator_password',

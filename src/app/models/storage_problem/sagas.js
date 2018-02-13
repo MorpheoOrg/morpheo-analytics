@@ -39,14 +39,14 @@ import actions, {actionTypes} from './actions';
 import {
     fetchProblem as fetchProblemApi,
 } from './api';
-import {getLoginVariables} from '../../routes/home/components/Login/selectors';
+import {getCredentials} from '../../routes/home/components/Login/selectors';
 
 
 export const loadItem = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {
         const {
             STORAGE_USER, STORAGE_PASSWORD
-        } = yield select(getLoginVariables);
+        } = yield select(getCredentials);
 
         const {error, item} = yield call(
             fetchItem, request.payload, STORAGE_USER, STORAGE_PASSWORD

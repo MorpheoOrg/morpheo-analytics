@@ -1,7 +1,7 @@
 import {all, call, put, select, takeLatest} from 'redux-saga/effects';
 
 import learnupletActions from '../../learnuplet/actions';
-import {getLoginVariables} from '../../../routes/home/components/Login/selectors';
+import {getCredentials} from '../../../routes/home/components/Login/selectors';
 import itSagaHelper from '../../../utils/testing/itSagaHelper';
 import {FetchError} from '../../../utils/errors';
 import generalActions from '../../../actions';
@@ -17,7 +17,7 @@ describe('loadAlgosListSaga', () => {
 
     it('should get algos and put success actions', () => {
         loadSaga.test((result) => {
-            expect(result).toEqual(select(getLoginVariables));
+            expect(result).toEqual(select(getCredentials));
             return ({
                 ORCHESTRATOR_USER: 'orchestrator_user',
                 ORCHESTRATOR_PASSWORD: 'orchestrator_password',
@@ -93,7 +93,7 @@ describe('postAlgoSaga', () => {
 
     it('should post an algo and put success actions', () => {
         postSaga.test((result) => {
-            expect(result).toEqual(select(getLoginVariables));
+            expect(result).toEqual(select(getCredentials));
             return ({
                 ORCHESTRATOR_USER: 'orchestrator_user',
                 ORCHESTRATOR_PASSWORD: 'orchestrator_password',

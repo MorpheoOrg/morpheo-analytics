@@ -3,9 +3,19 @@ import settings from 'electron-settings';
 import {actionsTypes} from './actions';
 
 
-const initialState = settings.get('settings.login', {});
+const getInitialState = () => {
+    const {version, ...login} = settings.get('settings.login', {});
 
-export default (state = initialState, {type, payload}) => {
+    // Manage the different versions of the settings of analytics
+    if (version !== '0.0.2') {
+        return {};
+    }
+
+    return login;
+};
+
+
+export default (state = getInitialState(), {type, payload}) => {
     switch (type) {
     case actionsTypes.env.set:
         return {

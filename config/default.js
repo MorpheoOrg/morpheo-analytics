@@ -3,6 +3,7 @@ const apiUrl = 'https://notebook-proxy.morpheo.co';
 const apiSocketUrl = 'wss://notebook-proxy.morpheo.co';
 const storageApiUrl = 'https://storage.morpheo.co';
 const orchestratorApiUrl = 'https://orchestrator.morpheo.co';
+// const orchestratorApiUrl = 'http://localhost:4000';
 const servicesApiUrl = 'https://notebook-services.morpheo.co';
 
 module.exports = {

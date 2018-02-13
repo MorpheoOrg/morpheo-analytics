@@ -9,14 +9,46 @@ import {
     fetchProblems as fetchProblemsApi,
     fetchProblem as fetchProblemApi,
 } from './api';
-import {getLoginVariables} from '../../routes/home/components/Login/selectors';
+import {getCredentials} from '../../routes/home/components/Login/selectors';
+import {getProblems, getToken} from '../ledger/api';
+import {FetchError} from '../../utils/errors';
 
 
-export const loadList = (actions, fetchList) =>
+export function* loadList() {
+    try {
+        const {token} = yield call(getToken);
+        const {channelName, chaincodeName, peer} = yield select(getCredentials);
+
+        const problems = yield call(getProblems, {
+            channelName, chaincodeName, peer, token,
+        });
+
+        for (let i = 0; i < problems.length; i += 1) {
+            yield put(storageProblemActions.item.get.request(
+                problems[i].storageAddress,
+            ));
+        }
+
+        yield put(actions.list.success({results: problems}));
+    }
+    catch (error) {
+        if (error instanceof FetchError) {
+            yield put(actions.list.failure({
+                error: {
+                    message: error.message,
+                    status: error.status,
+                }
+            }));
+        }
+        else throw error;
+    }
+}
+
+export const loadList1 = (actions, fetchList) =>
     function* loadListSaga() {
         const {
             ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-        } = yield select(getLoginVariables);
+        } = yield select(getCredentials);
 
         const {error, list} = yield call(
             fetchList, ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
@@ -36,7 +68,7 @@ export const loadList = (actions, fetchList) =>
             const l = list.problems.length;
             for (let i = 0; i < l; i += 1) {
                 yield put(storageProblemActions.item.get.request(
-                    list.problems[i].workflow,
+                    list.problems[i].storageAddress,
                 ));
             }
 
@@ -64,7 +96,7 @@ export const loadItem = (actions, fetchItem) =>
             yield put(actions.item.get.success(item));
 
             // load storage problem too
-            yield put(storageProblemActions.item.get.request(item.workflow));
+            yield put(storageProblemActions.item.get.request(item.storageAddress));
 
             return item;
         }
@@ -73,7 +105,7 @@ export const loadItem = (actions, fetchItem) =>
 /* istanbul ignore next */
 const challengeSagas = function* challengeSagas() {
     yield all([
-        takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchProblemsApi)),
+        takeLatest(actionTypes.list.REQUEST, loadList),
         takeEvery(actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)),
     ]);
 };

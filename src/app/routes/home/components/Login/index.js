@@ -6,30 +6,35 @@ import {bindActionCreators} from 'redux';
 import styled from 'react-emotion';
 
 import actions from './actions';
-import {getLoginVariables} from './selectors';
+import {getCredentials} from './selectors';
 
 
 const Background = styled.div`
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
 
     background-color: rgba(0,0,0,0.3);
+    display: flex;
 `;
 
 const Modal = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: auto;
     background-color: #FAFAFB;
-    border-radius: 3px;
+
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0, 0.25);
+
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    width: 300px;
 `;
 
 const Header = styled.div`
-    padding: 20px;
 `;
 
 const H1 = styled.h1`
@@ -39,7 +44,7 @@ const H1 = styled.h1`
 
 const Form = styled.form`
     display: block;
-    padding: 20px;
+    padding: 20px 0px;
 `;
 
 const Group = styled.div`
@@ -48,12 +53,26 @@ const Group = styled.div`
 
 const Label = styled.label`
     display: inline-block;
-    margin-bottom: .5rem;
 `;
 
 const Input = styled.input`
-    margin-bottom: 1rem;
     display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: 0;
+    }
+
+    &[type="submit"]{
+        width: 200px;
+        margin: auto;
+        margin-top: 40px;
+    }
 `;
 
 const FullInput = styled(Input)`
@@ -62,33 +81,16 @@ const FullInput = styled(Input)`
 
 class Login extends React.Component {
     state = {
-        ORCHESTRATOR_USER: this.props.ORCHESTRATOR_USER,
-        ORCHESTRATOR_PASSWORD: this.props.ORCHESTRATOR_PASSWORD,
-        STORAGE_USER: this.props.STORAGE_USER,
-        STORAGE_PASSWORD: this.props.STORAGE_PASSWORD,
+        channelName: this.props.channelName,
+        chaincodeName: this.props.chaincodeName,
+        username: this.props.username,
+        org: this.props.org,
+        peer: this.props.peer,
     };
 
-    changeOrchestratorUsername = (event) => {
+    changeFormProps = propName => (event) => {
         this.setState({
-            ORCHESTRATOR_USER: event.target.value,
-        });
-    }
-
-    changeOrchestratorPassword = (event) => {
-        this.setState({
-            ORCHESTRATOR_PASSWORD: event.target.value,
-        });
-    }
-
-    changeStorageUsername = (event) => {
-        this.setState({
-            STORAGE_USER: event.target.value,
-        });
-    }
-
-    changeStoragePassword = (event) => {
-        this.setState({
-            STORAGE_PASSWORD: event.target.value,
+            [propName]: event.target.value,
         });
     }
 
@@ -102,50 +104,55 @@ class Login extends React.Component {
             <Background>
                 <Modal>
                     <Header>
-                        <H1>First connection</H1>
-
-                        Please provide the following information.
+                        <H1>Connection</H1>
                     </Header>
                     <Form onSubmit={this.handleSubmit}>
                         <Group>
                             <Label>
-                                Orchestrator username:
+                                Channel name:
                             </Label>
                             <FullInput
                                 type="text"
-                                value={this.state.ORCHESTRATOR_USER}
-                                onChange={this.changeOrchestratorUsername}
+                                value={this.state.channelName}
+                                onChange={this.changeFormProps('channelName')}
                             />
                             <Label>
-                                Orchestrator password:
+                                Chaincode name:
                             </Label>
                             <FullInput
-                                type="password"
-                                value={this.state.ORCHESTRATOR_PASSWORD}
-                                onChange={this.changeOrchestratorPassword}
+                                type="text"
+                                value={this.state.chaincodeName}
+                                onChange={this.changeFormProps('chaincodeName')}
                             />
                         </Group>
 
                         <Group>
                             <Label>
-                                Storage username:
+                                Username:
                             </Label>
                             <FullInput
                                 type="text"
-                                value={this.state.STORAGE_USER}
-                                onChange={this.changeStorageUsername}
+                                value={this.state.username}
+                                onChange={this.changeFormProps('username')}
                             />
                             <Label>
-                                Storage password:
+                                Organisation name:
                             </Label>
                             <FullInput
-                                type="password"
-                                value={this.state.STORAGE_PASSWORD}
-                                onChange={this.changeStoragePassword}
+                                type="text"
+                                value={this.state.org}
+                                onChange={this.changeFormProps('org')}
+                            />
+                            <Label>
+                                Peer name:
+                            </Label>
+                            <FullInput
+                                type="text"
+                                value={this.state.peer}
+                                onChange={this.changeFormProps('peer')}
                             />
                         </Group>
                         <Input type="submit" value="Continue" />
-
                     </Form>
                 </Modal>
             </Background>
@@ -155,21 +162,23 @@ class Login extends React.Component {
 
 Login.propTypes = {
     login: PropTypes.func.isRequired,
-    ORCHESTRATOR_USER: PropTypes.string,
-    ORCHESTRATOR_PASSWORD: PropTypes.string,
-    STORAGE_USER: PropTypes.string,
-    STORAGE_PASSWORD: PropTypes.string,
+    channelName: PropTypes.string,
+    chaincodeName: PropTypes.string,
+    username: PropTypes.string,
+    org: PropTypes.string,
+    peer: PropTypes.string,
 };
 
 Login.defaultProps = {
-    ORCHESTRATOR_USER: '',
-    ORCHESTRATOR_PASSWORD: '',
-    STORAGE_USER: '',
-    STORAGE_PASSWORD: '',
+    channelName: '',
+    chaincodeName: '',
+    username: '',
+    org: '',
+    peer: '',
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    ...getLoginVariables(state),
+    ...getCredentials(state),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => bindActionCreators({
