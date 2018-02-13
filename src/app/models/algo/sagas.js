@@ -44,7 +44,7 @@ import {
     postAlgo as postAlgoApi,
     postAlgoToOrchestrator as postAlgoToOrchestratorApi,
 } from './api';
-import {getLoginVariables} from '../../routes/home/components/Login/selectors';
+import {getCredentials} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
 
 
@@ -53,7 +53,7 @@ import {FetchError} from '../../utils/errors';
 export function* loadAlgosListSaga({payload}) {
     const {
         ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-    } = yield select(getLoginVariables);
+    } = yield select(getCredentials);
     try {
         const {algos} = yield call(fetchAlgosApi, {
             user: ORCHESTRATOR_USER,
@@ -94,7 +94,7 @@ export function* postAlgoSaga({payload}) {
     const {
         ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
         STORAGE_USER, STORAGE_PASSWORD,
-    } = yield select(getLoginVariables);
+    } = yield select(getCredentials);
 
     try {
         // First we post the algo on storage

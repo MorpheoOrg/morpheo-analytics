@@ -14,14 +14,18 @@ export default actionTypes =>
                 ...state,
                 loading: true,
             };
-        case actionTypes.list.SUCCESS:
+        case actionTypes.list.SUCCESS: {
+            const {results} = payload;
             return {
                 ...state,
                 ...payload,
+                // As key is reserved word in React, we replace it by uuid
+                results: results.map(({key: uuid, ...p}) => ({...p, uuid})),
                 init: true,
                 error: null,
                 loading: false,
             };
+        }
         case actionTypes.list.FAILURE:
             return {
                 ...state,

@@ -69,6 +69,7 @@ ProblemDetail.defaultProps = {
 const mapStateToProps = (state, {id, updateProps}) => ({
     ...getProblemsDictionnary(state)[id],
     problemId: id,
+    problemList: getProblemsDictionnary(state),
     setActiveSection: index => updateProps({activeSectionIndex: index}),
 });
 

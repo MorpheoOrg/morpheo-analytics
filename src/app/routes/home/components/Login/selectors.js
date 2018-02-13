@@ -1,10 +1,10 @@
-export const getLoginVariables = state => state.settings.login;
+export const getCredentials = state => state.settings.login;
 
 export const isLoginVariableSet = state => (
-    getLoginVariables(state).ORCHESTRATOR_USER === undefined
+    getCredentials(state).username === undefined
 );
 
 export default {
-    getLoginVariables,
+    getCredentials,
     isLoginVariableSet,
 };

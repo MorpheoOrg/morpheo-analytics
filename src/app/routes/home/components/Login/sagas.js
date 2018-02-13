@@ -1,13 +1,18 @@
+// TODO: move that in models
+
 import {select, takeLatest} from 'redux-saga/effects';
 import settings from 'electron-settings';
 
 import {actionsTypes} from './actions';
-import {getLoginVariables} from './selectors';
+import {getCredentials} from './selectors';
 
 
 function* saveSettingsEnv() {
-    const login = yield select(getLoginVariables);
-    settings.set('settings.login', login);
+    const login = yield select(getCredentials);
+    settings.set('settings.login', {
+        ...login,
+        version: '0.0.2',
+    });
 }
 
 export default function* () {

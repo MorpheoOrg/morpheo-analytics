@@ -40,14 +40,14 @@ import actions, {actionTypes} from './actions';
 import {
     fetchLearnupletByAlgo as fetchLearnupletByAlgoApi,
 } from './api';
-import {getLoginVariables} from '../../routes/home/components/Login/selectors';
+import {getCredentials} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
 
 
 export function* loadLearnupletList({payload}) {
     const {
         ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-    } = yield select(getLoginVariables);
+    } = yield select(getCredentials);
     try {
         const {learnuplets} = yield call(fetchLearnupletByAlgoApi, {
             user: ORCHESTRATOR_USER,
