@@ -50,12 +50,15 @@ export default actionTypes =>
                 loading: true,
             };
         case actionTypes.list.success: {
-            const {list} = payload;
+            const {algorithmId, learnuplets} = payload;
             return {
                 ...state,
                 results: {
                     ...state.results,
-                    ...list,
+                    [algorithmId]: learnuplets.map(({key: uuid, ...props}) => ({
+                        uuid,
+                        ...props,
+                    })),
                 },
                 init: true,
                 error: null,

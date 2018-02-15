@@ -15,12 +15,15 @@ export default actionTypes =>
                 loading: true,
             };
         case actionTypes.list.SUCCESS: {
-            const {list} = payload;
+            const {problemId, algos} = payload;
             return {
                 ...state,
                 results: {
                     ...state.results,
-                    ...list
+                    [problemId]: Object.keys(algos).map(uuid => ({
+                        uuid,
+                        ...algos[uuid],
+                    })),
                 },
                 init: true,
                 error: null,

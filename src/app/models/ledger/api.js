@@ -1,6 +1,6 @@
-/* globals window fetch ORCHESTRATOR_API_URL */
+/* globals window fetch */
 import queryString from 'query-string';
-import jwtDecode from 'jwt-decode'
+import jwtDecode from 'jwt-decode';
 import {call, select} from 'redux-saga/effects';
 
 import {getCredentials} from '../../routes/home/components/Login/selectors';
@@ -75,12 +75,35 @@ const requestChaincode = async ({
 };
 
 
+const invokeChaincode = async ({
+    channelName, chaincodeName, token, ...parameters,
+}) => {
+    const url = `${ORCHESTRATOR_API_URL}/channels/${channelName}` +
+        `/chaincodes/${chaincodeName}` +
+        `?${queryString.stringify(parameters, {arrayFormat: 'bracket'})}`;
+    console.log(url);
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'content-Type': 'application/json',
+            authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(parameters),
+    });
+
+    if (response.status !== 200) {
+        throw new FetchError(await response.text(), response.status);
+    }
+};
+
+
 export const getAlgos = async ({
-    channelName, chaincodeName, peer, problem_key, token,
+    channelName, chaincodeName, peer, problemId, token,
 }) => requestChaincode({
     channelName,
     chaincodeName,
-    args: ['algo', problem_key],
+    args: ['algo', problemId],
     fcn: 'queryProblemItems',
     peer,
     token,
@@ -88,11 +111,11 @@ export const getAlgos = async ({
 
 
 export const getLearnuplet = async ({
-    algo_key, channelName, chaincodeName, peer, token,
+    algorithmId, channelName, chaincodeName, peer, token,
 }) => requestChaincode({
     channelName,
     chaincodeName,
-    args: [algo_key],
+    args: [algorithmId],
     fcn: 'queryAlgoLearnuplet',
     peer,
     token,
@@ -111,9 +134,23 @@ export const getProblems = async ({
 });
 
 
+export const postAlgo = async ({
+    channelName, chaincodeName, peers, token,
+    storageAdress, problemId, algorithmName
+}) => invokeChaincode({
+    channelName,
+    chaincodeName,
+    args: ['algo', storageAdress, problemId, algorithmName],
+    fcn: 'registerItem',
+    peers: ['peer1', 'peer2'],
+    token,
+});
+
+
 export default {
     getAlgos,
     getLearnuplet,
     getProblems,
     getToken,
+    postAlgo,
 };

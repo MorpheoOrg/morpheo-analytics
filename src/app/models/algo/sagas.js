@@ -40,48 +40,45 @@ import generalActions from '../../actions';
 import learnupletActions from '../learnuplet/actions';
 import actions, {actionTypes} from './actions';
 import {
-    fetchAlgos as fetchAlgosApi,
     postAlgo as postAlgoApi,
     postAlgoToOrchestrator as postAlgoToOrchestratorApi,
 } from './api';
 import {getCredentials} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
+import {getAlgos, getToken, postAlgo} from '../ledger/api';
 
 
-// TODO: add problemId into payload instead of sending string directly or take
-// it directly from the state
-export function* loadAlgosListSaga({payload}) {
-    const {
-        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-    } = yield select(getCredentials);
+export function* loadAlgoListSaga({payload}) {
+    console.log(payload);
+    const {problemId} = payload;
     try {
-        const {algos} = yield call(fetchAlgosApi, {
-            user: ORCHESTRATOR_USER,
-            password: ORCHESTRATOR_PASSWORD,
-            parameters: {
-                problem: payload
-            },
+        const {token} = yield call(getToken);
+        const {channelName, chaincodeName, peer} = yield select(getCredentials);
+
+        const algos = yield call(getAlgos, {
+            channelName, chaincodeName, peer, problemId, token,
         });
 
-        // Let's fetch the learnuplet from orchestrator
-        for (let i = 0; i < algos.length; i += 1) {
-            yield put(learnupletActions.list.request(
-                algos[i].uuid,
-            ));
-        }
+        // Fetch all the learnuplet from orchestrator
+        yield all(
+            Object.keys(algos)
+                .map(uuid => put(learnupletActions.list.request({
+                    algorithmId: uuid,
+                })))
+        );
 
         yield put(actions.list.success({
-            list: {
-                [payload]: algos,
-            }
+            problemId,
+            algos,
         }));
     }
     catch (error) {
         if (error instanceof FetchError) {
-            yield put(generalActions.error.set(error.message));
             yield put(actions.list.failure({
-                message: error.message,
-                status: error.status,
+                error: {
+                    message: error.message,
+                    status: error.status,
+                }
             }));
         }
         else throw error;
@@ -92,27 +89,28 @@ export function* loadAlgosListSaga({payload}) {
 export function* postAlgoSaga({payload}) {
     const {body, problemId} = payload;
     const {
-        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD,
-        STORAGE_USER, STORAGE_PASSWORD,
+        storageUser, storagePassword,
     } = yield select(getCredentials);
 
     try {
         // First we post the algo on storage
         const algo = yield call(postAlgoApi, {
             body,
-            user: STORAGE_USER,
-            password: STORAGE_PASSWORD
+            user: storageUser,
+            password: storagePassword
         });
 
+        const {token} = yield call(getToken);
+        const {channelName, chaincodeName} = yield select(getCredentials);
+
         // Then we post the algo to orchestrator to launch the computation
-        yield call(postAlgoToOrchestratorApi, {
-            body: {
-                uuid: algo.uuid,
-                name: algo.name,
-                problem: problemId,
-            },
-            user: ORCHESTRATOR_USER,
-            password: ORCHESTRATOR_PASSWORD,
+        yield call(postAlgo, {
+            channelName,
+            chaincodeName,
+            token,
+            storageAdress: algo.uuid,
+            problemId,
+            algorithmName: algo.name,
         });
 
         yield put(actions.item.post.success({...algo, problemId}));
@@ -138,9 +136,10 @@ export function* postAlgoSaga({payload}) {
     }
 }
 
+
 export default function* algoSagas() {
     yield all([
-        takeLatest(actionTypes.list.REQUEST, loadAlgosListSaga),
+        takeLatest(actionTypes.list.REQUEST, loadAlgoListSaga),
         takeLatest(actionTypes.item.post.REQUEST, postAlgoSaga),
     ]);
 }

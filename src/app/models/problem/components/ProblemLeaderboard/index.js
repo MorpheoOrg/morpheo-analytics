@@ -34,7 +34,7 @@ class ProblemLeaderboard extends React.Component {
                 />
                 <Performance
                     problemId={problemId}
-                    algorithmId={selectedAlgorithmId}
+                    selectedAlgorithmId={selectedAlgorithmId}
                 />
             </Container>
         );

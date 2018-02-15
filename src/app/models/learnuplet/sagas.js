@@ -32,7 +32,6 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-/* globals */
 
 import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 
@@ -42,9 +41,39 @@ import {
 } from './api';
 import {getCredentials} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
+import {getLearnuplet, getToken} from '../ledger/api';
 
+
+export function* loadLearnupletListSaga({payload}) {
+    const {algorithmId} = payload;
+    try {
+        const {token} = yield call(getToken);
+        const {channelName, chaincodeName, peer} = yield select(getCredentials);
+
+        const learnuplets = yield call(getLearnuplet, {
+            algorithmId, channelName, chaincodeName, peer, token,
+        });
+
+        yield put(actions.list.success({
+            algorithmId,
+            learnuplets,
+        }));
+    }
+    catch (error) {
+        if (error instanceof FetchError) {
+            yield put(actions.list.failure({
+                error: {
+                    message: error.message,
+                    status: error.status,
+                }
+            }));
+        }
+        else throw error;
+    }
+}
 
 export function* loadLearnupletList({payload}) {
+    const {algorithmId} = payload;
     const {
         ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
     } = yield select(getCredentials);
@@ -53,13 +82,13 @@ export function* loadLearnupletList({payload}) {
             user: ORCHESTRATOR_USER,
             password: ORCHESTRATOR_PASSWORD,
             parameters: {
-                algo: payload,
+                algo: algorithmId,
             },
         });
 
         yield put(actions.list.success({
             list: {
-                [payload]: learnuplets,
+                [algorithmId]: learnuplets,
             },
         }));
     }
@@ -78,6 +107,6 @@ export function* loadLearnupletList({payload}) {
 
 export default function* () {
     yield all([
-        takeEvery(actionTypes.list.request, loadLearnupletList),
+        takeEvery(actionTypes.list.request, loadLearnupletListSaga),
     ]);
 }

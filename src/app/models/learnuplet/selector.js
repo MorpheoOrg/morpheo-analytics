@@ -61,7 +61,7 @@ export const getLChartData = createDeepEqualSelector(
             ...p,
             [c]: sortBy(results[c], ['rank']).reduce((previous, current) =>
                 [...previous, {
-                    name: current.train_data.length + (
+                    name: current.trainPerf.length + (
                         previous.length ? previous[previous.length - 1].name : 0
                     ),
                     perf: current.perf * 100,

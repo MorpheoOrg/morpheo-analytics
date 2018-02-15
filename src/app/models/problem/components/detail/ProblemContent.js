@@ -7,10 +7,6 @@ import {shell} from 'electron';
 import description from './description.md';
 
 
-// const ProblemContent = styled(ReactMarkdown)`
-//     overflow: auto;
-// `;
-
 class RouterLink extends React.Component {
     handleOnClick = () => {
         shell.openExternal(this.props.href);
