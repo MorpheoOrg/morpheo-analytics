@@ -74,7 +74,7 @@ const mapStateToProps = (state, {id, updateProps}) => ({
 });
 
 const mapDispatchToProps = (dispatch, {id}) => bindActionCreators({
-    loadAlgoList: () => actionsAlgo.list.request(id),
+    loadAlgoList: () => actionsAlgo.list.request({problemId: id}),
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProblemDetail);

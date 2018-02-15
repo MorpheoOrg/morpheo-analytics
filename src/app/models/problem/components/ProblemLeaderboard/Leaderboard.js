@@ -173,7 +173,7 @@ const mapStateToProps = (state, {problemId}) => ({
 });
 
 const mapDispatchToProps = (dispatch, {problemId}) => bindActionCreators({
-    loadAlgoList: () => actionsAlgo.list.request(problemId),
+    loadAlgoList: () => actionsAlgo.list.request({problemId}),
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(onlyUpdateForKeys([

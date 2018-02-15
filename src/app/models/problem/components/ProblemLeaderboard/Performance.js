@@ -22,37 +22,80 @@ class Performance extends React.Component {
         min-width: 50%;
     `;
 
+    renderGraphic() {
+        const {algorithmIndex, bestPerf, lChartData, name} = this.props;
+        return (
+            <div
+                css={this.style}
+            >
+                <span>Performances of <b>{name}</b></span>
+                <span><Trophy />{algorithmIndex + 1}</span>
+                <span><ChartLine />{(bestPerf * 100).toFixed(2)}%</span>
+                <span><LChart data={lChartData} /></span>
+            </div>
+        );
+    }
+
     render() {
-        const {algorithmIndex, data, lChartData} = this.props;
-        const {bestPerf, name} = data;
-        return (<div
-            css={this.style}
-        >
-            <span>Performances of <b>{name}</b></span>
-            <span><Trophy />{algorithmIndex + 1}</span>
-            <span><ChartLine />{(bestPerf * 100).toFixed(2)}%</span>
-            <span><LChart data={lChartData} /></span>
-        </div>);
+        const {algorithmIndex} = this.props;
+        console.log(algorithmIndex);
+        return (
+            <div
+                css={this.style}
+            >
+                {
+                    algorithmIndex !== -1 ?
+                        this.renderGraphic() :
+                        <span>No algorithm avalaible for the problem.</span>
+                }
+            </div>
+        );
     }
 }
 
 Performance.propTypes = {
-
+    algorithmIndex: PropTypes.number,
+    bestPerf: PropTypes.number,
+    lChartData: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        perf: PropTypes.number.isRequired
+    })),
+    name: PropTypes.string,
 };
 
 Performance.defaultProps = {
-
+    algorithmIndex: -1,
+    bestPerf: 0.0,
+    lChartData: [],
+    name: '',
 };
 
-const mapStateToProps = (state, {problemId, algorithmId}) => {
+const mapStateToProps = (state, {problemId, selectedAlgorithmId}) => {
+    // Automatically select the first algorithm if available
     const algorithmData = getLeaderboardData(state)[problemId];
-    const algorithmUuid = algorithmId || algorithmData[0].uuid;
-    const algorithmIndex = algorithmData.findIndex(
-        ({uuid}) => uuid === algorithmUuid);
+    console.log('problemId:', problemId);
+    console.log('algoData:', algorithmData);
+    console.log('algoData.length:', algorithmData.length);
+    console.log('LeadData', getLeaderboardData(state));
+
+    const algorithmId = (
+        selectedAlgorithmId ||
+        (algorithmData && algorithmData.length !== 0) ?
+            algorithmData[0].uuid : undefined
+    );
+
+    const algorithmIndex = algorithmId ?
+        algorithmData.findIndex(({uuid}) => uuid === algorithmId) : -1;
+
+    const lChartData = algorithmId ? getLChartData(state)[algorithmId] : [];
+
+    const {bestPerf, name} = algorithmId ? algorithmData[algorithmIndex] : {};
+
     return ({
         algorithmIndex,
-        lChartData: getLChartData(state)[algorithmUuid],
-        data: algorithmData[algorithmIndex],
+        lChartData,
+        bestPerf,
+        name,
     });
 };
 

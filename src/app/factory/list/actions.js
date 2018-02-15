@@ -14,7 +14,7 @@ export const actionsFactory = actionTypes => ({
         id: PropTypes.string,
     }),
     success: createActionWithCheck(actionTypes.success, {
-        list: PropTypes.object.isRequired,
+        list: PropTypes.object,
     }),
     failure: createActionWithCheck(actionTypes.failure, {
         error: PropTypes.shape({

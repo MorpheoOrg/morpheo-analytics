@@ -45,11 +45,11 @@ import {getCredentials} from '../../routes/home/components/Login/selectors';
 export const loadItem = (actions, fetchItem, query) =>
     function* loadItemSaga(request) {
         const {
-            STORAGE_USER, STORAGE_PASSWORD
+            storageUser, storagePassword,
         } = yield select(getCredentials);
 
         const {error, item} = yield call(
-            fetchItem, request.payload, STORAGE_USER, STORAGE_PASSWORD
+            fetchItem, request.payload, storageUser, storagePassword
         );
 
         if (error) {

@@ -83,6 +83,8 @@ class Login extends React.Component {
     state = {
         channelName: this.props.channelName,
         chaincodeName: this.props.chaincodeName,
+        storageUser: this.props.storageUser,
+        storagePassword: this.props.storagePassword,
         username: this.props.username,
         org: this.props.org,
         peer: this.props.peer,
@@ -107,6 +109,25 @@ class Login extends React.Component {
                         <H1>Connection</H1>
                     </Header>
                     <Form onSubmit={this.handleSubmit}>
+                        <Group>
+                            <Label>
+                                Storage username:
+                            </Label>
+                            <FullInput
+                                type="text"
+                                value={this.state.storageUser}
+                                onChange={this.changeFormProps('storageUser')}
+                            />
+                            <Label>
+                                Storage password:
+                            </Label>
+                            <FullInput
+                                type="text"
+                                value={this.state.storagePassword}
+                                onChange={this.changeFormProps('storagePassword')}
+                            />
+                        </Group>
+
                         <Group>
                             <Label>
                                 Channel name:
@@ -164,6 +185,8 @@ Login.propTypes = {
     login: PropTypes.func.isRequired,
     channelName: PropTypes.string,
     chaincodeName: PropTypes.string,
+    storageUser: PropTypes.string,
+    storagePassword: PropTypes.string,
     username: PropTypes.string,
     org: PropTypes.string,
     peer: PropTypes.string,
@@ -173,6 +196,8 @@ Login.defaultProps = {
     channelName: '',
     chaincodeName: '',
     username: '',
+    storageUser: '',
+    storagePassword: '',
     org: '',
     peer: '',
 };
