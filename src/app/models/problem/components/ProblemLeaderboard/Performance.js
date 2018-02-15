@@ -57,7 +57,7 @@ Performance.propTypes = {
     algorithmIndex: PropTypes.number,
     bestPerf: PropTypes.number,
     lChartData: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired,
+        name: PropTypes.number.isRequired,
         perf: PropTypes.number.isRequired
     })),
     name: PropTypes.string,
