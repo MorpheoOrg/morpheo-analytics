@@ -18,16 +18,6 @@ app.use(compression());
 const DEBUG = !(['production', 'development', 'staging'].includes(process.env.NODE_ENV)),
     DEVELOPMENT = (['development', 'staging'].includes(process.env.NODE_ENV));
 
-
-// polyfill atob/btoa++
-
-if (!global.atob) {
-    global.atob = require('base-64').decode;
-}
-if (!global.btoa) {
-    global.btoa = require('base-64').encode;
-}
-
 // UNIVERSAL HMR + STATS HANDLING GOODNESS:
 
 if (DEVELOPMENT) {

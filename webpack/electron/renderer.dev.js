@@ -30,6 +30,7 @@ export default merge.smart(baseConfig, {
     devtool: 'inline-source-map',
 
     target: 'electron-renderer',
+
     entry: [
         'babel-polyfill',
         'react-hot-loader/patch',
@@ -39,7 +40,7 @@ export default merge.smart(baseConfig, {
     ],
 
     output: {
-        publicPath,
+        publicPath: `http://localhost:${port}/dist/`,
     },
 
     module: {

@@ -1,16 +1,20 @@
-import {call, put, select, takeLatest, takeEvery, all} from 'redux-saga/effects';
-import generalActions from '../../../../../../common/actions';
-import storageProblemActions from '../../storage_problem/actions';
+import {call, put, select, takeLatest, takeEvery} from 'redux-saga/effects';
+import generalActions from '../../../../../common/actions';
+import storageProblemActions from '../storage_problem/actions';
 
-import actions, {actionTypes} from '../actions';
+import actions, {actionTypes} from './actions';
 import {
     fetchProblems as fetchProblemsApi,
     fetchProblem as fetchProblemApi,
-} from '../api';
+} from './api';
+
 
 export const loadList = (actions, fetchList) =>
     function* loadListSaga() {
+        const state = yield select();
+
         const {error, list} = yield call(fetchList);
+        console.log('sagas: ', error, list);
 
         if (error) {
             if (error.body && error.body.message) {
@@ -62,10 +66,10 @@ export const loadItem = (actions, fetchItem) =>
 
 /* istanbul ignore next */
 const challengeSagas = function* challengeSagas() {
-    yield all([
+    yield [
         takeLatest(actionTypes.list.REQUEST, loadList(actions, fetchProblemsApi)),
         takeEvery(actionTypes.item.get.REQUEST, loadItem(actions, fetchProblemApi)),
-    ]);
+    ];
 };
 
 
