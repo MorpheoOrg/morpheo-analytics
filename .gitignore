@@ -27,7 +27,6 @@ chrome-user-data
 .vscode
 build/
 dist/
-doc/
 coverage/
 yarn.lock
 .happypack
