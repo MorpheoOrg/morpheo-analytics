@@ -33,19 +33,14 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-/* globals ORCHESTRATOR_API_URL STORAGE_API_URL */
+/* globals STORAGE_API_URL */
 
-import {
-    getEntityFactory, postEntityFactory,
-} from '../../utils/new_entities/fetchEntities';
+import {postEntityFactory} from '../../utils/new_entities/fetchEntities';
 
-
-export const fetchAlgos = getEntityFactory(`${ORCHESTRATOR_API_URL}/algo`);
 
 export const postAlgoToStorage = postEntityFactory(`${STORAGE_API_URL}/algo`);
 
 
 export default {
-    fetchAlgos,
     postAlgoToStorage,
 };
