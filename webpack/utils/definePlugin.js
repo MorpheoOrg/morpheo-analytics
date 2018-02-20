@@ -14,6 +14,6 @@ export default () => new webpack.DefinePlugin({
     PRODUCTION_BASE_NAME: JSON.stringify(config.apps.frontend.baseName.production),
     DEBUG_BASE_NAME: JSON.stringify(config.apps.frontend.baseName.debug),
     STORAGE_API_URL: JSON.stringify(config.apps.frontend.storage_api_url),
-    ORCHESTRATOR_API_URL: JSON.stringify(config.apps.frontend.orchestrator_api_url),
+    NODE_PROXY_URL: JSON.stringify(config.apps.frontend.node_proxy_url),
     SERVICES_API_URL: JSON.stringify(config.apps.frontend.services_api_url),
 });

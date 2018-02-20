@@ -13,7 +13,7 @@ module.exports = {
         '^.+\\.js?$': 'babel-jest'
     },
     globals: {
-        ORCHESTRATOR_API_URL: 'http://orchestrator_api_url',
+        NODE_API_URL: 'http://node_api_url',
         STORAGE_API_URL: 'http://storage_api_url',
     },
     // Add the test files into the coverage to be sure all test are passed

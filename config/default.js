@@ -2,8 +2,7 @@ const apiPort = process.env.NODE_PORT || 3000;
 const apiUrl = 'https://notebook-proxy.morpheo.co';
 const apiSocketUrl = 'wss://notebook-proxy.morpheo.co';
 const storageApiUrl = 'https://storage.morpheo.co';
-const orchestratorApiUrl = 'https://orchestrator.morpheo.co';
-// const orchestratorApiUrl = 'http://localhost:4000';
+const nodeProxyUrl = 'http://localhost:4000';
 const servicesApiUrl = 'https://notebook-services.morpheo.co';
 
 module.exports = {
@@ -14,7 +13,7 @@ module.exports = {
             api_socket_url: apiSocketUrl,
             api_port: apiPort,
             storage_api_url: storageApiUrl,
-            orchestrator_api_url: orchestratorApiUrl,
+            node_proxy_url: nodeProxyUrl,
             services_api_url: servicesApiUrl,
             baseName: {
                 production: '/',

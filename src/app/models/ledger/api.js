@@ -1,4 +1,4 @@
-/* globals window fetch */
+/* globals NODE_PROXY_URL window fetch */
 import queryString from 'query-string';
 import jwtDecode from 'jwt-decode';
 import {call, select} from 'redux-saga/effects';
@@ -7,12 +7,8 @@ import {getCredentials} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
 
 
-// TODO: Remove this when blockchain implemented
-const ORCHESTRATOR_API_URL = 'http://localhost:4000';
-
-
 const fetchToken = async ({username, orgName}) => {
-    const url = `${ORCHESTRATOR_API_URL}/users`;
+    const url = `${NODE_PROXY_URL}/users`;
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -56,7 +52,7 @@ export function* getToken() {
 const requestChaincode = async ({
     channelName, chaincodeName, token, ...parameters,
 }) => {
-    const url = `${ORCHESTRATOR_API_URL}/channels/${channelName}` +
+    const url = `${NODE_PROXY_URL}/channels/${channelName}` +
         `/chaincodes/${chaincodeName}` +
         `?${queryString.stringify(parameters, {arrayFormat: 'bracket'})}`;
     console.log(url);
@@ -78,7 +74,7 @@ const requestChaincode = async ({
 const invokeChaincode = async ({
     channelName, chaincodeName, token, ...parameters,
 }) => {
-    const url = `${ORCHESTRATOR_API_URL}/channels/${channelName}` +
+    const url = `${NODE_PROXY_URL}/channels/${channelName}` +
         `/chaincodes/${chaincodeName}` +
         `?${queryString.stringify(parameters, {arrayFormat: 'bracket'})}`;
     console.log(url);
