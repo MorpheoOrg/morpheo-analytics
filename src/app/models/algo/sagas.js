@@ -39,10 +39,7 @@ import notificationActions from '../../routes/home/components/Notifications/acti
 import generalActions from '../../actions';
 import learnupletActions from '../learnuplet/actions';
 import actions, {actionTypes} from './actions';
-import {
-    postAlgo as postAlgoApi,
-    postAlgoToOrchestrator as postAlgoToOrchestratorApi,
-} from './api';
+import {postAlgoToStorage} from './api';
 import {getCredentials} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
 import {getAlgos, getToken, postAlgo} from '../ledger/api';
@@ -94,7 +91,7 @@ export function* postAlgoSaga({payload}) {
 
     try {
         // First we post the algo on storage
-        const algo = yield call(postAlgoApi, {
+        const algo = yield call(postAlgoToStorage, {
             body,
             user: storageUser,
             password: storagePassword

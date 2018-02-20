@@ -36,9 +36,6 @@
 import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 
 import actions, {actionTypes} from './actions';
-import {
-    fetchLearnupletByAlgo as fetchLearnupletByAlgoApi,
-} from './api';
 import {getCredentials} from '../../routes/home/components/Login/selectors';
 import {FetchError} from '../../utils/errors';
 import {getLearnuplet, getToken} from '../ledger/api';
@@ -72,38 +69,6 @@ export function* loadLearnupletListSaga({payload}) {
     }
 }
 
-export function* loadLearnupletList({payload}) {
-    const {algorithmId} = payload;
-    const {
-        ORCHESTRATOR_USER, ORCHESTRATOR_PASSWORD
-    } = yield select(getCredentials);
-    try {
-        const {learnuplets} = yield call(fetchLearnupletByAlgoApi, {
-            user: ORCHESTRATOR_USER,
-            password: ORCHESTRATOR_PASSWORD,
-            parameters: {
-                algo: algorithmId,
-            },
-        });
-
-        yield put(actions.list.success({
-            list: {
-                [algorithmId]: learnuplets,
-            },
-        }));
-    }
-    catch (error) {
-        if (error instanceof FetchError) {
-            yield put(actions.list.failure({
-                error: {
-                    message: error.message,
-                    status: error.status,
-                }
-            }));
-        }
-        else throw error;
-    }
-}
 
 export default function* () {
     yield all([

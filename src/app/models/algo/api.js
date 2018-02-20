@@ -42,15 +42,10 @@ import {
 
 export const fetchAlgos = getEntityFactory(`${ORCHESTRATOR_API_URL}/algo`);
 
-export const postAlgo = postEntityFactory(`${STORAGE_API_URL}/algo`);
-
-export const postAlgoToOrchestrator = postEntityFactory(
-    `${ORCHESTRATOR_API_URL}/algo`, 'json',
-);
+export const postAlgoToStorage = postEntityFactory(`${STORAGE_API_URL}/algo`);
 
 
 export default {
     fetchAlgos,
-    postAlgo,
-    postAlgoToOrchestrator,
+    postAlgoToStorage,
 };
