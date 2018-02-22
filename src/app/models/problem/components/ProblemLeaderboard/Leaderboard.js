@@ -97,7 +97,6 @@ class Leaderboard extends React.Component {
     render() {
         // TODO add is loading
         const {leaderboardData, selectedAlgorithmId} = this.props;
-        console.log('render');
         return (
             <Container>
                 <FlatButton onClick={this.refresh}>
