@@ -30,11 +30,13 @@ export function* getToken() {
     const delta = 60; // Time in second before the expiration of the token
     const storedLedgerToken = window.localStorage.getItem('ledgerToken');
 
-    // If a token is avalaible and valid
+    // If a token is available and valid
     if (storedLedgerToken) {
         const jwt = jwtDecode(storedLedgerToken);
         const currentTime = Date.now().valueOf() / 1000;
-        if (currentTime < jwt.exp - delta) return {token: storedLedgerToken};
+        if (currentTime < jwt.exp - delta) {
+            return {token: storedLedgerToken};
+        }
     }
 
     // If not, we fetch the token from credentials
@@ -55,7 +57,6 @@ const requestChaincode = async ({
     const url = `${NODE_PROXY_URL}/channels/${channelName}` +
         `/chaincodes/${chaincodeName}` +
         `?${queryString.stringify(parameters, {arrayFormat: 'bracket'})}`;
-    console.log(url);
     const response = await fetch(url, {
         headers: {
             'content-Type': 'application/json',
@@ -77,7 +78,6 @@ const invokeChaincode = async ({
     const url = `${NODE_PROXY_URL}/channels/${channelName}` +
         `/chaincodes/${chaincodeName}` +
         `?${queryString.stringify(parameters, {arrayFormat: 'bracket'})}`;
-    console.log(url);
     const response = await fetch(url, {
         method: 'POST',
         headers: {

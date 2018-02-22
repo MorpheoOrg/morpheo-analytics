@@ -38,7 +38,6 @@ class Performance extends React.Component {
 
     render() {
         const {algorithmIndex} = this.props;
-        console.log(algorithmIndex);
         return (
             <div
                 css={this.style}
@@ -73,10 +72,6 @@ Performance.defaultProps = {
 const mapStateToProps = (state, {problemId, selectedAlgorithmId}) => {
     // Automatically select the first algorithm if available
     const algorithmData = getLeaderboardData(state)[problemId];
-    console.log('problemId:', problemId);
-    console.log('algoData:', algorithmData);
-    console.log('algoData.length:', algorithmData.length);
-    console.log('LeadData', getLeaderboardData(state));
 
     const algorithmId = (
         selectedAlgorithmId ||

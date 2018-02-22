@@ -35,7 +35,6 @@ export const postEntityFactory = (apiURL, contentType) => async ({
 }) => {
     const url = isEmpty(parameters) ? apiURL :
         `${apiURL}?${queryString.stringify(parameters)}`;
-    console.log('debut');
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -51,12 +50,10 @@ export const postEntityFactory = (apiURL, contentType) => async ({
         mode: 'cors',
         body: contentType === 'json' ? JSON.stringify(body) : body,
     });
-    console.log('send');
     if (response.status !== 201) {
         throw new FetchError(await response.text(), response.status);
     }
 
-    console.log('finish');
     return response.json();
 };
 

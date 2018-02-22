@@ -46,7 +46,6 @@ import {getAlgos, getToken, postAlgo} from '../ledger/api';
 
 
 export function* loadAlgoListSaga({payload}) {
-    console.log(payload);
     const {problemId} = payload;
     try {
         const {token} = yield call(getToken);

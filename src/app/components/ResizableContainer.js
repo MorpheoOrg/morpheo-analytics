@@ -51,7 +51,6 @@ class ResizableContainer extends React.Component {
             this.state.width - (this.clientX - event.clientX),
             this.props.minWidth,
         );
-        console.log(width);
         this.clientX = event.clientX;
         this.setState({
             width,
